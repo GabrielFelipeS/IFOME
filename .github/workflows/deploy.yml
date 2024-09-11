@@ -57,7 +57,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd ${{ secrets.APP_PATH }}
-            git pull origin dev
+            git pull -v origin dev
             docker compose up -d --build
 
   
