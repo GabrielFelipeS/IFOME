@@ -1,0 +1,6 @@
+services:
+  api:
+    container_name: api_spring
+    build: ./back/
+    ports:
+      - "8080:8080"
