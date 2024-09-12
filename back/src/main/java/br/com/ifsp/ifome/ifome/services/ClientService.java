@@ -18,10 +18,9 @@ public class ClientService {
         if(clientRequest.email().equals("user1@gmail.com")) {
            throw new RuntimeException();
         }
-        Client client = new Client(null, clientRequest.email(), clientRequest.password(), clientRequest.dateOfBirth(), clientRequest.cpf(), clientRequest.typeResidence(), clientRequest.cep(), clientRequest.address(), clientRequest.paymentMethods());
+        //Client client = new Client(null, clientRequest.email(), clientRequest.password(), clientRequest.dateOfBirth(), clientRequest.cpf(), clientRequest.typeResidence(), clientRequest.cep(), clientRequest.address(), clientRequest.paymentMethods());
+        Client client = new Client(clientRequest);
         client = clientRepository.save(client);
-        return new ClientResponse(client.getId(),
-            client.getEmail(), client.getDateOfBirth(), client.getCpf(),
-            client.getTypeResidence(), client.getCep(), client.getAddress(), client.getPaymentMethods());
+        return new ClientResponse(client.getId(), client.getEmail(), client.getDateOfBirth(), client.getCpf(), client.getTypeResidence(), client.getCep(), client.getAddress(), client.getPaymentMethods());
     }
 }

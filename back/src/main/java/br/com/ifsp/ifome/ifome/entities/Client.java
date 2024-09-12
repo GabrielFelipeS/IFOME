@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.ifome.entities;
 
+import br.com.ifsp.ifome.ifome.dto.request.ClientRequest;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -20,6 +21,17 @@ public class Client {
     private String paymentMethods;
 
     public Client() {}
+
+    public Client(ClientRequest clientRequest) {
+        this.email = clientRequest.email();
+        this.password = clientRequest.password();
+        this.dateOfBirth = clientRequest.dateOfBirth();
+        this.cpf = clientRequest.cpf();
+        this.typeResidence = clientRequest.typeResidence();
+        this.cep = clientRequest.cep();
+        this.address = clientRequest.address();
+        this.paymentMethods = clientRequest.paymentMethods();
+    }
 
     public Client(Long id, String email, String password, LocalDate dateOfBirth, String cpf, String typeResidence, String cep, String address, String paymentMethods) {
         this.id = id;
