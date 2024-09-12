@@ -4,6 +4,7 @@ package br.com.ifsp.ifome.ifome.controllers;
 import br.com.ifsp.ifome.ifome.dto.request.ClientRequest;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +23,7 @@ public class ClienteControllerIT {
     private TestRestTemplate restTemplate;
 
     @Test
+    @DisplayName("should be possible to create a new client")
     public void shouldBeAbleToCreateANewClient() {
         ClientRequest client = new ClientRequest("teste@teste.com", "password", "password",
             LocalDate.now(), "cpf", "Casa", "cep", "endereco", "payment_methods");
@@ -49,4 +51,15 @@ public class ClienteControllerIT {
         assertThat(address).isEqualTo(client.address());
         assertThat(paymentMethods).isEqualTo(client.paymentMethods());
     }
+
+    @Test
+    @DisplayName("should not be possible to create a new client with already registered email")
+    public void shouldReturnErrorWhenCreatingClientWithAlreadyRegisteredEmail() {
+        ClientRequest client = new ClientRequest("user1@gmail.com", "password", "password",
+            LocalDate.now(), "cpf", "Casa", "cep", "endereco", "payment_methods");
+
+        ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }
