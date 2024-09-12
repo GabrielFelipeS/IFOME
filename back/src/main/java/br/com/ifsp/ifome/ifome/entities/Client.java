@@ -1,18 +1,17 @@
 package br.com.ifsp.ifome.ifome.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "clients")
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
+    private String password;
     private LocalDate dateOfBirth;
     private String cpf;
     private String typeResidence;
@@ -22,9 +21,10 @@ public class Client {
 
     public Client() {}
 
-    public Client(Long id, String email, LocalDate dateOfBirth, String cpf, String typeResidence, String cep, String address, String paymentMethods) {
+    public Client(Long id, String email, String password, LocalDate dateOfBirth, String cpf, String typeResidence, String cep, String address, String paymentMethods) {
         this.id = id;
         this.email = email;
+        this.password = password;
         this.dateOfBirth = dateOfBirth;
         this.cpf = cpf;
         this.typeResidence = typeResidence;
@@ -47,6 +47,14 @@ public class Client {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public LocalDate getDateOfBirth() {
