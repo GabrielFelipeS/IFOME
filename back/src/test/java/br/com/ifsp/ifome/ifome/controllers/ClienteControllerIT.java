@@ -1,5 +1,9 @@
 package br.com.ifsp.ifome.ifome.controllers;
 
+
+import br.com.ifsp.ifome.ifome.dto.request.ClientRequest;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +21,13 @@ public class ClienteControllerIT {
 
     @Test
     public void shouldBeAbleToCreateANewClient() {
-        ResponseEntity<String> response = restTemplate.postForEntity("/client", null, String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        ClientRequest client = new ClientRequest(1L);
+        ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        DocumentContext document = JsonPath.parse(response.getBody());
+        Number id = document.read("$.id");
+
+        assertThat(id).isNotNull();
     }
 }
