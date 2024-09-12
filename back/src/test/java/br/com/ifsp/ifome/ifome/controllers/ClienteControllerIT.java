@@ -31,6 +31,7 @@ public class ClienteControllerIT {
 
         DocumentContext document = JsonPath.parse(response.getBody());
 
+        Number id = document.read("$.id");
         String email = document.read("$.email");
         String dateOfBirth = document.read("$.dateOfBirth");
         String cpf = document.read("$.cpf");
@@ -39,6 +40,7 @@ public class ClienteControllerIT {
         String address = document.read("$.address");
         String paymentMethods = document.read("$.paymentMethods");
 
+        assertThat(id).isNotNull();
         assertThat(email).isEqualTo(client.email());
         assertThat(dateOfBirth).isEqualTo(client.dateOfBirth().toString());
         assertThat(cpf).isEqualTo(client.cpf());
