@@ -11,6 +11,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -21,13 +23,28 @@ public class ClienteControllerIT {
 
     @Test
     public void shouldBeAbleToCreateANewClient() {
-        ClientRequest client = new ClientRequest(1L);
+        ClientRequest client = new ClientRequest("teste@teste.com", "password", "password",
+            LocalDate.now(), "cpf", "Casa", "cep", "endereco", "payment_methods");
+
         ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         DocumentContext document = JsonPath.parse(response.getBody());
-        Number id = document.read("$.id");
 
-        assertThat(id).isNotNull();
+        String email = document.read("$.email");
+        String dateOfBirth = document.read("$.dateOfBirth");
+        String cpf = document.read("$.cpf");
+        String typeResidence = document.read("$.typeResidence");
+        String cep = document.read("$.cep");
+        String address = document.read("$.address");
+        String paymentMethods = document.read("$.paymentMethods");
+
+        assertThat(email).isEqualTo(client.email());
+        assertThat(dateOfBirth).isEqualTo(client.dateOfBirth().toString());
+        assertThat(cpf).isEqualTo(client.cpf());
+        assertThat(typeResidence).isEqualTo(client.typeResidence());
+        assertThat(cep).isEqualTo(client.cep());
+        assertThat(address).isEqualTo(client.address());
+        assertThat(paymentMethods).isEqualTo(client.paymentMethods());
     }
 }

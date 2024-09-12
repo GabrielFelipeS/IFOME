@@ -1,15 +1,15 @@
 package br.com.ifsp.ifome.ifome.dto.request;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record ClientRequest (
         String email,
         String password,
         String confirmationPassword,
-        LocalDateTime date_of_birth,
+        LocalDate dateOfBirth,
         String cpf,
-        String type_residence,
+        String typeResidence,
         String cep,
-        String endereco,
-        String payment_methods
+        String address,
+        String paymentMethods
 ) { }
