@@ -18,11 +18,15 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity<ClientResponse> create(@RequestBody ClientRequest client , UriComponentsBuilder ucb) {
-        ClientResponse clientResponse = new ClientResponse(1L);
+        ClientResponse clientResponse = new ClientResponse(1L,
+            client.email(), client.dateOfBirth(), client.cpf(),
+            client.typeResidence(), client.cep(), client.address(), client.paymentMethods());
+
         URI locationOfNewClient = ucb
             .path("client/{id}")
             .buildAndExpand(1)
             .toUri();
+
         return ResponseEntity.created(locationOfNewClient).body(clientResponse);
     }
 }
