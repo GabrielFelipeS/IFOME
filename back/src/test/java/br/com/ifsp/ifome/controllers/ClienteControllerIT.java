@@ -67,6 +67,9 @@ public class ClienteControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
+        Number countOfInvalidFields = documentContext.read("$.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+
         List<String> message = documentContext.read("$.email");
 
         assertThat(message).containsExactlyInAnyOrder("E-mail já registrado");
@@ -74,17 +77,17 @@ public class ClienteControllerIT {
 
     @Test
     @DirtiesContext
-    @DisplayName("")
-    public void shouldReturnAllValidationErrorsWhenCreatingClient() {
-        ClientRequest client = new ClientRequest("email@.com", " ", "confirmationPassword",
-            LocalDate.now().plusYears(1), "cpf", "typeResidence", "cep", "address", "payment_methods");
+    @DisplayName("should return all validation errors in the password field")
+    public void shouldReturnAllValidationErrorsInThePasswordField() {
+        ClientRequest client = new ClientRequest("email@gmail.com", " ", "confirmationPassword",
+            LocalDate.now().minusYears(18), "019.056.440-78", "typeResidence", "cep", "address", "payment_methods");
 
         ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
-        System.out.println(response.getBody());
-        List<String> emailErrors = documentContext.read("$.email");
-        assertThat(emailErrors).containsExactlyInAnyOrder("E-mail inválido");
+
+        Number countOfInvalidFields = documentContext.read("$.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
 
         List<String> passwordErrors = documentContext.read("$.password");
         assertThat(passwordErrors)
@@ -96,6 +99,21 @@ public class ClienteControllerIT {
                 "Senha precisa conter pelo menos um caractere maiúsculo",
                 "Senha precisa conter pelo menos um caractere especial",
                 "Senha não pode conter espaço");
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("should return all validation errors in the dateOfBirth field")
+    public void shouldReturnAllValidationErrorsInThDateOfBirthField() {
+        ClientRequest client = new ClientRequest("email@gmail.com", "@Teste123", "confirmationPassword",
+            LocalDate.now().plusDays(1), "019.056.440-78", "typeResidence", "cep", "address", "payment_methods");
+
+        ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        Number countOfInvalidFields = documentContext.read("$.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
 
         List<String> dateOfBirth = documentContext.read("$.dateOfBirth");
         assertThat(dateOfBirth)
@@ -103,6 +121,21 @@ public class ClienteControllerIT {
                 "Data de nascimento deve estar no passado",
                 "É necessário ter pelo menos 18 anos"
             );
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("should return all validation errors in the cpf field")
+    public void shouldReturnAllValidationErrorsInTheCPFField() {
+        ClientRequest client = new ClientRequest("email@gmail.com", "@Teste123", "confirmationPassword",
+            LocalDate.now().minusYears(18), "cpf", "typeResidence", "cep", "address", "payment_methods");
+
+        ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        Number countOfInvalidFields = documentContext.read("$.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
 
         List<String> cpf = documentContext.read("$.cpf");
         assertThat(cpf)
@@ -110,5 +143,4 @@ public class ClienteControllerIT {
                 "CPF inválido"
             );
     }
-
 }
