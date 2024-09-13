@@ -1,4 +1,4 @@
-package br.com.ifsp.ifome.ifome.controllers;
+package br.com.ifsp.ifome.controllers;
 
 
 import br.com.ifsp.ifome.ifome.dto.request.ClientRequest;

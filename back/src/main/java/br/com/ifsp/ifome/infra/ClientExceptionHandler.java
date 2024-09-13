@@ -1,4 +1,4 @@
-package br.com.ifsp.ifome.ifome.infra;
+package br.com.ifsp.ifome.infra;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;

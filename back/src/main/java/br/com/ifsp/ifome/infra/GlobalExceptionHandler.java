@@ -1,4 +1,4 @@
-package br.com.ifsp.ifome.ifome.infra;
+package br.com.ifsp.ifome.infra;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

@@ -1,6 +1,6 @@
-package br.com.ifsp.ifome.ifome.repositories;
+package br.com.ifsp.ifome.repositories;
 
-import br.com.ifsp.ifome.ifome.entities.Client;
+import br.com.ifsp.ifome.entities.Client;
 import org.springframework.data.repository.CrudRepository;
 
 public interface ClientRepository extends CrudRepository<Client, Long> {

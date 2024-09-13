@@ -1,4 +1,4 @@
-package br.com.ifsp.ifome.ifome;
+package br.com.ifsp.ifome;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

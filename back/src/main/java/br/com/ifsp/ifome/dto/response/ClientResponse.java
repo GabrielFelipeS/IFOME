@@ -1,6 +1,6 @@
-package br.com.ifsp.ifome.ifome.dto.response;
+package br.com.ifsp.ifome.dto.response;
 
-import br.com.ifsp.ifome.ifome.entities.Client;
+import br.com.ifsp.ifome.entities.Client;
 
 import java.time.LocalDate;
 

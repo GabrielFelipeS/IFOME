@@ -1,4 +1,4 @@
-package br.com.ifsp.ifome.ifome;
+package br.com.ifsp.ifome;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

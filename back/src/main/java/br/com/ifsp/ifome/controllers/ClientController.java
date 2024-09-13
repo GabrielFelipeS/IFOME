@@ -1,9 +1,9 @@
-package br.com.ifsp.ifome.ifome.controllers;
+package br.com.ifsp.ifome.controllers;
 
 
-import br.com.ifsp.ifome.ifome.dto.request.ClientRequest;
-import br.com.ifsp.ifome.ifome.dto.response.ClientResponse;
-import br.com.ifsp.ifome.ifome.services.ClientService;
+import br.com.ifsp.ifome.dto.request.ClientRequest;
+import br.com.ifsp.ifome.dto.response.ClientResponse;
+import br.com.ifsp.ifome.services.ClientService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

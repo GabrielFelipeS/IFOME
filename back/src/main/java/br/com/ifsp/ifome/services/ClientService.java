@@ -1,9 +1,9 @@
-package br.com.ifsp.ifome.ifome.services;
+package br.com.ifsp.ifome.services;
 
-import br.com.ifsp.ifome.ifome.dto.request.ClientRequest;
-import br.com.ifsp.ifome.ifome.dto.response.ClientResponse;
-import br.com.ifsp.ifome.ifome.entities.Client;
-import br.com.ifsp.ifome.ifome.repositories.ClientRepository;
+import br.com.ifsp.ifome.dto.request.ClientRequest;
+import br.com.ifsp.ifome.dto.response.ClientResponse;
+import br.com.ifsp.ifome.entities.Client;
+import br.com.ifsp.ifome.repositories.ClientRepository;
 import org.springframework.stereotype.Service;
 
 @Service

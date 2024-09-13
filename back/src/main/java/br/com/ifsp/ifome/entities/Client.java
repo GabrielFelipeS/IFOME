@@ -1,6 +1,6 @@
-package br.com.ifsp.ifome.ifome.entities;
+package br.com.ifsp.ifome.entities;
 
-import br.com.ifsp.ifome.ifome.dto.request.ClientRequest;
+import br.com.ifsp.ifome.dto.request.ClientRequest;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;

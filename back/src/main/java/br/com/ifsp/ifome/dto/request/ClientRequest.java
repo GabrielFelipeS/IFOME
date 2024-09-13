@@ -1,4 +1,4 @@
-package br.com.ifsp.ifome.ifome.dto.request;
+package br.com.ifsp.ifome.dto.request;
 
 import br.com.ifsp.ifome.ifome.validation.anotations.NotRegisteredEmail;
 import jakarta.validation.constraints.NotBlank;
