@@ -25,7 +25,7 @@ public class EmailValidator implements ConstraintValidator<NotRegisteredEmail, S
         if (email == null) {
             return true;
         }
-        System.out.println(email);
+
         boolean emailExists = clientRepository.existsByEmail(email);
 
         if (emailExists) {

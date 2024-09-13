@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -61,9 +62,10 @@ public class ClienteControllerIT {
         ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
-        String message = documentContext.read("$.email");
 
-        assertThat(message).isEqualTo("E-mail já registrado");
+        List<String> message = documentContext.read("$.email");
+
+        assertThat(message).containsExactlyInAnyOrder("E-mail já registrado");
     }
 
 }
