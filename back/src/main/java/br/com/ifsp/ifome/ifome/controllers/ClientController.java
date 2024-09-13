@@ -4,6 +4,7 @@ package br.com.ifsp.ifome.ifome.controllers;
 import br.com.ifsp.ifome.ifome.dto.request.ClientRequest;
 import br.com.ifsp.ifome.ifome.dto.response.ClientResponse;
 import br.com.ifsp.ifome.ifome.services.ClientService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientResponse> create(@RequestBody ClientRequest clientRequest , UriComponentsBuilder ucb) {
+    public ResponseEntity<ClientResponse> create(@Valid @RequestBody ClientRequest clientRequest , UriComponentsBuilder ucb) {
         ClientResponse clientResponse = clientService.create(clientRequest);
 
         URI locationOfNewClient = ucb

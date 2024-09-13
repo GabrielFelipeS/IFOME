@@ -59,8 +59,9 @@ public class ClienteControllerIT {
             LocalDate.now(), "cpf", "Casa", "cep", "endereco", "payment_methods");
 
         ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
-        String message = response.getBody();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        String message = documentContext.read("$.email");
 
         assertThat(message).isEqualTo("E-mail já registrado");
     }
