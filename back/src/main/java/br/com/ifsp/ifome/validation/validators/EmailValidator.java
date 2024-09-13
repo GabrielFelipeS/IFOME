@@ -1,7 +1,7 @@
 package br.com.ifsp.ifome.validation.validators;
 
-import br.com.ifsp.ifome.ifome.repositories.ClientRepository;
-import br.com.ifsp.ifome.ifome.validation.anotations.NotRegisteredEmail;
+import br.com.ifsp.ifome.repositories.ClientRepository;
+import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmail;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
