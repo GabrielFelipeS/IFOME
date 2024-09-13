@@ -15,9 +15,6 @@ public class ClientService {
     }
 
     public ClientResponse create(ClientRequest clientRequest) {
-        if(clientRequest.email().equals("user1@gmail.com")) {
-           throw new RuntimeException();
-        }
         Client client = new Client(clientRequest);
         client = clientRepository.save(client);
         return new ClientResponse(client);

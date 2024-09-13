@@ -59,7 +59,10 @@ public class ClienteControllerIT {
             LocalDate.now(), "cpf", "Casa", "cep", "endereco", "payment_methods");
 
         ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
+        String message = response.getBody();
+
+        assertThat(message).isEqualTo("");
     }
 
 }
