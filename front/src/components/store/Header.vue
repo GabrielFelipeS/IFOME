@@ -15,7 +15,7 @@ import Button from '@/components/Button.vue';
 <style lang="scss" scoped>
 .header {
 
-    @apply w-full h-[100px] bg-tertiary flex flex-row justify-center items-center rounded-b-3xl font-default text-lg;
+    @apply w-full h-[100px] fixed top-0 left-0 bg-tertiary flex flex-row justify-center items-center rounded-b-3xl font-default text-lg;
 
     .buttons {
         @apply flex flex-row gap-4 w-[75%] items-center justify-around h-full;
