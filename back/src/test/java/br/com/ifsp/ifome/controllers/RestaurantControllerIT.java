@@ -84,7 +84,8 @@ public class RestaurantControllerIT {
                 "23:00",
                 "responsavel",
                 "cpfResponsavel",
-                "imagem.jpeg",   new BankAccount()
+                "imagem.jpeg",
+                new BankAccount()
 
         );
 
