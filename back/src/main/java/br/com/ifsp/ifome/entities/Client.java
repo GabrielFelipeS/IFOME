@@ -18,6 +18,7 @@ public class Client {
     private String password;
     private LocalDate dateOfBirth;
     private String cpf;
+
     @OneToMany
     @JoinColumn(name = "address", referencedColumnName = "cpf")
     private List<Address> address;
