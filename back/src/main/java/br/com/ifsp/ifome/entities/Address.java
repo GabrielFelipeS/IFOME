@@ -16,8 +16,6 @@ public class Address {
     private  String city;
     private String state;
     private String address;
-    private String zipCode;
-    private String typeResidence;
     private String number;
     private String complement;
 
@@ -27,9 +25,7 @@ public class Address {
         this.city = addressRequest.city();
         this.state = addressRequest.state();
         this.address = addressRequest.address();
-        this.zipCode = addressRequest.zipCode();
         this.complement = addressRequest.complement();
-        this.typeResidence = addressRequest.typeResidence();
         this.number = addressRequest.number();
     }
 
@@ -71,25 +67,11 @@ public class Address {
         this.address = address;
     }
 
-    public String getZipCode() {
-        return zipCode;
-    }
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
-
     public String getComplement() {
         return complement;
     }
     public void setComplement(String complement) {
         this.complement = complement;
-    }
-
-    public String getTypeResidence() {
-        return typeResidence;
-    }
-    public void setTypeResidence(String typeResidence) {
-        this.typeResidence = typeResidence;
     }
 
     public String getNumber() {

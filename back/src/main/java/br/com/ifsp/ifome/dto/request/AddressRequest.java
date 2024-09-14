@@ -2,11 +2,15 @@ package br.com.ifsp.ifome.dto.request;
 
 import br.com.ifsp.ifome.validation.anotations.CEP;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 public record AddressRequest(
     @NotBlank
     @CEP
     String cep,
+
+    @NotBlank
+    String nameAddress,
 
     @NotBlank
     String neighborhood,
@@ -21,15 +25,10 @@ public record AddressRequest(
     String address,
 
     @NotBlank
-    String zipCode,
-
-    @NotBlank
     String complement,
 
     @NotBlank
-    String typeResidence,
-
-    @NotBlank
+    @Pattern(regexp = "\\d{1,}")
     String number,
 
     String details
