@@ -4,6 +4,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -21,11 +22,19 @@ public class GlobalExceptionHandler {
         MethodArgumentNotValidException ex) {
         Map<String, List<String>> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
+            String name = getNameWithError(error);
             List<String> errorMessage = new LinkedList<>(Collections.singletonList(error.getDefaultMessage()));
-            addContraintViolation(errors, fieldName, errorMessage);
+            addContraintViolation(errors, name, errorMessage);
         });
         return errors;
+    }
+
+    private String getNameWithError(ObjectError error) {
+        if(error instanceof FieldError fieldError) {
+            return fieldError.getField();
+        }
+
+        return error.getObjectName();
     }
 
     private void addContraintViolation( Map<String, List<String>> errors, String fieldName, List<String> errorMessage) {
