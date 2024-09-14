@@ -16,9 +16,8 @@ public class Client {
     private String password;
     private LocalDate dateOfBirth;
     private String cpf;
-    private String typeResidence;
-    private String cep;
-    private String address;
+    @Embedded
+    private Address address;
     private String paymentMethods;
 
     public Client() {}
@@ -28,20 +27,16 @@ public class Client {
         this.password = clientRequest.password();
         this.dateOfBirth = clientRequest.dateOfBirth();
         this.cpf = clientRequest.cpf();
-        this.typeResidence = clientRequest.typeResidence();
-        this.cep = clientRequest.cep();
-        this.address = clientRequest.address();
+        this.address = new Address(clientRequest.address());
         this.paymentMethods = clientRequest.paymentMethods();
     }
 
-    public Client(Long id, String email, String password, LocalDate dateOfBirth, String cpf, String typeResidence, String cep, String address, String paymentMethods) {
+    public Client(Long id, String email, String password, LocalDate dateOfBirth, String cpf, Address address, String paymentMethods) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.dateOfBirth = dateOfBirth;
         this.cpf = cpf;
-        this.typeResidence = typeResidence;
-        this.cep = cep;
         this.address = address;
         this.paymentMethods = paymentMethods;
     }
@@ -86,27 +81,11 @@ public class Client {
         this.cpf = cpf;
     }
 
-    public String getTypeResidence() {
-        return typeResidence;
-    }
-
-    public void setTypeResidence(String typeResidence) {
-        this.typeResidence = typeResidence;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
-
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 

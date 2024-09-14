@@ -30,8 +30,6 @@ public record ClientRequest (
         @NotBlank(message = "CPF é obrigatório")
         String cpf,
 
-        String typeResidence,
-        String cep,
-        String address,
+       AddressRequest address,
         String paymentMethods
 ) { }
