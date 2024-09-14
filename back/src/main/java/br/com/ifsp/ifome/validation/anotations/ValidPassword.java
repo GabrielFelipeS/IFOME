@@ -15,7 +15,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {})
-@NotBlank(message = "Senha é obrigatório")
 @Size(min = 6, message = "A senha precisa possui pelo menos 6 caracteres")
 @Pattern(regexp = ".*\\d+.*", message = "Senha precisa conter pelo menos um número")
 @Pattern(regexp = ".*[A-ZÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]+.*", message = "Senha precisa conter pelo menos um caractere maiúsculo")
