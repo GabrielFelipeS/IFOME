@@ -2,7 +2,6 @@ package br.com.ifsp.ifome.dto.request;
 
 import br.com.ifsp.ifome.entities.BankAccount;
 import br.com.ifsp.ifome.validation.anotations.ConfirmartionPasswordEqualsPassword;
-import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmail;
 import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmailRestaurant;
 import br.com.ifsp.ifome.validation.anotations.ValidPassword;
 import jakarta.validation.constraints.Email;
