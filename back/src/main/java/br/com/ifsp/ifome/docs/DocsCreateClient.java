@@ -25,8 +25,23 @@ import java.lang.annotation.Target;
                 {
                     "email": "novo@cliente.com",
                     "password": "Abc@1234",
+                    "confirmationPassword": "Abc@1234",
                     "dateOfBirth": "2000-01-01",
-                    "cpf": "12345678900"
+                    "cpf": "12345678900",
+                    "phone": "(11) 99248-1491",
+                    "address": [
+                        {
+                            "nameAddress": "casa principal"
+                            "cep": "35170-222",
+                            "neighborhood": "neighborhood",
+                            "city": "Coronel Fabriciano",
+                            "state": "Minas Gerais",
+                            "address": "address", 
+                            "complement": "complement",
+                            "number": "12",
+                            "details": "details"
+                        }
+                    ]
                 }
                 """
         )
