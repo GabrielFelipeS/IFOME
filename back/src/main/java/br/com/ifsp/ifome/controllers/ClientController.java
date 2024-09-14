@@ -1,6 +1,7 @@
 package br.com.ifsp.ifome.controllers;
 
 
+import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
 import br.com.ifsp.ifome.dto.response.ClientResponse;
 import br.com.ifsp.ifome.services.ClientService;
@@ -24,7 +25,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientResponse> create(@Valid @RequestBody ClientRequest clientRequest , UriComponentsBuilder ucb) {
+    public ResponseEntity<ApiResponse> create(@Valid @RequestBody ClientRequest clientRequest , UriComponentsBuilder ucb) {
         ClientResponse clientResponse = clientService.create(clientRequest);
 
         URI locationOfNewClient = ucb
@@ -32,6 +33,7 @@ public class ClientController {
             .buildAndExpand(1)
             .toUri();
 
-        return ResponseEntity.created(locationOfNewClient).body(clientResponse);
+        ApiResponse response = new ApiResponse("success", clientResponse, "Cliente criado com sucesso");
+        return ResponseEntity.created(locationOfNewClient).body(response);
     }
 }

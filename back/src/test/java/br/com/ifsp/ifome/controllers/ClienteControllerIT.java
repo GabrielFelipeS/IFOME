@@ -37,14 +37,14 @@ public class ClienteControllerIT {
 
         DocumentContext document = JsonPath.parse(response.getBody());
 
-        Number id = document.read("$.id");
-        String email = document.read("$.email");
-        String dateOfBirth = document.read("$.dateOfBirth");
-        String cpf = document.read("$.cpf");
-        String typeResidence = document.read("$.typeResidence");
-        String cep = document.read("$.cep");
-        String address = document.read("$.address");
-        String paymentMethods = document.read("$.paymentMethods");
+        Number id = document.read("$.data.id");
+        String email = document.read("$.data.email");
+        String dateOfBirth = document.read("$.data.dateOfBirth");
+        String cpf = document.read("$.data.cpf");
+        String typeResidence = document.read("$.data.typeResidence");
+        String cep = document.read("$.data.cep");
+        String address = document.read("$.data.address");
+        String paymentMethods = document.read("$.data.paymentMethods");
 
         assertThat(id).isNotNull();
         assertThat(email).isEqualTo(client.email());
