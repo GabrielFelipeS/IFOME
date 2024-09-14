@@ -31,7 +31,7 @@ public class ClienteControllerIT {
     @DirtiesContext
     @DisplayName("should be possible to create a new client")
     public void shouldBeAbleToCreateANewClient() throws JsonProcessingException {
-        ClientRequest client = new ClientRequest("teste@teste.com", "@Password1", "password",
+        ClientRequest client = new ClientRequest("teste@teste.com", "@Password1", "@Password1",
             LocalDate.now().minusYears(18), "48608678071", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
                 "address", "zipCode", "complement",
@@ -71,7 +71,7 @@ public class ClienteControllerIT {
     @DirtiesContext
     @DisplayName("should not be possible to create a new client with already registered email")
     public void shouldReturnErrorWhenCreatingClientWithAlreadyRegisteredEmail() {
-        ClientRequest client = new ClientRequest("user1@gmail.com", "@Password1", "password",
+        ClientRequest client = new ClientRequest("user1@gmail.com", "@Password1", "@Password1",
             LocalDate.now().minusYears(14), "019.056.440-78", "(11) 99248-1491",List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
             "address", "zipCode", "complement",
             "typeResidence", "number", "details")));
@@ -92,7 +92,7 @@ public class ClienteControllerIT {
     @DirtiesContext
     @DisplayName("should return all validation errors in the password field")
     public void shouldReturnAllValidationErrorsInThePasswordField() {
-        ClientRequest client = new ClientRequest("email@gmail.com", " ", "confirmationPassword",
+        ClientRequest client = new ClientRequest("email@gmail.com", " ", " ",
             LocalDate.now().minusYears(18), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
             "address", "zipCode", "complement",
             "typeResidence", "number", "details")));
@@ -120,7 +120,7 @@ public class ClienteControllerIT {
     @DirtiesContext
     @DisplayName("should return all validation errors in the dateOfBirth field")
     public void shouldReturnAllValidationErrorsInThDateOfBirthField() {
-        ClientRequest client = new ClientRequest("email@gmail.com", "@Teste123", "confirmationPassword",
+        ClientRequest client = new ClientRequest("email@gmail.com", "@Teste123", "@Teste123",
             LocalDate.now().plusDays(1), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
             "address", "zipCode", "complement",
             "typeResidence", "number", "details")));
@@ -144,7 +144,7 @@ public class ClienteControllerIT {
     @DirtiesContext
     @DisplayName("should return all validation errors in the cpf field")
     public void shouldReturnAllValidationErrorsInTheCPFField() {
-        ClientRequest client = new ClientRequest("email@gmail.com", "@Teste123", "confirmationPassword",
+        ClientRequest client = new ClientRequest("email@gmail.com", "@Teste123", "@Teste123",
             LocalDate.now().minusYears(18), "cpf",  "(11) 99248-1491",List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
             "address", "zipCode", "complement",
             "typeResidence", "number", "details")));
@@ -161,5 +161,24 @@ public class ClienteControllerIT {
             .containsExactlyInAnyOrder(
                 "CPF inválido"
             );
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("should return error when registering a client with different password and password confirmation")
+    public void shouldReturnErrorWhenCreatingClientWithdifferentPasswordAndPasswordConfirmation() throws JsonProcessingException {
+        ClientRequest client = new ClientRequest("teste@teste.com", "@Password1", "@Password",
+            LocalDate.now().minusYears(18), "48608678071", "(11) 99248-1491",
+            List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
+                "address", "zipCode", "complement",
+                "typeResidence", "number", "details")));
+
+        ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        System.out.println(response.getBody());
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        Number countOfInvalidFields = documentContext.read("$.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
     }
 }
