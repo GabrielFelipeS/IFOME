@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.dto.request;
 
+import br.com.ifsp.ifome.validation.anotations.ConfirmartionPasswordEqualsPassword;
 import br.com.ifsp.ifome.validation.anotations.MinAgeToUse;
 import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmail;
 import br.com.ifsp.ifome.validation.anotations.ValidPassword;
@@ -10,7 +11,7 @@ import org.hibernate.validator.constraints.br.CPF;
 import java.time.LocalDate;
 import java.util.List;
 
-// TODO talvez seja necessario inserir a anotação que verifica se password e confirmationPassword são iguais
+@ConfirmartionPasswordEqualsPassword
 public record ClientRequest (
         @Email(message = "E-mail inválido")
         @NotBlank(message = "E-mail é obrigatório")
