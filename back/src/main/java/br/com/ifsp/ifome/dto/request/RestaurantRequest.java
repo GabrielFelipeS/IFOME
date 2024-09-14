@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.br.CNPJ;
+import org.hibernate.validator.constraints.br.CPF;
 
 public record RestaurantRequest(
         String nameRestaurant,
@@ -50,7 +51,10 @@ public record RestaurantRequest(
 
         String personResponsible,
 
+        @CPF(message = "CPF inválido")
+        @NotBlank(message = "CPF é obrigatório")
         String personResponsibleCPF,
+
         String restaurantImage,
         BankAccount bankAccount
 ) { }
