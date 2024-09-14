@@ -1,7 +1,7 @@
 package br.com.ifsp.ifome.controllers;
 
-import br.com.ifsp.ifome.dto.request.ClientRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
+import br.com.ifsp.ifome.entities.BankAccount;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,7 +43,7 @@ public class RestaurantControllerIT {
                 "responsavel",
                 "cpfResponsavel",
                 "imagem.jpeg",
-                "conta"
+                new BankAccount()
 
         );
         ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
@@ -85,7 +84,7 @@ public class RestaurantControllerIT {
                 "23:00",
                 "responsavel",
                 "cpfResponsavel",
-                "imagem.jpeg", "conta"
+                "imagem.jpeg",   new BankAccount()
 
         );
 
@@ -120,7 +119,7 @@ public class RestaurantControllerIT {
                 "23:00",
                 "responsavel",
                 "cpfResponsavel",
-                "imagem.jpeg", "conta"
+                "imagem.jpeg",   new BankAccount()
 
         );
         ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
@@ -161,7 +160,7 @@ public class RestaurantControllerIT {
                 "23:00",
                 "responsavel",
                 "cpfResponsavel",
-                "imagem.jpeg", "conta"
+                "imagem.jpeg",   new BankAccount()
 
         );
         ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
