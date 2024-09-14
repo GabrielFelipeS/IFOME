@@ -33,9 +33,9 @@ public class ClienteControllerIT {
     public void shouldBeAbleToCreateANewClient() throws JsonProcessingException {
         ClientRequest client = new ClientRequest("teste@teste.com", "@Password1", "@Password1",
             LocalDate.now().minusYears(18), "48608678071", "(11) 99248-1491",
-            List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
-                "address", "zipCode", "complement",
-                "typeResidence", "number", "details")));
+            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                "address", "complement",
+                 "12", "details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -60,10 +60,8 @@ public class ClienteControllerIT {
         assertThat(addressJson.getNeighborhood()).isEqualTo("neighborhood");
         assertThat(addressJson.getCity()).isEqualTo("city");
         assertThat(addressJson.getAddress()).isEqualTo("address");
-        assertThat(addressJson.getZipCode()).isEqualTo("zipCode");
         assertThat(addressJson.getComplement()).isEqualTo("complement");
-        assertThat(addressJson.getTypeResidence()).isEqualTo("typeResidence");
-        assertThat(addressJson.getNumber()).isEqualTo("number");
+        assertThat(addressJson.getNumber()).isEqualTo("12");
         assertThat(addressJson.getComplement()).isEqualTo("complement");
     }
 
@@ -72,9 +70,9 @@ public class ClienteControllerIT {
     @DisplayName("should not be possible to create a new client with already registered email")
     public void shouldReturnErrorWhenCreatingClientWithAlreadyRegisteredEmail() {
         ClientRequest client = new ClientRequest("user1@gmail.com", "@Password1", "@Password1",
-            LocalDate.now().minusYears(14), "019.056.440-78", "(11) 99248-1491",List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
-            "address", "zipCode", "complement",
-            "typeResidence", "number", "details")));
+            LocalDate.now().minusYears(14), "019.056.440-78", "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
+            "address",  "complement",
+             "12", "details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -93,9 +91,9 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the password field")
     public void shouldReturnAllValidationErrorsInThePasswordField() {
         ClientRequest client = new ClientRequest("email@gmail.com", " ", " ",
-            LocalDate.now().minusYears(18), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
-            "address", "zipCode", "complement",
-            "typeResidence", "number", "details")));
+            LocalDate.now().minusYears(18), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            "address",  "complement",
+            "12", "details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -121,9 +119,9 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the dateOfBirth field")
     public void shouldReturnAllValidationErrorsInThDateOfBirthField() {
         ClientRequest client = new ClientRequest("email@gmail.com", "@Teste123", "@Teste123",
-            LocalDate.now().plusDays(1), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
-            "address", "zipCode", "complement",
-            "typeResidence", "number", "details")));
+            LocalDate.now().plusDays(1), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            "address",  "complement",
+             "12", "details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -145,9 +143,9 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the cpf field")
     public void shouldReturnAllValidationErrorsInTheCPFField() {
         ClientRequest client = new ClientRequest("email@gmail.com", "@Teste123", "@Teste123",
-            LocalDate.now().minusYears(18), "cpf",  "(11) 99248-1491",List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
-            "address", "zipCode", "complement",
-            "typeResidence", "number", "details")));
+            LocalDate.now().minusYears(18), "cpf",  "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            "address", "complement",
+            "12", "details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -169,9 +167,9 @@ public class ClienteControllerIT {
     public void shouldReturnErrorWhenCreatingClientWithdifferentPasswordAndPasswordConfirmation() throws JsonProcessingException {
         ClientRequest client = new ClientRequest("teste@teste.com", "@Password1", "@Password",
             LocalDate.now().minusYears(18), "48608678071", "(11) 99248-1491",
-            List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
-                "address", "zipCode", "complement",
-                "typeResidence", "number", "details")));
+            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                "address",  "complement",
+                 "12", "details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
