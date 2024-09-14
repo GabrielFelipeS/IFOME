@@ -4,6 +4,8 @@ import br.com.ifsp.ifome.dto.request.ClientRequest;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "clients")
@@ -16,9 +18,9 @@ public class Client {
     private String password;
     private LocalDate dateOfBirth;
     private String cpf;
-    @Embedded
-    private Address address;
-    private String paymentMethods;
+    @OneToMany
+    @JoinColumn(name = "address", referencedColumnName = "")
+    private List<Address> address;
 
     public Client() {}
 
@@ -27,18 +29,20 @@ public class Client {
         this.password = clientRequest.password();
         this.dateOfBirth = clientRequest.dateOfBirth();
         this.cpf = clientRequest.cpf();
-        this.address = new Address(clientRequest.address());
-        this.paymentMethods = clientRequest.paymentMethods();
+        this.address = clientRequest.address().stream().map(Address::new).collect(Collectors.toList());
     }
 
-    public Client(Long id, String email, String password, LocalDate dateOfBirth, String cpf, Address address, String paymentMethods) {
+    public Client(Long id, String email, String password, LocalDate dateOfBirth, String cpf,  List<Address> address, String paymentMethods) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.dateOfBirth = dateOfBirth;
         this.cpf = cpf;
         this.address = address;
-        this.paymentMethods = paymentMethods;
+    }
+
+    public Client(Long id, String email, String password, LocalDate dateOfBirth, String cpf,  Address address, String paymentMethods) {
+      this(id, email, password, dateOfBirth, cpf, List.of(address), paymentMethods);
     }
 
     public Long getId() {
@@ -81,19 +85,12 @@ public class Client {
         this.cpf = cpf;
     }
 
-    public Address getAddress() {
+    public List<Address> getAddress() {
         return address;
     }
 
-    public void setAddress(Address address) {
+    public void setAddress( List<Address> address) {
         this.address = address;
     }
 
-    public String getPaymentMethods() {
-        return paymentMethods;
-    }
-
-    public void setPaymentMethods(String paymentMethods) {
-        this.paymentMethods = paymentMethods;
-    }
 }

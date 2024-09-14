@@ -11,6 +11,8 @@ import jakarta.validation.constraints.Past;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
+import java.util.List;
+
 // TODO talvez seja necessario inserir a anotação que verifica se password e confirmationPassword são iguais
 public record ClientRequest (
         @Email(message = "E-mail inválido")
@@ -31,7 +33,5 @@ public record ClientRequest (
         @NotBlank(message = "CPF é obrigatório")
         String cpf,
 
-        @Valid
-        AddressRequest address,
-        String paymentMethods
+        List<@Valid AddressRequest> address
 ) { }
