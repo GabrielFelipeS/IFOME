@@ -41,7 +41,7 @@ public class RestaurantControllerIT {
                 "12:00",
                 "23:00",
                 "responsavel",
-                "cpfResponsavel",
+                "033.197.356-16",
                 "imagem.jpeg",
                 new BankAccount()
 
@@ -84,7 +84,7 @@ public class RestaurantControllerIT {
                 "12:00",
                 "23:00",
                 "responsavel",
-                "cpfResponsavel",
+                "033.197.356-16",
                 "imagem.jpeg",
                 new BankAccount()
 
@@ -120,7 +120,7 @@ public class RestaurantControllerIT {
                 "12:00",
                 "23:00",
                 "responsavel",
-                "cpfResponsavel",
+                "033.197.356-16",
                 "imagem.jpeg",   new BankAccount()
 
         );
@@ -161,7 +161,7 @@ public class RestaurantControllerIT {
                 "12:00",
                 "23:00",
                 "responsavel",
-                "cpfResponsavel",
+                "033.197.356-16",
                 "imagem.jpeg",   new BankAccount()
 
         );
@@ -216,6 +216,8 @@ public class RestaurantControllerIT {
                         "CPF inválido"
                 );
     }
+
+
 }
 
 
