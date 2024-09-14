@@ -1,17 +1,17 @@
 package br.com.ifsp.ifome.dto.request;
 
+import br.com.ifsp.ifome.validation.anotations.ConfirmartionPasswordEqualsPassword;
 import br.com.ifsp.ifome.validation.anotations.MinAgeToUse;
 import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmail;
 import br.com.ifsp.ifome.validation.anotations.ValidPassword;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
-// TODO talvez seja necessario inserir a anotação que verifica se password e confirmationPassword são iguais
+import java.util.List;
+
+@ConfirmartionPasswordEqualsPassword
 public record ClientRequest (
         @Email(message = "E-mail inválido")
         @NotBlank(message = "E-mail é obrigatório")
@@ -31,7 +31,9 @@ public record ClientRequest (
         @NotBlank(message = "CPF é obrigatório")
         String cpf,
 
-        @Valid
-        AddressRequest address,
-        String paymentMethods
+        @NotBlank
+        @Pattern(regexp = "^\\([1-9]{2}\\) (?:[2-8]|9[0-9])[0-9]{3}-[0-9]{4}$")
+        String phone,
+
+        List<@Valid AddressRequest> address
 ) { }

@@ -1,17 +1,25 @@
 package br.com.ifsp.ifome.entities;
 
 import br.com.ifsp.ifome.dto.request.AddressRequest;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
+@Entity
 public class Address {
-    String cep;
-    String neighborhood;
-    String city;
-    String state;
-    String address;
-    String zipCode;
-    String typeResidence;
-    String number;
-    String complement;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    private String cep;
+    private String neighborhood;
+    private  String city;
+    private String state;
+    private String address;
+    private String zipCode;
+    private String typeResidence;
+    private String number;
+    private String complement;
 
     public Address(AddressRequest addressRequest) {
         this.cep = addressRequest.cep();
