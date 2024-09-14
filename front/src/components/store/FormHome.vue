@@ -51,8 +51,7 @@
         @apply text-sm text-gray-500;
 
         a {
-            @apply text-primary;
-            font-style: italic;
+            text-decoration: underline;
         }
     }
 
