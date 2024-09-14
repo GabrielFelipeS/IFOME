@@ -19,7 +19,7 @@ public class Client {
     private LocalDate dateOfBirth;
     private String cpf;
     @OneToMany
-    @JoinColumn(name = "address", referencedColumnName = "")
+    @JoinColumn(name = "address", referencedColumnName = "cpf")
     private List<Address> address;
 
     public Client() {}
