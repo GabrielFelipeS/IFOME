@@ -72,7 +72,7 @@ public class RestaurantControllerIT {
     public void shouldReturnErrorWhenCreatingRestaurantWithAlreadyRegisteredEmail() {
         RestaurantRequest restaurant = new RestaurantRequest(
                 "Nome Restaurante",
-                "email@email.com",
+                "email1@email.com",
                 "@Senha1",
                 "@Senha1",
                 "10.882.594/0001-65",
