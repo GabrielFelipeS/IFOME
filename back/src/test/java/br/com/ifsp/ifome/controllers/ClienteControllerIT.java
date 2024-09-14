@@ -100,7 +100,7 @@ public class ClienteControllerIT {
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
         Number countOfInvalidFields = documentContext.read("$.length()");
-        assertThat(countOfInvalidFields).isEqualTo(1);
+        assertThat(countOfInvalidFields).isEqualTo(2);
 
         List<String> passwordErrors = documentContext.read("$.password");
         assertThat(passwordErrors)

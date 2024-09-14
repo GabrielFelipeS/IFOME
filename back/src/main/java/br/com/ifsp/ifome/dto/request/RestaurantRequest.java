@@ -20,6 +20,7 @@ public record RestaurantRequest(
         String email,
 
         @ValidPassword
+        @NotBlank(message = "Senha é obrigatório")
         String password,
         String confirmationPassword,
 
