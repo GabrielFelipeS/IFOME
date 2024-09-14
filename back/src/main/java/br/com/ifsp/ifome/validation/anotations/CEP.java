@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.validation.anotations;
 
+import br.com.ifsp.ifome.validation.validators.CEPValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import jakarta.validation.constraints.Pattern;
@@ -9,7 +10,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = {})
+@Constraint(validatedBy = {CEPValidator.class})
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Pattern(regexp = "^\\d{5}-\\d{3}$")
