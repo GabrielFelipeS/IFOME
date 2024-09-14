@@ -35,7 +35,7 @@ public class ClienteControllerIT {
             LocalDate.now().minusYears(18), "48608678071",
             new AddressRequest("cep", "neighborhood", "city", "state",
                 "address", "zipCode", "complement",
-                "typeResidence", "number", "walk", "details"), "payment_methods");
+                "typeResidence", "number", "floor", "details"), "payment_methods");
 
         ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -64,7 +64,7 @@ public class ClienteControllerIT {
         assertThat(addressJson.get("typeResidence")).isEqualTo("typeResidence");
         assertThat(addressJson.get("number")).isEqualTo("number");
         assertThat(addressJson.get("complement")).isEqualTo("complement");
-        assertThat(addressJson.get("walk")).isEqualTo("walk");
+        assertThat(addressJson.get("floor")).isEqualTo("floor");
     }
 
     @Test
