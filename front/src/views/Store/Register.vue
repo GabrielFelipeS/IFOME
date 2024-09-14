@@ -1,11 +1,14 @@
 <script setup>
+import FormHome from '@/components/store/FormHome.vue';
 import '@/components/store/Header.vue';
 import Header from '@/components/store/Header.vue';
+import '@/components/store/FormHome.vue';
 </script>
 
 <template>
     <div class="content">
         <Header />
+        <FormHome />
     </div>
 </template>
 
