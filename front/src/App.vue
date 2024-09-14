@@ -7,7 +7,10 @@ import { RouterView } from 'vue-router'
     <RouterView />
 </template>
 
-<style lang="sass" scoped>
+<style>
 
+body{
+    background-color: #000;
+}
 
 </style>
