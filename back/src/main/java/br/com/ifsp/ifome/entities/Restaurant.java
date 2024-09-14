@@ -33,22 +33,21 @@ public class Restaurant {
     public Restaurant() {}
 
     public Restaurant(RestaurantRequest restaurantRequest){
-        this.id = id;
-        this.nameRestaurant = nameRestaurant;
-        this.cnpj = cnpj;
-        this.foodCategory = foodCategory;
-        this.cep = cep;
-        this.address = address;
-        this.telephone = telephone;
-        this.openingHoursStart = openingHoursStart;
-        this.openingHoursEnd = openingHoursEnd;
-        this.personResponsible = personResponsible;
-        this.personResponsibleCPF = personResponsibleCPF;
-        this.email = email;
-        this.password = password;
-        this.paymentMethods = paymentMethods;
-        this.restaurantImage = restaurantImage;
-        this.bankAccount = bankAccount;
+        this.nameRestaurant = restaurantRequest.nameRestaurant();
+        this.cnpj = restaurantRequest.cnpj();
+        this.foodCategory = restaurantRequest.foodCategory();
+        this.cep = restaurantRequest.cep();
+        this.address = restaurantRequest.address();
+        this.telephone = restaurantRequest.telephone();
+        this.openingHoursStart = restaurantRequest.openingHoursStart();
+        this.openingHoursEnd = restaurantRequest.openingHoursEnd();
+        this.personResponsible = restaurantRequest.personResponsible();
+        this.personResponsibleCPF = restaurantRequest.personResponsibleCPF();
+        this.email = restaurantRequest.email();
+        this.password = restaurantRequest.password();
+        this.paymentMethods = restaurantRequest.nameRestaurant();
+        this.restaurantImage = restaurantRequest.restaurantImage();
+        this.bankAccount = restaurantRequest.bankAccount();
     }
 
     public Restaurant(Long id, String nameRestaurant, String cnpj, String foodCategory, String cep, String address, String telephone, String openingHoursStart, String openingHoursEnd, String personResponsible, String personResponsibleCPF, String email, String password, String paymentMethods, String restaurantImage, BankAccount bankAccount) {
