@@ -1,7 +1,9 @@
 package br.com.ifsp.ifome.controllers;
 
 
+import br.com.ifsp.ifome.dto.request.AddressRequest;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,12 +30,14 @@ public class ClienteControllerIT {
     @Test
     @DirtiesContext
     @DisplayName("should be possible to create a new client")
-    public void shouldBeAbleToCreateANewClient() {
+    public void shouldBeAbleToCreateANewClient() throws JsonProcessingException {
         ClientRequest client = new ClientRequest("teste@teste.com", "@Password1", "password",
-            LocalDate.now().minusYears(18), "48608678071", "Casa", "cep", "endereco", "payment_methods");
+            LocalDate.now().minusYears(18), "48608678071",
+            new AddressRequest("cep", "neighborhood", "city", "state",
+                "address", "zipCode", "complement",
+                "typeResidence", "number", "walk", "details"), "payment_methods");
 
         ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
-        System.out.println(response.getBody());
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         DocumentContext document = JsonPath.parse(response.getBody());
@@ -41,19 +46,25 @@ public class ClienteControllerIT {
         String email = document.read("$.data.email");
         String dateOfBirth = document.read("$.data.dateOfBirth");
         String cpf = document.read("$.data.cpf");
-        String typeResidence = document.read("$.data.typeResidence");
-        String cep = document.read("$.data.cep");
-        String address = document.read("$.data.address");
+        LinkedHashMap<Object, Object> addressJson = document.read("$.data.address");
         String paymentMethods = document.read("$.data.paymentMethods");
 
         assertThat(id).isNotNull();
         assertThat(email).isEqualTo(client.email());
         assertThat(dateOfBirth).isEqualTo(client.dateOfBirth().toString());
         assertThat(cpf).isEqualTo(client.cpf());
-        assertThat(typeResidence).isEqualTo(client.typeResidence());
-        assertThat(cep).isEqualTo(client.cep());
-        assertThat(address).isEqualTo(client.address());
-        assertThat(paymentMethods).isEqualTo(client.paymentMethods());
+
+        assertThat(addressJson).isNotNull().isNotEmpty();
+        assertThat(addressJson.get("cep")).isEqualTo("cep");
+        assertThat(addressJson.get("neighborhood")).isEqualTo("neighborhood");
+        assertThat(addressJson.get("city")).isEqualTo("city");
+        assertThat(addressJson.get("address")).isEqualTo("address");
+        assertThat(addressJson.get("zipCode")).isEqualTo("zipCode");
+        assertThat(addressJson.get("complement")).isEqualTo("complement");
+        assertThat(addressJson.get("typeResidence")).isEqualTo("typeResidence");
+        assertThat(addressJson.get("number")).isEqualTo("number");
+        assertThat(addressJson.get("complement")).isEqualTo("complement");
+        assertThat(addressJson.get("walk")).isEqualTo("walk");
     }
 
     @Test
@@ -61,7 +72,9 @@ public class ClienteControllerIT {
     @DisplayName("should not be possible to create a new client with already registered email")
     public void shouldReturnErrorWhenCreatingClientWithAlreadyRegisteredEmail() {
         ClientRequest client = new ClientRequest("user1@gmail.com", "@Password1", "password",
-            LocalDate.now().minusYears(18), "019.056.440-78", "Casa", "cep", "endereco", "payment_methods");
+            LocalDate.now().minusYears(14), "019.056.440-78", new AddressRequest("cep", "neighborhood", "city", "state",
+            "address", "zipCode", "complement",
+            "typeResidence", "number", "walk", "details"), "payment_methods");
 
         ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -80,7 +93,9 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the password field")
     public void shouldReturnAllValidationErrorsInThePasswordField() {
         ClientRequest client = new ClientRequest("email@gmail.com", " ", "confirmationPassword",
-            LocalDate.now().minusYears(18), "019.056.440-78", "typeResidence", "cep", "address", "payment_methods");
+            LocalDate.now().minusYears(18), "019.056.440-78",  new AddressRequest("cep", "neighborhood", "city", "state",
+            "address", "zipCode", "complement",
+            "typeResidence", "number", "walk", "details"), "payment_methods");
 
         ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -106,7 +121,9 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the dateOfBirth field")
     public void shouldReturnAllValidationErrorsInThDateOfBirthField() {
         ClientRequest client = new ClientRequest("email@gmail.com", "@Teste123", "confirmationPassword",
-            LocalDate.now().plusDays(1), "019.056.440-78", "typeResidence", "cep", "address", "payment_methods");
+            LocalDate.now().plusDays(1), "019.056.440-78",  new AddressRequest("cep", "neighborhood", "city", "state",
+            "address", "zipCode", "complement",
+            "typeResidence", "number", "walk", "details"), "payment_methods");
 
         ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -128,7 +145,9 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the cpf field")
     public void shouldReturnAllValidationErrorsInTheCPFField() {
         ClientRequest client = new ClientRequest("email@gmail.com", "@Teste123", "confirmationPassword",
-            LocalDate.now().minusYears(18), "cpf", "typeResidence", "cep", "address", "payment_methods");
+            LocalDate.now().minusYears(18), "cpf",  new AddressRequest("cep", "neighborhood", "city", "state",
+            "address", "zipCode", "complement",
+            "typeResidence", "number", "walk", "details"), "payment_methods");
 
         ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
