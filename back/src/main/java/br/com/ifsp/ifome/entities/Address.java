@@ -12,7 +12,6 @@ public class Address {
     String typeResidence;
     String number;
     String complement;
-    String floor;
 
     public Address(AddressRequest addressRequest) {
         this.cep = addressRequest.cep();
@@ -24,7 +23,6 @@ public class Address {
         this.complement = addressRequest.complement();
         this.typeResidence = addressRequest.typeResidence();
         this.number = addressRequest.number();
-        this.floor = addressRequest.walk();
     }
 
     public Address() {
@@ -93,10 +91,4 @@ public class Address {
         this.number = number;
     }
 
-    public String getFloor() {
-        return floor;
-    }
-    public void setFloor(String floor) {
-        this.floor = floor;
-    }
 }
