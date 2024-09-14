@@ -135,7 +135,7 @@ public class ClienteControllerIT {
         assertThat(dateOfBirth)
             .containsExactlyInAnyOrder(
                 "Data de nascimento deve estar no passado",
-                "É necessário ter pelo menos 18 anos"
+                "É necessário ter pelo menos 13 anos"
             );
     }
 
