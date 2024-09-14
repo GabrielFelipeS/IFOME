@@ -3,14 +3,14 @@ package br.com.ifsp.ifome.validation.validators;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
 import br.com.ifsp.ifome.repositories.ClientRepository;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
-import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmail;
+import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmailRestaurant;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EmailValidatorRestaurant implements ConstraintValidator<NotRegisteredEmail, String> {
+public class EmailValidatorRestaurant implements ConstraintValidator<NotRegisteredEmailRestaurant, String> {
 
     private final RestaurantRepository restaurantRepository;
 
@@ -20,7 +20,7 @@ public class EmailValidatorRestaurant implements ConstraintValidator<NotRegister
     }
 
     @Override
-    public void initialize(NotRegisteredEmail constraintAnnotation) {}
+    public void initialize(NotRegisteredEmailRestaurant constraintAnnotation) {}
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext context) {

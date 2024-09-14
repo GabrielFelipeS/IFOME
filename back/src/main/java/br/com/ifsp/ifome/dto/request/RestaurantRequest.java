@@ -2,6 +2,7 @@ package br.com.ifsp.ifome.dto.request;
 
 import br.com.ifsp.ifome.entities.BankAccount;
 import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmail;
+import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmailRestaurant;
 import br.com.ifsp.ifome.validation.anotations.ValidPassword;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -13,7 +14,7 @@ public record RestaurantRequest(
 
         @Email(message = "E-mail inválido")
         @NotBlank(message = "E-mail é obrigatório")
-        @NotRegisteredEmail
+        @NotRegisteredEmailRestaurant
         String email,
 
         @ValidPassword
