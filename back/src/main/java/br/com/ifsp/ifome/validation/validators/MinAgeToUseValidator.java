@@ -1,21 +1,26 @@
 package br.com.ifsp.ifome.validation.validators;
 
-import br.com.ifsp.ifome.validation.anotations.IsOfLegalAge;
+import br.com.ifsp.ifome.validation.anotations.MinAgeToUse;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 import java.time.LocalDate;
 import java.time.Period;
 
-public class IsOfLegalAgeValidator implements ConstraintValidator<IsOfLegalAge, LocalDate> {
+public class MinAgeToUseValidator implements ConstraintValidator<MinAgeToUse, LocalDate> {
+    private int minAgeValue;
 
     @Override
-    public void initialize(IsOfLegalAge constraintAnnotation) {}
+    public void initialize(MinAgeToUse constraintAnnotation) {
+        this.minAgeValue = constraintAnnotation.minAge();
+    }
 
     @Override
     public boolean isValid(LocalDate dateOfBirth, ConstraintValidatorContext constraintValidatorContext) {
+        if(dateOfBirth == null) return false;
+
         final LocalDate today = LocalDate.now();
         final Period period = Period.between(dateOfBirth, today);
-        return period.getYears() >= 18;
+        return period.getYears() >= minAgeValue;
     }
 }
