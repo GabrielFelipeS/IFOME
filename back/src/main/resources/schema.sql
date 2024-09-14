@@ -9,3 +9,4 @@ CREATE TABLE clients (
        address TEXT,
        payment_methods TEXT
 );
+
