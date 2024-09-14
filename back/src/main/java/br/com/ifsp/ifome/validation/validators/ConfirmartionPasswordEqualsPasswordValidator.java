@@ -13,6 +13,13 @@ public class ConfirmartionPasswordEqualsPasswordValidator implements ConstraintV
 
     @Override
     public boolean isValid(ClientRequest clientRequest, ConstraintValidatorContext constraintValidatorContext) {
-        return true;
+        String password = clientRequest.password();
+        String confirmationPassword = clientRequest.confirmationPassword();
+
+        if(password == null || confirmationPassword == null) {
+            return false;
+        }
+
+        return password.equals(confirmationPassword);
     }
 }
