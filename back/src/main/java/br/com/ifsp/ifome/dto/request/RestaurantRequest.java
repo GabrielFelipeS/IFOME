@@ -1,6 +1,7 @@
 package br.com.ifsp.ifome.dto.request;
 
 import br.com.ifsp.ifome.entities.BankAccount;
+import br.com.ifsp.ifome.validation.anotations.ConfirmartionPasswordEqualsPassword;
 import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmail;
 import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmailRestaurant;
 import br.com.ifsp.ifome.validation.anotations.ValidPassword;
@@ -8,7 +9,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.br.CNPJ;
+import org.hibernate.validator.constraints.br.CPF;
 
+@ConfirmartionPasswordEqualsPassword
 public record RestaurantRequest(
         String nameRestaurant,
 
@@ -50,7 +53,10 @@ public record RestaurantRequest(
 
         String personResponsible,
 
+        @CPF(message = "CPF inválido")
+        @NotBlank(message = "CPF é obrigatório")
         String personResponsibleCPF,
+
         String restaurantImage,
         BankAccount bankAccount
 ) { }

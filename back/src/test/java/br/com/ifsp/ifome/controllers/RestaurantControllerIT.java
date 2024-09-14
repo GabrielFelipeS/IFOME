@@ -41,7 +41,7 @@ public class RestaurantControllerIT {
                 "12:00",
                 "23:00",
                 "responsavel",
-                "cpfResponsavel",
+                "033.197.356-16",
                 "imagem.jpeg",
                 new BankAccount()
 
@@ -63,6 +63,7 @@ public class RestaurantControllerIT {
         String paymentMethods = document.read("$.paymentMethods");
         String openingHoursStart = document.read("$.openingHoursStart");
         String openingHoursEnd = document.read("$.openingHoursEnd");
+        String personResponsibleCPF = document.read("$.personResponsibleCPF");
     }
 
     @Test
@@ -83,7 +84,7 @@ public class RestaurantControllerIT {
                 "12:00",
                 "23:00",
                 "responsavel",
-                "cpfResponsavel",
+                "033.197.356-16",
                 "imagem.jpeg",
                 new BankAccount()
 
@@ -119,7 +120,7 @@ public class RestaurantControllerIT {
                 "12:00",
                 "23:00",
                 "responsavel",
-                "cpfResponsavel",
+                "033.197.356-16",
                 "imagem.jpeg",   new BankAccount()
 
         );
@@ -160,7 +161,7 @@ public class RestaurantControllerIT {
                 "12:00",
                 "23:00",
                 "responsavel",
-                "cpfResponsavel",
+                "033.197.356-16",
                 "imagem.jpeg",   new BankAccount()
 
         );
@@ -177,6 +178,46 @@ public class RestaurantControllerIT {
                         "CNPJ inválido"
                 );
     }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("should return all validation errors in the CPF field")
+    public void shouldReturnAllValidationErrorsInThePersonResponsibleCPFField() {
+        RestaurantRequest restaurant = new RestaurantRequest(
+                "Nome Restaurante",
+                "email@email.com",
+                "@Senha1",
+                "senha",
+                "10.882.594/0001-65",
+                "Endereço completo",
+                "(11) 1234-5678",
+                "07070-000",
+                "Pizzaria",
+                "Dinheiro, Cartão",
+                "12:00",
+                "23:00",
+                "responsavel",
+                "CPF",
+                "imagem.jpeg",
+                new BankAccount()
+
+        );
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        System.out.println(response.getBody());
+        Number countOfInvalidFields = documentContext.read("$.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+
+
+        List<String> personResponsibleCPF = documentContext.read("$.personResponsibleCPF");
+        assertThat(personResponsibleCPF)
+                .containsExactlyInAnyOrder(
+                        "CPF inválido"
+                );
+    }
+
+
 }
 
 
