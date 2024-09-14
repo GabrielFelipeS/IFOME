@@ -14,7 +14,7 @@ import '@/components/store/FormHome.vue';
 
 <style lang="scss" scoped>
 .content {
-    @apply w-full h-screen flex flex-col;
+    @apply w-full h-screen flex flex-col justify-end items-center;
     background-image: url('../../assets/img/store/background_register_store_mob.jpg');
     background-position: top;
     background-size: cover;
@@ -22,6 +22,7 @@ import '@/components/store/FormHome.vue';
 
     @media (min-width: 768px) {
         background-image: url('../../assets/img/store/background_register_store.webp');
+        @apply flex-row justify-end items-end;
     }
 }
 </style>
