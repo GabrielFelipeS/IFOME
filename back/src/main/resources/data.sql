@@ -18,7 +18,7 @@ INSERT INTO restaurants (
     bank_account
 ) VALUES (
     'Nome Restaurante',
-    '10.882.594/0001-65',
+    '58.911.612/0001-16',
     'Pizzaria',
     '07070-000',
     'Endereço completo',
