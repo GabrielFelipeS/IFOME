@@ -32,7 +32,7 @@ public class ClienteControllerIT {
     @DisplayName("should be possible to create a new client")
     public void shouldBeAbleToCreateANewClient() throws JsonProcessingException {
         ClientRequest client = new ClientRequest("teste@teste.com", "@Password1", "password",
-            LocalDate.now().minusYears(18), "48608678071",
+            LocalDate.now().minusYears(18), "48608678071", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
                 "address", "zipCode", "complement",
                 "typeResidence", "number", "details")));
@@ -72,7 +72,7 @@ public class ClienteControllerIT {
     @DisplayName("should not be possible to create a new client with already registered email")
     public void shouldReturnErrorWhenCreatingClientWithAlreadyRegisteredEmail() {
         ClientRequest client = new ClientRequest("user1@gmail.com", "@Password1", "password",
-            LocalDate.now().minusYears(14), "019.056.440-78", List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
+            LocalDate.now().minusYears(14), "019.056.440-78", "(11) 99248-1491",List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
             "address", "zipCode", "complement",
             "typeResidence", "number", "details")));
 
@@ -93,7 +93,7 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the password field")
     public void shouldReturnAllValidationErrorsInThePasswordField() {
         ClientRequest client = new ClientRequest("email@gmail.com", " ", "confirmationPassword",
-            LocalDate.now().minusYears(18), "019.056.440-78",  List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
+            LocalDate.now().minusYears(18), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
             "address", "zipCode", "complement",
             "typeResidence", "number", "details")));
 
@@ -121,7 +121,7 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the dateOfBirth field")
     public void shouldReturnAllValidationErrorsInThDateOfBirthField() {
         ClientRequest client = new ClientRequest("email@gmail.com", "@Teste123", "confirmationPassword",
-            LocalDate.now().plusDays(1), "019.056.440-78",  List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
+            LocalDate.now().plusDays(1), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
             "address", "zipCode", "complement",
             "typeResidence", "number", "details")));
 
@@ -145,7 +145,7 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the cpf field")
     public void shouldReturnAllValidationErrorsInTheCPFField() {
         ClientRequest client = new ClientRequest("email@gmail.com", "@Teste123", "confirmationPassword",
-            LocalDate.now().minusYears(18), "cpf",  List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
+            LocalDate.now().minusYears(18), "cpf",  "(11) 99248-1491",List.of(new AddressRequest("35170-222", "neighborhood", "city", "state",
             "address", "zipCode", "complement",
             "typeResidence", "number", "details")));
 

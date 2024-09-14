@@ -4,10 +4,7 @@ import br.com.ifsp.ifome.validation.anotations.MinAgeToUse;
 import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmail;
 import br.com.ifsp.ifome.validation.anotations.ValidPassword;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
@@ -32,6 +29,10 @@ public record ClientRequest (
         @CPF(message = "CPF inválido")
         @NotBlank(message = "CPF é obrigatório")
         String cpf,
+
+        @NotBlank
+        @Pattern(regexp = "^\\([1-9]{2}\\) (?:[2-8]|9[0-9])[0-9]{3}-[0-9]{4}$")
+        String phone,
 
         List<@Valid AddressRequest> address
 ) { }
