@@ -19,7 +19,10 @@ public record ClientRequest (
         String email,
 
         @ValidPassword
+        @NotBlank(message = "Senha é obrigatório")
         String password,
+
+        @NotBlank
         String confirmationPassword,
 
         @Past(message = "Data de nascimento deve estar no passado")
@@ -35,5 +38,6 @@ public record ClientRequest (
         @Pattern(regexp = "^\\([1-9]{2}\\) (?:[2-8]|9[0-9])[0-9]{3}-[0-9]{4}$")
         String phone,
 
+        @NotEmpty
         List<@Valid AddressRequest> address
 ) { }
