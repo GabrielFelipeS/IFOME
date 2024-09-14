@@ -1,4 +1,8 @@
 <script setup>
+import { ref } from 'vue';
+import { MaskInput } from 'vue-3-mask';
+
+const phone = ref('');
 </script>
 <template>
     <form class="form">
@@ -14,7 +18,7 @@
 
         <div class="form-group">
             <label for="phone">Celular</label>
-            <input type="text" id="phone" name="phone" placeholder="Celular" />
+            <MaskInput v-model="phone" mask="(##) #####-####" placeholder="Celular" />
         </div>
 
         <button type="submit">Cadastrar Agora</button>
