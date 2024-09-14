@@ -1,6 +1,7 @@
 package br.com.ifsp.ifome.controllers;
 
 
+import br.com.ifsp.ifome.docs.DocsCreateClient;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
 import br.com.ifsp.ifome.dto.response.ClientResponse;
@@ -24,7 +25,9 @@ public class ClientController {
         this.clientService = clientService;
     }
 
+
     @PostMapping
+    @DocsCreateClient
     public ResponseEntity<ApiResponse> create(@Valid @RequestBody ClientRequest clientRequest , UriComponentsBuilder ucb) {
         ClientResponse clientResponse = clientService.create(clientRequest);
 
