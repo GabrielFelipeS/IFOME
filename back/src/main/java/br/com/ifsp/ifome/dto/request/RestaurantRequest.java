@@ -4,11 +4,15 @@ import br.com.ifsp.ifome.entities.BankAccount;
 import br.com.ifsp.ifome.validation.anotations.ConfirmartionPasswordEqualsPassword;
 import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmailRestaurant;
 import br.com.ifsp.ifome.validation.anotations.ValidPassword;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
+
+import java.util.List;
 
 @ConfirmartionPasswordEqualsPassword
 public record RestaurantRequest(
@@ -22,14 +26,15 @@ public record RestaurantRequest(
         @ValidPassword
         @NotBlank(message = "Senha é obrigatório")
         String password,
+        @NotBlank(message = "Confirmação de senha é obrigatório")
         String confirmationPassword,
 
         @CNPJ(message = "CNPJ inválido")
         @NotBlank(message = "CNPJ é obrigatório")
         String cnpj,
 
-        @NotBlank(message = "Endereço é obrigatório")
-        String address,
+        @NotEmpty
+        List<@Valid AddressRequest> address,
 
         @NotBlank(message = "Telefone é obrigatório")
         @Pattern(regexp = "\\(\\d{2}\\) \\d{4,5}-\\d{4}", message = "Telefone deve estar no formato (XX) XXXXX-XXXX")
@@ -57,6 +62,7 @@ public record RestaurantRequest(
         @NotBlank(message = "CPF é obrigatório")
         String personResponsibleCPF,
 
-        String restaurantImage,
-        BankAccount bankAccount
+        String restaurantImages,
+
+        BankAccountRequest bankAccount
 ) { }

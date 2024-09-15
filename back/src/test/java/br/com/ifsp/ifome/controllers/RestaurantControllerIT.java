@@ -1,6 +1,9 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.dto.request.AddressRequest;
+import br.com.ifsp.ifome.dto.request.BankAccountRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
+import br.com.ifsp.ifome.entities.Address;
 import br.com.ifsp.ifome.entities.BankAccount;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -33,7 +36,9 @@ public class RestaurantControllerIT {
                 "@Senha1",
                 "@Senha1",
                 "10.882.594/0001-65",
-                "Endereço completo",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "details")),
                 "(11) 1234-5678",
                 "07070-000",
                 "Pizzaria",
@@ -43,7 +48,7 @@ public class RestaurantControllerIT {
                 "responsavel",
                 "033.197.356-16",
                 "imagem.jpeg",
-                new BankAccount()
+                new BankAccountRequest("123","1255", "4547-7")
 
         );
         ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
@@ -56,7 +61,8 @@ public class RestaurantControllerIT {
         String nameRestaurant = document.read("$.nameRestaurant");
         String email = document.read("$.email");
         String cnpj = document.read("$.cnpj");
-        String address = document.read("$.address");
+        //String address = document.read("$.address");
+        Address addressJson = document.read("$.address[0]", Address.class);
         String telephone = document.read("$.telephone");
         String cep = document.read("$.cep");
         String foodCategory = document.read("$.foodCategory");
@@ -64,6 +70,24 @@ public class RestaurantControllerIT {
         String openingHoursStart = document.read("$.openingHoursStart");
         String openingHoursEnd = document.read("$.openingHoursEnd");
         String personResponsibleCPF = document.read("$.personResponsibleCPF");
+        List <String> restaurantImages = document.read("$.restaurantImages");
+
+
+        assertThat(id).isNotNull();
+        assertThat(email).isEqualTo(restaurant.email());
+        assertThat(cnpj).isEqualTo(restaurant.cnpj());
+
+        assertThat(addressJson).isNotNull();
+        assertThat(addressJson).isNotNull();
+
+        assertThat(addressJson.getCep()).isEqualTo("35170-222");
+        assertThat(addressJson.getNeighborhood()).isEqualTo("neighborhood");
+        assertThat(addressJson.getCity()).isEqualTo("city");
+        assertThat(addressJson.getAddress()).isEqualTo("address");
+        assertThat(addressJson.getComplement()).isEqualTo("complement");
+        assertThat(addressJson.getNumber()).isEqualTo("12");
+        assertThat(addressJson.getComplement()).isEqualTo("complement");
+
     }
 
     @Test
@@ -76,7 +100,9 @@ public class RestaurantControllerIT {
                 "@Senha1",
                 "@Senha1",
                 "10.882.594/0001-65",
-                "Endereço completo",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "details")),
                 "(11) 1234-5678",
                 "07070-000",
                 "Pizzaria",
@@ -86,7 +112,8 @@ public class RestaurantControllerIT {
                 "responsavel",
                 "033.197.356-16",
                 "imagem.jpeg",
-                new BankAccount()
+                new BankAccountRequest("123","1255", "4547-7")
+
 
         );
 
@@ -104,15 +131,17 @@ public class RestaurantControllerIT {
 
     @Test
     @DirtiesContext
-    @DisplayName("should return all validation errors in the password field")
-    public void shouldReturnAllValidationErrorsInThePasswordField() {
+    @DisplayName("should return all validation errors in the password fields")
+    public void shouldReturnAllValidationErrorsInThePasswordFields() {
         RestaurantRequest restaurant = new RestaurantRequest(
                 "Nome Restaurante",
                 "email@email.com",
                 " ",
                 " ",
                 "10.882.594/0001-65",
-                "Endereço completo",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "details")),
                 "(11) 1234-5678",
                 "07070-000",
                 "Pizzaria",
@@ -121,7 +150,9 @@ public class RestaurantControllerIT {
                 "23:00",
                 "responsavel",
                 "033.197.356-16",
-                "imagem.jpeg",   new BankAccount()
+                "imagem.jpeg",
+                new BankAccountRequest("123","1255", "4547-7")
+
 
         );
         ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
@@ -129,7 +160,7 @@ public class RestaurantControllerIT {
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
         Number countOfInvalidFields = documentContext.read("$.length()");
-        assertThat(countOfInvalidFields).isEqualTo(1);
+        assertThat(countOfInvalidFields).isEqualTo(2);
 
         List<String> passwordErrors = documentContext.read("$.password");
         assertThat(passwordErrors)
@@ -153,7 +184,9 @@ public class RestaurantControllerIT {
                 "@Senha1",
                 "@Senha1",
                 "10.882.594000165",
-                "Endereço completo",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "details")),
                 "(11) 1234-5678",
                 "07070-000",
                 "Pizzaria",
@@ -162,7 +195,9 @@ public class RestaurantControllerIT {
                 "23:00",
                 "responsavel",
                 "033.197.356-16",
-                "imagem.jpeg",   new BankAccount()
+                "imagem.jpeg",
+                new BankAccountRequest("123","1255", "4547-7")
+
 
         );
         ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
@@ -189,7 +224,9 @@ public class RestaurantControllerIT {
                 "@Senha1",
                 "@Senha1",
                 "10.882.594/0001-65",
-                "Endereço completo",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "details")),
                 "(11) 1234-5678",
                 "07070-000",
                 "Pizzaria",
@@ -199,7 +236,8 @@ public class RestaurantControllerIT {
                 "responsavel",
                 "CPF",
                 "imagem.jpeg",
-                new BankAccount()
+                new BankAccountRequest("123","1255", "4547-7")
+
 
         );
         ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
@@ -215,6 +253,41 @@ public class RestaurantControllerIT {
                 .containsExactlyInAnyOrder(
                         "CPF inválido"
                 );
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("should return all validation errors in the password confirmation field")
+    public void shouldReturnAllValidationErrorsInThePasswordConfirmationField() {
+        RestaurantRequest restaurant = new RestaurantRequest(
+                "Nome Restaurante",
+                "email@email.com",
+                "@Senha1",
+                "@senha",
+                "10.882.594/0001-65",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "details")),
+                "(11) 1234-5678",
+                "07070-000",
+                "Pizzaria",
+                "Dinheiro, Cartão",
+                "12:00",
+                "23:00",
+                "responsavel",
+                "033.197.356-16",
+                "imagem.jpeg",
+                new BankAccountRequest("123","1255", "4547-7")
+
+
+        );
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        System.out.println(response.getBody());
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        Number countOfInvalidFields = documentContext.read("$.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
     }
 
 

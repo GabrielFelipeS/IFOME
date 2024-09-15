@@ -1,8 +1,10 @@
 package br.com.ifsp.ifome.dto.response;
 
+import br.com.ifsp.ifome.entities.Address;
 import br.com.ifsp.ifome.entities.BankAccount;
 import br.com.ifsp.ifome.entities.Restaurant;
-import jakarta.persistence.Embedded;
+
+import java.util.List;
 
 public record RestaurantResponse(
         Long id,
@@ -10,7 +12,7 @@ public record RestaurantResponse(
         String cnpj,
         String foodCategory,
         String cep,
-        String address,
+        List<Address> address,
         String telephone,
 
         String openingHoursStart,
@@ -40,7 +42,7 @@ public record RestaurantResponse(
                 restaurant.getPersonResponsibleCPF(),
                 restaurant.getEmail(),
                 restaurant.getPaymentMethods(),
-                restaurant.getRestaurantImage(),
+                restaurant.getRestaurantImages(),
                 restaurant.getBankAccount());
     }
 }
