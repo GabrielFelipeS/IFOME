@@ -39,9 +39,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(request ->
                 request
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-                    .requestMatchers("/restaurant").permitAll()
-                    .requestMatchers("/api/**").permitAll()
                     .requestMatchers("/restaurant/**").permitAll()
+                    .requestMatchers("/deliveryPerson/**").permitAll()
                     .requestMatchers("/api/auth/**").permitAll()
                     .anyRequest().authenticated())
             .csrf(AbstractHttpConfigurer::disable)

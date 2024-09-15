@@ -23,10 +23,17 @@ CREATE TABLE restaurants (
     person_responsible VARCHAR(255),
     person_responsible_CPF VARCHAR(11),
     email VARCHAR(255) UNIQUE,
+    password VARCHAR(255) NOT NULL,
     payment_methods TEXT,
     restaurant_image TEXT,
     bank_account VARCHAR(255)
 );
+CREATE TABLE deliveryPerson (
+     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+     email VARCHAR(255) UNIQUE,
+     password VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE Address (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,
     name_address    VARCHAR(30) NOT NULL,
