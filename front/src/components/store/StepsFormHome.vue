@@ -532,7 +532,25 @@ const returnSteps = () => {
             <h3>Recebimentos de fundos</h3>
             <div class="form-group">
                 <label for="bank">Banco</label>
-                <input type="text" id="bank" v-model="bank" name="bank" placeholder="Banco" required />
+                <!-- fazer select com nomes de bancos brasileiros e seus codigos como values -->
+                <select name="bank" id="bank" v-model="bank" required>
+                    <option value="">Selecione o banco</option>
+                    <option value="001">Banco do Brasil</option>
+                    <option value="033">Santander</option>
+                    <option value="104">Caixa Econômica Federal</option>
+                    <option value="237">Bradesco</option>
+                    <option value="341">Itaú</option>
+                    <option value="356">Nubank</option>
+                    <option value="260">Nu Pagamentos</option>
+                    <option value="212">Banco Original</option>
+                    <option value="077">Banco Inter</option>
+                    <option value="422">Banco Safra</option>
+                    <option value="633">Banco Rendimento</option>
+                    <option value="745">Banco Citibank</option>
+                    <option value="399">HSBC Bank Brasil</option>
+                    <option value="409">Unibanco</option>
+                    <option value="041">Banco do Estado do Rio Grande do Sul</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="agency">Agência</label>
