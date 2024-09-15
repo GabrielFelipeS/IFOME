@@ -1,12 +1,12 @@
 package br.com.ifsp.ifome.services;
 
+import br.com.ifsp.ifome.exceptions.InvalidToken;
 import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -15,18 +15,20 @@ import java.util.Optional;
 @Service
 public class TokenService {
     private final JwtEncoder jwtEncoder;
-    private Instant now;
-    private Long expiresIn;
+    private final JwtDecoder jwtDecoder;
+    private final Long expiresIn;
+    private final Instant now;
 
     @Autowired
-    public TokenService(JwtEncoder jwtEncoder) {
-        this(jwtEncoder, Instant.now(), 300L);
+    public TokenService(JwtEncoder jwtEncoder, @Qualifier("jwtDecoder") JwtDecoder jwtDecoder) {
+        this(jwtEncoder, jwtDecoder, Instant.now(), 300L);
     }
 
-    public TokenService(JwtEncoder jwtEncoder, Instant now, Long expiresIn) {
+    public TokenService(JwtEncoder jwtEncoder, JwtDecoder jwtDecoder, Instant now, Long expiresIn) {
         this.jwtEncoder = jwtEncoder;
-        this.now = now;
+        this.jwtDecoder = jwtDecoder;
         this.expiresIn =expiresIn;
+        this.now = now;
     }
 
     public void isLoginIncorrect(Optional<? extends PasswordPolicy> passwordPolicyOptional, String rawPassword , BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -45,5 +47,13 @@ public class TokenService {
             ;
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+    }
+
+    public void validToken(String token) {
+        try {
+            Jwt jwt = jwtDecoder.decode(token);
+        } catch (JwtException e) {
+            throw new InvalidToken();
+        }
     }
 }
