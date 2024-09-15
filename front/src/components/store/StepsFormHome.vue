@@ -49,6 +49,7 @@ const cpf = ref('');
 const cnpj = ref('');
 const nameStore = ref('');
 const phone = ref('');
+const neighborhood = ref('');
 const specialty = ref('');
 const other = ref('');
 const opening = ref('');
@@ -61,6 +62,7 @@ const account = ref('');
 const digit = ref('');
 const password = ref('');
 const confirmPassword = ref('');
+const details = ref('');
 
 watch(specialty, (value) => {
     if (value === 'Outro') {
@@ -201,6 +203,7 @@ watch(cep, async (value) => {
         state.value = data.uf;
         city.value = data.localidade;
         address.value = data.logradouro;
+        neighborhood.value = data.bairro;
     }
 });
 
@@ -301,42 +304,50 @@ function showConfirmation() {
 function submitForm() {
     const formData = new FormData();
 
-    // Adicionar todos os campos de dados ao formData
-    formData.append('cep', cep.value);
-    formData.append('state', state.value);
-    formData.append('city', city.value);
-    formData.append('address', address.value);
-    formData.append('number', number.value);
-    formData.append('complement', complement.value);
-    formData.append('name', name.value);
-    formData.append('cpf', cpf.value);
-    formData.append('cnpj', cnpj.value);
-    formData.append('nameStore', nameStore.value);
-    formData.append('phone', phone.value);
-    formData.append('specialty', specialty.value);
-    formData.append('other', other.value);
-    formData.append('opening', opening.value);
-    formData.append('closing', closing.value);
-    formData.append('daysSelected', daysSelected.value);
-    formData.append('paymentMethods', JSON.stringify(paymentMethods.value));
-    formData.append('bank', bank.value);
-    formData.append('agency', agency.value);
-    formData.append('account', account.value);
-    formData.append('digit', digit.value);
-    formData.append('password', password.value);
-    formData.append('confirmPassword', confirmPassword.value);
-    formData.append('email', email.value);
+    let formatedAddress = [{
+        nameAddress: "casa principal",
+        cep: cep.value,
+        neighborhood: neighborhood.value,
+        city: city.value,
+        state: state.value,
+        address: address.value,
+        complement: complement.value,
+        number: number.value,
+        details: details.value
+    }];
+
+    const bankAccount = [{
+        bank: bank.value,
+        agency: agency.value,
+        account: `${account.value}-${digit.value}`
+    }];
+
+
+    formData.append('nameRestaurant', nameStore.value); 
+    formData.append('email', email.value);               
+    formData.append('password', password.value);         
+    formData.append('confirmationPassword', confirmPassword.value);  
+    formData.append('cnpj', cnpj.value);                
+    formData.append('address', JSON.stringify(formatedAddress)); 
+    formData.append('telephone', phone.value);           
+    formData.append('foodCategory', specialty.value);  
+    formData.append('paymentMethods', paymentMethods.value); 
+    formData.append('openingHoursStart', opening.value); 
+    formData.append('openingHoursEnd', closing.value);  
+    formData.append('personResponsible', name.value);   
+    formData.append('personResponsibleCPF', cpf.value);  
+    formData.append('restaurantImages', selectedFiles.value[0]);
+    formData.append('bankAccount', JSON.stringify(bankAccount));
 
     selectedFiles.value.forEach((file, index) => {
-        formData.append(`photo_${index}`, file);
+        formData.append(`restaurantImages_${index}`, file);
     });
-    
-    //mostar os dados no console em json
+
     console.log(Object.fromEntries(formData));
 
     nextStep();
-    
 }
+
 
 const returnSteps = () => {
     prevStep();
@@ -347,14 +358,15 @@ const returnSteps = () => {
 <template>
     <div class="steps" v-if="stepsActive">
         <!-- Passar a etapa atual para o componente filho -->
-        <HeaderSteps :currentStep="currentStep" @returnBack="returnSteps"/>
+        <HeaderSteps :currentStep="currentStep" @returnBack="returnSteps" />
 
         <div class="step" v-if="currentStep === 1">
             <h2>Endereço da loja</h2>
             <p>Preencha as informações de endereço da sua loja.</p>
             <div class="form-group">
                 <label for="cep">CEP</label>
-                <MaskInput type="text" id="cep" name="cep" v-model="cep" :value="cep" placeholder="CEP" mask="#####-###" required />
+                <MaskInput type="text" id="cep" name="cep" v-model="cep" :value="cep" placeholder="CEP" mask="#####-###"
+                    required />
             </div>
             <div class="mid">
                 <div class="form-group">
@@ -367,19 +379,28 @@ const returnSteps = () => {
                 </div>
             </div>
             <div class="form-group">
+                <label for="neighborhood">Bairro</label>
+                <input type="text" id="neighborhood" name="neighborhood" v-model="neighborhood" placeholder="Bairro"
+                    required/>
+            </div>
+            <div class="form-group">
                 <label for="address">Endereço</label>
                 <input type="text" id="address" name="address" v-model="address" placeholder="Endereço" required />
             </div>
             <div class="form-group">
                 <label for="number">Número</label>
-                <MaskInput type="text" id="number" name="number" v-model="number" :value="number" placeholder="Número" mask="######"
-                    required />
+                <MaskInput type="text" id="number" name="number" v-model="number" :value="number" placeholder="Número"
+                    mask="######" required />
             </div>
             <div class="form-group">
                 <label for="complement">Complemento</label>
                 <input type="text" id="complement" name="complement" v-model="complement" placeholder="Complemento" />
             </div>
-            <button type="submit" class="btn-primary" :class="stepCompleted ? '' : 'disable'" :disabled="!stepCompleted"
+            <div class="form-group">
+                <label for="details">Detalhes</label>
+                <textarea id="details" name="details" v-model="details" placeholder="Detalhes"></textarea>
+            </div>
+            <button type="submit" class="btn-text" :class="stepCompleted ? '' : 'disable'" :disabled="!stepCompleted"
                 @click="nextStep">Próximo</button>
         </div>
 
@@ -393,11 +414,11 @@ const returnSteps = () => {
             </div>
             <div class="form-group">
                 <label for="cpf">CPF</label>
-                <MaskInput type="text" id="cpf" v-model="cpf" name="cpf" :value="cpf" placeholder="CPF" mask="###.###.###-##"
-                    required />
+                <MaskInput type="text" id="cpf" v-model="cpf" name="cpf" :value="cpf" placeholder="CPF"
+                    mask="###.###.###-##" required />
             </div>
-            <button type="submit" class="btn-primary" :class="step2Completed ? '' : 'disable'" :disabled="!step2Completed"
-                @click="nextStep">Próximo</button>
+            <button type="submit" class="btn-primary" :class="step2Completed ? '' : 'disable'"
+                :disabled="!step2Completed" @click="nextStep">Próximo</button>
         </div>
 
         <div class="step" v-if="currentStep === 3">
@@ -405,8 +426,8 @@ const returnSteps = () => {
             <p>Preencha com os dados do seu negócio</p>
             <div class="form-group">
                 <label for="cnpj">CNPJ</label>
-                <MaskInput type="text" id="cnpj" v-model="cnpj" name="cnpj" :value="cnpj" placeholder="CNPJ" mask="##.###.###/####-##"
-                    required />
+                <MaskInput type="text" id="cnpj" v-model="cnpj" name="cnpj" :value="cnpj" placeholder="CNPJ"
+                    mask="##.###.###/####-##" required />
                 <p v-if="step3Erros.cnpj">** Digite um valor válido **</p>
             </div>
             <div class="form-group">
@@ -504,8 +525,8 @@ const returnSteps = () => {
                 </div>
             </div>
 
-            <button type="submit" class="btn-primary" :class="step4Completed ? '' : 'disable'" :disabled="!step4Completed"
-                @click="nextStep">Próximo</button>
+            <button type="submit" class="btn-primary" :class="step4Completed ? '' : 'disable'"
+                :disabled="!step4Completed" @click="nextStep">Próximo</button>
         </div>
 
         <div class="step" v-if="currentStep === 5">
@@ -554,19 +575,19 @@ const returnSteps = () => {
             </div>
             <div class="form-group">
                 <label for="agency">Agência</label>
-                <MaskInput type="text" id="agency" v-model="agency" name="agency" :value="agency" placeholder="Agência" mask="####-#"
-                    required />
+                <MaskInput type="text" id="agency" v-model="agency" name="agency" :value="agency" placeholder="Agência"
+                    mask="####-#" required />
             </div>
             <div class="mid-payment">
                 <div class="form-group">
                     <label for="account">Conta</label>
-                    <MaskInput type="text" id="account" v-model="account" :value="account" name="account" placeholder="Conta"
-                        mask="#####" required />
+                    <MaskInput type="text" id="account" v-model="account" :value="account" name="account"
+                        placeholder="Conta" mask="#####" required />
                 </div>
                 <div class="form-group dig">
                     <label for="digit">Dígito</label>
-                    <MaskInput type="text" id="digit" v-model="digit" name="digit" :value="digit" placeholder="Dígito" mask="#"
-                        required />
+                    <MaskInput type="text" id="digit" v-model="digit" name="digit" :value="digit" placeholder="Dígito"
+                        mask="#" required />
                 </div>
             </div>
             <button type="submit" class="btn-text" :class="step5Completed ? '' : 'disable'" :disabled="!step5Completed"
@@ -587,8 +608,8 @@ const returnSteps = () => {
                     placeholder="Confirmar Senha" required />
                 <span @click="showConfirmation" v-if="confirmPassword.length > 0">Mostrar Confirmação</span>
             </div>
-            <button type="submit" class="btn-primary" :class="step6Completed ? '' : 'disable'" :disabled="!step6Completed"
-                @click="submitForm">Concluir</button>
+            <button type="submit" class="btn-primary" :class="step6Completed ? '' : 'disable'"
+                :disabled="!step6Completed" @click="submitForm">Concluir</button>
         </div>
 
         <div class="step" v-if="currentStep === 7">
@@ -757,6 +778,10 @@ const returnSteps = () => {
 
             span {
                 @apply text-blue-500 cursor-pointer mt-3 cursor-pointer;
+            }
+
+            textarea {
+                @apply w-full h-[100px] border border-gray-300 rounded-lg px-3;
             }
 
         }
