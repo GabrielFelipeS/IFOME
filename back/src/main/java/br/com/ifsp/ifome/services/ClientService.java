@@ -2,7 +2,7 @@ package br.com.ifsp.ifome.services;
 
 import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
-import br.com.ifsp.ifome.dto.response.ClientLoginResponse;
+import br.com.ifsp.ifome.dto.response.LoginResponse;
 import br.com.ifsp.ifome.dto.response.ClientResponse;
 import br.com.ifsp.ifome.entities.Client;
 import br.com.ifsp.ifome.repositories.ClientRepository;
@@ -29,7 +29,7 @@ public class ClientService {
         return new ClientResponse(client);
     }
 
-    public ClientLoginResponse login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest) {
         Optional<Client> client = clientRepository.findByEmail(loginRequest.email());
 
         tokenService.isLoginIncorrect(client, loginRequest.password(), bCryptPasswordEncoder);
@@ -38,6 +38,6 @@ public class ClientService {
 
         ClientResponse clientResponse = new ClientResponse(client.orElseThrow());
 
-        return new ClientLoginResponse(clientResponse, jwtValue);
+        return new LoginResponse(clientResponse, jwtValue);
     }
 }

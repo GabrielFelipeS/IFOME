@@ -5,7 +5,7 @@ import br.com.ifsp.ifome.docs.DocsCreateClient;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
-import br.com.ifsp.ifome.dto.response.ClientLoginResponse;
+import br.com.ifsp.ifome.dto.response.LoginResponse;
 import br.com.ifsp.ifome.dto.response.ClientResponse;
 import br.com.ifsp.ifome.services.ClientService;
 import jakarta.validation.Valid;
@@ -44,8 +44,8 @@ public class ClientController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest clientLogin) {
-        ClientLoginResponse clientLoginResponse = clientService.login(clientLogin);
-        ApiResponse apiResponse = new ApiResponse("sucess", clientLoginResponse, "Cliente logado com sucesso");
+        LoginResponse loginResponse = clientService.login(clientLogin);
+        ApiResponse apiResponse = new ApiResponse("sucess", loginResponse, "Cliente logado com sucesso");
         return ResponseEntity.ok(apiResponse);
     }
 }
