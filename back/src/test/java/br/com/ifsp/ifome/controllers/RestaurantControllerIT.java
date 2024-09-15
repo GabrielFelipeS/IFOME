@@ -2,9 +2,9 @@ package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.dto.request.AddressRequest;
 import br.com.ifsp.ifome.dto.request.BankAccountRequest;
+import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
 import br.com.ifsp.ifome.entities.Address;
-import br.com.ifsp.ifome.entities.BankAccount;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +25,44 @@ public class RestaurantControllerIT {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
+
+
+    @Test
+    @DirtiesContext
+    public void shouldBeAbleLoginWithValidUser() {
+        LoginRequest restaurantLogin = new LoginRequest("email1@email.com", "@Password1");
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant/login", restaurantLogin, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        Object clientResponse = documentContext.read("$.data.restaurant");
+        assertThat(clientResponse).isNotNull();
+
+        String token = documentContext.read("$.data.token");
+        assertThat(token).isNotNull();
+
+        ResponseEntity<String> responseTokenValidation = testRestTemplate.postForEntity("/api/auth//token", token, String.class);
+        assertThat(responseTokenValidation.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DirtiesContext
+    public void shouldReturnErrorWhenLoginWithInvalidEmail() {
+        LoginRequest restaurantLogin = new LoginRequest("invalid_email@gmail.com", "@Password1");
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant/login", restaurantLogin, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    public void shouldReturnErrorWhenLoginWithInvalidPassword() {
+        LoginRequest restaurantLogin = new LoginRequest("user1@gmail.com", "invalid_password");
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant/login", restaurantLogin, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
 
     @Test
     @DirtiesContext

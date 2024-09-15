@@ -1,19 +1,14 @@
 package br.com.ifsp.ifome.services;
 
-import br.com.ifsp.ifome.dto.request.ClientLoginRequest;
+import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
 import br.com.ifsp.ifome.dto.response.ClientLoginResponse;
 import br.com.ifsp.ifome.dto.response.ClientResponse;
 import br.com.ifsp.ifome.entities.Client;
 import br.com.ifsp.ifome.repositories.ClientRepository;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.Optional;
 
 @Service
@@ -34,10 +29,10 @@ public class ClientService {
         return new ClientResponse(client);
     }
 
-    public ClientLoginResponse login(ClientLoginRequest clientLoginRequest) {
-        Optional<Client> client = clientRepository.findByEmail(clientLoginRequest.email());
+    public ClientLoginResponse login(LoginRequest loginRequest) {
+        Optional<Client> client = clientRepository.findByEmail(loginRequest.email());
 
-        tokenService.isLoginIncorrect(client, clientLoginRequest.password(), bCryptPasswordEncoder);
+        tokenService.isLoginIncorrect(client, loginRequest.password(), bCryptPasswordEncoder);
 
         var jwtValue = tokenService.generateToken(client.orElseThrow().getEmail());
 

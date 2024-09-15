@@ -3,7 +3,7 @@ package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.docs.DocsCreateClient;
 import br.com.ifsp.ifome.dto.ApiResponse;
-import br.com.ifsp.ifome.dto.request.ClientLoginRequest;
+import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
 import br.com.ifsp.ifome.dto.response.ClientLoginResponse;
 import br.com.ifsp.ifome.dto.response.ClientResponse;
@@ -19,7 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/client")
+@RequestMapping("/api/auth/client")
 public class ClientController {
     private final ClientService clientService;
 
@@ -43,7 +43,7 @@ public class ClientController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> login(@Valid @RequestBody ClientLoginRequest clientLogin) {
+    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest clientLogin) {
         ClientLoginResponse clientLoginResponse = clientService.login(clientLogin);
         ApiResponse apiResponse = new ApiResponse("sucess", clientLoginResponse, "Cliente logado com sucesso");
         return ResponseEntity.ok(apiResponse);
