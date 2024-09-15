@@ -287,11 +287,29 @@ watch([paymentMethods, bank, agency, account, digit], () => {
     }
 });
 
+const passwordErrors = ref({
+    password: false,
+    confirmPassword: false,
+});
+
 watch([password, confirmPassword], () => {
-    if (password.value && confirmPassword.value && password.value === confirmPassword.value) {
-        step6Completed.value = true;
+    if (password.value && password.value.length >= 8 && password.value.match(/[a-z]/) && password.value.match(/[A-Z]/) &&
+        password.value.match(/[0-9]/)) {
+        passwordErrors.value.password = false;
     } else {
+        passwordErrors.value.password = true;
+    }
+
+    if (password.value && confirmPassword.value && password.value === confirmPassword.value && !passwordErrors.value.password) {
+        passwordErrors.value.confirmPassword = false;
+    } else {
+        passwordErrors.value.confirmPassword = true;
+    }
+
+    if (Object.values(passwordErrors.value).some((value) => value)) {
         step6Completed.value = false;
+    } else {
+        step6Completed.value = true;
     }
 });
 
@@ -619,12 +637,15 @@ const returnSteps = () => {
                 <label for="password">Senha</label>
                 <input type="password" id="password" name="password" placeholder="Senha" v-model="password" required />
                 <span @click="showPassword" v-if="password.length > 0">Mostrar senha</span>
+                <p v-if="passwordErrors.password">** A senha deve conter no mínimo 8 caracteres, uma letra maiúscula,
+                    uma letra minúscula e um número **</p>
             </div>
             <div class="form-group">
                 <label for="confirmPassword">Confirmar Senha</label>
                 <input type="password" id="confirmPassword" name="confirmPassword" v-model="confirmPassword"
                     placeholder="Confirmar Senha" required />
                 <span @click="showConfirmation" v-if="confirmPassword.length > 0">Mostrar Confirmação</span>
+                <p v-if="passwordErrors.confirmPassword">** As senhas não conferem **</p>
             </div>
             <button type="submit" class="btn-primary" :class="step6Completed ? '' : 'disable'"
                 :disabled="!step6Completed" @click="submitForm">Concluir</button>
