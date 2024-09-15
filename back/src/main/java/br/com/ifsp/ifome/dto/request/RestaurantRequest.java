@@ -63,6 +63,6 @@ public record RestaurantRequest(
         String personResponsibleCPF,
 
         String restaurantImages,
-
+        @Valid
         BankAccountRequest bankAccount
 ) { }

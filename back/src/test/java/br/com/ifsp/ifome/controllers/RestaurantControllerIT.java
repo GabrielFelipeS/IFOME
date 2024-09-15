@@ -290,7 +290,74 @@ public class RestaurantControllerIT {
         assertThat(countOfInvalidFields).isEqualTo(1);
     }
 
+    @Test
+    @DirtiesContext
+    @DisplayName("should return all validation errors in the bank account fields")
+    public void shouldReturnAllValidationErrorsInTheBankAccountFields() {
+        RestaurantRequest restaurant = new RestaurantRequest(
+                "Nome Restaurante",
+                "email@email.com",
+                "@Senha1",
+                "@Senha1",
+                "10.882.594/0001-65",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "details")),
+                "(11) 1234-5678",
+                "07070-000",
+                "Pizzaria",
+                "Dinheiro, Cartão",
+                "12:00",
+                "23:00",
+                "responsavel",
+                "033.197.356-16",
+                "imagem.jpeg",
+                new BankAccountRequest(" "," ", "")
 
+
+        );
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        System.out.println(response.getBody());
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        Number countOfInvalidFields = documentContext.read("$.length()");
+        assertThat(countOfInvalidFields).isEqualTo(3);
+    }
+    @Test
+    @DirtiesContext
+    @DisplayName("should return all validation errors in the address fields")
+    public void shouldReturnAllValidationErrorsInTheAddressFields() {
+        RestaurantRequest restaurant = new RestaurantRequest(
+                "Nome Restaurante",
+                "email@email.com",
+                "@Senha1",
+                "@Senha1",
+                "10.882.594/0001-65",
+                List.of(new AddressRequest("35170-222", "casa 1"," ", "city", "state",
+                        "address", "complement",
+                        "12", "details")),
+                "(11) 1234-5678",
+                "07070-000",
+                "Pizzaria",
+                "Dinheiro, Cartão",
+                "12:00",
+                "23:00",
+                "responsavel",
+                "033.197.356-16",
+                "imagem.jpeg",
+                new BankAccountRequest("111","2222", "2156-1")
+
+
+        );
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        System.out.println(response.getBody());
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        Number countOfInvalidFields = documentContext.read("$.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+    }
 }
 
 
