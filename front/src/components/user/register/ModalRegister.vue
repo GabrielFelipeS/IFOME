@@ -24,6 +24,10 @@ import Button from "@/components/Button.vue";
 				<Button href="#" inversed class="button border border-primary">Já tenho uma conta, fazer login</Button>
 			</div>
 		</div>
+		<footer class="footer">
+			<span>Ao continuar, você concorda em receber comunicações do iFome.
+				Confira nossa <a href="#">Declaração de Privacidade</a>.</span>
+		</footer>
 	</div>
 </template>
 
@@ -51,5 +55,14 @@ import Button from "@/components/Button.vue";
 
 	.button {
 		@apply rounded-md w-full flex justify-center align-middle py-[2%];
+	}
+
+	.footer {
+		@apply flex items-center justify-center align-baseline px-4;
+		@apply font-light text-xs
+	}
+
+	.footer > span > a {
+		@apply underline
 	}
 </style>
