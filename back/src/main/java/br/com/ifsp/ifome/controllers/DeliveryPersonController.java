@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.docs.DocsCreateDeliveryPerson;
 import br.com.ifsp.ifome.dto.request.DeliveryPersonRequest;
 import br.com.ifsp.ifome.dto.response.DeliveryPersonResponse;
 import br.com.ifsp.ifome.services.DeliveryPersonService;
@@ -22,6 +23,7 @@ public class DeliveryPersonController {
     public DeliveryPersonController(DeliveryPersonService deliveryPersonService){
         this.deliveryPersonService = deliveryPersonService;
     }
+    @DocsCreateDeliveryPerson
     @PostMapping
     public ResponseEntity<DeliveryPersonResponse> create(@Valid @RequestBody DeliveryPersonRequest deliveryPersonRequest, UriComponentsBuilder ucb){
         DeliveryPersonResponse deliveryPersonResponse = deliveryPersonService.create(deliveryPersonRequest);
