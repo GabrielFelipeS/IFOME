@@ -1,13 +1,28 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import HeaderSteps from './HeaderSteps.vue';
 import { MaskInput } from 'vue-3-mask';
 import { fetchViaCep } from '@/services/viaCep';
 
 const currentStep = ref(1);
 
+const stepsActive = ref(false);
+
 const props = defineProps({
-    name: String,
+    data: Object,
+});
+
+const CurrentData = computed(() => {
+    return props.data;
+});
+
+watch(CurrentData, (value) => {
+    if (Object.keys(value).length > 0) {
+        stepsActive.value = true;
+        name.value = value.name;
+        phone.value = value.phone;
+        email.value = value.email;
+    }
 });
 
 function nextStep() {
@@ -22,6 +37,7 @@ function prevStep() {
     }
 }
 
+const email = ref('');
 const cep = ref('');
 const state = ref('');
 const city = ref('');
@@ -301,6 +317,7 @@ function submitForm() {
     formData.append('digit', digit.value);
     formData.append('password', password.value);
     formData.append('confirmPassword', confirmPassword.value);
+    formData.append('email', email.value);
 
     selectedFiles.value.forEach((file, index) => {
         formData.append(`photo_${index}`, file);
@@ -314,7 +331,7 @@ function submitForm() {
 </script>
 
 <template>
-    <div class="steps">
+    <div class="steps" v-if="stepsActive">
         <!-- Passar a etapa atual para o componente filho -->
         <HeaderSteps :currentStep="currentStep" />
 

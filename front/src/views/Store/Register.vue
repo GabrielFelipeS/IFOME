@@ -1,21 +1,22 @@
 <script setup>
 import FormHome from '@/components/store/FormHome.vue';
-import '@/components/store/Header.vue';
 import Header from '@/components/store/Header.vue';
-import '@/components/store/FormHome.vue';
 import StepsFormHome from '@/components/store/StepsFormHome.vue';
+import { ref } from 'vue';
 
+const data = ref({});
 
-const submitForm = (data) => {
-    console.log(data);
-}
+const submitForm = (formData) => {
+    data.value = formData;
+};
+
 </script>
 
 <template>
     <div class="content">
         <Header />
         <FormHome @submit="submitForm"/>
-        <StepsFormHome name="Teste"/>
+        <StepsFormHome :data="data"/>
     </div>
 </template>
 
