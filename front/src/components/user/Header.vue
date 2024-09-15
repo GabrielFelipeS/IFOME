@@ -1,5 +1,8 @@
 <script setup>
 import Button from '@/components/Button.vue';
+
+
+
 </script>
 
 <template>
@@ -15,6 +18,6 @@ import Button from '@/components/Button.vue';
 
 <style lang="scss" scoped>
 .header{
-	@apply w-full h-[70px] bg-tertiary flex flex-row  justify-center items-center rounded-b-3xl font-default text-lg;
+	@apply w-full h-[70px] bg-white flex flex-row  justify-center items-center rounded-b-3xl font-default text-lg;
 }
 </style>
