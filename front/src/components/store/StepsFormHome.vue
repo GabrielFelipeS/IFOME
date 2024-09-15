@@ -178,11 +178,11 @@ const days = [
             <div class="mid">
                 <div class="form-group">
                     <label for="opening">Abertura</label>
-                    <input type="time" id="opening" name="opening" v-model="opening" required />
+                    <MaskInput type="text" id="opening" name="opening" v-model="opening" mask="##:##" required />
                 </div>
                 <div class="form-group ">
                     <label for="closing">Fechamento</label>
-                    <input type="time" id="closing" name="closing" v-model="opening" required />
+                    <MaskInput type="text" id="closing" name="closing" v-model="closing" mask="##:##" required />
                 </div>
             </div>
             <div class="form-group">
