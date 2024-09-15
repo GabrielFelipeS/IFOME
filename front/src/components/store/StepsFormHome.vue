@@ -34,9 +34,9 @@ watch(cep, async (value) => {
 </script>
 
 <template>
-    <div class="steps" v-if="currentStep === 1">
+    <div class="steps">
         <HeaderSteps />
-        <div class="step">
+        <div class="step" v-if="currentStep === 1">
             <h2>Endereço da loja</h2>
             <p>Preencha as informações de endereço da sua loja.</p>
             <div class="form-group">
