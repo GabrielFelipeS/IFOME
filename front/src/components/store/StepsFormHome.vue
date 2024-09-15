@@ -576,7 +576,7 @@ const returnSteps = () => {
         <div class="step" v-if="currentStep === 7">
             <div class="final">
                 <img src="../../assets/img/logo_header.png" alt="Logo Ifome">
-                <h2>Seja Bem Vindo, {{ props.name }}</h2>
+                <h2>Seja Bem Vindo, {{ name }}</h2>
                 <img src="../../assets/img/store/balloon.png" alt="Icone Balão" class="baloon">
                 <img src="../../assets/img/store/balloon_2.png" alt="Icone Balão" class="baloon1">
                 <img src="../../assets/img/store/balloon_3.png" alt="Icone Balão" class="baloon2">
