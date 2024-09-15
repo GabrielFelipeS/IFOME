@@ -15,7 +15,7 @@ import java.net.URI;
 
 @RestController
 
-@RequestMapping("/deliveryPerson")
+@RequestMapping("/api/auth/deliveryPerson")
 public class DeliveryPersonController {
     private final DeliveryPersonService deliveryPersonService;
 
