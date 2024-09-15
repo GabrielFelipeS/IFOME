@@ -1,8 +1,9 @@
 package br.com.ifsp.ifome.entities;
 
 import br.com.ifsp.ifome.dto.request.DeliveryPersonRequest;
+import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -157,5 +158,10 @@ public class DeliveryPerson  implements PasswordPolicy {
 
     public void setBankAccount(BankAccount bankAccount) {
         this.bankAccount = bankAccount;
+    }
+
+    @Override
+    public boolean isLoginCorrect(String rawPassword, BCryptPasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(rawPassword, this.password);
     }
 }
