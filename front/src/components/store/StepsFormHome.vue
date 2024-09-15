@@ -326,8 +326,7 @@ const days = [
         .mid-check {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-around;
-            
+            justify-content: space-between;
             gap: 5px;
 
             .checkform {
