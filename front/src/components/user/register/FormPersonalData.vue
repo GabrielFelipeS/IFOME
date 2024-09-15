@@ -1,6 +1,7 @@
 <script setup>
 import Modal from "@/components/user/register/Modal.vue";
 import Button from "@/components/Button.vue";
+import { MaskInput } from "vue-3-mask";
 
 defineProps({
 	formData: {
@@ -24,14 +25,14 @@ defineProps({
 				<input type="text" placeholder="Nome completo" class="form-input" id="name"
 					   v-model="formData.name" >
 				<label for="" class="form-label">Celular</label>
-				<input type="text" placeholder="(00) 90000-0000" class="form-input" id="phone"
-					   v-model="formData.phone" >
+				<MaskInput type="text" placeholder="(00) 90000-0000" class="form-input" id="phone"
+					   v-model="formData.phone"  mask="(##) #####-####" />
 				<label for="" class="form-label">Data de nascimento</label>
-				<input type="text" placeholder="31/12/1969" class="form-input"
-					   v-model="formData.dateOfBirth" >
+				<MaskInput type="text" placeholder="31/12/1969" class="form-input"
+					   v-model="formData.dateOfBirth" mask="##/##/####" />
 				<label for="" class="form-label">CPF</label>
-				<input type="text" placeholder="000.000.000-00" class="form-input"
-					   v-model="formData.cpf" >
+				<MaskInput type="text" placeholder="000.000.000-00" class="form-input"
+					   v-model="formData.cpf" mask="###.###.###-##" />
 				<label for="" class="form-label">Senha</label>
 				<input type="password" placeholder="******" class="form-input"
 					   v-model="formData.password" >
