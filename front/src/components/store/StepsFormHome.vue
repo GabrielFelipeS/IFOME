@@ -369,7 +369,7 @@ const returnSteps = () => {
                 <label for="complement">Complemento</label>
                 <input type="text" id="complement" name="complement" v-model="complement" placeholder="Complemento" />
             </div>
-            <button type="submit" class="btn-primary" :class="stepCompleted ? '' : 'disable'"
+            <button type="submit" class="btn-primary" :class="stepCompleted ? '' : 'disable'" :disabled="!stepCompleted"
                 @click="nextStep">Próximo</button>
         </div>
 
@@ -386,7 +386,7 @@ const returnSteps = () => {
                 <MaskInput type="text" id="cpf" v-model="cpf" name="cpf" :value="cpf" placeholder="CPF" mask="###.###.###-##"
                     required />
             </div>
-            <button type="submit" class="btn-primary" :class="step2Completed ? '' : 'disable'"
+            <button type="submit" class="btn-primary" :class="step2Completed ? '' : 'disable'" :disabled="!step2Completed"
                 @click="nextStep">Próximo</button>
         </div>
 
@@ -455,7 +455,7 @@ const returnSteps = () => {
                 <p v-if="step3Erros.daysSelected">** Selecione pelo menos um dia **</p>
             </div>
 
-            <button type="submit" class="btn-text" :class="step3Completed ? '' : 'disable'"
+            <button type="submit" class="btn-text" :class="step3Completed ? '' : 'disable'" :disabled="!step3Completed"
                 @click="nextStep">Próximo</button>
         </div>
         <div class="step" v-if="currentStep === 4">
@@ -494,7 +494,7 @@ const returnSteps = () => {
                 </div>
             </div>
 
-            <button type="submit" class="btn-primary" :class="step4Completed ? '' : 'disable'"
+            <button type="submit" class="btn-primary" :class="step4Completed ? '' : 'disable'" :disabled="!step4Completed"
                 @click="nextStep">Próximo</button>
         </div>
 
@@ -541,7 +541,7 @@ const returnSteps = () => {
                         required />
                 </div>
             </div>
-            <button type="submit" class="btn-text" :class="step5Completed ? '' : 'disable'"
+            <button type="submit" class="btn-text" :class="step5Completed ? '' : 'disable'" :disabled="!step5Completed"
                 @click="nextStep">Próximo</button>
 
         </div>
@@ -559,7 +559,7 @@ const returnSteps = () => {
                     placeholder="Confirmar Senha" required />
                 <span @click="showConfirmation" v-if="confirmPassword.length > 0">Mostrar Confirmação</span>
             </div>
-            <button type="submit" class="btn-primary" :class="step6Completed ? '' : 'disable'"
+            <button type="submit" class="btn-primary" :class="step6Completed ? '' : 'disable'" :disabled="!step6Completed"
                 @click="submitForm">Concluir</button>
         </div>
 
