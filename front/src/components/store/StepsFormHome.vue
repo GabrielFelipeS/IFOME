@@ -298,7 +298,8 @@ const days = [
                 <p v-if="step3Erros.daysSelected">** Selecione pelo menos um dia **</p>
             </div>
 
-            <button type="submit" class="btn-text" @click="nextStep">Próximo</button>
+            <button type="submit" class="btn-text" :class="step3Completed ? '' : 'disable'"
+                @click="nextStep">Próximo</button>
         </div>
     </div>
 </template>
