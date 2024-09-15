@@ -38,6 +38,10 @@ function submitForm() {
     }
 
     emit('submit', { name: name.value, email: email.value, phone: phone.value });
+
+    name.value = '';
+    email.value = '';
+    phone.value = '';
 }
 </script>
 <template>
