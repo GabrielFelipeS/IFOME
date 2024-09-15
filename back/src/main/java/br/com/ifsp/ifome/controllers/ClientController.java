@@ -43,8 +43,9 @@ public class ClientController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ClientLoginResponse> login(@Valid @RequestBody ClientLoginRequest clientLogin) {
+    public ResponseEntity<ApiResponse> login(@Valid @RequestBody ClientLoginRequest clientLogin) {
         ClientLoginResponse clientLoginResponse = clientService.login(clientLogin);
-        return ResponseEntity.ok(clientLoginResponse);
+        ApiResponse apiResponse = new ApiResponse("sucess", clientLoginResponse, "Cliente logado com sucesso");
+        return ResponseEntity.ok(apiResponse);
     }
 }
