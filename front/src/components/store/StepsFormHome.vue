@@ -4,7 +4,7 @@ import HeaderSteps from './HeaderSteps.vue';
 import { MaskInput } from 'vue-3-mask';
 import { fetchViaCep } from '@/services/viaCep';
 
-const currentStep = ref(1);
+const currentStep = ref(2);
 
 function nextStep() {
     currentStep.value++;
@@ -20,8 +20,20 @@ const city = ref('');
 const address = ref('');
 const number = ref('');
 const complement = ref('');
+const name = ref('');
+const cpf = ref('');
 
 const stepCompleted = ref(false);
+const step2Completed = ref(false);
+
+watch([name, cpf], () => {
+    let cpfValue = cpf.value.replace(/\D/g, '');
+    if (name.value && cpfValue.length === 11) {
+        step2Completed.value = true;
+    } else {
+        step2Completed.value = false;
+    }
+});
 
 watch([cep, state, city, address, number], () => {
     if (cep.value && state.value && city.value && address.value && number.value) {
@@ -51,16 +63,16 @@ watch(cep, async (value) => {
             <p>Preencha as informações de endereço da sua loja.</p>
             <div class="form-group">
                 <label for="cep">CEP</label>
-                <MaskInput type="text" id="cep" name="cep" v-model="cep" placeholder="CEP" mask="#####-###" required/>
+                <MaskInput type="text" id="cep" name="cep" v-model="cep" placeholder="CEP" mask="#####-###" required />
             </div>
             <div class="mid">
                 <div class="form-group">
                     <label for="state">Estado</label>
-                    <input type="text" id="state" name="state" v-model="state" placeholder="Estado" required disabled/>
+                    <input type="text" id="state" name="state" v-model="state" placeholder="Estado" required disabled />
                 </div>
                 <div class="form-group">
                     <label for="city">Cidade</label>
-                    <input type="text" id="city" name="city" v-model="city" placeholder="Cidade" required  disabled/>
+                    <input type="text" id="city" name="city" v-model="city" placeholder="Cidade" required disabled />
                 </div>
             </div>
             <div class="form-group">
@@ -69,13 +81,30 @@ watch(cep, async (value) => {
             </div>
             <div class="form-group">
                 <label for="number">Número</label>
-                <MaskInput type="text" id="number" name="number" v-model="number" placeholder="Número" mask="######" required/>
+                <MaskInput type="text" id="number" name="number" v-model="number" placeholder="Número" mask="######"
+                    required />
             </div>
             <div class="form-group">
                 <label for="complement">Complemento</label>
                 <input type="text" id="complement" name="complement" v-model="complement" placeholder="Complemento" />
             </div>
-            <button type="submit" class="btn-primary" :class="stepCompleted ? '' : 'disable'" @click="nextStep">Próximo</button>
+            <button type="submit" class="btn-primary" :class="stepCompleted ? '' : 'disable'"
+                @click="nextStep">Próximo</button>
+        </div>
+        <div class="step" v-if="currentStep === 2">
+            <h2>Responsável da loja</h2>
+            <p>Informe os dados da pessoa que tem o nome no contrato social da empresa, seja como dona, sócia ou sócia
+                administrativa.</p>
+            <div class="form-group">
+                <label for="name">Nome</label>
+                <input type="text" id="name" name="name" v-model="name" placeholder="Nome" required />
+            </div>
+            <div class="form-group">
+                <label for="cpf">CPF</label>
+                <MaskInput type="text" id="cpf" v-model="cpf" name="cpf" placeholder="CPF" mask="###.###.###-##" required />
+            </div>
+            <button type="submit" class="btn-primary" :class="step2Completed ? '' : 'disable'"
+                @click="nextStep">Próximo</button>
         </div>
     </div>
 </template>
