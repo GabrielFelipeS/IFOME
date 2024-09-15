@@ -1,9 +1,11 @@
 package br.com.ifsp.ifome.entities;
 
+import br.com.ifsp.ifome.dto.request.ClientLoginRequest;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -37,9 +39,9 @@ public class Client implements UserDetails  {
 
     public Client() {}
 
-    public Client(ClientRequest clientRequest) {
+    public Client(ClientRequest clientRequest, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.email = clientRequest.email();
-        this.password = clientRequest.password();
+        this.password = bCryptPasswordEncoder.encode(clientRequest.password());
         this.dateOfBirth = clientRequest.dateOfBirth();
         this.cpf = clientRequest.cpf();
         this.address = clientRequest.address().stream().map(Address::new).collect(Collectors.toList());
@@ -136,4 +138,7 @@ public class Client implements UserDetails  {
         this.address = address;
     }
 
+    public boolean isLoginIncorrect(ClientLoginRequest clientLoginRequest, BCryptPasswordEncoder passwordEncoder) {
+        return !passwordEncoder.matches(clientLoginRequest.password(), this.password);
+    }
 }
