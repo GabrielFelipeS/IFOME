@@ -1,5 +1,6 @@
 <script setup>
 import HeaderSteps from './HeaderSteps.vue';
+import { MaskInput } from 'vue-3-mask';
 </script>
 
 <template>
@@ -10,16 +11,16 @@ import HeaderSteps from './HeaderSteps.vue';
             <p>Preencha as informações de endereço da sua loja.</p>
             <div class="form-group">
                 <label for="cep">CEP</label>
-                <input type="text" id="cep" name="cep" placeholder="CEP" required />
+                <MaskInput type="text" id="cep" name="cep" placeholder="CEP" mask="#####-###" required />
             </div>
             <div class="mid">
                 <div class="form-group">
                     <label for="state">Estado</label>
-                    <input type="text" id="state" name="state" placeholder="Estado" required />
+                    <input type="text" id="state" name="state" placeholder="Estado" required disabled/>
                 </div>
                 <div class="form-group">
                     <label for="city">Cidade</label>
-                    <input type="text" id="city" name="city" placeholder="Cidade" required />
+                    <input type="text" id="city" name="city" placeholder="Cidade" required  disabled/>
                 </div>
             </div>
             <div class="form-group">
