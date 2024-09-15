@@ -4,7 +4,7 @@ import HeaderSteps from './HeaderSteps.vue';
 import { MaskInput } from 'vue-3-mask';
 import { fetchViaCep } from '@/services/viaCep';
 
-const currentStep = ref(7);
+const currentStep = ref(1);
 
 const props = defineProps({
     name: String,
@@ -274,6 +274,43 @@ function showConfirmation() {
     }
 }
 
+function submitForm() {
+    const formData = new FormData();
+
+    // Adicionar todos os campos de dados ao formData
+    formData.append('cep', cep.value);
+    formData.append('state', state.value);
+    formData.append('city', city.value);
+    formData.append('address', address.value);
+    formData.append('number', number.value);
+    formData.append('complement', complement.value);
+    formData.append('name', name.value);
+    formData.append('cpf', cpf.value);
+    formData.append('cnpj', cnpj.value);
+    formData.append('nameStore', nameStore.value);
+    formData.append('phone', phone.value);
+    formData.append('specialty', specialty.value);
+    formData.append('other', other.value);
+    formData.append('opening', opening.value);
+    formData.append('closing', closing.value);
+    formData.append('daysSelected', daysSelected.value);
+    formData.append('paymentMethods', JSON.stringify(paymentMethods.value));
+    formData.append('bank', bank.value);
+    formData.append('agency', agency.value);
+    formData.append('account', account.value);
+    formData.append('digit', digit.value);
+    formData.append('password', password.value);
+    formData.append('confirmPassword', confirmPassword.value);
+
+    selectedFiles.value.forEach((file, index) => {
+        formData.append(`photo_${index}`, file);
+    });
+    
+    //mostar os dados no console em json
+    console.log(Object.fromEntries(formData));
+    
+}
+
 </script>
 
 <template>
@@ -502,7 +539,7 @@ function showConfirmation() {
                 <span @click="showConfirmation" v-if="confirmPassword.length > 0">Mostrar Confirmação</span>
             </div>
             <button type="submit" class="btn-primary" :class="step6Completed ? '' : 'disable'"
-                @click="nextStep">Próximo</button>
+                @click="submitForm">Concluir</button>
         </div>
 
         <div class="step" v-if="currentStep === 7">
@@ -512,7 +549,7 @@ function showConfirmation() {
                 <img src="../../assets/img/store/balloon.png" alt="Icone Balão" class="baloon">
                 <img src="../../assets/img/store/balloon_2.png" alt="Icone Balão" class="baloon1">
                 <img src="../../assets/img/store/balloon_3.png" alt="Icone Balão" class="baloon2">
-                <button type="submit" class="btn-text" @click="completeForm">Começar a Vender</button>
+                <button type="submit" class="btn-text">Começar a Vender</button>
             </div>
         </div>
     </div>
