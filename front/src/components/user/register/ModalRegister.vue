@@ -1,9 +1,10 @@
 <script setup>
 import Button from "@/components/Button.vue";
+import Modal from "@/components/user/register/Modal.vue";
 </script>
 
 <template>
-	<div class="body">
+	<Modal>
 		<div class="title">
 			Cadastre-se agora
 		</div>
@@ -28,7 +29,7 @@ import Button from "@/components/Button.vue";
 			<span>Ao continuar, você concorda em receber comunicações do iFome.
 				Confira nossa <a href="#">Declaração de Privacidade</a>.</span>
 		</footer>
-	</div>
+	</Modal>
 </template>
 
 <style scoped>
@@ -38,11 +39,6 @@ import Button from "@/components/Button.vue";
 
 	.subtitle {
 		@apply flex flex-row pl-4 mt-4;
-	}
-
-	.body {
-		@apply bg-white flex flex-col h-full my-[5%] mx-5 justify-center;
-		@apply rounded-2xl border-2 border-b-stone-400;
 	}
 
 	.main {
