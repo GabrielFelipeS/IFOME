@@ -2,6 +2,7 @@ package br.com.ifsp.ifome.entities;
 
 import br.com.ifsp.ifome.dto.request.ClientLoginRequest;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
+import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "clients")
-public class Client implements UserDetails  {
+public class Client implements PasswordPolicy, UserDetails  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,18 +49,18 @@ public class Client implements UserDetails  {
         this.address = clientRequest.address().stream().map(Address::new).collect(Collectors.toList());
     }
 
-    public Client(Long id, String name, String email, String password, LocalDate dateOfBirth, String cpf,  List<Address> address, String paymentMethods) {
+    public Client(Long id, String name, String email, String password, LocalDate dateOfBirth, String cpf,  List<Address> address, String paymentMethods, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.password = password;
+        this.password = bCryptPasswordEncoder.encode(password);
         this.dateOfBirth = dateOfBirth;
         this.cpf = cpf;
         this.address = address;
     }
 
-    public Client(Long id, String fullName, String email, String password, LocalDate dateOfBirth, String cpf,  Address address, String paymentMethods) {
-      this(id, fullName, email, password, dateOfBirth, cpf, List.of(address), paymentMethods);
+    public Client(Long id, String fullName, String email, String password, LocalDate dateOfBirth, String cpf,  Address address, String paymentMethods, BCryptPasswordEncoder bCryptPasswordEncoder) {
+      this(id, fullName, email, password, dateOfBirth, cpf, List.of(address), paymentMethods, bCryptPasswordEncoder);
     }
 
     public String getName() {
@@ -156,7 +157,8 @@ public class Client implements UserDetails  {
         this.address = address;
     }
 
-    public boolean isLoginIncorrect(ClientLoginRequest clientLoginRequest, BCryptPasswordEncoder passwordEncoder) {
-        return !passwordEncoder.matches(clientLoginRequest.password(), this.password);
+    @Override
+    public boolean isLoginCorrect(String rawPassword, BCryptPasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(rawPassword, this.password);
     }
 }
