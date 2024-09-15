@@ -2,23 +2,62 @@
 import { ref } from 'vue';
 import { MaskInput } from 'vue-3-mask';
 
+const emit = defineEmits(['submit']);
+
 const phone = ref('');
+const name = ref('');
+const email = ref('');
+
+const errors = ref({
+    name: '',
+    email: '',
+    phone: ''
+});
+
+function submitForm() {
+    if (!name.value) {
+        errors.value.name = { value: 'Campo obrigatório' };
+    } else {
+        errors.value.name = '';
+    }
+
+    if (!email.value) {
+        errors.value.email = { value: 'Campo obrigatório' };
+    } else {
+        errors.value.email = '';
+    }
+
+    if (!phone.value) {
+        errors.value.phone = { value: 'Campo obrigatório' };
+    } else {
+        errors.value.phone = '';
+    }
+
+    if(errors.value.name || errors.value.email || errors.value.phone){
+        return;
+    }
+
+    emit('submit', { name: name.value, email: email.value, phone: phone.value });
+}
 </script>
 <template>
-    <form class="form">
+    <form class="form" @submit.prevent="submitForm">
         <h2>Cadastre sua loja</h2>
         <div class="form-group">
             <label for="name">Nome Completo</label>
-            <input type="text" id="name" name="name" placeholder="Nome da loja" />
+            <input type="text" v-model="name" id="name" name="name" placeholder="Seu Nome Completo" required/>
+            <p v-if="errors.name">{{ errors.name.value }}</p>
         </div>
         <div class="form-group">
             <label for="email">E-mail</label>
-            <input type="email" id="email" name="email" placeholder="E-mail" />
+            <input type="email" v-model="email" id="email" name="email" placeholder="E-mail" required/>
+            <p v-if="errors.email">{{ errors.email.value }}</p>
         </div>
 
         <div class="form-group">
             <label for="phone">Celular</label>
-            <MaskInput v-model="phone" mask="(##) #####-####" placeholder="Celular" />
+            <MaskInput v-model="phone" mask="(##) #####-####" placeholder="Celular" required/>
+            <p v-if="errors.phone">{{ errors.phone.value }}</p>
         </div>
 
         <button type="submit">Cadastrar Agora</button>
@@ -44,6 +83,10 @@ const phone = ref('');
 
         input {
             @apply w-full h-[50px] border border-gray-300 rounded-lg px-3;
+        }
+
+        p{
+            @apply text-red-500 text-sm mt-1;
         }
     }
 
