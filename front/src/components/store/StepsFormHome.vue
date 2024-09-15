@@ -216,7 +216,7 @@ const days = [
         }
 
         p {
-            @apply text-lg text-gray-500 mb-5;
+            @apply text-lg text-gray-500 mb-5 font-bold;
         }
 
         .mid-check {
