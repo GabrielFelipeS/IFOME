@@ -50,7 +50,7 @@ watch(cep, async (value) => {
             </div>
             <div class="form-group">
                 <label for="number">Número</label>
-                <input type="text" id="number" name="number" v-model="number" placeholder="Número" required />
+                <MaskInput type="text" id="number" name="number" v-model="number" placeholder="Número" mask="######" required/>
             </div>
             <div class="form-group">
                 <label for="complement">Complemento</label>
