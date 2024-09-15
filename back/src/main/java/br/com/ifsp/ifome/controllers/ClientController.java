@@ -3,8 +3,10 @@ package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.docs.DocsCreateClient;
 import br.com.ifsp.ifome.dto.ApiResponse;
+import br.com.ifsp.ifome.dto.request.ClientLoginRequest;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
 import br.com.ifsp.ifome.dto.response.ClientResponse;
+import br.com.ifsp.ifome.entities.Client;
 import br.com.ifsp.ifome.services.ClientService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -38,5 +40,12 @@ public class ClientController {
 
         ApiResponse response = new ApiResponse("success", clientResponse, "Cliente criado com sucesso");
         return ResponseEntity.created(locationOfNewClient).body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@Valid @RequestBody ClientLoginRequest clientLogin) {
+        Client client = clientService.login(clientLogin);
+
+        return ResponseEntity.ok("Logado");
     }
 }
