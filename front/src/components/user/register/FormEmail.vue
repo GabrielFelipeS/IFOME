@@ -22,6 +22,8 @@ defineProps({
 				>
 			</div>
 			<div class="btn-container">
+				<Button href="#" @click="$emit('previous-step')" inversed
+						class="button text-primary-subtle border border-primary mr-[15%]">Voltar</Button>
 				<Button href="#" @click="$emit('next-step')"
 						class="button bg-primary text-white">Continuar</Button>
 			</div>
@@ -37,7 +39,7 @@ defineProps({
 	@apply mt-5
 }
 .btn-container {
-	@apply flex flex-row justify-center items-center align-baseline my-3 px-[20%];
+	@apply flex flex-row justify-center items-center align-baseline mt-5 px-[10%];
 }
 .button {
 	@apply rounded-md w-full flex justify-center align-middle py-[2%];
