@@ -1,6 +1,6 @@
 package br.com.ifsp.ifome.services;
 
-import br.com.ifsp.ifome.exceptions.InvalidToken;
+import br.com.ifsp.ifome.exceptions.InvalidTokenException;
 import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -53,7 +53,7 @@ public class TokenService {
         try {
             Jwt jwt = jwtDecoder.decode(token);
         } catch (JwtException e) {
-            throw new InvalidToken();
+            throw new InvalidTokenException();
         }
     }
 }
