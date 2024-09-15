@@ -73,20 +73,22 @@ public class ClienteControllerIT {
 
 
     @Test
+    @DirtiesContext
     public void shouldBeAbleLoginWithValidUser() {
         ClientLoginRequest clientLogin = new ClientLoginRequest("user1@gmail.com", "@Password1");
         ResponseEntity<String> response = restTemplate.postForEntity("/api/client/login", clientLogin, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
-//        ClientResponse clientResponse = documentContext.read("$.data.user", ClientResponse.class);
-        String token = documentContext.read("$.token");
-
-//        assertThat(clientResponse).isNotNull();
+        String token = documentContext.read("$.data.token");
         assertThat(token).isNotNull();
+
+        Object clientResponse = documentContext.read("$.data.user");
+        assertThat(clientResponse).isNotNull();
     }
 
     @Test
+    @DirtiesContext
     public void shouldReturnErrorWhenLoginWithInvalidEmail() {
         ClientLoginRequest clientLogin = new ClientLoginRequest("invalid_email@gmail.com", "@Password1");
         ResponseEntity<String> response = restTemplate.postForEntity("/api/client/login", clientLogin, String.class);
