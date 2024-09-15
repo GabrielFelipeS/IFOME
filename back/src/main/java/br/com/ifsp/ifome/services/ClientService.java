@@ -30,7 +30,6 @@ public class ClientService {
 
     public ClientResponse create(ClientRequest clientRequest) {
         Client client = new Client(clientRequest, bCryptPasswordEncoder);
-        System.out.println(client.getPassword());
         client = clientRepository.save(client);
         return new ClientResponse(client);
     }
