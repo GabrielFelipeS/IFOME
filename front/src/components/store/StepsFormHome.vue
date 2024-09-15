@@ -138,33 +138,51 @@ watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other]
         step3Erros.value.specialty = false;
     }
 
-    if (opening.value) {
+    if (opening.value && opening.value.includes(':')) {
         let openingValue = opening.value.split(':');
-        if (openingValue[0] < 0 || openingValue[0] > 23 || openingValue[1] < 0 || openingValue[1] > 59) {
+        let hour = parseInt(openingValue[0], 10);
+        let minute = parseInt(openingValue[1], 10);
+
+        if (isNaN(hour) || isNaN(minute) || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
             step3Erros.value.opening = true;
         } else {
             step3Erros.value.opening = false;
         }
+    } else {
+        step3Erros.value.opening = true;
     }
 
-    if (closing.value) {
+    // Verificação de Fechamento
+    if (closing.value && closing.value.includes(':')) {
         let closingValue = closing.value.split(':');
-        if (closingValue[0] < 0 || closingValue[0] > 23 || closingValue[1] < 0 || closingValue[1] > 59) {
+        let hour = parseInt(closingValue[0], 10);
+        let minute = parseInt(closingValue[1], 10);
+
+        // Verificar se os valores são válidos
+        if (isNaN(hour) || isNaN(minute) || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
             step3Erros.value.closing = true;
         } else {
             step3Erros.value.closing = false;
         }
+    } else {
+        step3Erros.value.closing = true;
     }
 
-    if (opening.value && closing.value) {
+    if (!step3Erros.value.opening && !step3Erros.value.closing) {
         let openingValue = opening.value.split(':');
         let closingValue = closing.value.split(':');
-        if (closingValue[0] < openingValue[0] || (closingValue[0] === openingValue[0] && closingValue[1] <= openingValue[1])) {
+        let openingHour = parseInt(openingValue[0], 10);
+        let openingMinute = parseInt(openingValue[1], 10);
+        let closingHour = parseInt(closingValue[0], 10);
+        let closingMinute = parseInt(closingValue[1], 10);
+
+        if (closingHour < openingHour || (closingHour === openingHour && closingMinute <= openingMinute)) {
             step3Erros.value.closing = true;
         } else {
             step3Erros.value.closing = false;
         }
     }
+
 
     if (daysSelected.value.length === 0) {
         step3Erros.value.daysSelected = true;
@@ -323,19 +341,19 @@ function submitForm() {
     }];
 
 
-    formData.append('nameRestaurant', nameStore.value); 
-    formData.append('email', email.value);               
-    formData.append('password', password.value);         
-    formData.append('confirmationPassword', confirmPassword.value);  
-    formData.append('cnpj', cnpj.value);                
-    formData.append('address', JSON.stringify(formatedAddress)); 
-    formData.append('telephone', phone.value);           
-    formData.append('foodCategory', specialty.value);  
-    formData.append('paymentMethods', paymentMethods.value); 
-    formData.append('openingHoursStart', opening.value); 
-    formData.append('openingHoursEnd', closing.value);  
-    formData.append('personResponsible', name.value);   
-    formData.append('personResponsibleCPF', cpf.value);  
+    formData.append('nameRestaurant', nameStore.value);
+    formData.append('email', email.value);
+    formData.append('password', password.value);
+    formData.append('confirmationPassword', confirmPassword.value);
+    formData.append('cnpj', cnpj.value);
+    formData.append('address', JSON.stringify(formatedAddress));
+    formData.append('telephone', phone.value);
+    formData.append('foodCategory', specialty.value);
+    formData.append('paymentMethods', paymentMethods.value);
+    formData.append('openingHoursStart', opening.value);
+    formData.append('openingHoursEnd', closing.value);
+    formData.append('personResponsible', name.value);
+    formData.append('personResponsibleCPF', cpf.value);
     formData.append('restaurantImages', selectedFiles.value[0]);
     formData.append('bankAccount', JSON.stringify(bankAccount));
 
@@ -381,7 +399,7 @@ const returnSteps = () => {
             <div class="form-group">
                 <label for="neighborhood">Bairro</label>
                 <input type="text" id="neighborhood" name="neighborhood" v-model="neighborhood" placeholder="Bairro"
-                    required/>
+                    required />
             </div>
             <div class="form-group">
                 <label for="address">Endereço</label>
