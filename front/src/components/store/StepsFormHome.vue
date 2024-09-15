@@ -80,10 +80,10 @@ import HeaderSteps from './HeaderSteps.vue';
         }
 
         @media (min-width: 768px) {
-            @apply w-[500px] h-[calc(100vh-100px)] m-auto pt-10;
+            @apply w-[60%] h-[calc(100vh-100px)] m-auto pt-10;
 
             button {
-                @apply w-[500px] h-[50px] bg-primary text-white font-semibold rounded-lg fixed bottom-10 left-[50%] transform -translate-x-1/2;
+                @apply w-[60%] h-[50px] bg-primary text-white font-semibold rounded-lg fixed bottom-10 left-[50%] transform -translate-x-1/2;
             }
         }
 
