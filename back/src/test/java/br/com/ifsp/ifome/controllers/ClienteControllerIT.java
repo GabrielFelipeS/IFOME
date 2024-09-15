@@ -39,7 +39,7 @@ public class ClienteControllerIT {
                 "address", "complement",
                  "12", "details")));
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         DocumentContext document = JsonPath.parse(response.getBody());
@@ -76,7 +76,7 @@ public class ClienteControllerIT {
             "address",  "complement",
              "12", "details")));
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
@@ -97,7 +97,7 @@ public class ClienteControllerIT {
             "address",  "complement",
             "12", "details")));
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
@@ -125,7 +125,7 @@ public class ClienteControllerIT {
             "address",  "complement",
              "12", "details")));
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
@@ -149,7 +149,7 @@ public class ClienteControllerIT {
             "address", "complement",
             "12", "details")));
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
@@ -173,7 +173,7 @@ public class ClienteControllerIT {
                 "address",  "complement",
                  "12", "details")));
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         System.out.println(response.getBody());
         DocumentContext documentContext = JsonPath.parse(response.getBody());
