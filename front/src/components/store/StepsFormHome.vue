@@ -70,6 +70,14 @@ watch(specialty, (value) => {
     }
 });
 
+watch(other, (value) => {
+    if (value) {
+        document.querySelector('#specialty').closest('.form-group').classList.remove('hidden');
+    } else {
+        document.querySelector('#specialty').closest('.form-group').classList.add('hidden');
+    }
+});
+
 const stepCompleted = ref(false);
 const step2Completed = ref(false);
 const step3Completed = ref(false);
@@ -424,7 +432,7 @@ const returnSteps = () => {
                     </select>
                     <p v-if="step3Erros.specialty">** Selecione uma opção valida **</p>
                 </div>
-                <div class="form-group hidden">
+                <div class="form-group" :class="specialty === 'Outro' ? '' : 'hidden'">
                     <label for="other">Outro</label>
                     <input type="text" id="other" v-model="other" name="other" placeholder="Outro" />
                     <p v-if="step3Erros.other">** Digite um valor valido **</p>
