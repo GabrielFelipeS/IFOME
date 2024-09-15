@@ -2,15 +2,17 @@ package br.com.ifsp.ifome.entities;
 
 import br.com.ifsp.ifome.dto.request.BankAccountRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
+import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "restaurants")
-public class Restaurant {
+@Table(name = "RESTAURANTS")
+public class Restaurant implements PasswordPolicy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -193,5 +195,11 @@ public class Restaurant {
 
     public void setBankAccount(BankAccount bankAccount) {
         this.bankAccount = bankAccount;
+    }
+
+    @Override
+    public boolean isLoginCorrect(String rawPassword, BCryptPasswordEncoder passwordEncoder) {
+        System.out.println(rawPassword);
+        return passwordEncoder.matches(rawPassword, this.password);
     }
 }

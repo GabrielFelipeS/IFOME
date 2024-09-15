@@ -14,6 +14,7 @@ INSERT INTO restaurants (
     person_responsible,
     person_responsible_CPF,
     email,
+    password,
     payment_methods,
     restaurant_image,
     bank_account
@@ -29,8 +30,18 @@ INSERT INTO restaurants (
     'Nome Responsável',
     '13212312365',
     'email1@email.com',
+    '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
     'Dinheiro, Cartão',
     'imagem_restaurante.jpg',
     'Banco XYZ, Agência 123, Conta 456789'
+);
+
+INSERT INTO deliveryPerson  (
+    email,
+    password
+)
+VALUES (
+   'email1@email.com',
+   '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG'
 );
 

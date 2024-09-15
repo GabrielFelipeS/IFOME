@@ -1,7 +1,10 @@
 package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.docs.DocsCreateRestaurant;
+import br.com.ifsp.ifome.dto.ApiResponse;
+import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
+import br.com.ifsp.ifome.dto.response.RestaurantLoginResponse;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
 import br.com.ifsp.ifome.services.RestaurantService;
 import jakarta.validation.Valid;
@@ -35,6 +38,11 @@ public class RestaurantController {
         return ResponseEntity.created(locationOfNewRestaurant).body(restaurantResponse);
     }
 
-
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest restaurantLogin) {
+        RestaurantLoginResponse restaurantLoginResponse = restaurantService.login(restaurantLogin);
+        ApiResponse apiResponse = new ApiResponse("sucess", restaurantLoginResponse, "Cliente logado com sucesso");
+        return ResponseEntity.ok(apiResponse);
+    }
 
 }
