@@ -21,6 +21,16 @@ const address = ref('');
 const number = ref('');
 const complement = ref('');
 
+const stepCompleted = ref(false);
+
+watch([cep, state, city, address, number], () => {
+    if (cep.value && state.value && city.value && address.value && number.value) {
+        stepCompleted.value = true;
+    } else {
+        stepCompleted.value = false;
+    }
+});
+
 watch(cep, async (value) => {
     if (value.length === 9) {
         let cep = value.replace('-', '');
@@ -65,7 +75,7 @@ watch(cep, async (value) => {
                 <label for="complement">Complemento</label>
                 <input type="text" id="complement" name="complement" v-model="complement" placeholder="Complemento" />
             </div>
-            <button type="submit" class="btn-primary">Próximo</button>
+            <button type="submit" class="btn-primary" :class="stepCompleted ? '' : 'disable'">Próximo</button>
 
         </div>
     </div>
@@ -116,6 +126,10 @@ watch(cep, async (value) => {
             button {
                 @apply w-[60%] h-[50px] bg-primary text-white font-semibold rounded-lg fixed bottom-10 left-[50%] transform -translate-x-1/2;
             }
+        }
+
+        .disable {
+            @apply bg-gray-300 cursor-not-allowed;
         }
 
     }
