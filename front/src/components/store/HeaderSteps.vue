@@ -7,7 +7,7 @@ const emit = defineEmits(['returnBack']);
 
 const returnBack = () => {
     if (props.currentStep > 1) {
-        widthLine.value = (props.currentStep - 2) * 25;
+        widthLine.value = (props.currentStep - 2) * 20;
         emit('returnBack');
     }
 };
@@ -17,7 +17,7 @@ const props = defineProps({
 });
 
 watch(() => props.currentStep, (newStep) => {
-    widthLine.value = (newStep - 1) * 25;
+    widthLine.value = (newStep - 1) * 20;
 });
 </script>
 
