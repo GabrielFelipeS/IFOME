@@ -4,6 +4,16 @@ import HeaderSteps from './HeaderSteps.vue';
 import { MaskInput } from 'vue-3-mask';
 import { fetchViaCep } from '@/services/viaCep';
 
+const currentStep = ref(1);
+
+function nextStep() {
+    currentStep.value++;
+}
+
+function prevStep() {
+    currentStep.value--;
+}
+
 const cep = ref('');
 const state = ref('');
 const city = ref('');
@@ -15,7 +25,6 @@ watch(cep, async (value) => {
     if (value.length === 9) {
         let cep = value.replace('-', '');
         const data = await fetchViaCep(cep);
-        console.log(data);
         state.value = data.uf;
         city.value = data.localidade;
         address.value = data.logradouro;
@@ -25,7 +34,7 @@ watch(cep, async (value) => {
 </script>
 
 <template>
-    <div class="steps">
+    <div class="steps" v-if="currentStep === 1">
         <HeaderSteps />
         <div class="step">
             <h2>Endereço da loja</h2>
