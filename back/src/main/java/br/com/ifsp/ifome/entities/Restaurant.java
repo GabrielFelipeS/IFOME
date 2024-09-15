@@ -18,7 +18,6 @@ public class Restaurant {
     private String nameRestaurant;
     private String cnpj;
     private String foodCategory;
-    private String cep;
     @OneToMany
     @JoinColumn(name = "address", referencedColumnName = "cnpj")
     private List<Address> address;
@@ -45,7 +44,6 @@ public class Restaurant {
         this.nameRestaurant = restaurantRequest.nameRestaurant();
         this.cnpj = restaurantRequest.cnpj();
         this.foodCategory = restaurantRequest.foodCategory();
-        this.cep = restaurantRequest.cep();
         this.address = restaurantRequest.address().stream().map(Address::new).collect(Collectors.toList());
         this.telephone = restaurantRequest.telephone();
         this.openingHoursStart = restaurantRequest.openingHoursStart();
@@ -59,12 +57,11 @@ public class Restaurant {
         this.bankAccount = new BankAccount(restaurantRequest.bankAccount());
     }
 
-    public Restaurant(Long id, String nameRestaurant, String cnpj, String foodCategory, String cep, List<Address> address, String telephone, String openingHoursStart, String openingHoursEnd, String personResponsible, String personResponsibleCPF, String email, String password, String paymentMethods, String restaurantImage, BankAccount bankAccount) {
+    public Restaurant(Long id, String nameRestaurant, String cnpj, String foodCategory, List<Address> address, String telephone, String openingHoursStart, String openingHoursEnd, String personResponsible, String personResponsibleCPF, String email, String password, String paymentMethods, String restaurantImage, BankAccount bankAccount) {
         this.id = id;
         this.nameRestaurant = nameRestaurant;
         this.cnpj = cnpj;
         this.foodCategory = foodCategory;
-        this.cep = cep;
         this.address = address;
         this.telephone = telephone;
         this.openingHoursStart = openingHoursStart;
@@ -108,14 +105,6 @@ public class Restaurant {
 
     public void setFoodCategory(String foodCategory) {
         this.foodCategory = foodCategory;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
     }
 
     public List<Address> getAddress() {

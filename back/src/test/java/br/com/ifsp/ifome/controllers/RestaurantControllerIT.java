@@ -40,7 +40,6 @@ public class RestaurantControllerIT {
                         "address", "complement",
                         "12", "details")),
                 "(11) 1234-5678",
-                "07070-000",
                 "Pizzaria",
                 "Dinheiro, Cartão",
                 "12:00",
@@ -64,13 +63,12 @@ public class RestaurantControllerIT {
         //String address = document.read("$.address");
         Address addressJson = document.read("$.address[0]", Address.class);
         String telephone = document.read("$.telephone");
-        String cep = document.read("$.cep");
         String foodCategory = document.read("$.foodCategory");
         String paymentMethods = document.read("$.paymentMethods");
         String openingHoursStart = document.read("$.openingHoursStart");
         String openingHoursEnd = document.read("$.openingHoursEnd");
         String personResponsibleCPF = document.read("$.personResponsibleCPF");
-        String restaurantImages = document.read("$.restaurantImage");
+        String restaurantImages = document.read("$.restaurantImages");
 
 
         assertThat(id).isNotNull();
@@ -104,7 +102,6 @@ public class RestaurantControllerIT {
                         "address", "complement",
                         "12", "details")),
                 "(11) 1234-5678",
-                "07070-000",
                 "Pizzaria",
                 "Dinheiro, Cartão",
                 "12:00",
@@ -143,7 +140,6 @@ public class RestaurantControllerIT {
                         "address", "complement",
                         "12", "details")),
                 "(11) 1234-5678",
-                "07070-000",
                 "Pizzaria",
                 "Dinheiro, Cartão",
                 "12:00",
@@ -188,7 +184,6 @@ public class RestaurantControllerIT {
                         "address", "complement",
                         "12", "details")),
                 "(11) 1234-5678",
-                "07070-000",
                 "Pizzaria",
                 "Dinheiro, Cartão",
                 "12:00",
@@ -228,7 +223,6 @@ public class RestaurantControllerIT {
                         "address", "complement",
                         "12", "details")),
                 "(11) 1234-5678",
-                "07070-000",
                 "Pizzaria",
                 "Dinheiro, Cartão",
                 "12:00",
@@ -269,7 +263,6 @@ public class RestaurantControllerIT {
                         "address", "complement",
                         "12", "details")),
                 "(11) 1234-5678",
-                "07070-000",
                 "Pizzaria",
                 "Dinheiro, Cartão",
                 "12:00",
@@ -304,7 +297,6 @@ public class RestaurantControllerIT {
                         "address", "complement",
                         "12", "details")),
                 "(11) 1234-5678",
-                "07070-000",
                 "Pizzaria",
                 "Dinheiro, Cartão",
                 "12:00",
@@ -338,7 +330,6 @@ public class RestaurantControllerIT {
                         "address", "complement",
                         "12", "details")),
                 "(11) 1234-5678",
-                "07070-000",
                 "Pizzaria",
                 "Dinheiro, Cartão",
                 "12:00",

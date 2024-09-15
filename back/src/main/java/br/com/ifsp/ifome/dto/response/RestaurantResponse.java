@@ -11,7 +11,6 @@ public record RestaurantResponse(
         String nameRestaurant,
         String cnpj,
         String foodCategory,
-        String cep,
         List<Address> address,
         String telephone,
 
@@ -22,7 +21,7 @@ public record RestaurantResponse(
         String personResponsibleCPF,
         String email,
         String paymentMethods,
-        String restaurantImage,
+        String restaurantImages,
         BankAccount bankAccount
 
 ) {
@@ -31,7 +30,6 @@ public record RestaurantResponse(
                 restaurant.getNameRestaurant(),
                 restaurant.getCnpj(),
                 restaurant.getFoodCategory(),
-                restaurant.getCep(),
                 restaurant.getAddress(),
                 restaurant.getTelephone(),
 

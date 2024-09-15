@@ -40,10 +40,6 @@ public record RestaurantRequest(
         @Pattern(regexp = "\\(\\d{2}\\) \\d{4,5}-\\d{4}", message = "Telefone deve estar no formato (XX) XXXXX-XXXX")
         String telephone,
 
-        @NotBlank(message = "CEP é obrigatório")
-        @Pattern(regexp = "\\d{5}-\\d{3}", message = "CEP deve estar no formato XXXXX-XXX")
-        String cep,
-
         @NotBlank(message = "Categoria de comida é obrigatória")
         String foodCategory,
 

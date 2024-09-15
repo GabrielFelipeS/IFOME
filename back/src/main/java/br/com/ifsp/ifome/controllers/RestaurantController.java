@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.docs.DocsCreateRestaurant;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
 import br.com.ifsp.ifome.services.RestaurantService;
@@ -14,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 
 @RestController
+
 @RequestMapping("/restaurant")
 public class RestaurantController {
     private final RestaurantService restaurantService;
@@ -21,7 +23,7 @@ public class RestaurantController {
     public RestaurantController(RestaurantService restaurantService){
         this.restaurantService = restaurantService;
     }
-
+    @DocsCreateRestaurant
     @PostMapping
     public ResponseEntity<RestaurantResponse> create(@Valid @RequestBody RestaurantRequest restaurantRequest, UriComponentsBuilder ucb){
         RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest);
