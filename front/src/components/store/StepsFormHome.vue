@@ -1,6 +1,27 @@
 <script setup>
+import { ref, watch } from 'vue';
 import HeaderSteps from './HeaderSteps.vue';
 import { MaskInput } from 'vue-3-mask';
+import { fetchViaCep } from '@/services/viaCep';
+
+const cep = ref('');
+const state = ref('');
+const city = ref('');
+const address = ref('');
+const number = ref('');
+const complement = ref('');
+
+watch(cep, async (value) => {
+    if (value.length === 9) {
+        let cep = value.replace('-', '');
+        const data = await fetchViaCep(cep);
+        console.log(data);
+        state.value = data.uf;
+        city.value = data.localidade;
+        address.value = data.logradouro;
+    }
+});
+
 </script>
 
 <template>
@@ -11,29 +32,29 @@ import { MaskInput } from 'vue-3-mask';
             <p>Preencha as informações de endereço da sua loja.</p>
             <div class="form-group">
                 <label for="cep">CEP</label>
-                <MaskInput type="text" id="cep" name="cep" placeholder="CEP" mask="#####-###" required />
+                <MaskInput type="text" id="cep" name="cep" v-model="cep" placeholder="CEP" mask="#####-###" required/>
             </div>
             <div class="mid">
                 <div class="form-group">
                     <label for="state">Estado</label>
-                    <input type="text" id="state" name="state" placeholder="Estado" required disabled/>
+                    <input type="text" id="state" name="state" v-model="state" placeholder="Estado" required disabled/>
                 </div>
                 <div class="form-group">
                     <label for="city">Cidade</label>
-                    <input type="text" id="city" name="city" placeholder="Cidade" required  disabled/>
+                    <input type="text" id="city" name="city" v-model="city" placeholder="Cidade" required  disabled/>
                 </div>
             </div>
             <div class="form-group">
                 <label for="address">Endereço</label>
-                <input type="text" id="address" name="address" placeholder="Endereço" required />
+                <input type="text" id="address" name="address" v-model="address" placeholder="Endereço" required />
             </div>
             <div class="form-group">
                 <label for="number">Número</label>
-                <input type="text" id="number" name="number" placeholder="Número" required />
+                <input type="text" id="number" name="number" v-model="number" placeholder="Número" required />
             </div>
             <div class="form-group">
                 <label for="complement">Complemento</label>
-                <input type="text" id="complement" name="complement" placeholder="Complemento" />
+                <input type="text" id="complement" name="complement" v-model="complement" placeholder="Complemento" />
             </div>
             <button type="submit" class="btn-primary">Próximo</button>
 
