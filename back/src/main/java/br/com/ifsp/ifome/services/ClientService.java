@@ -27,7 +27,7 @@ public class ClientService {
         return new ClientResponse(client);
     }
 
-    public Client login(ClientLoginRequest clientLoginRequest) {
+    public ClientLoginResponse login(ClientLoginRequest clientLoginRequest) {
         Optional<Client> client = clientRepository.findByEmail(clientLoginRequest.email());
 
         if(client.isEmpty() || client.get().isLoginIncorrect(clientLoginRequest, bCryptPasswordEncoder)) {
@@ -37,5 +37,6 @@ public class ClientService {
 
 
         return client.orElseThrow(RuntimeException::new);
+        return new ClientLoginResponse(clientResponse, jwtValue);
     }
 }
