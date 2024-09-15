@@ -75,8 +75,7 @@ watch(cep, async (value) => {
                 <label for="complement">Complemento</label>
                 <input type="text" id="complement" name="complement" v-model="complement" placeholder="Complemento" />
             </div>
-            <button type="submit" class="btn-primary" :class="stepCompleted ? '' : 'disable'">Próximo</button>
-
+            <button type="submit" class="btn-primary" :class="stepCompleted ? '' : 'disable'" @click="nextStep">Próximo</button>
         </div>
     </div>
 </template>
