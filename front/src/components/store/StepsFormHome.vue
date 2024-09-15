@@ -34,6 +34,11 @@ const other = ref('');
 const opening = ref('');
 const closing = ref('');
 const daysSelected = ref([]);
+const paymentMethods = ref([]);
+const bank = ref('');
+const agency = ref('');
+const account = ref('');
+const digit = ref('');
 
 watch(specialty, (value) => {
     if (value === 'Outro') {
@@ -47,6 +52,7 @@ const stepCompleted = ref(false);
 const step2Completed = ref(false);
 const step3Completed = ref(false);
 const step4Completed = ref(false);
+const step5Completed = ref(false);
 
 const step3Erros = ref({
     cnpj: false,
@@ -218,6 +224,14 @@ watch(selectedFiles, () => {
         step4Completed.value = false;
     } else {
         step4Completed.value = true;
+    }
+});
+
+watch([paymentMethods, bank, agency, account, digit], () => {
+    if (paymentMethods.value.length > 0 && bank.value && agency.value && account.value && digit.value) {
+        step5Completed.value = true;
+    } else {
+        step5Completed.value = false;
     }
 });
 
@@ -393,17 +407,17 @@ watch(selectedFiles, () => {
             <h3>Metodos de pagamento aceito</h3>
             <div class="grid grid-cols-2 lg:grid-cols-3">
                 <div class="checkform-payment">
-                    <input type="checkbox" id="money" name="money" checked/>
+                    <input type="checkbox" id="money" name="money" value="dinner" v-model="paymentMethods" checked/>
                     <label for="money">Dinheiro</label>
                     <img src="../../assets/img/store/money_icon.png" />
                 </div>
                 <div class="checkform-payment">
-                    <input type="checkbox" id="credit" name="credit" />
+                    <input type="checkbox" id="credit" name="credit" value="credit" v-model="paymentMethods" />
                     <label for="credit">Debito/Crédito</label>
                     <img src="../../assets/img/store/credit_card.png" />
                 </div>
                 <div class="checkform-payment">
-                    <input type="checkbox" id="debit" name="debit" />
+                    <input type="checkbox" id="debit" name="debit" value="pix" v-model="paymentMethods"/>
                     <label for="debit">Pix</label>
                     <img src="../../assets/img/store/pix_icon.png" />
                 </div>
@@ -411,23 +425,25 @@ watch(selectedFiles, () => {
             <h3>Recebimentos de fundos</h3>
             <div class="form-group">
                 <label for="bank">Banco</label>
-                <input type="text" id="bank" name="bank" placeholder="Banco" required />
+                <input type="text" id="bank" v-model="bank" name="bank" placeholder="Banco" required />
             </div>
             <div class="form-group">
                 <label for="agency">Agência</label>
-                <input type="text" id="agency" name="agency" placeholder="Agência" required />
+                <MaskInput type="text" id="agency" v-model="agency" name="agency" placeholder="Agência" mask="####-#"
+                    required />
             </div>
             <div class="mid-payment">
                 <div class="form-group">
                     <label for="account">Conta</label>
-                    <input type="text" id="account" name="account" placeholder="Conta" required />
+                    <MaskInput type="text" id="account" v-model="account" name="account" placeholder="Conta"
+                        mask="#####" required />
                 </div>
                 <div class="form-group dig">
                     <label for="digit">Dígito</label>
-                    <input type="text" id="digit" name="digit" placeholder="Dígito" required />
+                    <MaskInput type="text" id="digit" v-model="digit" name="digit" placeholder="Dígito" mask="#" required />
                 </div>
             </div>
-            <button type="submit" class="btn-text" :class="step4Completed ? '' : 'disable'"
+            <button type="submit" class="btn-text" :class="step5Completed ? '' : 'disable'"
                 @click="nextStep">Próximo</button>
 
         </div>
