@@ -3,12 +3,26 @@ import Modal from "@/components/user/register/Modal.vue";
 import Button from "@/components/Button.vue";
 import { MaskInput } from "vue-3-mask";
 
-defineProps({
+const props = defineProps({
 	formData: {
 		type: Object,
 		required: true,
 	}
 })
+
+const emit = defineEmits(['next-step']);
+
+const nextStep = () => {
+	if (props.formData.name.length > 0 &&
+		props.formData.phone.length > 0 &&
+		props.formData.dateOfBirth.length > 0 &&
+		props.formData.cpf.length > 0 &&
+		props.formData.password.length > 0 &&
+		props.formData.passwordConfirmation.length > 0
+	) {
+		emit('next-step')
+	}
+};
 </script>
 
 <template>
@@ -43,7 +57,7 @@ defineProps({
 			<div class="btn-container">
 				<Button href="#" @click="$emit('previous-step')" inversed
 						class="button text-primary-subtle border border-primary mr-[15%]">Voltar</Button>
-				<Button href="#" @click="$emit('next-step')"
+				<Button href="#" @click="nextStep"
 					class="button bg-primary text-white">Continuar</Button>
 			</div>
 		</div>
