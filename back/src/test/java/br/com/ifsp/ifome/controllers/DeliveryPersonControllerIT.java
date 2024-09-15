@@ -57,7 +57,7 @@ public class DeliveryPersonControllerIT {
         String cnpj = document.read("$.cpf");
         String email = document.read("$.email");
         String dateOfBirth = document.read("$.dateOfBirth");
-        String typeOfVehicle = document.read("$.typeOfVehicle ");
+        String typeOfVehicle = document.read("$.typeOfVehicle");
         String telephone = document.read("$.telephone");
         String cnh = document.read("$.cnh");
         String vehicleDocument = document.read("$.vehicleDocument");
