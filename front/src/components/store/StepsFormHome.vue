@@ -370,6 +370,10 @@ const days = [
                 @apply w-full h-[50px] border border-gray-300 rounded-lg px-3;
             }
 
+            p{
+                @apply text-red-500;
+            }
+
         }
 
         .btn-text {
