@@ -26,6 +26,22 @@ const number = ref('');
 const complement = ref('');
 const name = ref('');
 const cpf = ref('');
+const cnpj = ref('');
+const nameStore = ref('');
+const phone = ref('');
+const specialty = ref('');
+const other = ref('');
+const opening = ref('');
+const closing = ref('');
+const daysSelected = ref([]);
+
+watch(specialty, (value) => {
+    if (value === 'Outro') {
+        document.querySelector('#other').closest('.form-group').classList.remove('hidden');
+    } else {
+        document.querySelector('#other').closest('.form-group').classList.add('hidden');
+    }
+});
 
 const stepCompleted = ref(false);
 const step2Completed = ref(false);
@@ -131,20 +147,20 @@ const days = [
             <p>Preencha com os dados do seu negócio</p>
             <div class="form-group">
                 <label for="cnpj">CNPJ</label>
-                <MaskInput type="text" id="cnpj" name="cnpj" placeholder="CNPJ" mask="##.###.###/####-##" required />
+                <MaskInput type="text" id="cnpj" v-model="cnpj" name="cnpj" placeholder="CNPJ" mask="##.###.###/####-##" required />
             </div>
             <div class="form-group">
                 <label for="nameStore">Nome do Restaurante (como aparecerá no app)</label>
-                <input type="text" id="nameStore" name="nameStore" placeholder="Nome da loja" required />
+                <input type="text" id="nameStore" v-model="nameStore" name="nameStore" placeholder="Nome da loja" required />
             </div>
             <div class="form-group">
                 <label for="phone">Telefone do Restaurante</label>
-                <MaskInput type="text" id="phone" name="phone" placeholder="Telefone" mask="(##) #####-####" required />
+                <MaskInput type="text" id="phone" v-model="phone" name="phone" placeholder="Telefone" mask="(##) #####-####" required />
             </div>
             <div class="mid">
                 <div class="form-group">
                     <label for="specialty">Especialidade</label>
-                    <select name="specialty" id="specialty" required>
+                    <select name="specialty" id="specialty" v-model="specialty" required>
                         <option value="">Selecione a especialidade</option>
                         <option value="Pizza">Pizza</option>
                         <option value="Hamburguer">Hamburguer</option>
@@ -153,27 +169,27 @@ const days = [
                         <option value="Outro">Outro</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group hidden">
                     <label for="other">Outro</label>
-                    <input type="text" id="other" name="other" placeholder="Outro" />
+                    <input type="text" id="other" v-model="other" name="other" placeholder="Outro" />
                 </div>
             </div>
             <h3>Funcionamento</h3>
             <div class="mid">
                 <div class="form-group">
                     <label for="opening">Abertura</label>
-                    <input type="time" id="opening" name="opening" required />
+                    <input type="time" id="opening" name="opening" v-model="opening" required />
                 </div>
                 <div class="form-group ">
                     <label for="closing">Fechamento</label>
-                    <input type="time" id="closing" name="closing" required />
+                    <input type="time" id="closing" name="closing" v-model="opening" required />
                 </div>
             </div>
             <div class="form-group">
                 <label for="days">Dias de funcionamento</label>
                 <div class="mid-check">
                     <div class="checkform" v-for="day in days">
-                        <input type="checkbox" id="dayselect" name="dayselect" :value="day.value" />
+                        <input type="checkbox" id="dayselect" name="dayselect" v-model="daysSelected" :value="day.value" />
                         <label for="sunday">{{ day.name }}</label>
                     </div>
                 </div>
