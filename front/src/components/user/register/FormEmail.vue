@@ -2,12 +2,20 @@
 import Modal from "@/components/user/register/Modal.vue";
 import Button from "@/components/Button.vue";
 
-defineProps({
+const props = defineProps({
 	formData: {
 		type: Object,
 		required: true,
 	}
 })
+
+const emit = defineEmits(["next-step"]);
+
+const nextStep = () => {
+	if (props.formData.email.length > 0) {
+		emit('next-step');
+	}
+}
 </script>
 
 <template>
@@ -24,7 +32,7 @@ defineProps({
 			<div class="btn-container">
 				<Button href="#" @click="$emit('previous-step')" inversed
 						class="button text-primary-subtle border border-primary mr-[15%]">Voltar</Button>
-				<Button href="#" @click="$emit('next-step')"
+				<Button href="#" @click="nextStep"
 						class="button bg-primary text-white">Continuar</Button>
 			</div>
 		</div>
