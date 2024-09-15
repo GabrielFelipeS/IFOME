@@ -4,6 +4,7 @@ import Header from "@/components/user/Header.vue";
 import ModalRegister from "@/components/user/register/ModalRegister.vue";
 import FormEmail from "@/components/user/register/FormEmail.vue";
 import {computed, ref} from "vue";
+import FormPersonalData from "@/components/user/register/FormPersonalData.vue";
 
 const formData = ref({
 	email: '',
@@ -28,6 +29,7 @@ const currentStep = ref(0);
 const steps = {
 	0: ModalRegister,
 	1: FormEmail,
+	2: FormPersonalData,
 };
 const nextStep = () => {
 	currentStep.value++;
@@ -35,6 +37,7 @@ const nextStep = () => {
 }
 const previousStep = () => {
 	currentStep.value--;
+	console.log(currentStep.value);
 }
 
 const loadComponent = computed(() => {
@@ -79,7 +82,7 @@ const teste = () => {
 	}
 
 	.main {
-		@apply mt-[50%];
+		@apply flex flex-row h-full w-full justify-center items-center;
 	}
 
 </style>
