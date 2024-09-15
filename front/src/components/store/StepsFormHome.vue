@@ -4,7 +4,7 @@ import HeaderSteps from './HeaderSteps.vue';
 import { MaskInput } from 'vue-3-mask';
 import { fetchViaCep } from '@/services/viaCep';
 
-const currentStep = ref(3);
+const currentStep = ref(4);
 
 function nextStep() {
     if (currentStep.value < 4) {
@@ -46,6 +46,7 @@ watch(specialty, (value) => {
 const stepCompleted = ref(false);
 const step2Completed = ref(false);
 const step3Completed = ref(false);
+const step4Completed = ref(false);
 
 const step3Erros = ref({
     cnpj: false,
@@ -58,7 +59,7 @@ const step3Erros = ref({
     other: false,
 });
 
-watch([cnpj,nameStore, phone, specialty, opening, closing, daysSelected, other], () => {
+watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other], () => {
 
     if (cnpj.value) {
         let cnpjValue = cnpj.value.replace(/\D/g, '');
@@ -130,9 +131,7 @@ watch([cnpj,nameStore, phone, specialty, opening, closing, daysSelected, other],
         step3Erros.value.daysSelected = true;
     } else {
         step3Erros.value.daysSelected = false;
-    }  
-    
-    //verifica se tem algum erro
+    }
 
     if (Object.values(step3Erros.value).some((value) => value)) {
         step3Completed.value = false;
@@ -178,6 +177,49 @@ const days = [
     { name: 'Sábado', value: 'saturday' },
 ];
 
+const selectedFiles = ref([]);
+
+function handleFileChange(event) {
+    const files = Array.from(event.target.files);
+    selectedFiles.value = [...selectedFiles.value, ...files];
+}
+
+function dragOver(event) {
+    event.preventDefault();
+    event.currentTarget.classList.add('bg-gray-100');
+}
+
+function dragLeave(event) {
+    event.currentTarget.classList.remove('bg-gray-100');
+}
+
+function drop(event) {
+    event.currentTarget.classList.remove('bg-gray-100');
+    const files = Array.from(event.dataTransfer.files);
+    selectedFiles.value = [...selectedFiles.value, ...files];
+}
+
+function removeFile(index) {
+    selectedFiles.value = selectedFiles.value.filter((_, i) => i !== index);
+}
+
+const step4Erros = ref({
+    photos: false,
+});
+
+watch(selectedFiles, () => {
+    if (selectedFiles.value.length === 0) {
+        step4Erros.value.photos = true;
+    } else {
+        step4Erros.value.photos = false;
+    }
+
+    if (step4Erros.value.photos) {
+        step4Completed.value = false;
+    } else {
+        step4Completed.value = true;
+    }
+});
 
 </script>
 
@@ -242,17 +284,20 @@ const days = [
             <p>Preencha com os dados do seu negócio</p>
             <div class="form-group">
                 <label for="cnpj">CNPJ</label>
-                <MaskInput type="text" id="cnpj" v-model="cnpj" name="cnpj" placeholder="CNPJ" mask="##.###.###/####-##" required />
+                <MaskInput type="text" id="cnpj" v-model="cnpj" name="cnpj" placeholder="CNPJ" mask="##.###.###/####-##"
+                    required />
                 <p v-if="step3Erros.cnpj">** Digite um valor válido **</p>
             </div>
             <div class="form-group">
                 <label for="nameStore">Nome do Restaurante (como aparecerá no app)</label>
-                <input type="text" id="nameStore" v-model="nameStore" name="nameStore" placeholder="Nome da loja" required />
+                <input type="text" id="nameStore" v-model="nameStore" name="nameStore" placeholder="Nome da loja"
+                    required />
                 <p v-if="step3Erros.nameStore">** Digite um nome valido ( Minimo 3 letras ) **</p>
             </div>
             <div class="form-group">
                 <label for="phone">Telefone do Restaurante</label>
-                <MaskInput type="text" id="phone" v-model="phone" name="phone" placeholder="Telefone" mask="(##) #####-####" required />
+                <MaskInput type="text" id="phone" v-model="phone" name="phone" placeholder="Telefone"
+                    mask="(##) #####-####" required />
                 <p v-if="step3Erros.phone">** Digite um valor válido **</p>
             </div>
             <div class="mid">
@@ -291,7 +336,8 @@ const days = [
                 <label for="days">Dias de funcionamento</label>
                 <div class="mid-check">
                     <div class="checkform" v-for="day in days">
-                        <input type="checkbox" id="dayselect" name="dayselect" v-model="daysSelected" :value="day.value" />
+                        <input type="checkbox" id="dayselect" name="dayselect" v-model="daysSelected"
+                            :value="day.value" />
                         <label for="sunday">{{ day.name }}</label>
                     </div>
                 </div>
@@ -299,6 +345,41 @@ const days = [
             </div>
 
             <button type="submit" class="btn-text" :class="step3Completed ? '' : 'disable'"
+                @click="nextStep">Próximo</button>
+        </div>
+        <div class="step" v-if="currentStep === 4">
+            <h2>Fotos da loja</h2>
+            <p>Selecione as fotos do seu negócio</p>
+
+            <!-- Área de upload de fotos -->
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-5 text-center h-[300px] flex items-center justify-center" @dragover.prevent="dragOver"
+                @dragleave.prevent="dragLeave" @drop.prevent="drop">
+                <input type="file" id="photo" name="photo" multiple class="hidden" @change="handleFileChange" />
+                <label for="photo" class="cursor-pointer flex flex-col items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        class="w-12 h-12 text-gray-500">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16l4 4m0 0l4-4m-4 4V4m0 0L8 8m0 0L4 4" />
+                    </svg>
+                    <span>Arraste e solte suas fotos aqui</span>
+                    <span class="text-sm text-gray-400">ou <span class="text-blue-500">clique aqui</span> e
+                        selecione</span>
+                </label>
+            </div>
+            <p v-if="step4Erros.photos">** Selecione pelo menos uma foto **</p>
+
+            <!-- Lista de fotos selecionadas -->
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div v-for="(file, index) in selectedFiles" :key="index"
+                    class="flex items-center justify-between border-gray-300 border-dashed border-2 rounded-3xl font-thin pl-5">
+                    <span class="truncate">{{ file.name }}</span>
+                    <button class="bg-red-500 text-white w-[15%] py-2 rounded-r-3xl" @click="removeFile(index)">
+                        X
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary" :class="step4Completed ? '' : 'disable'"
                 @click="nextStep">Próximo</button>
         </div>
     </div>
@@ -369,7 +450,7 @@ const days = [
                 @apply w-full h-[50px] border border-gray-300 rounded-lg px-3;
             }
 
-            p{
+            p {
                 @apply text-red-500;
             }
 
