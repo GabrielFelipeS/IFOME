@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDate;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@WithMockUser
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ClienteControllerIT {
 
@@ -37,7 +39,7 @@ public class ClienteControllerIT {
                 "address", "complement",
                  "12", "details")));
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         DocumentContext document = JsonPath.parse(response.getBody());
@@ -74,7 +76,7 @@ public class ClienteControllerIT {
             "address",  "complement",
              "12", "details")));
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
@@ -95,7 +97,7 @@ public class ClienteControllerIT {
             "address",  "complement",
             "12", "details")));
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
@@ -123,7 +125,7 @@ public class ClienteControllerIT {
             "address",  "complement",
              "12", "details")));
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
@@ -147,7 +149,7 @@ public class ClienteControllerIT {
             "address", "complement",
             "12", "details")));
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
@@ -171,7 +173,7 @@ public class ClienteControllerIT {
                 "address",  "complement",
                  "12", "details")));
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/client", client, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         System.out.println(response.getBody());
         DocumentContext documentContext = JsonPath.parse(response.getBody());
