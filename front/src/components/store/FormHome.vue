@@ -29,7 +29,7 @@ const phone = ref('');
 </template>
 <style lang="scss" scoped>
 .form {
-    @apply w-[80%] h-[60%] bg-white rounded-lg shadow-lg mb-[50px] flex flex-col justify-around p-5;
+    @apply w-[95%] h-[60%] bg-white rounded-lg shadow-lg mb-[50px] flex flex-col justify-around p-5;
 
     h2 {
         @apply text-4xl font-semibold text-gray-800 mb-5;
