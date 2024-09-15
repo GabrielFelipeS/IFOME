@@ -4,7 +4,7 @@ import HeaderSteps from './HeaderSteps.vue';
 import { MaskInput } from 'vue-3-mask';
 import { fetchViaCep } from '@/services/viaCep';
 
-const currentStep = ref(1);
+const currentStep = ref(3);
 
 function nextStep() {
     if (currentStep.value < 4) {
@@ -56,13 +56,25 @@ watch(cep, async (value) => {
         address.value = data.logradouro;
     }
 });
+
+const days = [
+    { name: 'Domingo', value: 'sunday' },
+    { name: 'Segunda-feira', value: 'monday' },
+    { name: 'Terça-feira', value: 'tuesday' },
+    { name: 'Quarta-feira', value: 'wednesday' },
+    { name: 'Quinta-feira', value: 'thursday' },
+    { name: 'Sexta-feira', value: 'friday' },
+    { name: 'Sábado', value: 'saturday' },
+];
+
+
 </script>
 
 <template>
     <div class="steps">
         <!-- Passar a etapa atual para o componente filho -->
         <HeaderSteps :currentStep="currentStep" />
-        
+
         <div class="step" v-if="currentStep === 1">
             <h2>Endereço da loja</h2>
             <p>Preencha as informações de endereço da sua loja.</p>
@@ -107,17 +119,74 @@ watch(cep, async (value) => {
             </div>
             <div class="form-group">
                 <label for="cpf">CPF</label>
-                <MaskInput type="text" id="cpf" v-model="cpf" name="cpf" placeholder="CPF" mask="###.###.###-##" required />
+                <MaskInput type="text" id="cpf" v-model="cpf" name="cpf" placeholder="CPF" mask="###.###.###-##"
+                    required />
             </div>
             <button type="submit" class="btn-primary" :class="step2Completed ? '' : 'disable'"
                 @click="nextStep">Próximo</button>
+        </div>
+
+        <div class="step" v-if="currentStep === 3">
+            <h2>Informações da loja</h2>
+            <p>Preencha com os dados do seu negócio</p>
+            <div class="form-group">
+                <label for="cnpj">CNPJ</label>
+                <MaskInput type="text" id="cnpj" name="cnpj" placeholder="CNPJ" mask="##.###.###/####-##" required />
+            </div>
+            <div class="form-group">
+                <label for="nameStore">Nome do Restaurante (como aparecerá no app)</label>
+                <input type="text" id="nameStore" name="nameStore" placeholder="Nome da loja" required />
+            </div>
+            <div class="form-group">
+                <label for="phone">Telefone do Restaurante</label>
+                <MaskInput type="text" id="phone" name="phone" placeholder="Telefone" mask="(##) #####-####" required />
+            </div>
+            <div class="mid">
+                <div class="form-group">
+                    <label for="specialty">Especialidade</label>
+                    <select name="specialty" id="specialty" required>
+                        <option value="">Selecione a especialidade</option>
+                        <option value="Pizza">Pizza</option>
+                        <option value="Hamburguer">Hamburguer</option>
+                        <option value="Comida Japonesa">Comida Japonesa</option>
+                        <option value="Comida Saudável">Comida Saudável</option>
+                        <option value="Outro">Outro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="other">Outro</label>
+                    <input type="text" id="other" name="other" placeholder="Outro" />
+                </div>
+            </div>
+            <h3>Funcionamento</h3>
+            <div class="mid">
+                <div class="form-group">
+                    <label for="opening">Abertura</label>
+                    <input type="time" id="opening" name="opening" required />
+                </div>
+                <div class="form-group ">
+                    <label for="closing">Fechamento</label>
+                    <input type="time" id="closing" name="closing" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="days">Dias de funcionamento</label>
+                <div class="mid-check">
+                    <div class="checkform" v-for="day in days">
+                        <input type="checkbox" id="dayselect" name="dayselect" :value="day.value" />
+                        <label for="sunday">{{ day.name }}</label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-text" @click="nextStep">Próximo</button>
         </div>
     </div>
 </template>
 
 <style lang="scss" scoped>
 .steps {
-    @apply fixed top-0 left-0 w-full h-full bg-white;
+    @apply fixed top-0 left-0 w-full h-full bg-white overflow-auto;
 
     .step {
         @apply w-[90%] h-[calc(100vh-100px)] m-auto pt-10;
@@ -126,8 +195,32 @@ watch(cep, async (value) => {
             @apply text-4xl font-semibold text-gray-800 mb-5;
         }
 
+        h3 {
+            @apply text-2xl font-semibold text-gray-800 mb-2;
+        }
+
         p {
             @apply text-lg text-gray-500 mb-5;
+        }
+
+        .mid-check {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            
+            gap: 5px;
+
+            .checkform {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                white-space: nowrap;
+                font-weight: 300;
+
+                input[type="checkbox"] {
+                    @apply bg-black text-white;
+                }
+            }
         }
 
         .mid {
@@ -135,6 +228,10 @@ watch(cep, async (value) => {
 
             .form-group {
                 @apply w-[calc(50%-10px)];
+            }
+
+            input[type="checkbox"] {
+                @apply hidden;
             }
         }
 
@@ -148,16 +245,25 @@ watch(cep, async (value) => {
             input {
                 @apply w-full h-[50px] border border-gray-300 rounded-lg px-3;
             }
+
+            select {
+                @apply w-full h-[50px] border border-gray-300 rounded-lg px-3;
+            }
+
         }
 
-        button {
+        .btn-text {
+            @apply relative w-full h-[50px] bg-primary text-white font-semibold rounded-lg mb-3;
+        }
+
+        .btn-primary {
             @apply w-[90%] h-[50px] bg-primary text-white font-semibold rounded-lg fixed bottom-10 left-[50%] transform -translate-x-1/2;
         }
 
         @media (min-width: 768px) {
             @apply w-[60%] h-[calc(100vh-100px)] m-auto pt-10;
 
-            button {
+            .btn-primary {
                 @apply w-[60%] h-[50px] bg-primary text-white font-semibold rounded-lg fixed bottom-10 left-[50%] transform -translate-x-1/2;
             }
         }
