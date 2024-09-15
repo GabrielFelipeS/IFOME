@@ -45,6 +45,101 @@ watch(specialty, (value) => {
 
 const stepCompleted = ref(false);
 const step2Completed = ref(false);
+const step3Completed = ref(false);
+
+const step3Erros = ref({
+    cnpj: false,
+    nameStore: false,
+    phone: false,
+    specialty: false,
+    opening: false,
+    closing: false,
+    daysSelected: false,
+    other: false,
+});
+
+watch([cnpj,nameStore, phone, specialty, opening, closing, daysSelected, other], () => {
+
+    if (cnpj.value) {
+        let cnpjValue = cnpj.value.replace(/\D/g, '');
+        if (cnpjValue.length !== 14) {
+            step3Erros.value.cnpj = true;
+        } else {
+            step3Erros.value.cnpj = false;
+        }
+    }
+
+    if (nameStore.value) {
+        if (nameStore.value.length < 3) {
+            step3Erros.value.nameStore = true;
+        } else {
+            step3Erros.value.nameStore = false;
+        }
+    }
+
+    if (phone.value) {
+        let phoneValue = phone.value.replace(/\D/g, '');
+        if (phoneValue.length !== 10 && phoneValue.length !== 11) {
+            step3Erros.value.phone = true;
+        } else {
+            step3Erros.value.phone = false;
+        }
+    }
+
+    if (specialty.value === 'Outro' && !other.value) {
+        step3Erros.value.other = true;
+    } else {
+        step3Erros.value.other = false;
+    }
+
+    if (specialty.value === 'none') {
+        step3Erros.value.specialty = true;
+    } else {
+        step3Erros.value.specialty = false;
+    }
+
+    if (opening.value) {
+        let openingValue = opening.value.split(':');
+        if (openingValue[0] < 0 || openingValue[0] > 23 || openingValue[1] < 0 || openingValue[1] > 59) {
+            step3Erros.value.opening = true;
+        } else {
+            step3Erros.value.opening = false;
+        }
+    }
+
+    if (closing.value) {
+        let closingValue = closing.value.split(':');
+        if (closingValue[0] < 0 || closingValue[0] > 23 || closingValue[1] < 0 || closingValue[1] > 59) {
+            step3Erros.value.closing = true;
+        } else {
+            step3Erros.value.closing = false;
+        }
+    }
+
+    if (opening.value && closing.value) {
+        let openingValue = opening.value.split(':');
+        let closingValue = closing.value.split(':');
+        if (closingValue[0] < openingValue[0] || (closingValue[0] === openingValue[0] && closingValue[1] <= openingValue[1])) {
+            step3Erros.value.closing = true;
+        } else {
+            step3Erros.value.closing = false;
+        }
+    }
+
+    if (daysSelected.value.length === 0) {
+        step3Erros.value.daysSelected = true;
+    } else {
+        step3Erros.value.daysSelected = false;
+    }  
+    
+    //verifica se tem algum erro
+
+    if (Object.values(step3Erros.value).some((value) => value)) {
+        step3Completed.value = false;
+    } else {
+        step3Completed.value = true;
+    }
+});
 
 watch([name, cpf], () => {
     let cpfValue = cpf.value.replace(/\D/g, '');
@@ -148,14 +243,17 @@ const days = [
             <div class="form-group">
                 <label for="cnpj">CNPJ</label>
                 <MaskInput type="text" id="cnpj" v-model="cnpj" name="cnpj" placeholder="CNPJ" mask="##.###.###/####-##" required />
+                <p v-if="step3Erros.cnpj">** Digite um valor válido **</p>
             </div>
             <div class="form-group">
                 <label for="nameStore">Nome do Restaurante (como aparecerá no app)</label>
                 <input type="text" id="nameStore" v-model="nameStore" name="nameStore" placeholder="Nome da loja" required />
+                <p v-if="step3Erros.nameStore">** Digite um nome valido ( Minimo 3 letras ) **</p>
             </div>
             <div class="form-group">
                 <label for="phone">Telefone do Restaurante</label>
                 <MaskInput type="text" id="phone" v-model="phone" name="phone" placeholder="Telefone" mask="(##) #####-####" required />
+                <p v-if="step3Erros.phone">** Digite um valor válido **</p>
             </div>
             <div class="mid">
                 <div class="form-group">
@@ -168,21 +266,25 @@ const days = [
                         <option value="Comida Saudável">Comida Saudável</option>
                         <option value="Outro">Outro</option>
                     </select>
+                    <p v-if="step3Erros.specialty">** Selecione uma opção valida **</p>
                 </div>
                 <div class="form-group hidden">
                     <label for="other">Outro</label>
                     <input type="text" id="other" v-model="other" name="other" placeholder="Outro" />
+                    <p v-if="step3Erros.other">** Digite um valor valido **</p>
                 </div>
             </div>
             <h3>Funcionamento</h3>
             <div class="mid">
                 <div class="form-group">
                     <label for="opening">Abertura</label>
-                    <MaskInput type="text" id="opening" name="opening" v-model="opening" mask="##:##" required />
+                    <input type="time" id="opening" v-model="opening" name="opening" required />
+                    <p v-if="step3Erros.opening">** Digite um horario valido **</p>
                 </div>
                 <div class="form-group ">
                     <label for="closing">Fechamento</label>
-                    <MaskInput type="text" id="closing" name="closing" v-model="closing" mask="##:##" required />
+                    <input type="time" id="closing" v-model="closing" name="closing" required />
+                    <p v-if="step3Erros.closing">** Digite um horario valido, e maior que a abertura**</p>
                 </div>
             </div>
             <div class="form-group">
@@ -193,6 +295,7 @@ const days = [
                         <label for="sunday">{{ day.name }}</label>
                     </div>
                 </div>
+                <p v-if="step3Erros.daysSelected">** Selecione pelo menos um dia **</p>
             </div>
 
             <button type="submit" class="btn-text" @click="nextStep">Próximo</button>
