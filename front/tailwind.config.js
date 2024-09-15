@@ -12,8 +12,12 @@ module.exports = {
         "transparent": 'transparent',
         "current": 'currentColor',
         "primary": "#E61B1B",
+        "primary-subtle": "#FF7575",
         "secondary": "#FFF787",
-        "tertiary": "#fff",
+        "secondary-subtle": "#FFF787",
+        "tertiary": "#1E1E1E",
+        "tertiary-subtle": "#F2F2F2",
+        "soft-border": "#E1E1E1",
       }
     },
   },
