@@ -489,13 +489,13 @@ function showConfirmation() {
             <div class="form-group">
                 <label for="password">Senha</label>
                 <input type="password" id="password" name="password" placeholder="Senha" v-model="password" required />
-                <span @click="showPassword">Mostrar senha</span>
+                <span @click="showPassword" v-if="password.length > 0">Mostrar senha</span>
             </div>
             <div class="form-group">
                 <label for="confirmPassword">Confirmar Senha</label>
                 <input type="password" id="confirmPassword" name="confirmPassword" v-model="confirmPassword"
                     placeholder="Confirmar Senha" required />
-                <span @click="showConfirmation">Mostrar Confirmação</span>
+                <span @click="showConfirmation" v-if="confirmPassword.length > 0">Mostrar Confirmação</span>
             </div>
             <button type="submit" class="btn-primary" :class="step6Completed ? '' : 'disable'"
                 @click="nextStep">Próximo</button>
