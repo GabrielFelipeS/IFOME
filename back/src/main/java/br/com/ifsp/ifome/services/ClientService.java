@@ -20,12 +20,12 @@ import java.util.Optional;
 public class ClientService {
     private final ClientRepository clientRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final JwtEncoder jwtEncoder;
+    private final TokenService tokenService;
 
-    public ClientService(ClientRepository clientRepository, BCryptPasswordEncoder bCryptPasswordEncoder, JwtEncoder jwtEncoder) {
+    public ClientService(TokenService tokenService, ClientRepository clientRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.tokenService = tokenService;
         this.clientRepository = clientRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.jwtEncoder = jwtEncoder;
     }
 
     public ClientResponse create(ClientRequest clientRequest) {
@@ -38,23 +38,9 @@ public class ClientService {
     public ClientLoginResponse login(ClientLoginRequest clientLoginRequest) {
         Optional<Client> client = clientRepository.findByEmail(clientLoginRequest.email());
 
-        if(client.isEmpty() || client.get().isLoginIncorrect(clientLoginRequest, bCryptPasswordEncoder)) {
-            throw new BadCredentialsException("email or password is invalid!");
-        }
+        tokenService.isLoginIncorrect(client, clientLoginRequest.password(), bCryptPasswordEncoder);
 
-
-        var now = Instant.now();
-        var expiresIn = 300L;
-
-        var claims = JwtClaimsSet.builder()
-            .issuer("api_ifome")
-            .subject(client.get().getEmail())
-            .issuedAt(now)
-            .expiresAt(now.plusSeconds(expiresIn))
-            .build()
-            ;
-
-        var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        var jwtValue = tokenService.generateToken(client.orElseThrow().getEmail());
 
         ClientResponse clientResponse = new ClientResponse(client.orElseThrow());
 
