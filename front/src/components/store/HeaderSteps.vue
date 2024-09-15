@@ -17,7 +17,9 @@ const props = defineProps({
 });
 
 watch(() => props.currentStep, (newStep) => {
-    widthLine.value = (newStep - 1) * 20;
+    if (newStep > 1 && newStep < 7) {
+        widthLine.value = (newStep - 1) * 20;
+    }
 });
 </script>
 
