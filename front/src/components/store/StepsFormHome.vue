@@ -259,7 +259,7 @@ const days = [
                 <div class="form-group">
                     <label for="specialty">Especialidade</label>
                     <select name="specialty" id="specialty" v-model="specialty" required>
-                        <option value="">Selecione a especialidade</option>
+                        <option value="none">Selecione a especialidade</option>
                         <option value="Pizza">Pizza</option>
                         <option value="Hamburguer">Hamburguer</option>
                         <option value="Comida Japonesa">Comida Japonesa</option>
