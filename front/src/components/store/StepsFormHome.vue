@@ -328,12 +328,16 @@ function submitForm() {
     
 }
 
+const returnSteps = () => {
+    prevStep();
+};
+
 </script>
 
 <template>
     <div class="steps" v-if="stepsActive">
         <!-- Passar a etapa atual para o componente filho -->
-        <HeaderSteps :currentStep="currentStep" />
+        <HeaderSteps :currentStep="currentStep" @returnBack="returnSteps"/>
 
         <div class="step" v-if="currentStep === 1">
             <h2>Endereço da loja</h2>
