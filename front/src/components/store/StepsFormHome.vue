@@ -4,7 +4,7 @@ import HeaderSteps from './HeaderSteps.vue';
 import { MaskInput } from 'vue-3-mask';
 import { fetchViaCep } from '@/services/viaCep';
 
-const currentStep = ref(5);
+const currentStep = ref(6);
 
 function nextStep() {
     if (currentStep.value < 7) {
@@ -39,6 +39,8 @@ const bank = ref('');
 const agency = ref('');
 const account = ref('');
 const digit = ref('');
+const password = ref('');
+const confirmPassword = ref('');
 
 watch(specialty, (value) => {
     if (value === 'Outro') {
@@ -53,6 +55,7 @@ const step2Completed = ref(false);
 const step3Completed = ref(false);
 const step4Completed = ref(false);
 const step5Completed = ref(false);
+const step6Completed = ref(false);
 
 const step3Erros = ref({
     cnpj: false,
@@ -235,6 +238,38 @@ watch([paymentMethods, bank, agency, account, digit], () => {
     }
 });
 
+watch([password, confirmPassword], () => {
+    if (password.value && confirmPassword.value && password.value === confirmPassword.value) {
+        step6Completed.value = true;
+    } else {
+        step6Completed.value = false;
+    }
+});
+
+function showPassword() {
+    let input = document.querySelector('#password');
+    let span = document.querySelector('#password + span');
+    if (input.type === 'password') {
+        input.type = 'text';
+        span.textContent = 'Ocultar senha';
+    } else {
+        input.type = 'password';
+        span.textContent = 'Mostrar senha';
+    }
+}
+
+function showConfirmation() {
+    let input = document.querySelector('#confirmPassword');
+    let span = document.querySelector('#confirmPassword + span');
+    if (input.type === 'password') {
+        input.type = 'text';
+        span.textContent = 'Ocultar senha';
+    } else {
+        input.type = 'password';
+        span.textContent = 'Mostrar senha';
+    }
+}
+
 </script>
 
 <template>
@@ -407,7 +442,7 @@ watch([paymentMethods, bank, agency, account, digit], () => {
             <h3>Metodos de pagamento aceito</h3>
             <div class="grid grid-cols-2 lg:grid-cols-3">
                 <div class="checkform-payment">
-                    <input type="checkbox" id="money" name="money" value="dinner" v-model="paymentMethods" checked/>
+                    <input type="checkbox" id="money" name="money" value="dinner" v-model="paymentMethods" checked />
                     <label for="money">Dinheiro</label>
                     <img src="../../assets/img/store/money_icon.png" />
                 </div>
@@ -417,7 +452,7 @@ watch([paymentMethods, bank, agency, account, digit], () => {
                     <img src="../../assets/img/store/credit_card.png" />
                 </div>
                 <div class="checkform-payment">
-                    <input type="checkbox" id="debit" name="debit" value="pix" v-model="paymentMethods"/>
+                    <input type="checkbox" id="debit" name="debit" value="pix" v-model="paymentMethods" />
                     <label for="debit">Pix</label>
                     <img src="../../assets/img/store/pix_icon.png" />
                 </div>
@@ -440,12 +475,30 @@ watch([paymentMethods, bank, agency, account, digit], () => {
                 </div>
                 <div class="form-group dig">
                     <label for="digit">Dígito</label>
-                    <MaskInput type="text" id="digit" v-model="digit" name="digit" placeholder="Dígito" mask="#" required />
+                    <MaskInput type="text" id="digit" v-model="digit" name="digit" placeholder="Dígito" mask="#"
+                        required />
                 </div>
             </div>
             <button type="submit" class="btn-text" :class="step5Completed ? '' : 'disable'"
                 @click="nextStep">Próximo</button>
 
+        </div>
+        <div class="step" v-if="currentStep === 6">
+            <h2>Informações de Login</h2>
+            <!-- confirmar senha -->
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" placeholder="Senha" v-model="password" required />
+                <span @click="showPassword">Mostrar senha</span>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirmar Senha</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" v-model="confirmPassword"
+                    placeholder="Confirmar Senha" required />
+                <span @click="showConfirmation">Mostrar Confirmação</span>
+            </div>
+            <button type="submit" class="btn-primary" :class="step6Completed ? '' : 'disable'"
+                @click="nextStep">Próximo</button>
         </div>
     </div>
 </template>
@@ -469,7 +522,7 @@ watch([paymentMethods, bank, agency, account, digit], () => {
             @apply text-lg text-gray-500 mb-5 font-bold;
         }
 
-        .checkform-payment{
+        .checkform-payment {
             display: flex;
             align-items: center;
             gap: 5px;
@@ -479,7 +532,7 @@ watch([paymentMethods, bank, agency, account, digit], () => {
 
             @apply font-thin text-xl;
 
-            img{
+            img {
                 @apply w-[30px] h-[30px];
             }
         }
@@ -553,6 +606,10 @@ watch([paymentMethods, bank, agency, account, digit], () => {
 
             p {
                 @apply text-red-500;
+            }
+
+            span{
+                @apply text-blue-500 cursor-pointer mt-3 cursor-pointer;
             }
 
         }
