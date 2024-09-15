@@ -35,7 +35,7 @@ public class ClienteControllerIT {
     @DirtiesContext
     @DisplayName("should be possible to create a new client")
     public void shouldBeAbleToCreateANewClient() throws JsonProcessingException {
-        ClientRequest client = new ClientRequest("teste@teste.com", "@Password1", "@Password1",
+        ClientRequest client = new ClientRequest("Nome completo", "teste@teste.com", "@Password1", "@Password1",
             LocalDate.now().minusYears(18), "48608678071", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
@@ -47,12 +47,14 @@ public class ClienteControllerIT {
         DocumentContext document = JsonPath.parse(response.getBody());
 
         Number id = document.read("$.data.id");
+        String name = document.read("$.data.name");
         String email = document.read("$.data.email");
         String dateOfBirth = document.read("$.data.dateOfBirth");
         String cpf = document.read("$.data.cpf");
         Address addressJson = document.read("$.data.address[0]", Address.class);
 
         assertThat(id).isNotNull();
+        assertThat(name).isEqualTo(client.name());
         assertThat(email).isEqualTo(client.email());
         assertThat(dateOfBirth).isEqualTo(client.dateOfBirth().toString());
         assertThat(cpf).isEqualTo(client.cpf());
@@ -105,7 +107,7 @@ public class ClienteControllerIT {
     @DirtiesContext
     @DisplayName("should not be possible to create a new client with already registered email")
     public void shouldReturnErrorWhenCreatingClientWithAlreadyRegisteredEmail() {
-        ClientRequest client = new ClientRequest("user1@gmail.com", "@Password1", "@Password1",
+        ClientRequest client = new ClientRequest("Nome completo","user1@gmail.com", "@Password1", "@Password1",
             LocalDate.now().minusYears(14), "019.056.440-78", "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
             "address",  "complement",
              "12", "details")));
@@ -126,7 +128,7 @@ public class ClienteControllerIT {
     @DirtiesContext
     @DisplayName("should return all validation errors in the password field")
     public void shouldReturnAllValidationErrorsInThePasswordField() {
-        ClientRequest client = new ClientRequest("email@gmail.com", " ", " ",
+        ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", " ", " ",
             LocalDate.now().minusYears(18), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address",  "complement",
             "12", "details")));
@@ -154,7 +156,7 @@ public class ClienteControllerIT {
     @DirtiesContext
     @DisplayName("should return all validation errors in the dateOfBirth field")
     public void shouldReturnAllValidationErrorsInThDateOfBirthField() {
-        ClientRequest client = new ClientRequest("email@gmail.com", "@Teste123", "@Teste123",
+        ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", "@Teste123", "@Teste123",
             LocalDate.now().plusDays(1), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address",  "complement",
              "12", "details")));
@@ -178,7 +180,7 @@ public class ClienteControllerIT {
     @DirtiesContext
     @DisplayName("should return all validation errors in the cpf field")
     public void shouldReturnAllValidationErrorsInTheCPFField() {
-        ClientRequest client = new ClientRequest("email@gmail.com", "@Teste123", "@Teste123",
+        ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", "@Teste123", "@Teste123",
             LocalDate.now().minusYears(18), "cpf",  "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address", "complement",
             "12", "details")));
@@ -201,7 +203,7 @@ public class ClienteControllerIT {
     @DirtiesContext
     @DisplayName("should return error when registering a client with different password and password confirmation")
     public void shouldReturnErrorWhenCreatingClientWithdifferentPasswordAndPasswordConfirmation() throws JsonProcessingException {
-        ClientRequest client = new ClientRequest("teste@teste.com", "@Password1", "@Password",
+        ClientRequest client = new ClientRequest("Nome completo","teste@teste.com", "@Password1", "@Password",
             LocalDate.now().minusYears(18), "48608678071", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address",  "complement",

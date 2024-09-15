@@ -8,13 +8,14 @@ import java.util.List;
 
 public record ClientResponse(
     Long id,
+    String name,
     String email,
     LocalDate dateOfBirth,
     String cpf,
     List<Address> address
 ) {
     public ClientResponse(Client client) {
-        this(client.getId(), client.getEmail(), client.getDateOfBirth(),
+        this(client.getId(), client.getName(), client.getEmail(), client.getDateOfBirth(),
             client.getCpf(), client.getAddress());
     }
 }

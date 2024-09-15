@@ -19,7 +19,7 @@ public class Client implements UserDetails  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private String name;
     private String email;
     private String password;
     private LocalDate dateOfBirth;
@@ -40,6 +40,7 @@ public class Client implements UserDetails  {
     public Client() {}
 
     public Client(ClientRequest clientRequest, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.name = clientRequest.name();
         this.email = clientRequest.email();
         this.password = bCryptPasswordEncoder.encode(clientRequest.password());
         this.dateOfBirth = clientRequest.dateOfBirth();
@@ -47,8 +48,9 @@ public class Client implements UserDetails  {
         this.address = clientRequest.address().stream().map(Address::new).collect(Collectors.toList());
     }
 
-    public Client(Long id, String email, String password, LocalDate dateOfBirth, String cpf,  List<Address> address, String paymentMethods) {
+    public Client(Long id, String name, String email, String password, LocalDate dateOfBirth, String cpf,  List<Address> address, String paymentMethods) {
         this.id = id;
+        this.name = name;
         this.email = email;
         this.password = password;
         this.dateOfBirth = dateOfBirth;
@@ -56,8 +58,24 @@ public class Client implements UserDetails  {
         this.address = address;
     }
 
-    public Client(Long id, String email, String password, LocalDate dateOfBirth, String cpf,  Address address, String paymentMethods) {
-      this(id, email, password, dateOfBirth, cpf, List.of(address), paymentMethods);
+    public Client(Long id, String fullName, String email, String password, LocalDate dateOfBirth, String cpf,  Address address, String paymentMethods) {
+      this(id, fullName, email, password, dateOfBirth, cpf, List.of(address), paymentMethods);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public Long getId() {
