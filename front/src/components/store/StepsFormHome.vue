@@ -333,6 +333,8 @@ function submitForm() {
     
     //mostar os dados no console em json
     console.log(Object.fromEntries(formData));
+
+    nextStep();
     
 }
 
