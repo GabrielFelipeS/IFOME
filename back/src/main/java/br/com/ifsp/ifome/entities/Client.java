@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
@@ -22,6 +23,14 @@ public class Client {
     @OneToMany
     @JoinColumn(name = "address", referencedColumnName = "cpf")
     private List<Address> address;
+
+    @ManyToMany
+    @JoinTable(
+        name = "tb_users_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 
     public Client() {}
 
