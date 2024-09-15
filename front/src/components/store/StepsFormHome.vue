@@ -352,15 +352,19 @@ watch(selectedFiles, () => {
             <p>Selecione as fotos do seu negócio</p>
 
             <!-- Área de upload de fotos -->
-            <div class="border-2 border-dashed border-gray-300 rounded-lg p-5 text-center h-[300px] flex items-center justify-center" @dragover.prevent="dragOver"
-                @dragleave.prevent="dragLeave" @drop.prevent="drop">
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-5 text-center h-[300px] flex items-center justify-center"
+                @dragover.prevent="dragOver" @dragleave.prevent="dragLeave" @drop.prevent="drop">
                 <input type="file" id="photo" name="photo" multiple class="hidden" @change="handleFileChange" />
                 <label for="photo" class="cursor-pointer flex flex-col items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                        class="w-12 h-12 text-gray-500">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 16l4 4m0 0l4-4m-4 4V4m0 0L8 8m0 0L4 4" />
+                    <svg data-name="Livello 1" id="Livello_1" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg"
+                        width="30" height="30" class="mb-2">
+                        <title />
+                        <path
+                            d="M37.09,32.91A3,3,0,0,0,39.21,32L61,10.24V91a3,3,0,0,0,6,0V10.24L88.79,32A3,3,0,0,0,93,27.79L66.12.88A3,3,0,0,0,65.66.5L65.43.38a3,3,0,0,0-.29-.15,3,3,0,0,0-.31-.1L64.59.06a3,3,0,0,0-1.18,0l-.25.08a2.93,2.93,0,0,0-.31.1,3,3,0,0,0-.29.15L62.34.5a3,3,0,0,0-.46.38L35,27.79a3,3,0,0,0,2.12,5.12Z" />
+                        <path
+                            d="M125,88a3,3,0,0,0-3,3v22a9,9,0,0,1-9,9H15a9,9,0,0,1-9-9V91a3,3,0,0,0-6,0v22a15,15,0,0,0,15,15h98a15,15,0,0,0,15-15V91A3,3,0,0,0,125,88Z" />
                     </svg>
+
                     <span>Arraste e solte suas fotos aqui</span>
                     <span class="text-sm text-gray-400">ou <span class="text-blue-500">clique aqui</span> e
                         selecione</span>
