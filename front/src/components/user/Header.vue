@@ -21,10 +21,7 @@ const props = defineProps({
 <template>
 	<header class="header">
 		<div class="flex flex-row gap-4 w-[75%] items-center justify-center h-full" v-if="logo">
-			<div class="flex flex-col h-full w-1/3 justify-center hidden">
-				<Button href="#" >Voltar</Button>
-			</div>
-			<div class="flex flex-col h-full justify-center items-center">
+			<div class="flex flex-col justify-center items-center">
 				<img src="../../assets/img/logo_header.png" class="w-[25%]" alt="Logo">
 			</div>
 		</div>
