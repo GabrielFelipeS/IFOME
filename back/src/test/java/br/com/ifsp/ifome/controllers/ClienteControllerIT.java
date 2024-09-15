@@ -2,7 +2,9 @@ package br.com.ifsp.ifome.controllers;
 
 
 import br.com.ifsp.ifome.dto.request.AddressRequest;
+import br.com.ifsp.ifome.dto.request.ClientLoginRequest;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
+import br.com.ifsp.ifome.dto.response.ClientResponse;
 import br.com.ifsp.ifome.entities.Address;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.jsonpath.DocumentContext;
@@ -66,6 +68,38 @@ public class ClienteControllerIT {
         assertThat(addressJson.getNumber()).isEqualTo("12");
         assertThat(addressJson.getComplement()).isEqualTo("complement");
     }
+
+
+    @Test
+    public void shouldBeAbleLoginWithValidUser() {
+        ClientLoginRequest clientLogin = new ClientLoginRequest("user1@gmail.com", "@Password1");
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/client/login", clientLogin, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+//        ClientResponse clientResponse = documentContext.read("$.data.user", ClientResponse.class);
+        String token = documentContext.read("$.token");
+
+//        assertThat(clientResponse).isNotNull();
+        assertThat(token).isNotNull();
+    }
+
+    @Test
+    public void shouldReturnErrorWhenLoginWithInvalidEmail() {
+        ClientLoginRequest clientLogin = new ClientLoginRequest("invalid_email@gmail.com", "@Password1");
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/client/login", clientLogin, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    public void shouldReturnErrorWhenLoginWithInvalidPassword() {
+        ClientLoginRequest clientLogin = new ClientLoginRequest("user1@gmail.com", "invalid_password");
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/client/login", clientLogin, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
 
     @Test
     @DirtiesContext
@@ -181,4 +215,5 @@ public class ClienteControllerIT {
         Number countOfInvalidFields = documentContext.read("$.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
     }
+
 }
