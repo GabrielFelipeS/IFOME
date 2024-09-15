@@ -1,13 +1,15 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch, defineProps } from 'vue';
 
 const widthLine = ref(0);
 
-const increaseProgress = () => {
-    if (widthLine.value < 100) {
-        widthLine.value += 25;
-    }
-};
+const props = defineProps({
+    currentStep: Number,
+});
+
+watch(() => props.currentStep, (newStep) => {
+    widthLine.value = (newStep - 1) * 25;
+});
 </script>
 
 <template>

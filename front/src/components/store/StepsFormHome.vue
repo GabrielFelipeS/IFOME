@@ -4,14 +4,18 @@ import HeaderSteps from './HeaderSteps.vue';
 import { MaskInput } from 'vue-3-mask';
 import { fetchViaCep } from '@/services/viaCep';
 
-const currentStep = ref(2);
+const currentStep = ref(1);
 
 function nextStep() {
-    currentStep.value++;
+    if (currentStep.value < 4) {
+        currentStep.value++;
+    }
 }
 
 function prevStep() {
-    currentStep.value--;
+    if (currentStep.value > 1) {
+        currentStep.value--;
+    }
 }
 
 const cep = ref('');
@@ -52,12 +56,13 @@ watch(cep, async (value) => {
         address.value = data.logradouro;
     }
 });
-
 </script>
 
 <template>
     <div class="steps">
-        <HeaderSteps />
+        <!-- Passar a etapa atual para o componente filho -->
+        <HeaderSteps :currentStep="currentStep" />
+        
         <div class="step" v-if="currentStep === 1">
             <h2>Endereço da loja</h2>
             <p>Preencha as informações de endereço da sua loja.</p>
@@ -91,6 +96,7 @@ watch(cep, async (value) => {
             <button type="submit" class="btn-primary" :class="stepCompleted ? '' : 'disable'"
                 @click="nextStep">Próximo</button>
         </div>
+
         <div class="step" v-if="currentStep === 2">
             <h2>Responsável da loja</h2>
             <p>Informe os dados da pessoa que tem o nome no contrato social da empresa, seja como dona, sócia ou sócia
