@@ -3,12 +3,18 @@ import FormHome from '@/components/store/FormHome.vue';
 import '@/components/store/Header.vue';
 import Header from '@/components/store/Header.vue';
 import '@/components/store/FormHome.vue';
+
+//escutar o evento submit do componente FormHome
+
+const submitForm = (data) => {
+    console.log(data);
+}
 </script>
 
 <template>
     <div class="content">
         <Header />
-        <FormHome />
+        <FormHome @submit="submitForm"/>
     </div>
 </template>
 
