@@ -19,7 +19,8 @@ import Modal from "@/components/user/register/Modal.vue";
 				<Button href="#" class="button bg-[#F2F2F2]">Fazer login com o Google</Button>
 			</div>
 			<div class="btn-container">
-				<Button href="#" class="button bg-primary text-white">Continuar com e-mail</Button>
+				<Button href="#" class="button bg-primary text-white"
+					@click="$emit('next-step')">Continuar com e-mail</Button>
 			</div>
 			<div class="btn-container">
 				<Button href="#" inversed class="button border border-primary">Já tenho uma conta, fazer login</Button>
