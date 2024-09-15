@@ -28,7 +28,7 @@ CREATE TABLE restaurants (
     restaurant_image TEXT,
     bank_account VARCHAR(255)
 );
-CREATE TABLE deliveryPerson (
+CREATE TABLE delivery_person (
      id BIGINT AUTO_INCREMENT PRIMARY KEY,
      email VARCHAR(255) UNIQUE,
      password VARCHAR(255) NOT NULL

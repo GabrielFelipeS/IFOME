@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 
 
 @Entity
-@Table(name = "deliveryPerson")
-public class DeliveryPerson {
+@Table(name = "delivery_person")
+public class DeliveryPerson  implements PasswordPolicy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

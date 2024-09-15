@@ -36,7 +36,7 @@ INSERT INTO restaurants (
     'Banco XYZ, Agência 123, Conta 456789'
 );
 
-INSERT INTO deliveryPerson  (
+INSERT INTO delivery_person (
     email,
     password
 )
