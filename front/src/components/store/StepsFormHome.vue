@@ -608,7 +608,7 @@ const returnSteps = () => {
         @apply w-[90%] h-[calc(100vh-100px)] m-auto pt-10;
 
         h2 {
-            @apply text-4xl font-semibold text-gray-800 mb-5;
+            @apply text-4xl font-semibold text-gray-800 mb-5 text-center;
         }
 
         h3 {
