@@ -15,7 +15,7 @@ const submitForm = (data) => {
     <div class="content">
         <Header />
         <FormHome @submit="submitForm"/>
-        <StepsFormHome />
+        <StepsFormHome name="Teste"/>
     </div>
 </template>
 

@@ -4,7 +4,11 @@ import HeaderSteps from './HeaderSteps.vue';
 import { MaskInput } from 'vue-3-mask';
 import { fetchViaCep } from '@/services/viaCep';
 
-const currentStep = ref(6);
+const currentStep = ref(7);
+
+const props = defineProps({
+    name: String,
+});
 
 function nextStep() {
     if (currentStep.value < 7) {
@@ -500,10 +504,35 @@ function showConfirmation() {
             <button type="submit" class="btn-primary" :class="step6Completed ? '' : 'disable'"
                 @click="nextStep">Próximo</button>
         </div>
+
+        <div class="step" v-if="currentStep === 7">
+            <div class="final">
+                <img src="../../assets/img/logo_header.png" alt="Logo Ifome">
+                <h2>Seja Bem Vindo, {{ props.name }}</h2>
+                <img src="../../assets/img/store/balloon.png" alt="Icone Balão" class="baloon">
+                <img src="../../assets/img/store/balloon_2.png" alt="Icone Balão" class="baloon1">
+                <img src="../../assets/img/store/balloon_3.png" alt="Icone Balão" class="baloon2">
+                <button type="submit" class="btn-text" @click="completeForm">Começar a Vender</button>
+            </div>
+        </div>
     </div>
 </template>
 
 <style lang="scss" scoped>
+@keyframes baloon {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
 .steps {
     @apply fixed top-0 left-0 w-full h-full bg-white overflow-auto;
 
@@ -534,6 +563,38 @@ function showConfirmation() {
 
             img {
                 @apply w-[30px] h-[30px];
+            }
+        }
+
+
+        .final {
+            @apply flex flex-col items-center justify-start mt-36 h-full lg:mt-0 lg:justify-center;
+
+            img {
+                @apply w-[80%] md:w-[50%] lg:w-[40%] mb-5;
+            }
+
+            h2 {
+                @apply text-4xl font-thin text-gray-800 mb-5;
+            }
+
+            .btn-text {
+                @apply relative w-[80%] md:w-[50%] h-[50px] bg-primary text-white font-semibold rounded-lg mb-3 text-center animate-bounce;
+            }
+
+            .baloon {
+                @apply w-[20%] md:w-[10%] lg:w-[5%] absolute top-[45%] right-[5%] md:right-[30%];
+                animation: baloon 2s infinite;
+            }
+
+            .baloon1 {
+                @apply w-[20%] md:w-[10%] lg:w-[5%] absolute top-[20%] left-[10%] md:left-[30%];
+                animation: baloon 2s infinite;
+            }
+
+            .baloon2 {
+                @apply w-[20%] md:w-[10%] lg:w-[5%] absolute bottom-56 left-[10%] md:left-[30%];
+                animation: baloon 2s infinite;
             }
         }
 
@@ -608,7 +669,7 @@ function showConfirmation() {
                 @apply text-red-500;
             }
 
-            span{
+            span {
                 @apply text-blue-500 cursor-pointer mt-3 cursor-pointer;
             }
 
