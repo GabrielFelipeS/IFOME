@@ -344,7 +344,7 @@ const returnSteps = () => {
             <p>Preencha as informações de endereço da sua loja.</p>
             <div class="form-group">
                 <label for="cep">CEP</label>
-                <MaskInput type="text" id="cep" name="cep" v-model="cep" placeholder="CEP" mask="#####-###" required />
+                <MaskInput type="text" id="cep" name="cep" v-model="cep" :value="cep" placeholder="CEP" mask="#####-###" required />
             </div>
             <div class="mid">
                 <div class="form-group">
@@ -362,7 +362,7 @@ const returnSteps = () => {
             </div>
             <div class="form-group">
                 <label for="number">Número</label>
-                <MaskInput type="text" id="number" name="number" v-model="number" placeholder="Número" mask="######"
+                <MaskInput type="text" id="number" name="number" v-model="number" :value="number" placeholder="Número" mask="######"
                     required />
             </div>
             <div class="form-group">
@@ -383,7 +383,7 @@ const returnSteps = () => {
             </div>
             <div class="form-group">
                 <label for="cpf">CPF</label>
-                <MaskInput type="text" id="cpf" v-model="cpf" name="cpf" placeholder="CPF" mask="###.###.###-##"
+                <MaskInput type="text" id="cpf" v-model="cpf" name="cpf" :value="cpf" placeholder="CPF" mask="###.###.###-##"
                     required />
             </div>
             <button type="submit" class="btn-primary" :class="step2Completed ? '' : 'disable'"
@@ -395,7 +395,7 @@ const returnSteps = () => {
             <p>Preencha com os dados do seu negócio</p>
             <div class="form-group">
                 <label for="cnpj">CNPJ</label>
-                <MaskInput type="text" id="cnpj" v-model="cnpj" name="cnpj" placeholder="CNPJ" mask="##.###.###/####-##"
+                <MaskInput type="text" id="cnpj" v-model="cnpj" name="cnpj" :value="cnpj" placeholder="CNPJ" mask="##.###.###/####-##"
                     required />
                 <p v-if="step3Erros.cnpj">** Digite um valor válido **</p>
             </div>
@@ -407,7 +407,7 @@ const returnSteps = () => {
             </div>
             <div class="form-group">
                 <label for="phone">Telefone do Restaurante</label>
-                <MaskInput type="text" id="phone" v-model="phone" name="phone" placeholder="Telefone"
+                <MaskInput type="text" id="phone" v-model="phone" :value="phone" name="phone" placeholder="Telefone"
                     mask="(##) #####-####" required />
                 <p v-if="step3Erros.phone">** Digite um valor válido **</p>
             </div>
@@ -526,18 +526,18 @@ const returnSteps = () => {
             </div>
             <div class="form-group">
                 <label for="agency">Agência</label>
-                <MaskInput type="text" id="agency" v-model="agency" name="agency" placeholder="Agência" mask="####-#"
+                <MaskInput type="text" id="agency" v-model="agency" name="agency" :value="agency" placeholder="Agência" mask="####-#"
                     required />
             </div>
             <div class="mid-payment">
                 <div class="form-group">
                     <label for="account">Conta</label>
-                    <MaskInput type="text" id="account" v-model="account" name="account" placeholder="Conta"
+                    <MaskInput type="text" id="account" v-model="account" :value="account" name="account" placeholder="Conta"
                         mask="#####" required />
                 </div>
                 <div class="form-group dig">
                     <label for="digit">Dígito</label>
-                    <MaskInput type="text" id="digit" v-model="digit" name="digit" placeholder="Dígito" mask="#"
+                    <MaskInput type="text" id="digit" v-model="digit" name="digit" :value="digit" placeholder="Dígito" mask="#"
                         required />
                 </div>
             </div>
