@@ -35,6 +35,10 @@ public record DeliveryPersonRequest(
         LocalDate dateOfBirth,
         String typeOfVehicle,
 
+        @NotBlank(message = "Verique a placa")
+        @Pattern(regexp = "[A-Z]{3}-\\d{4}", message = "A placa deve estar no formato XXX-9999")
+        String plate,
+
         @NotBlank(message = "Telefone é obrigatório")
         @Pattern(regexp = "\\(\\d{2}\\) \\d{4,5}-\\d{4}", message = "Telefone deve estar no formato (XX) XXXXX-XXXX")
         String telephone,

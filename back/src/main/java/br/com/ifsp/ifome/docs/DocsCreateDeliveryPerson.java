@@ -33,6 +33,7 @@ import java.lang.annotation.Target;
                       "confirmationPassword" : "@Senha1",
                       "dateOfBirth : "1999-02-01",
                       "typeOfVehicle" : "Carro",
+                      "plate" : "DIT-4987"
                       "telephone" : "(11) 1234-5678",
                       "cnh" : "document.jpg"
                       "vehicleDocument" : "DOCUMENTO DO VEICULO",
@@ -69,6 +70,7 @@ import java.lang.annotation.Target;
                                             password: não possui letra maiúscula, número e caractere especial
                                             address: esta vazio
                                             bankAccount: esta vazio
+                                            plate:  "Verique a placa"
                                         """,
                                 value = """
                     {
@@ -78,6 +80,7 @@ import java.lang.annotation.Target;
                         "confirmationPassword": "password",
                         "bankAccount": [],
                         "address": []
+                        "plate": "DIT-4987"
                     }
                     """
                         )

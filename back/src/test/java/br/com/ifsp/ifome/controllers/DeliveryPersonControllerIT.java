@@ -39,6 +39,7 @@ public class DeliveryPersonControllerIT {
                 "@Senha1",
                 LocalDate.of(1999, 1, 2),
                 "Carro",
+                "DIT-4987",
                 "(11) 95455-4565",
                 "CNH",
                 "dOCUMENTO DO VEICULO",
@@ -97,6 +98,7 @@ public class DeliveryPersonControllerIT {
                 "@Senha1",
                 LocalDate.of(1999, 1, 2),
                 "Carro",
+                "DIT-4987",
                 "(11) 95455-4565",
                 " ",
                 "DOCUMENTO DO VEICULO",
@@ -137,6 +139,7 @@ public class DeliveryPersonControllerIT {
                 " ",
                 LocalDate.of(1999, 1, 2),
                 "Carro",
+                "DIT-4987",
                 "(11) 95455-4565",
                 "CNH",
                 "dOCUMENTO DO VEICULO",
@@ -177,6 +180,7 @@ public class DeliveryPersonControllerIT {
                 "@Senha1",
                 LocalDate.of(1999, 1, 2),
                 "Carro",
+                "DIT-4987",
                 "(11) 95455-4565",
                 "CNH",
                 "dOCUMENTO DO VEICULO",
@@ -198,6 +202,44 @@ public class DeliveryPersonControllerIT {
         assertThat(cpf)
                 .containsExactlyInAnyOrder(
                         "CPF inválido"
+                );
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("should return all validation errors in the plate field")
+    public void shouldReturnAllValidationErrorsInThePlateField() {
+        DeliveryPersonRequest deliveryPersonRequest = new DeliveryPersonRequest(
+                "Nome entregador",
+                "033.197.356-16",
+                "email@email.com",
+                "@Senha1",
+                "@Senha1",
+                LocalDate.of(1999, 1, 2),
+                "Carro",
+                " ",
+                "(11) 95455-4565",
+                "CNH",
+                "dOCUMENTO DO VEICULO",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "details")),
+                new BankAccountRequest("123","1255", "4547-7")
+
+        );
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson", deliveryPersonRequest, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        System.out.println(response.getBody());
+        Number countOfInvalidFields = documentContext.read("$.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+
+
+        List<String> plate = documentContext.read("$.plate");
+        assertThat(plate)
+                .containsExactlyInAnyOrder(
+                        "A placa deve estar no formato XXX-9999",
+                        "Verique a placa"
                 );
     }
 

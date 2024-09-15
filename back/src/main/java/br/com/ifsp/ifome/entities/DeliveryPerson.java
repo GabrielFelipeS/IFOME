@@ -22,6 +22,7 @@ public class DeliveryPerson {
     private String password;
     private LocalDate dateOfBirth;
     private String typeOfVehicle;
+    private String plate;
     private String telephone;
     private String cnh;
     private String vehicleDocument;
@@ -40,6 +41,7 @@ public class DeliveryPerson {
         this.password = deliveryPersonRequest.password();
         this.dateOfBirth =deliveryPersonRequest.dateOfBirth();
         this.typeOfVehicle = deliveryPersonRequest.vehicleDocument();
+        this.plate = deliveryPersonRequest.plate();
         this.telephone = deliveryPersonRequest.telephone();
         this.cnh = deliveryPersonRequest.cnh();
         this.vehicleDocument = deliveryPersonRequest.vehicleDocument();
@@ -48,7 +50,7 @@ public class DeliveryPerson {
     }
 
 
-    public DeliveryPerson(Long id, String name, String cpf, String email, String password, LocalDate dateOfBirth, String typeOfVehicle, String telephone, String cnh, String vehicleDocument, List<Address> address, BankAccount bankAccount) {
+    public DeliveryPerson(Long id, String name, String cpf, String email, String password, LocalDate dateOfBirth, String typeOfVehicle, String plate,String telephone, String cnh, String vehicleDocument, List<Address> address, BankAccount bankAccount) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
@@ -56,6 +58,7 @@ public class DeliveryPerson {
         this.password = password;
         this.dateOfBirth = dateOfBirth;
         this.typeOfVehicle = typeOfVehicle;
+        this.plate = plate;
         this.telephone = telephone;
         this.cnh = cnh;
         this.vehicleDocument = vehicleDocument;
@@ -157,5 +160,13 @@ public class DeliveryPerson {
 
     public void setBankAccount(BankAccount bankAccount) {
         this.bankAccount = bankAccount;
+    }
+
+    public String getPlate() {
+        return plate;
+    }
+
+    public void setPlate(String plate) {
+        this.plate = plate;
     }
 }
