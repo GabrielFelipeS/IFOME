@@ -647,7 +647,7 @@ const returnSteps = () => {
             }
 
             .btn-text {
-                @apply relative w-[80%] md:w-[50%] h-[50px] bg-primary text-white font-semibold rounded-lg mb-3 text-center animate-bounce;
+                @apply relative w-[80%] md:w-[50%] h-[50px] bg-primary text-white font-semibold rounded-lg mb-3 text-center;
             }
 
             .baloon {
