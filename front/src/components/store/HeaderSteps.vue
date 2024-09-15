@@ -22,7 +22,7 @@ watch(() => props.currentStep, (newStep) => {
 </script>
 
 <template>
-    <header class="headerSteps" :class="props.currentStep > 1 ? 'justify-center md:justify-between': 'justify-center md:justify-center'">
+    <header class="headerSteps" :class="props.currentStep > 1 &&  props.currentStep < 7? 'justify-center md:justify-between': 'justify-center md:justify-center'">
         <div class="arrow" @click="returnBack" v-if="props.currentStep > 1">
             <img src="../../assets/img/store/arrow.svg" class="img">
         </div>
