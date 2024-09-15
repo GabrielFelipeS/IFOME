@@ -1,6 +1,5 @@
 package br.com.ifsp.ifome.entities;
 
-import br.com.ifsp.ifome.dto.request.ClientLoginRequest;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
 import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
