@@ -661,7 +661,7 @@ const returnSteps = () => {
             }
 
             .baloon2 {
-                @apply w-[20%] md:w-[10%] lg:w-[5%] absolute bottom-56 left-[10%] md:left-[30%];
+                @apply w-[20%] md:w-[10%] lg:w-[5%] absolute bottom-[40%] left-[10%] md:left-[30%];
                 animation: baloon 2s infinite;
             }
         }
