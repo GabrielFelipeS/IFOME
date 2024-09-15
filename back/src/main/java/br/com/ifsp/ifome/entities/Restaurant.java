@@ -33,7 +33,7 @@ public class Restaurant {
     private String email;
     private String password;
     private String paymentMethods;
-    @ElementCollection
+
     private String restaurantImages;
 
     @Embedded

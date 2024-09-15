@@ -70,7 +70,7 @@ public class RestaurantControllerIT {
         String openingHoursStart = document.read("$.openingHoursStart");
         String openingHoursEnd = document.read("$.openingHoursEnd");
         String personResponsibleCPF = document.read("$.personResponsibleCPF");
-        List <String> restaurantImages = document.read("$.restaurantImages");
+        String restaurantImages = document.read("$.restaurantImage");
 
 
         assertThat(id).isNotNull();
