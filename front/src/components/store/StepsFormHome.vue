@@ -4,10 +4,10 @@ import HeaderSteps from './HeaderSteps.vue';
 import { MaskInput } from 'vue-3-mask';
 import { fetchViaCep } from '@/services/viaCep';
 
-const currentStep = ref(4);
+const currentStep = ref(5);
 
 function nextStep() {
-    if (currentStep.value < 4) {
+    if (currentStep.value < 7) {
         currentStep.value++;
     }
 }
@@ -386,6 +386,51 @@ watch(selectedFiles, () => {
             <button type="submit" class="btn-primary" :class="step4Completed ? '' : 'disable'"
                 @click="nextStep">Próximo</button>
         </div>
+
+        <div class="step" v-if="currentStep === 5">
+            <h2>Informações de Pagamento</h2>
+            <p>Preencha com os dados de pagamento</p>
+            <h3>Metodos de pagamento aceito</h3>
+            <div class="grid grid-cols-2 lg:grid-cols-3">
+                <div class="checkform-payment">
+                    <input type="checkbox" id="money" name="money" checked/>
+                    <label for="money">Dinheiro</label>
+                    <img src="../../assets/img/store/money_icon.png" />
+                </div>
+                <div class="checkform-payment">
+                    <input type="checkbox" id="credit" name="credit" />
+                    <label for="credit">Debito/Crédito</label>
+                    <img src="../../assets/img/store/credit_card.png" />
+                </div>
+                <div class="checkform-payment">
+                    <input type="checkbox" id="debit" name="debit" />
+                    <label for="debit">Pix</label>
+                    <img src="../../assets/img/store/pix_icon.png" />
+                </div>
+            </div>
+            <h3>Recebimentos de fundos</h3>
+            <div class="form-group">
+                <label for="bank">Banco</label>
+                <input type="text" id="bank" name="bank" placeholder="Banco" required />
+            </div>
+            <div class="form-group">
+                <label for="agency">Agência</label>
+                <input type="text" id="agency" name="agency" placeholder="Agência" required />
+            </div>
+            <div class="mid-payment">
+                <div class="form-group">
+                    <label for="account">Conta</label>
+                    <input type="text" id="account" name="account" placeholder="Conta" required />
+                </div>
+                <div class="form-group dig">
+                    <label for="digit">Dígito</label>
+                    <input type="text" id="digit" name="digit" placeholder="Dígito" required />
+                </div>
+            </div>
+            <button type="submit" class="btn-text" :class="step4Completed ? '' : 'disable'"
+                @click="nextStep">Próximo</button>
+
+        </div>
     </div>
 </template>
 
@@ -406,6 +451,42 @@ watch(selectedFiles, () => {
 
         p {
             @apply text-lg text-gray-500 mb-5 font-bold;
+        }
+
+        .checkform-payment{
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+            font-weight: 300;
+            @apply p-2;
+
+            @apply font-thin text-xl;
+
+            img{
+                @apply w-[30px] h-[30px];
+            }
+        }
+
+        .mid-payment {
+            @apply flex flex-col md:flex-row justify-between;
+
+            .form-group {
+                @apply w-[calc(70%-10px)];
+
+                &.dig {
+                    @apply w-[30%];
+                }
+
+                @media (max-width: 768px) {
+                    @apply w-full;
+
+                    &.dig {
+                        @apply w-full;
+                    }
+                }
+            }
+
         }
 
         .mid-check {
