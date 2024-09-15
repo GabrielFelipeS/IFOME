@@ -39,9 +39,7 @@ function submitForm() {
 
     emit('submit', { name: name.value, email: email.value, phone: phone.value });
 
-    name.value = '';
-    email.value = '';
-    phone.value = '';
+    document.querySelector('form').reset();
 }
 </script>
 <template>
