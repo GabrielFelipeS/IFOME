@@ -80,11 +80,15 @@ public class ClienteControllerIT {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
-        String token = documentContext.read("$.data.token");
-        assertThat(token).isNotNull();
 
         Object clientResponse = documentContext.read("$.data.user");
         assertThat(clientResponse).isNotNull();
+
+        String token = documentContext.read("$.data.token");
+        assertThat(token).isNotNull();
+
+        ResponseEntity<String> responseTokenValidation = restTemplate.postForEntity("/api/token", token, String.class);
+        assertThat(responseTokenValidation.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
