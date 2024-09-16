@@ -12,9 +12,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
@@ -31,7 +33,7 @@ public class RestaurantControllerIT {
     @DirtiesContext
     public void shouldBeAbleLoginWithValidUser() {
         LoginRequest restaurantLogin = new LoginRequest("email1@email.com", "@Password1");
-        ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant/login", restaurantLogin, String.class);
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/restaurant/login", restaurantLogin, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
@@ -42,7 +44,7 @@ public class RestaurantControllerIT {
         String token = documentContext.read("$.data.token");
         assertThat(token).isNotNull();
 
-        ResponseEntity<String> responseTokenValidation = testRestTemplate.postForEntity("/api/auth//token", token, String.class);
+        ResponseEntity<String> responseTokenValidation = testRestTemplate.postForEntity("/api/auth/token", token, String.class);
         assertThat(responseTokenValidation.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
@@ -50,7 +52,7 @@ public class RestaurantControllerIT {
     @DirtiesContext
     public void shouldReturnErrorWhenLoginWithInvalidEmail() {
         LoginRequest restaurantLogin = new LoginRequest("invalid_email@gmail.com", "@Password1");
-        ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant/login", restaurantLogin, String.class);
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/restaurant/login", restaurantLogin, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
@@ -58,7 +60,7 @@ public class RestaurantControllerIT {
     @Test
     public void shouldReturnErrorWhenLoginWithInvalidPassword() {
         LoginRequest restaurantLogin = new LoginRequest("user1@gmail.com", "invalid_password");
-        ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant/login", restaurantLogin, String.class);
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/restaurant/login", restaurantLogin, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
@@ -88,8 +90,23 @@ public class RestaurantControllerIT {
                 new BankAccountRequest("123","1255", "4547-7")
 
         );
-        ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
+
+        // Carregar o arquivo de exemplo do classpath
+        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        System.out.println("File?");
+
+        // Criar o mapa de parâmetros para enviar o objeto e o arquivo
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("restaurant", restaurant);
+        body.add("file", fileResource);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity(
+                                    "/api/auth/restaurant",
+                                        body,
+                                        String.class);
+
         System.out.println(response.getBody());
+
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         DocumentContext document = JsonPath.parse(response.getBody());
@@ -151,8 +168,15 @@ public class RestaurantControllerIT {
 
 
         );
+        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        System.out.println("File?");
 
-        ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
+        // Criar o mapa de parâmetros para enviar o objeto e o arquivo
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("restaurant", restaurant);
+        body.add("file", fileResource);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/restaurant", body, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
@@ -189,7 +213,16 @@ public class RestaurantControllerIT {
 
 
         );
-        ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
+
+        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        System.out.println("File?");
+
+        // Criar o mapa de parâmetros para enviar o objeto e o arquivo
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("restaurant", restaurant);
+        body.add("file", fileResource);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/restaurant", body, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
@@ -233,7 +266,15 @@ public class RestaurantControllerIT {
 
 
         );
-        ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
+        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        System.out.println("File?");
+
+        // Criar o mapa de parâmetros para enviar o objeto e o arquivo
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("restaurant", restaurant);
+        body.add("file", fileResource);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/restaurant", body, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
@@ -272,7 +313,15 @@ public class RestaurantControllerIT {
 
 
         );
-        ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
+        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        System.out.println("File?");
+
+        // Criar o mapa de parâmetros para enviar o objeto e o arquivo
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("restaurant", restaurant);
+        body.add("file", fileResource);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/restaurant", body, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
         System.out.println(response.getBody());
@@ -312,7 +361,15 @@ public class RestaurantControllerIT {
 
 
         );
-        ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
+        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        System.out.println("File?");
+
+        // Criar o mapa de parâmetros para enviar o objeto e o arquivo
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("restaurant", restaurant);
+        body.add("file", fileResource);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/restaurant", body, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         System.out.println(response.getBody());
         DocumentContext documentContext = JsonPath.parse(response.getBody());
@@ -346,7 +403,15 @@ public class RestaurantControllerIT {
 
 
         );
-        ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
+        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        System.out.println("File?");
+
+        // Criar o mapa de parâmetros para enviar o objeto e o arquivo
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("restaurant", restaurant);
+        body.add("file", fileResource);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/restaurant", body, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         System.out.println(response.getBody());
         DocumentContext documentContext = JsonPath.parse(response.getBody());
@@ -379,7 +444,15 @@ public class RestaurantControllerIT {
 
 
         );
-        ResponseEntity<String> response = testRestTemplate.postForEntity("/restaurant", restaurant, String.class);
+        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        System.out.println("File?");
+
+        // Criar o mapa de parâmetros para enviar o objeto e o arquivo
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("restaurant", restaurant);
+        body.add("file", fileResource);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/restaurant", body, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         System.out.println(response.getBody());
         DocumentContext documentContext = JsonPath.parse(response.getBody());
