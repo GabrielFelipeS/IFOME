@@ -7,6 +7,8 @@ import {computed, ref} from "vue";
 import FormPersonalData from "@/components/user/register/FormPersonalData.vue";
 import FormAddress from "@/components/user/register/FormAddress.vue";
 
+document.querySelector('#app').setAttribute('style', 'overflow-x: hidden');
+
 const formData = ref({
 	email: '',
 	name: '',
