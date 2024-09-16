@@ -13,12 +13,26 @@ const props = defineProps({
 	}
 });
 
+const erros = ref({
+	cep: '',
+	state: '',
+	city: '',
+	neighborhood: '',
+	address: '',
+	houseNumber: '',
+	complement: '',
+	details: ''
+});
+
 const emit = defineEmits(['submit-form']);
 
 watch(() => props.formData.cep, async (value) => {
 	if (value.length === 9) {
 		let cep = value.replace('-', '');
 		const data = await fetchViaCep(cep);
+		if (data.erro) {
+			erros.value.cep = 'Digite um CEP válido';
+		}
 		props.formData.state = data.estado;
 		props.formData.city = data.localidade;
 		props.formData.neighborhood = data.bairro;
@@ -32,19 +46,88 @@ watch(() => props.formData.cep, async (value) => {
 	}
 });
 
-const sendSubmit = () => {
-	if (props.formData.cep.length > 0 &&
-		props.formData.state.length > 0 &&
-		props.formData.city.length > 0 &&
-		props.formData.neighborhood.length > 0 &&
-		props.formData.address.length > 0 &&
-		props.formData.houseNumber.length > 0 &&
-		props.formData.complement.length > 0 &&
-		props.formData.details.length > 0
-	) {
-		emit('submit-form');
-	} else {
+watch(props.formData, () => {
+	if (props.formData.cep.length === 0) {
+		erros.value.cep = '';
+	}
+	if (props.formData.state.length === 0) {
+		erros.value.state = '';
+	}
+	if (props.formData.city.length === 0) {
+		erros.value.city = '';
+	}
+	if (props.formData.neighborhood.length === 0) {
+		erros.value.neighborhood = '';
+	}
+	if (props.formData.address.length === 0) {
+		erros.value.address = '';
+	}
+	if (props.formData.houseNumber.length === 0) {
+		erros.value.houseNumber = '';
+	}
+	if (props.formData.complement.length === 0) {
+		erros.value.complement = '';
+	}
+}, { deep:true })
 
+const validateForm = () => {
+	let valid = true;
+
+	if (props.formData.cep.length === 0) {
+		erros.value.cep = 'Preencha o campo CEP.';
+		valid = false;
+	} else {
+		erros.value.cep = '';
+	}
+
+	if (props.formData.state.length === 0) {
+		erros.value.state = 'Preencha o campo Estado.';
+		valid = false;
+	} else {
+		erros.value.state = '';
+	}
+
+	if (props.formData.city.length === 0) {
+		erros.value.city = 'Preencha o campo Cidade.';
+		valid = false;
+	} else {
+		erros.value.city = '';
+	}
+
+	if (props.formData.neighborhood.length === 0) {
+		erros.value.neighborhood = 'Preencha o campo Bairro.';
+		valid = false;
+	} else {
+		erros.value.neighborhood = '';
+	}
+
+	if (props.formData.address.length === 0) {
+		erros.value.address = 'Preencha o campo Endereço.';
+		valid = false;
+	} else {
+		erros.value.address = '';
+	}
+
+	if (props.formData.houseNumber.length === 0) {
+		erros.value.houseNumber = 'Preencha o campo Número.';
+		valid = false;
+	} else {
+		erros.value.houseNumber = '';
+	}
+
+	if (props.formData.complement.length === 0) {
+		erros.value.complement = 'Preencha o campo Complemento.';
+		valid = false;
+	} else {
+		erros.value.complement = '';
+	}
+
+	return valid;
+};
+
+const sendSubmit = () => {
+	if (validateForm()) {
+		emit('submit-form');
 	}
 }
 
@@ -62,28 +145,43 @@ const sendSubmit = () => {
 			<div class="form-group">
 				<label for="cep" class="form-label">CEP</label>
 				<MaskInput type="text" placeholder="00000-000" class="form-input" id="cep"
-					   v-model="formData.cep" mask="#####-###" />
+						   v-model="formData.cep" mask="#####-###" />
+				<p v-if="erros.cep !== ''" class="invalid-input-text">{{ erros.cep }}</p>
+
 				<label for="state" class="form-label">Estado</label>
 				<input type="text" placeholder="Exemplo: São Paulo" class="form-input" id="state"
 					   v-model="formData.state" >
+				<p v-if="erros.state !== ''" class="invalid-input-text">{{ erros.state }}</p>
+
 				<label for="city" class="form-label">Cidade</label>
 				<input type="text" placeholder="Exemplo: Guarulhos" class="form-input" id="city"
 					   v-model="formData.city" >
+				<p v-if="erros.city !== ''" class="invalid-input-text">{{ erros.city }}</p>
+
 				<label for="neighborhood" class="form-label">Bairro</label>
 				<input type="text" placeholder="Exemplo: Parque Santos Dumont" class="form-input" id="neighborhood"
 					   v-model="formData.neighborhood" >
+				<p v-if="erros.neighborhood !== ''" class="invalid-input-text">{{ erros.neighborhood }}</p>
+
 				<label for="address" class="form-label">Endereço</label>
 				<input type="text" placeholder="Exemplo: Rua Dantas" class="form-input" id="address"
 					   v-model="formData.address" >
+				<p v-if="erros.address !== ''" class="invalid-input-text">{{ erros.address }}</p>
+
 				<label for="houseNumber" class="form-label">Número</label>
 				<input type="text" placeholder="Exemplo: 12A" class="form-input" id="houseNumber"
 					   v-model="formData.houseNumber" >
+				<p v-if="erros.houseNumber !== ''" class="invalid-input-text">{{ erros.houseNumber }}</p>
+
 				<label for="complement" class="form-label">Complemento</label>
 				<input type="text" placeholder="Exemplo: AP12 BL5" class="form-input" id="complement"
 					   v-model="formData.complement" >
-				<label for="details" class="form-label">Detalhes</label>
+				<p v-if="erros.complement !== ''" class="invalid-input-text">{{ erros.complement }}</p>
+
+				<label for="details" class="form-label">Detalhes (opcional)</label>
 				<input type="text" placeholder="Exemplo: Em frente a padaria do seu zé" class="form-input" id="details"
 					   v-model="formData.details" >
+				<p v-if="erros.details !== ''" class="invalid-input-text">{{ erros.details }}</p>
 			</div>
 			<div class="btn-container">
 				<Button href="#" @click="$emit('previous-step')" inversed
@@ -120,5 +218,8 @@ const sendSubmit = () => {
 }
 .form-label {
 	@apply my-1 text-sm;
+}
+.invalid-input-text {
+	@apply font-light text-sm text-red-500 px-2;
 }
 </style>
