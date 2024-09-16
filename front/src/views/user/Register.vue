@@ -53,7 +53,11 @@ const sendForm = () => {
 	form.append("email", formData.value.email);
 	form.append("password", formData.value.password);
 	form.append("confirmationPassword", formData.value.passwordConfirmation);
-	form.append("dateOfBirth", formData.value.dateOfBirth);
+
+	let [day, month, year] = formData.value.dateOfBirth.split('/').map(String);
+	let date = year + '-' + month + '-' + day;
+	form.append("dateOfBirth", date);
+
 	form.append("cpf", formData.value.cpf);
 	form.append("phone", formData.value.phone);
 
