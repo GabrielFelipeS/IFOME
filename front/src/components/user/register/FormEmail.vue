@@ -81,8 +81,5 @@ onMounted(() => {
 .invalid-input-text {
 	@apply font-light text-sm text-red-500 px-2;
 }
-.btn-error {
-	@apply border-primary;
-}
 
 </style>
