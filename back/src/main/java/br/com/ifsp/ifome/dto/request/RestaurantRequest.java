@@ -16,6 +16,7 @@ import java.util.List;
 
 @ConfirmartionPasswordEqualsPassword
 public record RestaurantRequest(
+        @NotBlank
         String nameRestaurant,
 
         @Email(message = "E-mail inválido")
