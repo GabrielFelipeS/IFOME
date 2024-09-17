@@ -10,6 +10,7 @@ import br.com.ifsp.ifome.dto.response.ClientResponse;
 import br.com.ifsp.ifome.services.ClientService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +31,7 @@ public class ClientController {
 
     @PostMapping
     @DocsCreateClient
-    public ResponseEntity<ApiResponse> create(@Valid @RequestBody ClientRequest clientRequest , UriComponentsBuilder ucb) {
+    public ResponseEntity<ApiResponse> create(@Valid @RequestBody ClientRequest clientRequest , UriComponentsBuilder ucb) throws MethodArgumentNotValidException {
         ClientResponse clientResponse = clientService.create(clientRequest);
 
         URI locationOfNewClient = ucb
