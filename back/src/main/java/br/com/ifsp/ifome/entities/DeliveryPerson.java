@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "delivery_person")
+// TODO esta faltando a parte de user details junto com roles
 public class DeliveryPerson  implements PasswordPolicy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

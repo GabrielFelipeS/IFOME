@@ -1,6 +1,7 @@
 package br.com.ifsp.ifome.validation.validators;
 
 import br.com.ifsp.ifome.validation.anotations.MinAgeToUse;
+import br.com.ifsp.ifome.validation.validators.anotations.MinAgeToUseValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +26,7 @@ public class MinAgeToUseValidatorTest {
     @Mock
     private ConstraintValidatorContext constraintValidatorContext;
 
-    private  MinAgeToUseValidator minAgeToUseValidator;
+    private MinAgeToUseValidator minAgeToUseValidator;
 
     @BeforeEach
     public void setup() {

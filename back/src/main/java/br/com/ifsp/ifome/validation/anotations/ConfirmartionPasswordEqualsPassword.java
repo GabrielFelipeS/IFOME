@@ -1,6 +1,6 @@
 package br.com.ifsp.ifome.validation.anotations;
 
-import br.com.ifsp.ifome.validation.validators.ConfirmartionPasswordEqualsPasswordValidator;
+import br.com.ifsp.ifome.validation.validators.anotations.ConfirmartionPasswordEqualsPasswordValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

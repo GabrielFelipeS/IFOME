@@ -1,4 +1,4 @@
-package br.com.ifsp.ifome.validation.validators;
+package br.com.ifsp.ifome.validation.validators.anotations;
 
 import br.com.ifsp.ifome.repositories.DeliveryPersonRepository;
 import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmailDeliveryPerson;
