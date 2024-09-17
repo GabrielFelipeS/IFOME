@@ -19,6 +19,8 @@ public class ValidatorService<T> {
     }
 
     public void isValid(T request) throws MethodArgumentNotValidException {
+        System.err.println(validators);
+
         BindingResult bindingResult = new BeanPropertyBindingResult(request, request.getClass().getName());
         validators.stream()
             .map(validator -> validator.isValid(request))
