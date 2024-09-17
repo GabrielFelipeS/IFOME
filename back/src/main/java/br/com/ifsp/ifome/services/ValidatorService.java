@@ -1,5 +1,7 @@
 package br.com.ifsp.ifome.services;
 
+import br.com.ifsp.ifome.dto.request.ClientRequest;
+import br.com.ifsp.ifome.validation.interfaces.ClientValidator;
 import br.com.ifsp.ifome.validation.interfaces.Validator;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -12,9 +14,9 @@ import java.util.Optional;
 
 @Service
 public class ValidatorService<T> {
-    private final List<? extends Validator<T>> validators;
+    private final List<Validator<T>> validators;
 
-    public ValidatorService(List<? extends Validator<T>> validators) {
+    public ValidatorService(List<Validator<T>> validators) {
         this.validators = validators;
     }
 

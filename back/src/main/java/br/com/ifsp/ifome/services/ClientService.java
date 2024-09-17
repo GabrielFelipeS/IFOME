@@ -6,11 +6,13 @@ import br.com.ifsp.ifome.dto.response.ClientResponse;
 import br.com.ifsp.ifome.dto.response.LoginResponse;
 import br.com.ifsp.ifome.entities.Client;
 import br.com.ifsp.ifome.repositories.ClientRepository;
-import br.com.ifsp.ifome.validation.interfaces.ClientValidator;
+import br.com.ifsp.ifome.validation.interfaces.Validator;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,11 +23,12 @@ public class ClientService {
     private final ValidatorService<ClientRequest> validatorService;
 
     public ClientService(TokenService tokenService, ClientRepository clientRepository,
-                         BCryptPasswordEncoder bCryptPasswordEncoder, ValidatorService<ClientRequest> validatorService) {
+                         BCryptPasswordEncoder bCryptPasswordEncoder,
+                         @Qualifier("clientValidator") List<Validator<ClientRequest>> validators) {
         this.tokenService = tokenService;
         this.clientRepository = clientRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.validatorService = validatorService;
+        this.validatorService = new ValidatorService<>(validators);
     }
 
     public ClientResponse create(ClientRequest clientRequest) throws MethodArgumentNotValidException {
