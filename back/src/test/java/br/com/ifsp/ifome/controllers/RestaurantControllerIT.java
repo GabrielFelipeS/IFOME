@@ -146,14 +146,14 @@ public class RestaurantControllerIT {
 
     @Test
     @DirtiesContext
-    @DisplayName("should be return error with cpf already registred")
-    public void shouldReturnErrorWithCpfAlreadyRegistred() throws JsonProcessingException {
+    @DisplayName("should be return error with cnpj already registred")
+    public void shouldReturnErrorWithCnpjAlreadyRegistred() throws JsonProcessingException {
         RestaurantRequest restaurant = new RestaurantRequest(
             "Nome Restaurante",
             "email@email.com",
             "@Senha1",
             "@Senha1",
-            "10.882.594/0001-65",
+            "58.911.612/0001-16",
             List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
                 "address", "complement",
                 "12", "details")),
@@ -169,16 +169,28 @@ public class RestaurantControllerIT {
 
         );
 
-        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/restaurant", restaurant, String.class);
+        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        System.out.println("File?");
+
+        // Criar o mapa de parâmetros para enviar o objeto e o arquivo
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("restaurant", restaurant);
+        body.add("file", fileResource);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity(
+            "/api/auth/restaurant",
+            body,
+            String.class);
+
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
         Number countOfInvalidFields = documentContext.read("$.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> message = documentContext.read("$.cpf");
+        List<String> message = documentContext.read("$.cnpj");
 
-        assertThat(message).containsExactlyInAnyOrder("Cpf já cadastrado");
+        assertThat(message).containsExactlyInAnyOrder("Cnpj já cadastrado");
     }
     @Test
     @DirtiesContext
