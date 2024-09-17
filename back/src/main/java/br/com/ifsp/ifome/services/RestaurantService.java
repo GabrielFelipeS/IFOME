@@ -23,7 +23,7 @@ public class RestaurantService {
     private final TokenService tokenService;
 
     public RestaurantService(TokenService tokenService, RestaurantRepository restaurantRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-                             @Qualifier("restaurantValidator")  List<Validator<RestaurantRequest>> validators) {
+                             List<Validator<RestaurantRequest>> validators) {
         this.tokenService = tokenService;
         this.restaurantRepository = restaurantRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;

@@ -12,7 +12,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import java.util.List;
 import java.util.Optional;
 
-@Service
 public class ValidatorService<T> {
     private final List<Validator<T>> validators;
 

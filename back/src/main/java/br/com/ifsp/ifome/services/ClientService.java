@@ -24,7 +24,7 @@ public class ClientService {
 
     public ClientService(TokenService tokenService, ClientRepository clientRepository,
                          BCryptPasswordEncoder bCryptPasswordEncoder,
-                         @Qualifier("clientValidator") List<Validator<ClientRequest>> validators) {
+                         List<Validator<ClientRequest>> validators) {
         this.tokenService = tokenService;
         this.clientRepository = clientRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
