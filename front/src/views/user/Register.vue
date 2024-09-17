@@ -94,8 +94,6 @@ const sendFormTest = () => {
 	form.append("password", 'Senha@123');
 	form.append("confirmationPassword", 'Senha@123');
 
-	let [day, month, year] = formData.value.dateOfBirth.split('/').map(String);
-	let date = year + '-' + month + '-' + day;
 	form.append("dateOfBirth", '2001-02-03');
 
 	form.append("cpf", '497.029.968-48');
