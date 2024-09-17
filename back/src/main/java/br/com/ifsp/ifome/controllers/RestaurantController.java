@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -39,7 +40,9 @@ public class RestaurantController {
     public ResponseEntity<RestaurantResponse> create(
         @RequestPart("file")  MultipartFile multipartFile,
         @Valid @RequestPart("restaurant") RestaurantRequest restaurantRequest,
-        UriComponentsBuilder ucb) throws IOException {
+        UriComponentsBuilder ucb)
+        throws IOException, MethodArgumentNotValidException {
+
         System.out.println( fileStorageService.storeFile(multipartFile));
         RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest);
 

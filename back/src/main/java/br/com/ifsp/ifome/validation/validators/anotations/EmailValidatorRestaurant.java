@@ -26,7 +26,7 @@ public class EmailValidatorRestaurant implements ConstraintValidator<NotRegister
             return true;
         }
 
-        boolean emailExists = restaurantRepository.existsByEmail(email);
+        boolean emailExists = restaurantRepository.existsByEmailIgnoreCase(email);
 
         if (emailExists) {
             context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
