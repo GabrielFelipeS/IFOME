@@ -6,7 +6,7 @@ const router = createRouter({
     {
       path: '/store/register',
       name: 'store-register',
-      component: () => import('../views/store/Register.vue')
+      component: () => import('../views/Store/Register.vue')
     },
     {
       path: '/user/register',
