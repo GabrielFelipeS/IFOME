@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ValidatorService<T, V> {
+public class ValidatorService<T> {
     private final List<? extends Validator<T>> validators;
 
     public ValidatorService(List<? extends Validator<T>> validators) {

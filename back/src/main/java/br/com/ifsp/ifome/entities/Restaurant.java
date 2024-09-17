@@ -1,10 +1,8 @@
 package br.com.ifsp.ifome.entities;
 
-import br.com.ifsp.ifome.dto.request.BankAccountRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
 import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;

@@ -18,10 +18,10 @@ public class ClientService {
     private final TokenService tokenService;
     private final ClientRepository clientRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final ValidatorService<ClientRequest, ClientValidator> validatorService;
+    private final ValidatorService<ClientRequest> validatorService;
 
     public ClientService(TokenService tokenService, ClientRepository clientRepository,
-                         BCryptPasswordEncoder bCryptPasswordEncoder, ValidatorService<ClientRequest, ClientValidator> validatorService) {
+                         BCryptPasswordEncoder bCryptPasswordEncoder, ValidatorService<ClientRequest> validatorService) {
         this.tokenService = tokenService;
         this.clientRepository = clientRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
