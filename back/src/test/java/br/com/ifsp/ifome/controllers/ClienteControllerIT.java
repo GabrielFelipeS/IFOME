@@ -108,6 +108,29 @@ public class ClienteControllerIT {
 
     @Test
     @DirtiesContext
+    @DisplayName("should be return error with cpf already registred")
+    public void shouldReturnErrorWithCpfAlreadyRegistred() throws JsonProcessingException {
+        ClientRequest client = new ClientRequest("Nome completo", "teste@teste.com", "@Password1", "@Password1",
+            LocalDate.now().minusYears(18), "528.003.140-28", "(11) 99248-1491",
+            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                "address", "complement",
+                "12", "details")));
+
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        Number countOfInvalidFields = documentContext.read("$.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+
+        List<String> message = documentContext.read("$.cpf");
+
+        assertThat(message).containsExactlyInAnyOrder("Cpf já cadastrado");
+    }
+
+
+    @Test
+    @DirtiesContext
     @DisplayName("should not be possible to create a new client with already registered email")
     public void shouldReturnErrorWhenCreatingClientWithAlreadyRegisteredEmail() {
         ClientRequest client = new ClientRequest("Nome completo","user1@gmail.com", "@Password1", "@Password1",
