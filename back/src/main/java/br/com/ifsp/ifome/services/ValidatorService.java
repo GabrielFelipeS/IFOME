@@ -1,9 +1,6 @@
 package br.com.ifsp.ifome.services;
 
-import br.com.ifsp.ifome.dto.request.ClientRequest;
-import br.com.ifsp.ifome.validation.interfaces.ClientValidator;
 import br.com.ifsp.ifome.validation.interfaces.Validator;
-import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
