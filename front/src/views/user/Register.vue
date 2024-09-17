@@ -6,6 +6,8 @@ import FormEmail from "@/components/user/register/FormEmail.vue";
 import {computed, ref} from "vue";
 import FormPersonalData from "@/components/user/register/FormPersonalData.vue";
 import FormAddress from "@/components/user/register/FormAddress.vue";
+import api from "@/services/api.js";
+import Button from "@/components/Button.vue";
 
 document.querySelector('#app').setAttribute('style', 'overflow-x: hidden');
 
@@ -76,8 +78,55 @@ const sendForm = () => {
 	);
 	form.append("address", address);
 
+	api.post('client', form)
+		.then(response => {
+			console.log('Response:', response.data);
+		})
+		.catch(error => {
+			console.error('Error:', error);
+		});
 	console.log(Object.fromEntries(form));
 };
+
+const sendFormTest = () => {
+	const form = new FormData();
+	form.append("email", 'teste@email.com');
+	form.append("password", 'Senha@123');
+	form.append("confirmationPassword", 'Senha@123');
+
+	let [day, month, year] = formData.value.dateOfBirth.split('/').map(String);
+	let date = year + '-' + month + '-' + day;
+	form.append("dateOfBirth", '2001-02-03');
+
+	form.append("cpf", '497.029.968-48');
+	form.append("phone", '(11) 96702-3233');
+
+	const address = new Array(
+		{
+			nameAddress: 'Endereço Principal',
+			cep: '07152-340',
+			neighborhood: 'rua feliz',
+			city: 'cidade felix',
+			state: 'estado da depressão',
+			address: 'rua do tião',
+			complement: 'casa',
+			number: '3',
+			details: 'detalhes',
+		},
+	);
+	form.append("address", address);
+
+
+
+	api.post('client', form)
+		.then(response => {
+			console.log('Response:', response.data);
+		})
+		.catch(error => {
+			console.error('Error:', error);
+		});
+	console.log(Object.fromEntries(form));
+}
 
 </script>
 
@@ -98,6 +147,7 @@ const sendForm = () => {
 				/>
 			</KeepAlive>
 		</div>
+		<Button href="#" @click="sendFormTest" class="w-full bg-primary">Teste</Button>
 	</div>
 </template>
 
