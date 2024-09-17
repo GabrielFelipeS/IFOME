@@ -5,6 +5,7 @@ import br.com.ifsp.ifome.dto.request.BankAccountRequest;
 import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
 import br.com.ifsp.ifome.entities.Address;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.DisplayName;
@@ -126,6 +127,42 @@ public class RestaurantControllerIT {
 
     }
 
+    @Test
+    @DirtiesContext
+    @DisplayName("should be return error with cpf already registred")
+    public void shouldReturnErrorWithCpfAlreadyRegistred() throws JsonProcessingException {
+        RestaurantRequest restaurant = new RestaurantRequest(
+            "Nome Restaurante",
+            "email@email.com",
+            "@Senha1",
+            "@Senha1",
+            "10.882.594/0001-65",
+            List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
+                "address", "complement",
+                "12", "details")),
+            "(11) 1234-5678",
+            "Pizzaria",
+            "Dinheiro, Cartão",
+            "12:00",
+            "23:00",
+            "responsavel",
+            "033.197.356-16",
+            "imagem.jpeg",
+            new BankAccountRequest("123", "1255", "4547-7")
+
+        );
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/restaurant", restaurant, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        Number countOfInvalidFields = documentContext.read("$.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+
+        List<String> message = documentContext.read("$.cpf");
+
+        assertThat(message).containsExactlyInAnyOrder("Cpf já cadastrado");
+    }
     @Test
     @DirtiesContext
     @DisplayName("should not be possible to create a new restaurant with already registered email")
