@@ -31,7 +31,7 @@ public class RestaurantService {
     }
     public RestaurantResponse create(RestaurantRequest restaurantRequest) throws MethodArgumentNotValidException {
         validatorService.isValid(restaurantRequest);
-        Restaurant restaurant = new Restaurant(restaurantRequest);
+        Restaurant restaurant = new Restaurant(restaurantRequest, bCryptPasswordEncoder);
         restaurant = restaurantRepository.save(restaurant);
         return new RestaurantResponse(restaurant);
     }

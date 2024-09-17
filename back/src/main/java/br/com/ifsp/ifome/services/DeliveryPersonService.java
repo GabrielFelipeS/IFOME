@@ -23,7 +23,7 @@ public class DeliveryPersonService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
     public DeliveryPersonResponse create(DeliveryPersonRequest deliveryPersonRequest){
-        DeliveryPerson deliveryPerson = new DeliveryPerson(deliveryPersonRequest);
+        DeliveryPerson deliveryPerson = new DeliveryPerson(deliveryPersonRequest, bCryptPasswordEncoder);
         deliveryPerson = deliveryPersonRepository.save(deliveryPerson);
         return new DeliveryPersonResponse(deliveryPerson);
     }

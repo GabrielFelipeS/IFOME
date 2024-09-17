@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -157,7 +158,7 @@ public class Client implements PasswordPolicy, UserDetails  {
     }
 
     @Override
-    public boolean isLoginCorrect(String rawPassword, BCryptPasswordEncoder passwordEncoder) {
+    public boolean isLoginCorrect(String rawPassword, PasswordEncoder passwordEncoder) {
         return passwordEncoder.matches(rawPassword, this.password);
     }
 }
