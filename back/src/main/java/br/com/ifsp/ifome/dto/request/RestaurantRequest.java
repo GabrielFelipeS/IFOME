@@ -1,6 +1,5 @@
 package br.com.ifsp.ifome.dto.request;
 
-import br.com.ifsp.ifome.entities.BankAccount;
 import br.com.ifsp.ifome.validation.anotations.ConfirmartionPasswordEqualsPassword;
 import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmailRestaurant;
 import br.com.ifsp.ifome.validation.anotations.ValidPassword;
@@ -59,7 +58,7 @@ public record RestaurantRequest(
         @NotBlank(message = "CPF é obrigatório")
         String personResponsibleCPF,
 
-        String restaurantImages,
+        String restaurantImage,
         @Valid
         BankAccountRequest bankAccount
 ) { }

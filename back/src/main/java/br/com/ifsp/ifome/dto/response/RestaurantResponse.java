@@ -21,7 +21,7 @@ public record RestaurantResponse(
         String personResponsibleCPF,
         String email,
         String paymentMethods,
-        String restaurantImages,
+        String restaurantImage,
         BankAccount bankAccount
 
 ) {
@@ -40,7 +40,7 @@ public record RestaurantResponse(
                 restaurant.getPersonResponsibleCPF(),
                 restaurant.getEmail(),
                 restaurant.getPaymentMethods(),
-                restaurant.getRestaurantImages(),
+                restaurant.getRestaurantImage(),
                 restaurant.getBankAccount());
     }
 }

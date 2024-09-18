@@ -1,10 +1,8 @@
 package br.com.ifsp.ifome.entities;
 
-import br.com.ifsp.ifome.dto.request.BankAccountRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
 import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
@@ -35,7 +33,7 @@ public class Restaurant implements PasswordPolicy {
     private String password;
     private String paymentMethods;
 
-    private String restaurantImages;
+    private String restaurantImage;
 
     @Embedded
     private BankAccount bankAccount;
@@ -55,7 +53,7 @@ public class Restaurant implements PasswordPolicy {
         this.email = restaurantRequest.email();
         this.password = restaurantRequest.password();
         this.paymentMethods = restaurantRequest.paymentMethods();
-        this.restaurantImages = restaurantRequest.restaurantImages();
+        this.restaurantImage = restaurantRequest.restaurantImage();
         this.bankAccount = new BankAccount(restaurantRequest.bankAccount());
     }
 
@@ -73,7 +71,7 @@ public class Restaurant implements PasswordPolicy {
         this.email = email;
         this.password = password;
         this.paymentMethods = paymentMethods;
-        this.restaurantImages = restaurantImage;
+        this.restaurantImage = restaurantImage;
         this.bankAccount = bankAccount;
     }
 
@@ -181,12 +179,12 @@ public class Restaurant implements PasswordPolicy {
         this.paymentMethods = paymentMethods;
     }
 
-    public String getRestaurantImages() {
-        return restaurantImages;
+    public String getRestaurantImage() {
+        return restaurantImage;
     }
 
-    public void setRestaurantImages(String restaurantImages) {
-        this.restaurantImages = restaurantImages;
+    public void setRestaurantImage(String restaurantImage) {
+        this.restaurantImage = restaurantImage;
     }
 
     public BankAccount getBankAccount() {
