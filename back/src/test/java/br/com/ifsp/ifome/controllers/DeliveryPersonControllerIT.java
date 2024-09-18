@@ -124,7 +124,7 @@ public class DeliveryPersonControllerIT {
     public void shouldReturnErrorWithCpfAlreadyRegistred() throws JsonProcessingException {
         DeliveryPersonRequest deliveryPersonRequest = new DeliveryPersonRequest(
             "Nome entregador",
-            "033.197.356-16",
+            "528.003.140-28",
             "email@email.com",
             "@Senha1",
             "@Senha1",
@@ -140,7 +140,7 @@ public class DeliveryPersonControllerIT {
 
         );
 
-        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/client", deliveryPersonRequest, String.class);
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson", deliveryPersonRequest, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
