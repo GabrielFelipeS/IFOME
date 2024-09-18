@@ -13,6 +13,9 @@ import java.util.List;
 
 @ConfirmartionPasswordEqualsPassword
 public record ClientRequest (
+        @NotBlank
+        String name,
+
         @Email(message = "E-mail inválido")
         @NotBlank(message = "E-mail é obrigatório")
         @NotRegisteredEmail

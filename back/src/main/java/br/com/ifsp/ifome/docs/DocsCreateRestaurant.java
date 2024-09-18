@@ -107,41 +107,46 @@ import java.util.List;
                     "data": {
                          "id": 2,
                           "nameRestaurant" : "Nome Restaurante",
-                      "email" : "email@email.com",
-                      "password" : "@Senha1",
-                      "confirmationPassword" : "@Senha1",
-                      "cnpj" : "10.882.594/0001-65",
-                      "address": [
-                        {
-                          "nameAddress": "casa principal",
-                          "cep": "35170-222",
-                          "neighborhood": "neighborhood",
-                          "city": "Coronel Fabriciano",
-                          "state": "Minas Gerais",
-                          "address": "address",
-                          "complement": "complement",
-                          "number": "12",
-                          "details": "details"
-                        }
-                      ],
-                      "telephone" : "(11) 1234-5678",
-                      "foodCategory" : "Pizzaria",
-                      "paymentMethods" : "Dinheiro, Cartão",
-                      "openingHoursStart" : "12:00",
-                      "openingHoursEnd" : 23:00",
-                      "personResponsible" : "responsavel",
-                      "personResponsibleCPF" : "033.197.356-16",
-                      "restaurantImages" : "imagem.jpeg",
-                      "bankAccount" : [
-                          {
-                              "bank" : "123",
-                              "agency" : "1255",
-                              "account" : "4547-7"
-                           }
-                      ]
-                    },
-                    "message": "Restaurante criado com sucesso"
-                }
+                          "email" : "email@email.com",
+                          "password" : "@Senha1",
+                          "confirmationPassword" : "@Senha1",
+                          "cnpj" : "10.882.594/0001-65",
+                          "address": [
+                            {
+                              "nameAddress": "casa principal",
+                              "cep": "35170-222",
+                              "neighborhood": "neighborhood",
+                              "city": "Coronel Fabriciano",
+                              "state": "Minas Gerais",
+                              "address": "address",
+                              "complement": "complement",
+                              "number": "12",
+                              "details": "details"
+                            }
+                           ],
+                          "telephone" : "(11) 1234-5678",
+                          "foodCategory" : "Pizzaria",
+                          "paymentMethods" : "Dinheiro, Cartão",
+                          "openingHours" : [
+                            {
+                            "dayOfTheWeek:": "Segunda",
+                            "opening" : 11:00",
+                            "closing": 23:00"
+                            }
+                          ],
+                          "personResponsible" : "responsavel",
+                          "personResponsibleCPF" : "033.197.356-16",
+                          "restaurantImage" : "imagem.jpeg",
+                          "bankAccount" : [
+                              {
+                                  "bank" : "123",
+                                  "agency" : "1255",
+                                  "account" : "4547-7"
+                               }
+                          ]
+                        },
+                        "message": "Restaurante criado com sucesso"
+                    }
             """)
                 )),
         @ApiResponse(responseCode = "400", description = "Invalid request",
@@ -178,10 +183,7 @@ import java.util.List;
                   "paymentMethods" :[
                     "não deve estar em branco"
                   ],
-                  "openingHoursStart" :[
-                    "não deve estar em branco"
-                  ]
-                  "openingHoursEnd" :[
+                  "openingHours" :[
                     "não deve estar em branco"
                   ]
                   "personResponsible" : [

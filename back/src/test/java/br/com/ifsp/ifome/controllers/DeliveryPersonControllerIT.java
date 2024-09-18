@@ -4,6 +4,7 @@ import br.com.ifsp.ifome.dto.request.AddressRequest;
 import br.com.ifsp.ifome.dto.request.BankAccountRequest;
 import br.com.ifsp.ifome.dto.request.DeliveryPersonRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
+import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.entities.Address;
 import br.com.ifsp.ifome.entities.BankAccount;
 import com.jayway.jsonpath.DocumentContext;
@@ -26,6 +27,42 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DeliveryPersonControllerIT {
     @Autowired
     private TestRestTemplate testRestTemplate;
+
+    @Test
+    @DirtiesContext
+    public void shouldBeAbleLoginWithValidUser() {
+        LoginRequest clientLogin = new LoginRequest("email1@email.com", "@Password1");
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson/login", clientLogin, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        Object clientResponse = documentContext.read("$.data.user");
+        assertThat(clientResponse).isNotNull();
+
+        String token = documentContext.read("$.data.token");
+        assertThat(token).isNotNull();
+
+        ResponseEntity<String> responseTokenValidation = testRestTemplate.postForEntity("/api/auth/token", token, String.class);
+        assertThat(responseTokenValidation.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DirtiesContext
+    public void shouldReturnErrorWhenLoginWithInvalidEmail() {
+        LoginRequest clientLogin = new LoginRequest("invalid_email@gmail.com", "@Password1");
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson/login", clientLogin, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    public void shouldReturnErrorWhenLoginWithInvalidPassword() {
+        LoginRequest clientLogin = new LoginRequest("user1@gmail.com", "invalid_password");
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson/login", clientLogin, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
 
     @Test
     @DirtiesContext

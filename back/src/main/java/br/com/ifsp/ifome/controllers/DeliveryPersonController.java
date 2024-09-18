@@ -1,7 +1,9 @@
 package br.com.ifsp.ifome.controllers;
 
-import br.com.ifsp.ifome.docs.DocsCreateDeliveryPerson;
+import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.DeliveryPersonRequest;
+import br.com.ifsp.ifome.dto.request.LoginRequest;
+import br.com.ifsp.ifome.dto.response.LoginResponse;
 import br.com.ifsp.ifome.dto.response.DeliveryPersonResponse;
 import br.com.ifsp.ifome.services.DeliveryPersonService;
 import jakarta.validation.Valid;
@@ -23,7 +25,6 @@ public class DeliveryPersonController {
     public DeliveryPersonController(DeliveryPersonService deliveryPersonService){
         this.deliveryPersonService = deliveryPersonService;
     }
-    @DocsCreateDeliveryPerson
     @PostMapping
     public ResponseEntity<DeliveryPersonResponse> create(@Valid @RequestBody DeliveryPersonRequest deliveryPersonRequest, UriComponentsBuilder ucb){
         DeliveryPersonResponse deliveryPersonResponse = deliveryPersonService.create(deliveryPersonRequest);
@@ -33,4 +34,13 @@ public class DeliveryPersonController {
                 .toUri();
         return ResponseEntity.created(locationOfNewDeliveryPerson).body(deliveryPersonResponse);
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest clientLogin) {
+        System.err.println(clientLogin.email());
+        LoginResponse loginResponse = deliveryPersonService.login(clientLogin);
+        ApiResponse apiResponse = new ApiResponse("sucess", loginResponse, "Cliente logado com sucesso");
+        return ResponseEntity.ok(apiResponse);
+    }
+
 }

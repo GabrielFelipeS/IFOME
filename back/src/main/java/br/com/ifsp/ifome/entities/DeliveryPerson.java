@@ -1,8 +1,9 @@
 package br.com.ifsp.ifome.entities;
 
 import br.com.ifsp.ifome.dto.request.DeliveryPersonRequest;
+import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,8 +11,8 @@ import java.util.stream.Collectors;
 
 
 @Entity
-@Table(name = "deliveryPerson")
-public class DeliveryPerson {
+@Table(name = "delivery_person")
+public class DeliveryPerson  implements PasswordPolicy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -168,5 +169,10 @@ public class DeliveryPerson {
 
     public void setPlate(String plate) {
         this.plate = plate;
+    }
+
+    @Override
+    public boolean isLoginCorrect(String rawPassword, BCryptPasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(rawPassword, this.password);
     }
 }

@@ -2,6 +2,7 @@ package br.com.ifsp.ifome.controllers;
 
 
 import br.com.ifsp.ifome.dto.request.AddressRequest;
+import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
 import br.com.ifsp.ifome.entities.Address;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDate;
@@ -21,6 +23,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@WithMockUser
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ClienteControllerIT {
 
@@ -29,26 +32,64 @@ public class ClienteControllerIT {
 
     @Test
     @DirtiesContext
+    public void shouldBeAbleLoginWithValidUser() {
+        LoginRequest clientLogin = new LoginRequest("user1@gmail.com", "@Password1");
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/login", clientLogin, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        Object clientResponse = documentContext.read("$.data.user");
+        assertThat(clientResponse).isNotNull();
+
+        String token = documentContext.read("$.data.token");
+        assertThat(token).isNotNull();
+
+        ResponseEntity<String> responseTokenValidation = restTemplate.postForEntity("/api/auth/token", token, String.class);
+        assertThat(responseTokenValidation.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DirtiesContext
+    public void shouldReturnErrorWhenLoginWithInvalidEmail() {
+        LoginRequest clientLogin = new LoginRequest("invalid_email@gmail.com", "@Password1");
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/login", clientLogin, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    public void shouldReturnErrorWhenLoginWithInvalidPassword() {
+        LoginRequest clientLogin = new LoginRequest("user1@gmail.com", "invalid_password");
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/login", clientLogin, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    @DirtiesContext
     @DisplayName("should be possible to create a new client")
     public void shouldBeAbleToCreateANewClient() throws JsonProcessingException {
-        ClientRequest client = new ClientRequest("teste@teste.com", "@Password1", "@Password1",
+        ClientRequest client = new ClientRequest("Nome completo", "teste@teste.com", "@Password1", "@Password1",
             LocalDate.now().minusYears(18), "48608678071", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
-                 "12", "details")));
+                "12", "details")));
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/client", client, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         DocumentContext document = JsonPath.parse(response.getBody());
 
         Number id = document.read("$.data.id");
+        String name = document.read("$.data.name");
         String email = document.read("$.data.email");
         String dateOfBirth = document.read("$.data.dateOfBirth");
         String cpf = document.read("$.data.cpf");
         Address addressJson = document.read("$.data.address[0]", Address.class);
 
         assertThat(id).isNotNull();
+        assertThat(name).isEqualTo(client.name());
         assertThat(email).isEqualTo(client.email());
         assertThat(dateOfBirth).isEqualTo(client.dateOfBirth().toString());
         assertThat(cpf).isEqualTo(client.cpf());
@@ -69,12 +110,12 @@ public class ClienteControllerIT {
     @DirtiesContext
     @DisplayName("should not be possible to create a new client with already registered email")
     public void shouldReturnErrorWhenCreatingClientWithAlreadyRegisteredEmail() {
-        ClientRequest client = new ClientRequest("user1@gmail.com", "@Password1", "@Password1",
+        ClientRequest client = new ClientRequest("Nome completo","user1@gmail.com", "@Password1", "@Password1",
             LocalDate.now().minusYears(14), "019.056.440-78", "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
             "address",  "complement",
              "12", "details")));
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/client", client, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
@@ -90,12 +131,12 @@ public class ClienteControllerIT {
     @DirtiesContext
     @DisplayName("should return all validation errors in the password field")
     public void shouldReturnAllValidationErrorsInThePasswordField() {
-        ClientRequest client = new ClientRequest("email@gmail.com", " ", " ",
+        ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", " ", " ",
             LocalDate.now().minusYears(18), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address",  "complement",
             "12", "details")));
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/client", client, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
@@ -118,12 +159,12 @@ public class ClienteControllerIT {
     @DirtiesContext
     @DisplayName("should return all validation errors in the dateOfBirth field")
     public void shouldReturnAllValidationErrorsInThDateOfBirthField() {
-        ClientRequest client = new ClientRequest("email@gmail.com", "@Teste123", "@Teste123",
+        ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", "@Teste123", "@Teste123",
             LocalDate.now().plusDays(1), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address",  "complement",
              "12", "details")));
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/client", client, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
@@ -142,12 +183,12 @@ public class ClienteControllerIT {
     @DirtiesContext
     @DisplayName("should return all validation errors in the cpf field")
     public void shouldReturnAllValidationErrorsInTheCPFField() {
-        ClientRequest client = new ClientRequest("email@gmail.com", "@Teste123", "@Teste123",
+        ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", "@Teste123", "@Teste123",
             LocalDate.now().minusYears(18), "cpf",  "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address", "complement",
             "12", "details")));
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/client", client, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
@@ -165,13 +206,13 @@ public class ClienteControllerIT {
     @DirtiesContext
     @DisplayName("should return error when registering a client with different password and password confirmation")
     public void shouldReturnErrorWhenCreatingClientWithdifferentPasswordAndPasswordConfirmation() throws JsonProcessingException {
-        ClientRequest client = new ClientRequest("teste@teste.com", "@Password1", "@Password",
+        ClientRequest client = new ClientRequest("Nome completo","teste@teste.com", "@Password1", "@Password",
             LocalDate.now().minusYears(18), "48608678071", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address",  "complement",
                  "12", "details")));
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/client", client, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         System.out.println(response.getBody());
         DocumentContext documentContext = JsonPath.parse(response.getBody());
@@ -179,4 +220,5 @@ public class ClienteControllerIT {
         Number countOfInvalidFields = documentContext.read("$.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
     }
+
 }

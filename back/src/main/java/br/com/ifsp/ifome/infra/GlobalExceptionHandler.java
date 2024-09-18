@@ -1,8 +1,10 @@
 package br.com.ifsp.ifome.infra;
 
+import br.com.ifsp.ifome.exceptions.InvalidTokenException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -43,5 +45,10 @@ public class GlobalExceptionHandler {
         }else {
             errors.put(fieldName, errorMessage);
         }
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<String> invalidTokenExceptionHandler(InvalidTokenException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 }
