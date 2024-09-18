@@ -2,7 +2,6 @@ package br.com.ifsp.ifome.validation.validators.implement;
 
 import br.com.ifsp.ifome.dto.request.ClientRequest;
 import br.com.ifsp.ifome.repositories.ClientRepository;
-import br.com.ifsp.ifome.validation.interfaces.ClientValidator;
 import br.com.ifsp.ifome.validation.interfaces.Validator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -13,11 +12,11 @@ import java.util.Optional;
 
 @Component
 @Qualifier("clientValidator")
-public class ClienNotRegisteredCPFValidator implements Validator<ClientRequest> {
+public class ClientNotRegisteredCPFValidator implements Validator<ClientRequest> {
 
     private final ClientRepository clientRepository;
 
-    public ClienNotRegisteredCPFValidator(ClientRepository clientRepository) {
+    public ClientNotRegisteredCPFValidator(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
 
