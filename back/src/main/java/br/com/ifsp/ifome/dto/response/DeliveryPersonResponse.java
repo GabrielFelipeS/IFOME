@@ -17,7 +17,7 @@ public record DeliveryPersonResponse(
         String plate,
         String telephone,
         String cnhNumber,
-        String cnhValidity,
+        LocalDate cnhValidity,
         String vehicleDocument,
         List<Address> address,
         BankAccount bankAccount

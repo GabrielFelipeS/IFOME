@@ -26,7 +26,7 @@ public class DeliveryPerson  implements PasswordPolicy {
     private String plate;
     private String telephone;
     private String cnhNumber;
-    private String cnhValidity;
+    private LocalDate cnhValidity;
     private String vehicleDocument;
     @OneToMany
     @JoinColumn(name = "address", referencedColumnName = "cpf")
@@ -53,7 +53,7 @@ public class DeliveryPerson  implements PasswordPolicy {
     }
 
 
-    public DeliveryPerson(Long id, String name, String cpf, String email, String password, LocalDate dateOfBirth, String typeOfVehicle, String plate,String telephone, String cnhNumber,String cnhValidity, String vehicleDocument, List<Address> address, BankAccount bankAccount) {
+    public DeliveryPerson(Long id, String name, String cpf, String email, String password, LocalDate dateOfBirth, String typeOfVehicle, String plate,String telephone, String cnhNumber, LocalDate cnhValidity, String vehicleDocument, List<Address> address, BankAccount bankAccount) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
@@ -174,11 +174,11 @@ public class DeliveryPerson  implements PasswordPolicy {
         this.plate = plate;
     }
 
-    public String getCnhValidity() {
+    public LocalDate getCnhValidity() {
         return cnhValidity;
     }
 
-    public void setCnhValidity(String cnhValidity) {
+    public void LocalDate(LocalDate cnhValidity) {
         this.cnhValidity = cnhValidity;
     }
 

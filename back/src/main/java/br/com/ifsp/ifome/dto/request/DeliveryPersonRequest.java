@@ -44,9 +44,8 @@ public record DeliveryPersonRequest(
         @Pattern(regexp = "\\d{9}", message = "O número da CNH deve conter exatamente 9 dígitos numéricos")
         String cnhNumber,
 
-        @NotBlank(message = "Data de validade obrigatória")
-        //@Future(message = "A data de validade da CNH deve ser uma data futura")
-        String cnhValidity,
+        @Future(message = "A data de validade da CNH deve ser uma data futura")
+        LocalDate cnhValidity,
 
         @NotBlank
         @Pattern(regexp = "\\d{9,11}", message = "O RENAVAM deve conter entre 9 e 11 dígitos numéricos")
