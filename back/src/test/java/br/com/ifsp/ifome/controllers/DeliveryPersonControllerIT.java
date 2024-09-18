@@ -80,7 +80,7 @@ public class DeliveryPersonControllerIT {
                 "dOCUMENTO DO VEICULO",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 new BankAccountRequest("123","1255", "4547-7")
 
         );
@@ -115,7 +115,7 @@ public class DeliveryPersonControllerIT {
         assertThat(addressJson.getComplement()).isEqualTo("complement");
         assertThat(addressJson.getNumber()).isEqualTo("12");
         assertThat(addressJson.getComplement()).isEqualTo("complement");
-
+        assertThat(addressJson.getTypeResidence()).isEqualTo("condominio");
     }
 
     @Test
@@ -135,7 +135,7 @@ public class DeliveryPersonControllerIT {
             "dOCUMENTO DO VEICULO",
             List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
                 "address", "complement",
-                "12", "details")),
+                "12", "condominio","details")),
             new BankAccountRequest("123", "1255", "4547-7")
 
         );

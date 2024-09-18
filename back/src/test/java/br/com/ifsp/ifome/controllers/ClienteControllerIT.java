@@ -74,7 +74,7 @@ public class ClienteControllerIT {
             LocalDate.now().minusYears(18), "48608678071", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
-                "12", "details")));
+                "12", "casa","details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -104,6 +104,7 @@ public class ClienteControllerIT {
         assertThat(addressJson.getComplement()).isEqualTo("complement");
         assertThat(addressJson.getNumber()).isEqualTo("12");
         assertThat(addressJson.getComplement()).isEqualTo("complement");
+        assertThat(addressJson.getTypeResidence()).isEqualTo("casa");
     }
 
     @Test
@@ -114,7 +115,7 @@ public class ClienteControllerIT {
             LocalDate.now().minusYears(18), "528.003.140-28", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
-                "12", "details")));
+                "12", "casa","details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -136,7 +137,7 @@ public class ClienteControllerIT {
         ClientRequest client = new ClientRequest("Nome completo","user1@gmail.com", "@Password1", "@Password1",
             LocalDate.now().minusYears(14), "019.056.440-78", "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
             "address",  "complement",
-             "12", "details")));
+             "12", "condominio","details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -157,7 +158,7 @@ public class ClienteControllerIT {
         ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", " ", " ",
             LocalDate.now().minusYears(18), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address",  "complement",
-            "12", "details")));
+            "12", "condomínio","details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -185,7 +186,7 @@ public class ClienteControllerIT {
         ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", "@Teste123", "@Teste123",
             LocalDate.now().plusDays(1), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address",  "complement",
-             "12", "details")));
+             "12", "condominio","details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -209,7 +210,7 @@ public class ClienteControllerIT {
         ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", "@Teste123", "@Teste123",
             LocalDate.now().minusYears(18), "cpf",  "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address", "complement",
-            "12", "details")));
+            "12", "condominio","details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -233,7 +234,7 @@ public class ClienteControllerIT {
             LocalDate.now().minusYears(18), "48608678071", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address",  "complement",
-                 "12", "details")));
+                 "12", "condominio","details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);

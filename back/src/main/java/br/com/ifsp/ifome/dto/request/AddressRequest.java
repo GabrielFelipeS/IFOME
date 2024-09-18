@@ -31,5 +31,9 @@ public record AddressRequest(
     @Pattern(regexp = "\\d{1,}")
     String number,
 
+    @NotBlank
+    @Pattern(regexp = "(casa|apartamento|condom[ií]nio)")
+    String typeResidence,
+
     String details
 ) { }

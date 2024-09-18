@@ -79,7 +79,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -141,6 +141,7 @@ public class RestaurantControllerIT {
         assertThat(addressJson.getComplement()).isEqualTo("complement");
         assertThat(addressJson.getNumber()).isEqualTo("12");
         assertThat(addressJson.getComplement()).isEqualTo("complement");
+        assertThat(addressJson.getTypeResidence()).isEqualTo("condominio");
 
     }
 
@@ -156,7 +157,7 @@ public class RestaurantControllerIT {
             "58.911.612/0001-16",
             List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
                 "address", "complement",
-                "12", "details")),
+                "12", "condominio","details")),
             "(11) 1234-5678",
             "Pizzaria",
             "Dinheiro, Cartão",
@@ -204,7 +205,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -249,7 +250,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -302,7 +303,7 @@ public class RestaurantControllerIT {
                 "10.882.594000165",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -349,7 +350,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -397,7 +398,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -439,7 +440,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -480,7 +481,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1"," ", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
