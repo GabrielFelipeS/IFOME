@@ -4,10 +4,7 @@ import br.com.ifsp.ifome.validation.anotations.ConfirmartionPasswordEqualsPasswo
 import br.com.ifsp.ifome.validation.anotations.ValidPassword;
 import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmailDeliveryPerson;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
@@ -44,8 +41,11 @@ public record DeliveryPersonRequest(
         String telephone,
 
         @NotBlank(message = "CNH obrigatória")
+        @Pattern(regexp = "\\d{9}", message = "O número da CNH deve conter exatamente 9 dígitos numéricos")
         String cnhNumber,
+
         @NotBlank(message = "Data de validade obrigatória")
+        //@Future(message = "A data de validade da CNH deve ser uma data futura")
         String cnhValidity,
 
         @NotBlank

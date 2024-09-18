@@ -78,7 +78,7 @@ public class DeliveryPersonControllerIT {
                 "Carro",
                 "DIT-4987",
                 "(11) 95455-4565",
-                "CNH",
+                "123456789",
                 "123456789",
                 "12345678910",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
@@ -160,7 +160,8 @@ public class DeliveryPersonControllerIT {
         List<String> cnh = documentContext.read("$.cnhNumber");
         assertThat(cnh)
                 .containsExactlyInAnyOrder(
-                        "CNH obrigatória"
+                        "CNH obrigatória",
+                        "O número da CNH deve conter exatamente 9 dígitos numéricos"
                 );
 
 
@@ -181,7 +182,7 @@ public class DeliveryPersonControllerIT {
                 "Carro",
                 "DIT-4987",
                 "(11) 95455-4565",
-                "CNH",
+                "123456789",
                 "2102",
                 "12345678910",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
@@ -223,7 +224,7 @@ public class DeliveryPersonControllerIT {
                 "Carro",
                 "DIT-4987",
                 "(11) 95455-4565",
-                "CNH",
+                "123456789",
                 "2020",
                 "12345678910",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
@@ -261,7 +262,7 @@ public class DeliveryPersonControllerIT {
                 "Carro",
                 " ",
                 "(11) 95455-4565",
-                "CNH",
+                "123456789",
                 "12345678910",
                 "12345678910",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
@@ -288,8 +289,8 @@ public class DeliveryPersonControllerIT {
 
     @Test
     @DirtiesContext
-    @DisplayName("should return all validation errors in the VehicleDocument field")
-    public void shouldReturnAllValidationErrorsInTheVehicleDocumentField() {
+    @DisplayName("should return all validation errors in the CNH number fields")
+    public void shouldReturnAllValidationErrorsInTheCNHNumberFields() {
         DeliveryPersonRequest deliveryPersonRequest = new DeliveryPersonRequest(
                 "Nome entregador",
                 "033.197.356-16",
@@ -300,7 +301,7 @@ public class DeliveryPersonControllerIT {
                 "Carro",
                 "DIT-4987",
                 "(11) 95455-4565",
-                "CNH",
+                "123456789",
                 "dOCUMENTO DO VEICULO",
                 "111",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
