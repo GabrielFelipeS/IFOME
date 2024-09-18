@@ -49,6 +49,7 @@ const cpf = ref('');
 const cnpj = ref('');
 const nameStore = ref('');
 const phone = ref('');
+const neighborhood = ref('');
 const specialty = ref('');
 const other = ref('');
 const opening = ref('');
@@ -61,12 +62,21 @@ const account = ref('');
 const digit = ref('');
 const password = ref('');
 const confirmPassword = ref('');
+const details = ref('');
 
 watch(specialty, (value) => {
     if (value === 'Outro') {
         document.querySelector('#other').closest('.form-group').classList.remove('hidden');
     } else {
         document.querySelector('#other').closest('.form-group').classList.add('hidden');
+    }
+});
+
+watch(other, (value) => {
+    if (value) {
+        document.querySelector('#specialty').closest('.form-group').classList.remove('hidden');
+    } else {
+        document.querySelector('#specialty').closest('.form-group').classList.add('hidden');
     }
 });
 
@@ -128,33 +138,51 @@ watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other]
         step3Erros.value.specialty = false;
     }
 
-    if (opening.value) {
+    if (opening.value && opening.value.includes(':')) {
         let openingValue = opening.value.split(':');
-        if (openingValue[0] < 0 || openingValue[0] > 23 || openingValue[1] < 0 || openingValue[1] > 59) {
+        let hour = parseInt(openingValue[0], 10);
+        let minute = parseInt(openingValue[1], 10);
+
+        if (isNaN(hour) || isNaN(minute) || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
             step3Erros.value.opening = true;
         } else {
             step3Erros.value.opening = false;
         }
+    } else {
+        step3Erros.value.opening = true;
     }
 
-    if (closing.value) {
+    // Verificação de Fechamento
+    if (closing.value && closing.value.includes(':')) {
         let closingValue = closing.value.split(':');
-        if (closingValue[0] < 0 || closingValue[0] > 23 || closingValue[1] < 0 || closingValue[1] > 59) {
+        let hour = parseInt(closingValue[0], 10);
+        let minute = parseInt(closingValue[1], 10);
+
+        // Verificar se os valores são válidos
+        if (isNaN(hour) || isNaN(minute) || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
             step3Erros.value.closing = true;
         } else {
             step3Erros.value.closing = false;
         }
+    } else {
+        step3Erros.value.closing = true;
     }
 
-    if (opening.value && closing.value) {
+    if (!step3Erros.value.opening && !step3Erros.value.closing) {
         let openingValue = opening.value.split(':');
         let closingValue = closing.value.split(':');
-        if (closingValue[0] < openingValue[0] || (closingValue[0] === openingValue[0] && closingValue[1] <= openingValue[1])) {
+        let openingHour = parseInt(openingValue[0], 10);
+        let openingMinute = parseInt(openingValue[1], 10);
+        let closingHour = parseInt(closingValue[0], 10);
+        let closingMinute = parseInt(closingValue[1], 10);
+
+        if (closingHour < openingHour || (closingHour === openingHour && closingMinute <= openingMinute)) {
             step3Erros.value.closing = true;
         } else {
             step3Erros.value.closing = false;
         }
     }
+
 
     if (daysSelected.value.length === 0) {
         step3Erros.value.daysSelected = true;
@@ -193,6 +221,7 @@ watch(cep, async (value) => {
         state.value = data.uf;
         city.value = data.localidade;
         address.value = data.logradouro;
+        neighborhood.value = data.bairro;
     }
 });
 
@@ -258,11 +287,29 @@ watch([paymentMethods, bank, agency, account, digit], () => {
     }
 });
 
+const passwordErrors = ref({
+    password: false,
+    confirmPassword: false,
+});
+
 watch([password, confirmPassword], () => {
-    if (password.value && confirmPassword.value && password.value === confirmPassword.value) {
-        step6Completed.value = true;
+    if (password.value && password.value.length >= 8 && password.value.match(/[a-z]/) && password.value.match(/[A-Z]/) &&
+        password.value.match(/[0-9]/)) {
+        passwordErrors.value.password = false;
     } else {
+        passwordErrors.value.password = true;
+    }
+
+    if (password.value && confirmPassword.value && password.value === confirmPassword.value && !passwordErrors.value.password) {
+        passwordErrors.value.confirmPassword = false;
+    } else {
+        passwordErrors.value.confirmPassword = true;
+    }
+
+    if (Object.values(passwordErrors.value).some((value) => value)) {
         step6Completed.value = false;
+    } else {
+        step6Completed.value = true;
     }
 });
 
@@ -293,40 +340,50 @@ function showConfirmation() {
 function submitForm() {
     const formData = new FormData();
 
-    // Adicionar todos os campos de dados ao formData
-    formData.append('cep', cep.value);
-    formData.append('state', state.value);
-    formData.append('city', city.value);
-    formData.append('address', address.value);
-    formData.append('number', number.value);
-    formData.append('complement', complement.value);
-    formData.append('name', name.value);
-    formData.append('cpf', cpf.value);
-    formData.append('cnpj', cnpj.value);
-    formData.append('nameStore', nameStore.value);
-    formData.append('phone', phone.value);
-    formData.append('specialty', specialty.value);
-    formData.append('other', other.value);
-    formData.append('opening', opening.value);
-    formData.append('closing', closing.value);
-    formData.append('daysSelected', daysSelected.value);
-    formData.append('paymentMethods', JSON.stringify(paymentMethods.value));
-    formData.append('bank', bank.value);
-    formData.append('agency', agency.value);
-    formData.append('account', account.value);
-    formData.append('digit', digit.value);
-    formData.append('password', password.value);
-    formData.append('confirmPassword', confirmPassword.value);
+    let formatedAddress = [{
+        nameAddress: "casa principal",
+        cep: cep.value,
+        neighborhood: neighborhood.value,
+        city: city.value,
+        state: state.value,
+        address: address.value,
+        complement: complement.value,
+        number: number.value,
+        details: details.value
+    }];
+
+    const bankAccount = [{
+        bank: bank.value,
+        agency: agency.value,
+        account: `${account.value}-${digit.value}`
+    }];
+
+
+    formData.append('nameRestaurant', nameStore.value);
     formData.append('email', email.value);
+    formData.append('password', password.value);
+    formData.append('confirmationPassword', confirmPassword.value);
+    formData.append('cnpj', cnpj.value);
+    formData.append('address', JSON.stringify(formatedAddress));
+    formData.append('telephone', phone.value);
+    formData.append('foodCategory', specialty.value);
+    formData.append('paymentMethods', paymentMethods.value);
+    formData.append('openingHoursStart', opening.value);
+    formData.append('openingHoursEnd', closing.value);
+    formData.append('personResponsible', name.value);
+    formData.append('personResponsibleCPF', cpf.value);
+    formData.append('restaurantImages', selectedFiles.value[0]);
+    formData.append('bankAccount', JSON.stringify(bankAccount));
 
     selectedFiles.value.forEach((file, index) => {
-        formData.append(`photo_${index}`, file);
+        formData.append(`restaurantImages_${index}`, file);
     });
-    
-    //mostar os dados no console em json
+
     console.log(Object.fromEntries(formData));
-    
+
+    nextStep();
 }
+
 
 const returnSteps = () => {
     prevStep();
@@ -337,14 +394,15 @@ const returnSteps = () => {
 <template>
     <div class="steps" v-if="stepsActive">
         <!-- Passar a etapa atual para o componente filho -->
-        <HeaderSteps :currentStep="currentStep" @returnBack="returnSteps"/>
+        <HeaderSteps :currentStep="currentStep" @returnBack="returnSteps" />
 
         <div class="step" v-if="currentStep === 1">
             <h2>Endereço da loja</h2>
             <p>Preencha as informações de endereço da sua loja.</p>
             <div class="form-group">
                 <label for="cep">CEP</label>
-                <MaskInput type="text" id="cep" name="cep" v-model="cep" :value="cep" placeholder="CEP" mask="#####-###" required />
+                <MaskInput type="text" id="cep" name="cep" v-model="cep" :value="cep" placeholder="CEP" mask="#####-###"
+                    required />
             </div>
             <div class="mid">
                 <div class="form-group">
@@ -357,19 +415,28 @@ const returnSteps = () => {
                 </div>
             </div>
             <div class="form-group">
+                <label for="neighborhood">Bairro</label>
+                <input type="text" id="neighborhood" name="neighborhood" v-model="neighborhood" placeholder="Bairro"
+                    required />
+            </div>
+            <div class="form-group">
                 <label for="address">Endereço</label>
                 <input type="text" id="address" name="address" v-model="address" placeholder="Endereço" required />
             </div>
             <div class="form-group">
                 <label for="number">Número</label>
-                <MaskInput type="text" id="number" name="number" v-model="number" :value="number" placeholder="Número" mask="######"
-                    required />
+                <MaskInput type="text" id="number" name="number" v-model="number" :value="number" placeholder="Número"
+                    mask="######" required />
             </div>
             <div class="form-group">
                 <label for="complement">Complemento</label>
                 <input type="text" id="complement" name="complement" v-model="complement" placeholder="Complemento" />
             </div>
-            <button type="submit" class="btn-primary" :class="stepCompleted ? '' : 'disable'"
+            <div class="form-group">
+                <label for="details">Detalhes</label>
+                <textarea id="details" name="details" v-model="details" placeholder="Detalhes"></textarea>
+            </div>
+            <button type="submit" class="btn-text" :class="stepCompleted ? '' : 'disable'" :disabled="!stepCompleted"
                 @click="nextStep">Próximo</button>
         </div>
 
@@ -383,11 +450,11 @@ const returnSteps = () => {
             </div>
             <div class="form-group">
                 <label for="cpf">CPF</label>
-                <MaskInput type="text" id="cpf" v-model="cpf" name="cpf" :value="cpf" placeholder="CPF" mask="###.###.###-##"
-                    required />
+                <MaskInput type="text" id="cpf" v-model="cpf" name="cpf" :value="cpf" placeholder="CPF"
+                    mask="###.###.###-##" required />
             </div>
             <button type="submit" class="btn-primary" :class="step2Completed ? '' : 'disable'"
-                @click="nextStep">Próximo</button>
+                :disabled="!step2Completed" @click="nextStep">Próximo</button>
         </div>
 
         <div class="step" v-if="currentStep === 3">
@@ -395,8 +462,8 @@ const returnSteps = () => {
             <p>Preencha com os dados do seu negócio</p>
             <div class="form-group">
                 <label for="cnpj">CNPJ</label>
-                <MaskInput type="text" id="cnpj" v-model="cnpj" name="cnpj" :value="cnpj" placeholder="CNPJ" mask="##.###.###/####-##"
-                    required />
+                <MaskInput type="text" id="cnpj" v-model="cnpj" name="cnpj" :value="cnpj" placeholder="CNPJ"
+                    mask="##.###.###/####-##" required />
                 <p v-if="step3Erros.cnpj">** Digite um valor válido **</p>
             </div>
             <div class="form-group">
@@ -424,7 +491,7 @@ const returnSteps = () => {
                     </select>
                     <p v-if="step3Erros.specialty">** Selecione uma opção valida **</p>
                 </div>
-                <div class="form-group hidden">
+                <div class="form-group" :class="specialty === 'Outro' ? '' : 'hidden'">
                     <label for="other">Outro</label>
                     <input type="text" id="other" v-model="other" name="other" placeholder="Outro" />
                     <p v-if="step3Erros.other">** Digite um valor valido **</p>
@@ -455,7 +522,7 @@ const returnSteps = () => {
                 <p v-if="step3Erros.daysSelected">** Selecione pelo menos um dia **</p>
             </div>
 
-            <button type="submit" class="btn-text" :class="step3Completed ? '' : 'disable'"
+            <button type="submit" class="btn-text" :class="step3Completed ? '' : 'disable'" :disabled="!step3Completed"
                 @click="nextStep">Próximo</button>
         </div>
         <div class="step" v-if="currentStep === 4">
@@ -495,7 +562,7 @@ const returnSteps = () => {
             </div>
 
             <button type="submit" class="btn-primary" :class="step4Completed ? '' : 'disable'"
-                @click="nextStep">Próximo</button>
+                :disabled="!step4Completed" @click="nextStep">Próximo</button>
         </div>
 
         <div class="step" v-if="currentStep === 5">
@@ -522,26 +589,44 @@ const returnSteps = () => {
             <h3>Recebimentos de fundos</h3>
             <div class="form-group">
                 <label for="bank">Banco</label>
-                <input type="text" id="bank" v-model="bank" name="bank" placeholder="Banco" required />
+                <!-- fazer select com nomes de bancos brasileiros e seus codigos como values -->
+                <select name="bank" id="bank" v-model="bank" required>
+                    <option value="">Selecione o banco</option>
+                    <option value="001">Banco do Brasil</option>
+                    <option value="033">Santander</option>
+                    <option value="104">Caixa Econômica Federal</option>
+                    <option value="237">Bradesco</option>
+                    <option value="341">Itaú</option>
+                    <option value="356">Nubank</option>
+                    <option value="260">Nu Pagamentos</option>
+                    <option value="212">Banco Original</option>
+                    <option value="077">Banco Inter</option>
+                    <option value="422">Banco Safra</option>
+                    <option value="633">Banco Rendimento</option>
+                    <option value="745">Banco Citibank</option>
+                    <option value="399">HSBC Bank Brasil</option>
+                    <option value="409">Unibanco</option>
+                    <option value="041">Banco do Estado do Rio Grande do Sul</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="agency">Agência</label>
-                <MaskInput type="text" id="agency" v-model="agency" name="agency" :value="agency" placeholder="Agência" mask="####-#"
-                    required />
+                <MaskInput type="text" id="agency" v-model="agency" name="agency" :value="agency" placeholder="Agência"
+                    mask="####-#" required />
             </div>
             <div class="mid-payment">
                 <div class="form-group">
                     <label for="account">Conta</label>
-                    <MaskInput type="text" id="account" v-model="account" :value="account" name="account" placeholder="Conta"
-                        mask="#####" required />
+                    <MaskInput type="text" id="account" v-model="account" :value="account" name="account"
+                        placeholder="Conta" mask="#####" required />
                 </div>
                 <div class="form-group dig">
                     <label for="digit">Dígito</label>
-                    <MaskInput type="text" id="digit" v-model="digit" name="digit" :value="digit" placeholder="Dígito" mask="#"
-                        required />
+                    <MaskInput type="text" id="digit" v-model="digit" name="digit" :value="digit" placeholder="Dígito"
+                        mask="#" required />
                 </div>
             </div>
-            <button type="submit" class="btn-text" :class="step5Completed ? '' : 'disable'"
+            <button type="submit" class="btn-text" :class="step5Completed ? '' : 'disable'" :disabled="!step5Completed"
                 @click="nextStep">Próximo</button>
 
         </div>
@@ -552,21 +637,24 @@ const returnSteps = () => {
                 <label for="password">Senha</label>
                 <input type="password" id="password" name="password" placeholder="Senha" v-model="password" required />
                 <span @click="showPassword" v-if="password.length > 0">Mostrar senha</span>
+                <p v-if="passwordErrors.password">** A senha deve conter no mínimo 8 caracteres, uma letra maiúscula,
+                    uma letra minúscula e um número **</p>
             </div>
             <div class="form-group">
                 <label for="confirmPassword">Confirmar Senha</label>
                 <input type="password" id="confirmPassword" name="confirmPassword" v-model="confirmPassword"
                     placeholder="Confirmar Senha" required />
                 <span @click="showConfirmation" v-if="confirmPassword.length > 0">Mostrar Confirmação</span>
+                <p v-if="passwordErrors.confirmPassword">** As senhas não conferem **</p>
             </div>
             <button type="submit" class="btn-primary" :class="step6Completed ? '' : 'disable'"
-                @click="submitForm">Concluir</button>
+                :disabled="!step6Completed" @click="submitForm">Concluir</button>
         </div>
 
         <div class="step" v-if="currentStep === 7">
             <div class="final">
                 <img src="../../assets/img/logo_header.png" alt="Logo Ifome">
-                <h2>Seja Bem Vindo, {{ props.name }}</h2>
+                <h2>Seja Bem Vindo, {{ name }}</h2>
                 <img src="../../assets/img/store/balloon.png" alt="Icone Balão" class="baloon">
                 <img src="../../assets/img/store/balloon_2.png" alt="Icone Balão" class="baloon1">
                 <img src="../../assets/img/store/balloon_3.png" alt="Icone Balão" class="baloon2">
@@ -598,7 +686,7 @@ const returnSteps = () => {
         @apply w-[90%] h-[calc(100vh-100px)] m-auto pt-10;
 
         h2 {
-            @apply text-4xl font-semibold text-gray-800 mb-5;
+            @apply text-4xl font-semibold text-gray-800 mb-5 text-center;
         }
 
         h3 {
@@ -637,7 +725,7 @@ const returnSteps = () => {
             }
 
             .btn-text {
-                @apply relative w-[80%] md:w-[50%] h-[50px] bg-primary text-white font-semibold rounded-lg mb-3 text-center animate-bounce;
+                @apply relative w-[80%] md:w-[50%] h-[50px] bg-primary text-white font-semibold rounded-lg mb-3 text-center;
             }
 
             .baloon {
@@ -651,7 +739,7 @@ const returnSteps = () => {
             }
 
             .baloon2 {
-                @apply w-[20%] md:w-[10%] lg:w-[5%] absolute bottom-56 left-[10%] md:left-[30%];
+                @apply w-[20%] md:w-[10%] lg:w-[5%] absolute bottom-[40%] left-[10%] md:left-[30%];
                 animation: baloon 2s infinite;
             }
         }
@@ -729,6 +817,10 @@ const returnSteps = () => {
 
             span {
                 @apply text-blue-500 cursor-pointer mt-3 cursor-pointer;
+            }
+
+            textarea {
+                @apply w-full h-[100px] border border-gray-300 rounded-lg px-3;
             }
 
         }

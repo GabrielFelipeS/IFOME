@@ -17,13 +17,15 @@ const props = defineProps({
 });
 
 watch(() => props.currentStep, (newStep) => {
-    widthLine.value = (newStep - 1) * 20;
+    if (newStep > 1 && newStep < 7) {
+        widthLine.value = (newStep - 1) * 20;
+    }
 });
 </script>
 
 <template>
-    <header class="headerSteps" :class="props.currentStep > 1 ? 'justify-center md:justify-between': 'justify-center md:justify-center'">
-        <div class="arrow" @click="returnBack" v-if="props.currentStep > 1">
+    <header class="headerSteps" :class="props.currentStep > 1 &&  props.currentStep < 7? 'justify-center md:justify-between': 'justify-center md:justify-center'">
+        <div class="arrow" @click="returnBack" v-if="props.currentStep > 1 &&  props.currentStep < 7">
             <img src="../../assets/img/store/arrow.svg" class="img">
         </div>
         <img src="../../assets/img/logo_header.png" class="img">
