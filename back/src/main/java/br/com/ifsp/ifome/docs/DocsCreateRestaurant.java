@@ -127,8 +127,13 @@ import java.util.List;
                           "telephone" : "(11) 1234-5678",
                           "foodCategory" : "Pizzaria",
                           "paymentMethods" : "Dinheiro, Cartão",
-                          "openingHoursStart" : "12:00",
-                          "openingHoursEnd" : 23:00",
+                          "openingHours" : [
+                            {
+                            "dayOfTheWeek:": "Segunda",
+                            "opening" : 11:00",
+                            "closing": 23:00"
+                            }
+                          ],
                           "personResponsible" : "responsavel",
                           "personResponsibleCPF" : "033.197.356-16",
                           "restaurantImage" : "imagem.jpeg",
@@ -178,10 +183,7 @@ import java.util.List;
                   "paymentMethods" :[
                     "não deve estar em branco"
                   ],
-                  "openingHoursStart" :[
-                    "não deve estar em branco"
-                  ]
-                  "openingHoursEnd" :[
+                  "openingHours" :[
                     "não deve estar em branco"
                   ]
                   "personResponsible" : [

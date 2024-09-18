@@ -2,6 +2,7 @@ package br.com.ifsp.ifome.dto.response;
 
 import br.com.ifsp.ifome.entities.Address;
 import br.com.ifsp.ifome.entities.BankAccount;
+import br.com.ifsp.ifome.entities.OpeningHours;
 import br.com.ifsp.ifome.entities.Restaurant;
 
 import java.util.List;
@@ -14,8 +15,7 @@ public record RestaurantResponse(
         List<Address> address,
         String telephone,
 
-        String openingHoursStart,
-        String openingHoursEnd,
+        List<OpeningHours> openingHours,
 
         String personResponsible,
         String personResponsibleCPF,
@@ -33,8 +33,7 @@ public record RestaurantResponse(
                 restaurant.getAddress(),
                 restaurant.getTelephone(),
 
-                restaurant.getOpeningHoursStart(),
-                restaurant.getOpeningHoursEnd(),
+                restaurant.getOpeningHours(),
 
                 restaurant.getPersonResponsible(),
                 restaurant.getPersonResponsibleCPF(),

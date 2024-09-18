@@ -46,11 +46,8 @@ public record RestaurantRequest(
         @NotBlank(message = "Formas de pagamento são obrigatórias")
         String paymentMethods,
 
-        @NotBlank(message = "Horário de funcionamento inicial é obrigatório")
-        String openingHoursStart,
-
-        @NotBlank(message = "Horário de funcionamento final é obrigatório")
-        String openingHoursEnd,
+        @NotEmpty(message = "Horário de funcionamento é obrigatório")
+        List<OpeningHoursRequest> openingHours,
 
         String personResponsible,
 
