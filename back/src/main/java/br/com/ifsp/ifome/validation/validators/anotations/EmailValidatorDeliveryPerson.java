@@ -25,7 +25,7 @@ public class EmailValidatorDeliveryPerson implements ConstraintValidator<NotRegi
             return true;
         }
 
-        boolean emailExists = deliveryPersonRepository.existsByEmail(email);
+        boolean emailExists = deliveryPersonRepository.existsByEmailIgnoreCase(email);
 
         if (emailExists) {
             context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
