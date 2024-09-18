@@ -9,6 +9,6 @@
 	@apply bg-white flex flex-col w-full my-[2%] mx-5 py-5 justify-center;
 	@apply rounded-2xl border-2 border-b-stone-400;
 
-	@apply md:w-[50%]
+	@apply md:max-w-[500px] 2xl:max-w-[600px];
 }
 </style>
