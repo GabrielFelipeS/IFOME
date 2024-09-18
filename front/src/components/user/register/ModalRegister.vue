@@ -4,7 +4,7 @@ import Modal from "@/components/user/register/Modal.vue";
 </script>
 
 <template>
-	<Modal>
+	<Modal class="modal">
 		<div class="title">
 			Cadastre-se agora
 		</div>
@@ -34,6 +34,17 @@ import Modal from "@/components/user/register/Modal.vue";
 </template>
 
 <style scoped>
+
+	@media (min-width: 768px) {
+		.modal {
+			@apply w-full justify-end;
+			@apply md:ml-96;
+			margin-left: 60%;
+			padding: 1%;
+		}
+	}
+
+
 	.title {
 		@apply flex flex-row font-semibold pl-4 text-xl;
 	}
