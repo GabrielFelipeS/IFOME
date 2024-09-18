@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
                       "typeOfVehicle" : "Carro",
                       "plate" : "DIT-4987"
                       "telephone" : "(11) 1234-5678",
-                      "cnh" : "document.jpg"
+                      "cnhNumber" : "document.jpg"
                       "vehicleDocument" : "DOCUMENTO DO VEICULO",
                       "address": [
                         {

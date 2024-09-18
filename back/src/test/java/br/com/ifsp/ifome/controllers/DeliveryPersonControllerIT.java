@@ -79,7 +79,8 @@ public class DeliveryPersonControllerIT {
                 "DIT-4987",
                 "(11) 95455-4565",
                 "CNH",
-                "dOCUMENTO DO VEICULO",
+                "123456789",
+                "12345678910",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
                         "12", "details")),
@@ -99,7 +100,8 @@ public class DeliveryPersonControllerIT {
         String dateOfBirth = document.read("$.dateOfBirth");
         String typeOfVehicle = document.read("$.typeOfVehicle");
         String telephone = document.read("$.telephone");
-        String cnh = document.read("$.cnh");
+        String cnhNumber = document.read("$.cnhNumber");
+        String cnhValidity = document.read("$.cnhNumber");
         String vehicleDocument = document.read("$.vehicleDocument");
         Address addressJson = document.read("$.address[0]", Address.class);
         //BankAccount bankAccountJson = document.read("$.bankAccount[0]", BankAccount.class);
@@ -125,7 +127,7 @@ public class DeliveryPersonControllerIT {
 
     @Test
     @DirtiesContext
-    @DisplayName("Should be possible to create a new delivery person without cnh")
+    @DisplayName("Should be possible to create a new delivery person without cnhNumber")
     public void  shouldBeAbleToCreateANewDeliveryPersonWithoutCNH(){
         DeliveryPersonRequest deliveryPersonRequest = new DeliveryPersonRequest(
                 "Nome entregador",
@@ -138,7 +140,8 @@ public class DeliveryPersonControllerIT {
                 "DIT-4987",
                 "(11) 95455-4565",
                 " ",
-                "DOCUMENTO DO VEICULO",
+                "01/02/2020",
+                "123456789",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
                         "12", "details")),
@@ -154,7 +157,7 @@ public class DeliveryPersonControllerIT {
         assertThat(countOfInvalidFields).isEqualTo(1);
 
 
-        List<String> cnh = documentContext.read("$.cnh");
+        List<String> cnh = documentContext.read("$.cnhNumber");
         assertThat(cnh)
                 .containsExactlyInAnyOrder(
                         "CNH obrigatória"
@@ -179,7 +182,8 @@ public class DeliveryPersonControllerIT {
                 "DIT-4987",
                 "(11) 95455-4565",
                 "CNH",
-                "dOCUMENTO DO VEICULO",
+                "2102",
+                "12345678910",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
                         "12", "details")),
@@ -220,7 +224,8 @@ public class DeliveryPersonControllerIT {
                 "DIT-4987",
                 "(11) 95455-4565",
                 "CNH",
-                "dOCUMENTO DO VEICULO",
+                "2020",
+                "12345678910",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
                         "12", "details")),
@@ -257,7 +262,8 @@ public class DeliveryPersonControllerIT {
                 " ",
                 "(11) 95455-4565",
                 "CNH",
-                "dOCUMENTO DO VEICULO",
+                "12345678910",
+                "12345678910",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
                         "12", "details")),
@@ -277,6 +283,44 @@ public class DeliveryPersonControllerIT {
                 .containsExactlyInAnyOrder(
                         "A placa deve estar no formato XXX-9999",
                         "Verique a placa"
+                );
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("should return all validation errors in the VehicleDocument field")
+    public void shouldReturnAllValidationErrorsInTheVehicleDocumentField() {
+        DeliveryPersonRequest deliveryPersonRequest = new DeliveryPersonRequest(
+                "Nome entregador",
+                "033.197.356-16",
+                "email@email.com",
+                "@Senha1",
+                "@Senha1",
+                LocalDate.of(1999, 1, 2),
+                "Carro",
+                "DIT-4987",
+                "(11) 95455-4565",
+                "CNH",
+                "dOCUMENTO DO VEICULO",
+                "111",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "details")),
+                new BankAccountRequest("123","1255", "4547-7")
+
+        );
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson", deliveryPersonRequest, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        System.out.println(response.getBody());
+        Number countOfInvalidFields = documentContext.read("$.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+
+
+        List<String> vehicleDocument = documentContext.read("$.vehicleDocument");
+        assertThat(vehicleDocument)
+                .containsExactlyInAnyOrder(
+                        "O RENAVAM deve conter entre 9 e 11 dígitos numéricos"
                 );
     }
 

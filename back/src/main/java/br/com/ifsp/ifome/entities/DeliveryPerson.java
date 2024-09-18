@@ -25,7 +25,8 @@ public class DeliveryPerson  implements PasswordPolicy {
     private String typeOfVehicle;
     private String plate;
     private String telephone;
-    private String cnh;
+    private String cnhNumber;
+    private String cnhValidity;
     private String vehicleDocument;
     @OneToMany
     @JoinColumn(name = "address", referencedColumnName = "cpf")
@@ -44,14 +45,15 @@ public class DeliveryPerson  implements PasswordPolicy {
         this.typeOfVehicle = deliveryPersonRequest.vehicleDocument();
         this.plate = deliveryPersonRequest.plate();
         this.telephone = deliveryPersonRequest.telephone();
-        this.cnh = deliveryPersonRequest.cnh();
+        this.cnhNumber = deliveryPersonRequest.cnhNumber();
+        this.cnhValidity = deliveryPersonRequest.cnhValidity();
         this.vehicleDocument = deliveryPersonRequest.vehicleDocument();
         this.address = deliveryPersonRequest.address().stream().map(Address::new).collect(Collectors.toList());
         this.bankAccount = new BankAccount(deliveryPersonRequest.bankAccount());
     }
 
 
-    public DeliveryPerson(Long id, String name, String cpf, String email, String password, LocalDate dateOfBirth, String typeOfVehicle, String plate,String telephone, String cnh, String vehicleDocument, List<Address> address, BankAccount bankAccount) {
+    public DeliveryPerson(Long id, String name, String cpf, String email, String password, LocalDate dateOfBirth, String typeOfVehicle, String plate,String telephone, String cnhNumber,String cnhValidity, String vehicleDocument, List<Address> address, BankAccount bankAccount) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
@@ -61,7 +63,8 @@ public class DeliveryPerson  implements PasswordPolicy {
         this.typeOfVehicle = typeOfVehicle;
         this.plate = plate;
         this.telephone = telephone;
-        this.cnh = cnh;
+        this.cnhNumber = cnhNumber;
+        this.cnhValidity = cnhValidity;
         this.vehicleDocument = vehicleDocument;
         this.address = address;
         this.bankAccount = bankAccount;
@@ -131,12 +134,12 @@ public class DeliveryPerson  implements PasswordPolicy {
         this.telephone = telephone;
     }
 
-    public String getCnh() {
-        return cnh;
+    public String getCnhNumber() {
+        return cnhNumber;
     }
 
-    public void setCnh(String cnh) {
-        this.cnh = cnh;
+    public void setCnhNumber(String cnhNumber) {
+        this.cnhNumber = cnhNumber;
     }
 
     public String getVehicleDocument() {
@@ -169,6 +172,14 @@ public class DeliveryPerson  implements PasswordPolicy {
 
     public void setPlate(String plate) {
         this.plate = plate;
+    }
+
+    public String getCnhValidity() {
+        return cnhValidity;
+    }
+
+    public void setCnhValidity(String cnhValidity) {
+        this.cnhValidity = cnhValidity;
     }
 
     @Override

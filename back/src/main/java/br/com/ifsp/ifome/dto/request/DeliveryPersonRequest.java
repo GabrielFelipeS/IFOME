@@ -44,8 +44,12 @@ public record DeliveryPersonRequest(
         String telephone,
 
         @NotBlank(message = "CNH obrigatória")
-        String cnh,
+        String cnhNumber,
+        @NotBlank(message = "Data de validade obrigatória")
+        String cnhValidity,
+
         @NotBlank
+        @Pattern(regexp = "\\d{9,11}", message = "O RENAVAM deve conter entre 9 e 11 dígitos numéricos")
         String vehicleDocument,
 
         @NotEmpty
