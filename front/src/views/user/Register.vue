@@ -8,6 +8,7 @@ import FormPersonalData from "@/components/user/register/FormPersonalData.vue";
 import FormAddress from "@/components/user/register/FormAddress.vue";
 import api from "@/services/api.js";
 import Button from "@/components/Button.vue";
+import FormSuccess from "@/components/user/register/FormSuccess.vue";
 
 document.querySelector('#app').setAttribute('style', 'overflow-x: hidden');
 
@@ -38,6 +39,7 @@ const steps = {
 	1: FormEmail,
 	2: FormPersonalData,
 	3: FormAddress,
+	4: FormSuccess,
 };
 const nextStep = () => {
 	currentStep.value++;
@@ -81,15 +83,18 @@ const sendForm = () => {
 	api.post('client', form)
 		.then(response => {
 			console.log('Response:', response.data);
+			currentStep.value++;
 		})
 		.catch(error => {
 			console.error('Error:', error);
 		});
+	// currentStep.value++;
 	console.log(Object.fromEntries(form));
 };
 
 const sendFormTest = () => {
 	const form = new FormData();
+	form.append('name', 'nome');
 	form.append("email", 'teste@email.com');
 	form.append("password", 'Senha@123');
 	form.append("confirmationPassword", 'Senha@123');
