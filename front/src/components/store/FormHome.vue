@@ -44,7 +44,7 @@ function submitForm() {
 </script>
 <template>
     <form class="form" @submit.prevent="submitForm">
-        <h2>Cadastre sua loja</h2>
+        <h2>Cadastre seu negócio</h2>
         <div class="form-group">
             <label for="name">Nome Completo</label>
             <input type="text" v-model="name" id="name" name="name" placeholder="Seu Nome Completo" required/>
