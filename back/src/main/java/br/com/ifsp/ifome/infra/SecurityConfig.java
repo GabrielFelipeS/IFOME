@@ -38,7 +38,8 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.ignoringRequestMatchers("/swagger-ui/**", "/v3/api-docs/**"))
             .authorizeHttpRequests(request ->
                 request
-                    .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                    .requestMatchers("/actuator/health").permitAll()
+		    .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/static/**").permitAll()
                     .anyRequest().authenticated())
