@@ -13,10 +13,10 @@ import Modal from "@/components/user/register/Modal.vue";
 		</div>
 		<div class="main">
 			<div class="btn-container">
-				<Button href="#" class="button bg-[#4065B4] text-white">Continuar com Facebook</Button>
+				<Button href="#" class="button bg-[#4065B4] text-white">Continuar com Facebook <v-icon name="fa-facebook-square" class="icon"/></Button>
 			</div>
 			<div class="btn-container">
-				<Button href="#" class="button bg-[#F2F2F2]">Fazer login com o Google</Button>
+				<Button href="#" class="button bg-[#F2F2F2]">Fazer login com o Google <v-icon name="fa-google" class="icon" /></Button>
 			</div>
 			<div class="btn-container">
 				<Button href="#" class="button bg-primary text-white"
@@ -37,7 +37,7 @@ import Modal from "@/components/user/register/Modal.vue";
 
 	@media (min-width: 768px) {
 		.modal {
-			@apply w-full justify-end;
+			@apply w-full justify-end gap-4;
 			@apply md:ml-96;
 			margin-left: 60%;
 			padding: 1%;
@@ -46,11 +46,11 @@ import Modal from "@/components/user/register/Modal.vue";
 
 
 	.title {
-		@apply flex flex-row font-semibold pl-4 text-xl;
+		@apply flex flex-row font-semibold pl-4 md:text-4xl text-2xl;
 	}
 
 	.subtitle {
-		@apply flex flex-row pl-4 mt-4;
+		@apply flex flex-row pl-4 mt-4 md:text-2xl text-xl;
 	}
 
 	.main {
@@ -62,7 +62,11 @@ import Modal from "@/components/user/register/Modal.vue";
 	}
 
 	.button {
-		@apply rounded-md w-full flex justify-center align-middle py-[2%];
+		@apply rounded-md w-full flex flex-row justify-center items-center py-[2%];
+	}
+
+	.icon {
+		@apply h-full w-5 ml-1.5; /* Ajuste o tamanho diretamente */
 	}
 
 	.footer {
