@@ -23,14 +23,10 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
+    - name: Build with Maven and run tests
       run: | 
         cd ./back/
-        mvn -B package --file pom.xml -DskipTests
-    - name: Run tests
-      run: | 
-        cd ./back/
-        mvn verify
+        mvn clean package
       
   build:
     runs-on: ubuntu-latest

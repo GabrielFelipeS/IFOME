@@ -28,7 +28,6 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-
     @PostMapping
     @DocsCreateClient
     public ResponseEntity<ApiResponse> create(@Valid @RequestBody ClientRequest clientRequest , UriComponentsBuilder ucb) throws MethodArgumentNotValidException {
