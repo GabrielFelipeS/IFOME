@@ -13,7 +13,7 @@ import java.util.List;
 
 @ConfirmartionPasswordEqualsPassword(message = "As senhas não coincidem")
 public record ClientRequest (
-        @NotBlank
+        @NotBlank(message = "Nome é obrigatório")
         String name,
 
         @Email(message = "E-mail inválido")
