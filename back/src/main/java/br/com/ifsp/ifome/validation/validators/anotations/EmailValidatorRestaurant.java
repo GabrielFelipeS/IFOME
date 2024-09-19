@@ -1,7 +1,5 @@
-package br.com.ifsp.ifome.validation.validators;
+package br.com.ifsp.ifome.validation.validators.anotations;
 
-import br.com.ifsp.ifome.dto.response.RestaurantResponse;
-import br.com.ifsp.ifome.repositories.ClientRepository;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
 import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmailRestaurant;
 import jakarta.validation.ConstraintValidator;
@@ -28,7 +26,7 @@ public class EmailValidatorRestaurant implements ConstraintValidator<NotRegister
             return true;
         }
 
-        boolean emailExists = restaurantRepository.existsByEmail(email);
+        boolean emailExists = restaurantRepository.existsByEmailIgnoreCase(email);
 
         if (emailExists) {
             context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())

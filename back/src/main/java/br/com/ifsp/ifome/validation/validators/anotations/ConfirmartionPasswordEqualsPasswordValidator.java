@@ -1,6 +1,7 @@
-package br.com.ifsp.ifome.validation.validators;
+package br.com.ifsp.ifome.validation.validators.anotations;
 
 import br.com.ifsp.ifome.dto.request.ClientRequest;
+import br.com.ifsp.ifome.dto.request.DeliveryPersonRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
 import br.com.ifsp.ifome.validation.anotations.ConfirmartionPasswordEqualsPassword;
 import jakarta.validation.ConstraintValidator;
@@ -25,6 +26,9 @@ public class ConfirmartionPasswordEqualsPasswordValidator implements ConstraintV
         } else if(object instanceof RestaurantRequest restaurantRequest) {
             password = restaurantRequest.password();
             confirmationPassword = restaurantRequest.confirmationPassword();
+        } else if(object instanceof DeliveryPersonRequest deliveryPersonRequest) {
+            password = deliveryPersonRequest.password();
+            confirmationPassword = deliveryPersonRequest.confirmationPassword();
         } else {
             return false;
         }

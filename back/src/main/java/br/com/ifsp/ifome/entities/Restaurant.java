@@ -1,11 +1,18 @@
 package br.com.ifsp.ifome.entities;
 
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
+import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "restaurants")
-public class Restaurant {
+@Table(name = "RESTAURANTS")
+// TODO esta faltando a parte de user details junto com roles
+public class Restaurant implements PasswordPolicy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -13,8 +20,10 @@ public class Restaurant {
     private String nameRestaurant;
     private String cnpj;
     private String foodCategory;
-    private String cep;
-    private String address;
+    @OneToMany
+    @JoinColumn(name = "address", referencedColumnName = "cnpj")
+    private List<Address> address;
+
     private String telephone;
 
     private String openingHoursStart;
@@ -25,37 +34,40 @@ public class Restaurant {
     private String email;
     private String password;
     private String paymentMethods;
-    private String restaurantImage;
+
+    private String restaurantImages;
 
     @Embedded
     private BankAccount bankAccount;
 
     public Restaurant() {}
 
-    public Restaurant(RestaurantRequest restaurantRequest){
+    public Restaurant(RestaurantRequest restaurantRequest, BCryptPasswordEncoder bCryptPasswordEncoder){
         this.nameRestaurant = restaurantRequest.nameRestaurant();
         this.cnpj = restaurantRequest.cnpj();
         this.foodCategory = restaurantRequest.foodCategory();
-        this.cep = restaurantRequest.cep();
-        this.address = restaurantRequest.address();
+        this.address = restaurantRequest.address().stream().map(Address::new).collect(Collectors.toList());
         this.telephone = restaurantRequest.telephone();
         this.openingHoursStart = restaurantRequest.openingHoursStart();
         this.openingHoursEnd = restaurantRequest.openingHoursEnd();
         this.personResponsible = restaurantRequest.personResponsible();
         this.personResponsibleCPF = restaurantRequest.personResponsibleCPF();
         this.email = restaurantRequest.email();
-        this.password = restaurantRequest.password();
-        this.paymentMethods = restaurantRequest.nameRestaurant();
-        this.restaurantImage = restaurantRequest.restaurantImage();
-        this.bankAccount = restaurantRequest.bankAccount();
+        this.password = bCryptPasswordEncoder.encode(restaurantRequest.password());
+        this.paymentMethods = restaurantRequest.paymentMethods();
+        this.restaurantImages = restaurantRequest.restaurantImages();
+        this.bankAccount = new BankAccount(restaurantRequest.bankAccount());
     }
 
-    public Restaurant(Long id, String nameRestaurant, String cnpj, String foodCategory, String cep, String address, String telephone, String openingHoursStart, String openingHoursEnd, String personResponsible, String personResponsibleCPF, String email, String password, String paymentMethods, String restaurantImage, BankAccount bankAccount) {
+    public Restaurant(Long id, String nameRestaurant, String cnpj,
+                      String foodCategory, List<Address> address, String telephone,
+                      String openingHoursStart, String openingHoursEnd, String personResponsible,
+                      String personResponsibleCPF, String email, String password, String paymentMethods,
+                      String restaurantImage, BankAccount bankAccount,  BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.id = id;
         this.nameRestaurant = nameRestaurant;
         this.cnpj = cnpj;
         this.foodCategory = foodCategory;
-        this.cep = cep;
         this.address = address;
         this.telephone = telephone;
         this.openingHoursStart = openingHoursStart;
@@ -63,9 +75,9 @@ public class Restaurant {
         this.personResponsible = personResponsible;
         this.personResponsibleCPF = personResponsibleCPF;
         this.email = email;
-        this.password = password;
+        this.password = bCryptPasswordEncoder.encode(password);
         this.paymentMethods = paymentMethods;
-        this.restaurantImage = restaurantImage;
+        this.restaurantImages = restaurantImage;
         this.bankAccount = bankAccount;
     }
 
@@ -101,19 +113,11 @@ public class Restaurant {
         this.foodCategory = foodCategory;
     }
 
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
-
-    public String getAddress() {
+    public List<Address> getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress( List<Address> address) {
         this.address = address;
     }
 
@@ -181,12 +185,12 @@ public class Restaurant {
         this.paymentMethods = paymentMethods;
     }
 
-    public String getRestaurantImage() {
-        return restaurantImage;
+    public String getRestaurantImages() {
+        return restaurantImages;
     }
 
-    public void setRestaurantImage(String restaurantImage) {
-        this.restaurantImage = restaurantImage;
+    public void setRestaurantImages(String restaurantImages) {
+        this.restaurantImages = restaurantImages;
     }
 
     public BankAccount getBankAccount() {
@@ -195,5 +199,11 @@ public class Restaurant {
 
     public void setBankAccount(BankAccount bankAccount) {
         this.bankAccount = bankAccount;
+    }
+
+    @Override
+    public boolean isLoginCorrect(String rawPassword, PasswordEncoder passwordEncoder) {
+        System.out.println(rawPassword);
+        return passwordEncoder.matches(rawPassword, this.password);
     }
 }
