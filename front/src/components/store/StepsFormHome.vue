@@ -619,13 +619,13 @@ const returnSteps = () => {
             <div class="form-group">
                 <label for="agency">Agência</label>
                 <MaskInput type="text" id="agency" v-model="agency" name="agency" :value="agency" placeholder="Agência"
-                    mask="####-#" required />
+                    mask="####" required />
             </div>
             <div class="mid-payment">
                 <div class="form-group">
                     <label for="account">Conta</label>
                     <MaskInput type="text" id="account" v-model="account" :value="account" name="account"
-                        placeholder="Conta" mask="#####" required />
+                        placeholder="Conta" mask="####" required />
                 </div>
                 <div class="form-group dig">
                     <label for="digit">Dígito</label>
