@@ -103,9 +103,12 @@ function submitForm() {
             text-decoration: underline;
         }
     }
+    @media (max-width: 768px) {
+        @apply mr-[100px];
+    }
 
     @media (min-width: 768px) {
-        @apply w-[500px] mb-[100px] mr-[100px] min-w-[500px];
+        @apply w-[500px] mb-[100px] mr-[200px] min-w-[500px];
     }
 }
 </style>
