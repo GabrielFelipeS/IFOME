@@ -345,10 +345,10 @@ import java.lang.annotation.Target;
                     "Senha precisa conter pelo menos um caractere maiúsculo"
                 ],
                 "address": [
-                    "não deve estar vazio"
+                    "É necessário ter pelo menos um endereço"
                 ],
                 "phone": [
-                    "não deve estar em branco"
+                    "Telefone é obrigatório"
                 ],
                 "cpf": [
                     "CPF inválido"

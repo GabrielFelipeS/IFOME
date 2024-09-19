@@ -16,18 +16,20 @@ import java.util.Optional;
 
 @Service
 public class DeliveryPersonService {
-    private final DeliveryPersonRepository deliveryPersonRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final LoginService loginService;
     private final TokenService tokenService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final DeliveryPersonRepository deliveryPersonRepository;
     private final ValidatorService<DeliveryPersonRequest> validatorService;
 
     public DeliveryPersonService(TokenService tokenService, DeliveryPersonRepository deliveryPersonRepository,
                                  BCryptPasswordEncoder bCryptPasswordEncoder,
-                                 List<Validator<DeliveryPersonRequest>> validators) {
+                                 List<Validator<DeliveryPersonRequest>> validators, LoginService loginService) {
         this.tokenService = tokenService;
         this.deliveryPersonRepository = deliveryPersonRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.validatorService = new ValidatorService<>(validators);
+        this.loginService = loginService;
     }
     public DeliveryPersonResponse create(DeliveryPersonRequest deliveryPersonRequest) throws MethodArgumentNotValidException {
         validatorService.isValid(deliveryPersonRequest);
@@ -38,8 +40,8 @@ public class DeliveryPersonService {
 
     public LoginResponse login(LoginRequest loginRequest) {
         Optional<DeliveryPerson> deliveryPerson = deliveryPersonRepository.findByEmail(loginRequest.email());
-        System.err.println(deliveryPerson.isPresent());
-        tokenService.isLoginIncorrect(deliveryPerson, loginRequest.password(), bCryptPasswordEncoder);
+
+        loginService.isLoginIncorrect(deliveryPerson, loginRequest.password(), bCryptPasswordEncoder);
 
         var jwtValue = tokenService.generateToken(deliveryPerson.orElseThrow().getEmail());
 
