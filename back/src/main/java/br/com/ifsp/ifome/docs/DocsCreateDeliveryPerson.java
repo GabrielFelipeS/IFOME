@@ -47,6 +47,7 @@ import java.lang.annotation.Target;
                           "address": "address",
                           "complement": "complement",
                           "number": "12",
+                          "typeResidence" : "Casa",
                           "details": "details"
                         }
                       ],

@@ -446,9 +446,17 @@ public class DeliveryPersonControllerIT {
                 "123456789",
                 LocalDate.of(2030, 1, 2),
                 "111456789",
-                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
-                        "address", "complement",
-                        "12", "condominio","details")),
+                List.of(new AddressRequest(
+                        "35170-222",
+                        "casa 1",
+                        "neighborhood",
+                        "city",
+                        "state",
+                        "address",
+                        "complement",
+                        "12",
+                        "condominio",
+                        "details")),
                 new BankAccountRequest("123","1255", "4547-7")
 
         );
