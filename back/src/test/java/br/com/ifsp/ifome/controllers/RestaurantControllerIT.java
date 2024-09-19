@@ -147,23 +147,24 @@ public class RestaurantControllerIT {
     @DisplayName("should be return error with cnpj already registred")
     public void shouldReturnErrorWithCnpjAlreadyRegistred() throws JsonProcessingException {
         RestaurantRequest restaurant = new RestaurantRequest(
-            "Nome Restaurante",
-            "email@email.com",
-            "@Senha1",
-            "@Senha1",
-            "58.911.612/0001-16",
-            List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
-                "address", "complement",
-                "12", "condominio","details")),
-            "(11) 1234-5678",
-            "Pizzaria",
-            "Dinheiro, Cartão",
-            "12:00",
-            "23:00",
-            "responsavel",
-            "033.197.356-16",
-            "imagem.jpeg",
-            new BankAccountRequest("123", "1255", "4547-7")
+                "Nome Restaurante",
+                "email@email.com",
+                "@Senha1",
+                "@Senha1",
+                "58.911.612/0001-16",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "condominio","details")),
+                "(11) 1234-5678",
+                "Pizzaria",
+                "Dinheiro, Cartão",
+                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça","11:00", "23:00")),
+                "responsavel",
+                "033.197.356-16",
+                "imagem.jpeg",
+                new BankAccountRequest("123","1255", "4547-7")
+
 
         );
 

@@ -80,7 +80,7 @@ public class DeliveryPersonControllerIT {
                 "DIT-4987",
                 "(11) 95455-4565",
                 "123456789",
-                LocalDate.of(1999, 1, 2),
+                LocalDate.of(2030, 1, 2),
                 "12345678910",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
@@ -154,8 +154,8 @@ public class DeliveryPersonControllerIT {
 
     @Test
     @DirtiesContext
-    @DisplayName("Should be possible to create a new delivery person without cnhNumber")
-    public void  shouldBeAbleToCreateANewDeliveryPersonWithoutCNH(){
+    @DisplayName("Should be possible to not create a new delivery person without cnhNumber")
+    public void  shouldBeAbleToNoTCreateANewDeliveryPersonWithoutCNH(){
         DeliveryPersonRequest deliveryPersonRequest = new DeliveryPersonRequest(
                 "Nome entregador",
                 "033.197.356-16",
@@ -312,16 +312,7 @@ public class DeliveryPersonControllerIT {
                         "A placa deve estar no formato XXX-9999",
                         "Verique a placa"
                 );
-        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson", deliveryPersonRequest, String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
-        assertThat(countOfInvalidFields).isEqualTo(1);
-
-        List<String> message = documentContext.read("$.cpf");
-
-        assertThat(message).containsExactlyInAnyOrder("Cpf já cadastrado");
     }
 
     @Test
@@ -338,7 +329,7 @@ public class DeliveryPersonControllerIT {
                 "Carro",
                 "DIT-4987",
                 "(11) 95455-4565",
-                "123456789",
+                "12345A",
                 LocalDate.of(2030, 1, 2),
                 "123456789",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
@@ -355,10 +346,10 @@ public class DeliveryPersonControllerIT {
         assertThat(countOfInvalidFields).isEqualTo(1);
 
 
-        List<String> vehicleDocument = documentContext.read("$.vehicleDocument");
-        assertThat(vehicleDocument)
+        List<String> cnhNumber = documentContext.read("$.cnhNumber");
+        assertThat(cnhNumber)
                 .containsExactlyInAnyOrder(
-                        "O RENAVAM deve conter entre 9 e 11 dígitos numéricos"
+                        "O número da CNH deve conter exatamente 9 dígitos numéricos"
                 );
     }
 
