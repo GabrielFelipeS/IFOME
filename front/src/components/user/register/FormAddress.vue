@@ -24,7 +24,7 @@ const erros = ref({
 	details: ''
 });
 
-const emit = defineEmits(['submit-form']);
+const emit = defineEmits(['submit-form', 'next-step']);
 
 watch(() => props.formData.cep, async (value) => {
 	if (value.length === 9) {
@@ -128,6 +128,7 @@ const validateForm = () => {
 const sendSubmit = () => {
 	if (validateForm()) {
 		emit('submit-form');
+		emit('next-step');
 	}
 }
 
@@ -182,6 +183,25 @@ const sendSubmit = () => {
 				<input type="text" placeholder="Exemplo: Em frente a padaria do seu zé" class="form-input" id="details"
 					   v-model="formData.details" >
 				<p v-if="erros.details !== ''" class="invalid-input-text">{{ erros.details }}</p>
+				<label for="" class="form-label">Tipo de residência</label>
+				<div class="checkbox-div">
+					<div class="checkbox-row">
+						<input type="radio" placeholder="Exemplo: Em frente a padaria do seu zé" class="form-checkbox" id="checkbox-casa"
+							   v-model="formData.typeResidence" value="casa">
+						<label for="checkbox-casa" class="form-label">Casa</label>
+					</div>
+					<div class="checkbox-row">
+						<input type="radio" placeholder="Exemplo: Em frente a padaria do seu zé" class="form-checkbox" id="checkbox-apartamento"
+							   v-model="formData.typeResidence" value="apartamento">
+						<label for="checkbox-apartamento" class="form-label">Apartamento</label>
+					</div>
+					<div class="checkbox-row">
+						<input type="radio" placeholder="Exemplo: Em frente a padaria do seu zé" class="form-checkbox" id="checkbox-condominio"
+								v-model="formData.typeResidence" value="condominio">
+						<label for="checkbox-condominio" class="form-label">Condomínio</label>
+					</div>
+				</div>
+				<p v-if="erros.details !== ''" class="invalid-input-text">{{ erros.details }}</p>
 			</div>
 			<div class="btn-container">
 				<Button href="#" @click="$emit('previous-step')" inversed
@@ -218,6 +238,16 @@ const sendSubmit = () => {
 }
 .form-label {
 	@apply my-1 text-sm;
+}
+.checkbox-div {
+	@apply flex flex-row justify-start mx-4 my-2.5 w-full gap-5 ;
+}
+.checkbox-row {
+	@apply flex flex-row justify-start gap-1.5;
+
+	.form-label {
+		@apply font-semibold;
+	}
 }
 .invalid-input-text {
 	@apply font-light text-sm text-red-500 px-2;
