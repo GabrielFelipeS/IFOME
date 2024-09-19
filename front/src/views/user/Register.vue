@@ -33,8 +33,6 @@ const formData = ref({
 	typeResidence: '',
 });
 
-const currentComponent = ref(ModalRegister);
-
 const currentStep = ref(0);
 const steps = {
 	0: ModalRegister,
@@ -128,7 +126,8 @@ const sendFormTest = () => {
 </script>
 
 <template>
-	<div class="content">
+	<div class="content"
+		 v-bind:class="[currentStep === 0 ? 'bg-image' : '']">
 		<div class="header">
 			<Header v-if="currentStep === 0" />
 			<Header logo v-if="currentStep > 0" />
@@ -152,10 +151,12 @@ const sendFormTest = () => {
 
 	.content {
 		@apply w-screen min-h-screen flex flex-col align-middle;
-		background-image: url("../../assets/img/user/bg-cadastro.jpg");
 		background-color: #fff;
 		background-position: center;
 		background-size: cover;
+	}
+	.bg-image {
+		background-image: url("../../assets/img/user/bg-cadastro.jpg");
 	}
 
 	.header {
