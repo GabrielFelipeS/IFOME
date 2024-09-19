@@ -7,7 +7,6 @@ import {computed, ref} from "vue";
 import FormPersonalData from "@/components/user/register/FormPersonalData.vue";
 import FormAddress from "@/components/user/register/FormAddress.vue";
 import api from "@/services/api.js";
-import Button from "@/components/Button.vue";
 import FormSuccess from "@/components/user/register/FormSuccess.vue";
 import axios from "axios";
 
@@ -78,7 +77,11 @@ const sendForm = () => {
 		]
 	}
 
-	api.post('auth/client', JSON.stringify(data))
+	axios.post(import.meta.env.VITE_API_URL + 'auth/client', JSON.stringify(data), {
+		headers: {
+			"Content-Type": "application/json",
+		}
+	})
 		.then(response => {
 			console.log('Response:', response.data);
 			currentStep.value++;
@@ -88,40 +91,6 @@ const sendForm = () => {
 		});
 	console.log(JSON.stringify(data));
 };
-
-const sendFormTest = () => {
-	let data = {
-		"name": "Nome",
-		"email":"lsyigfkiysfgbjksbg@email.com",
-		"password":"Senha@123",
-		"confirmationPassword":"Senha@123",
-		"dateOfBirth":"2004-02-24",
-		"cpf":"497.029.968-48",
-		"phone":"(11) 96702-3233",
-		"address":[
-			{
-				"nameAddress":"Endereço Principal",
-				"cep":"07152-340",
-				"neighborhood":"Parque Santos Dumont",
-				"city":"Guarulhos",
-				"state":"São Paulo",
-				"address":"Rua José da Penha",
-				"complement":"casa",
-				"number":"11",
-				"details":""
-			}
-		]
-	}
-
-	api.post('auth/client', JSON.stringify(data))
-		.then(response => {
-			console.log('Response:', response.data);
-		})
-		.catch(error => {
-			console.error('Error:', error);
-		});
-	console.log(JSON.stringify(data));
-}
 
 </script>
 
@@ -143,7 +112,6 @@ const sendFormTest = () => {
 				/>
 			</KeepAlive>
 		</div>
-		<Button href="#" @click="sendFormTest" class="w-full bg-primary">Teste</Button>
 	</div>
 </template>
 
