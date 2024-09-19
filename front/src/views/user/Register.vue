@@ -30,6 +30,7 @@ const formData = ref({
 	houseNumber: '',
 	complement: '',
 	details: '',
+	typeResidence: '',
 });
 
 const currentComponent = ref(ModalRegister);
@@ -66,6 +67,7 @@ const sendForm = () => {
 		"address": [
 			{
 				"nameAddress": "Endereço Principal",
+				"typeResidence": formData.value.typeResidence,
 				"cep": formData.value.cep,
 				"neighborhood": formData.value.neighborhood,
 				"city": formData.value.city,
@@ -78,7 +80,7 @@ const sendForm = () => {
 		]
 	}
 
-	api.post('client', JSON.stringify(data))
+	api.post('auth/client', JSON.stringify(data))
 		.then(response => {
 			console.log('Response:', response.data);
 			currentStep.value++;
@@ -91,6 +93,7 @@ const sendForm = () => {
 
 const sendFormTest = () => {
 	let data = {
+		"name": "Nome",
 		"email":"lsyigfkiysfgbjksbg@email.com",
 		"password":"Senha@123",
 		"confirmationPassword":"Senha@123",
@@ -112,14 +115,14 @@ const sendFormTest = () => {
 		]
 	}
 
-	api.post('client', JSON.stringify(data))
+	api.post('auth/client', JSON.stringify(data))
 		.then(response => {
 			console.log('Response:', response.data);
 		})
 		.catch(error => {
 			console.error('Error:', error);
 		});
-	console.log(Object.fromEntries(form));
+	console.log(JSON.stringify(data));
 }
 
 </script>
