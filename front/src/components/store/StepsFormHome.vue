@@ -358,6 +358,14 @@ function submitForm() {
         account: `${account.value}-${digit.value}`
     }];
 
+    const openingHours = daysSelected.value.map((day) => {
+        return {
+            dayOfTheWeek: day,
+            opening: opening.value,
+            closing: closing.value
+        };
+    });
+
 
     formData.append('nameRestaurant', nameStore.value);
     formData.append('email', email.value);
@@ -366,10 +374,9 @@ function submitForm() {
     formData.append('cnpj', cnpj.value);
     formData.append('address', JSON.stringify(formatedAddress));
     formData.append('telephone', phone.value);
-    formData.append('foodCategory', specialty.value);
+    formData.append('foodCategory', specialty.value == 'Outro' ? other.value : specialty.value);
     formData.append('paymentMethods', paymentMethods.value);
-    formData.append('openingHoursStart', opening.value);
-    formData.append('openingHoursEnd', closing.value);
+    formData.append('openingHours', JSON.stringify(openingHours));
     formData.append('personResponsible', name.value);
     formData.append('personResponsibleCPF', cpf.value);
     formData.append('restaurantImages', selectedFiles.value[0]);
