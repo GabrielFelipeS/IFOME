@@ -24,18 +24,23 @@ const props = defineProps({
 		</div>
 		<div class="flex flex-row gap-4 w-[75%] items-center justify-between h-full" v-if="!logo">
 			<div>
-				<Button href="#">Login</Button>
+				<Button @click="goToPage('user-register')"
+						class="h-full flex items-center justify-center border-b-2 border-white
+						active:border-primary active:text-primary"
+						href="#">Login</Button>
 			</div>
 			<div>
 				<Button @click="goToPage('user-register')"
-						class="h-full w-[50%] flex items-center justify-center border-b-2 border-primary"
-						inversed href="#">Cadastrar</Button>
+						class="h-full flex items-center justify-center border-b-2 border-white
+						 active:border-primary active:text-primary"
+						href="#">Cadastrar</Button>
 			</div>
 		</div>
 	</header>
 	<header class="header-desktop">
 		<div class="desktop-content">
-			<Button href="#" @click="goToPage('home')"><img src="../../assets/img/logo_header.png" class="logo" alt="Logo"></Button>
+			<Button href="#" @click="goToPage('home')">
+				<img src="../../assets/img/logo_header.png" class="logo" alt="Logo"></Button>
 		</div>
 	</header>
 </template>

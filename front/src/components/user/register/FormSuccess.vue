@@ -17,7 +17,8 @@ const goToPage = async (page) => {
 		<div class="main">
 			<div class="btn-container">
 				<Button href="#" @click="goToPage('home')"
-						class="button bg-primary text-white font-semibold">Finalizar<v-icon name="fa-check" class="ml-5"/></Button>
+						class="button bg-primary text-white font-semibold hover:bg-primary-dark
+						 active:bg-primary-darker">Finalizar<v-icon name="fa-check" class="ml-5"/></Button>
 			</div>
 		</div>
 	</Modal>

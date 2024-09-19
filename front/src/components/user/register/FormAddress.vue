@@ -205,9 +205,10 @@ const sendSubmit = () => {
 			</div>
 			<div class="btn-container">
 				<Button href="#" @click="$emit('previous-step')" inversed
-						class="button text-primary-subtle border border-primary mr-[15%]">Voltar</Button>
+						class="button text-primary-subtle border border-primary mr-[15%] hover:text-white
+						 hover:bg-primary active:bg-primary-dark hover:border-white">Voltar</Button>
 				<Button href="#" @click="sendSubmit"
-						class="button bg-primary text-white">Finalizar</Button>
+						class="button bg-primary text-white hover:bg-primary-dark active:bg-primary-darker">Continuar</Button>
 			</div>
 		</div>
 	</Modal>
@@ -233,7 +234,7 @@ const sendSubmit = () => {
 	@apply rounded-md border border-tertiary-subtle p-2 w-full mb-2;
 
 	&:disabled {
-		@apply bg-tertiary-subtle
+		@apply bg-soft-border;
 	}
 }
 .form-label {

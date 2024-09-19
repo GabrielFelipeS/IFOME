@@ -48,9 +48,10 @@ onMounted(() => {
 			</div>
 			<div class="btn-container">
 				<Button href="#" @click="$emit('previous-step')" inversed
-						class="button text-primary-subtle border border-primary mr-[15%]">Voltar</Button>
+						class="button text-primary-subtle border border-primary mr-[15%] hover:text-white
+						 hover:bg-primary active:bg-primary-dark hover:border-white">Voltar</Button>
 				<Button href="#" @click="nextStep"
-						class="button bg-primary text-white">Continuar</Button>
+						class="button bg-primary text-white hover:bg-primary-dark active:bg-primary-darker">Continuar</Button>
 			</div>
 		</div>
 	</Modal>

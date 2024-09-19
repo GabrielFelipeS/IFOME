@@ -13,17 +13,20 @@ import Modal from "@/components/user/register/Modal.vue";
 		</div>
 		<div class="main">
 			<div class="btn-container">
-				<Button href="#" class="button bg-[#4065B4] text-white">Continuar com Facebook <v-icon name="fa-facebook-square" class="icon"/></Button>
+				<Button href="#" class="button bg-[#4065B4] text-white hover:bg-[#335190] active:bg-[#20335a]">
+					Continuar com Facebook <v-icon name="fa-facebook-square" class="icon"/></Button>
 			</div>
 			<div class="btn-container">
-				<Button href="#" class="button bg-[#F2F2F2]">Fazer login com o Google <v-icon name="fa-google" class="icon" /></Button>
+				<Button href="#" class="button bg-[#F2F2F2] hover:bg-[#c2c2c2] active:bg-[#797979]">
+					Fazer login com o Google <v-icon name="fa-google" class="icon" /></Button>
 			</div>
 			<div class="btn-container">
-				<Button href="#" class="button bg-primary text-white"
+				<Button href="#" class="button bg-primary text-white hover:bg-primary-dark active:bg-primary-darker"
 					@click="$emit('next-step')">Continuar com e-mail</Button>
 			</div>
 			<div class="btn-container">
-				<Button href="#" inversed class="button border border-primary">Já tenho uma conta, fazer login</Button>
+				<Button href="#" inversed class="button border border-primary hover:text-white hover:bg-primary
+				 active:bg-primary-dark hover:border-white">Já tenho uma conta, fazer login</Button>
 			</div>
 		</div>
 		<footer class="footer">
