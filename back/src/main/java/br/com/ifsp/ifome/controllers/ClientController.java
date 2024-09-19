@@ -36,7 +36,7 @@ public class ClientController {
 
         URI locationOfNewClient = ucb
             .path("client/{id}")
-            .buildAndExpand(1)
+            .buildAndExpand(clientResponse.id())
             .toUri();
 
         ApiResponse response = new ApiResponse("success", clientResponse, "Cliente criado com sucesso");

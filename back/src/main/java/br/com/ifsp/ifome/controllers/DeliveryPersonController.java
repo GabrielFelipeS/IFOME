@@ -31,7 +31,7 @@ public class DeliveryPersonController {
         DeliveryPersonResponse deliveryPersonResponse = deliveryPersonService.create(deliveryPersonRequest);
         URI locationOfNewDeliveryPerson = ucb
                 .path("deliveryPerson/{id}")
-                .buildAndExpand(1)
+                .buildAndExpand(deliveryPersonResponse.id())
                 .toUri();
         return ResponseEntity.created(locationOfNewDeliveryPerson).body(deliveryPersonResponse);
     }
