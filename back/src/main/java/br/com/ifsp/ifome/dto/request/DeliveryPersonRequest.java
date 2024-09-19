@@ -1,6 +1,7 @@
 package br.com.ifsp.ifome.dto.request;
 
 import br.com.ifsp.ifome.validation.anotations.ConfirmartionPasswordEqualsPassword;
+import br.com.ifsp.ifome.validation.anotations.MinAgeToUse;
 import br.com.ifsp.ifome.validation.anotations.ValidPassword;
 import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmailDeliveryPerson;
 import jakarta.validation.Valid;
@@ -29,7 +30,12 @@ public record DeliveryPersonRequest(
         @NotBlank(message = "Confirmação de senha é obrigatório")
         String confirmationPassword,
 
+        @Past(message = "Data de nascimento deve estar no passado")
+        @MinAgeToUse(minAge = 18, message = "Para cadastro no sistema, é necessário ter pelo menos 18 anos de idade.")
+        @NotNull(message = "Data de nascimento é obrigatório")
         LocalDate dateOfBirth,
+
+        @NotNull
         String typeOfVehicle,
 
         @NotBlank(message = "Verique a placa")
@@ -45,6 +51,7 @@ public record DeliveryPersonRequest(
         String cnhNumber,
 
         @Future(message = "CNH fora de validade")
+        @NotNull
         LocalDate cnhValidity,
 
         @NotBlank
