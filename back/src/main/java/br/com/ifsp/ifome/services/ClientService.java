@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @Service
 public class ClientService {
+    private final LoginService loginService;
     private final TokenService tokenService;
     private final ClientRepository clientRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -24,11 +25,12 @@ public class ClientService {
 
     public ClientService(TokenService tokenService, ClientRepository clientRepository,
                          BCryptPasswordEncoder bCryptPasswordEncoder,
-                         List<Validator<ClientRequest>> validators) {
+                         List<Validator<ClientRequest>> validators, LoginService loginService) {
         this.tokenService = tokenService;
         this.clientRepository = clientRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.validatorService = new ValidatorService<>(validators);
+        this.loginService = loginService;
     }
 
     public ClientResponse create(ClientRequest clientRequest) throws MethodArgumentNotValidException {
@@ -41,7 +43,7 @@ public class ClientService {
     public LoginResponse login(LoginRequest loginRequest) {
         Optional<Client> client = clientRepository.findByEmail(loginRequest.email());
 
-        tokenService.isLoginIncorrect(client, loginRequest.password(), bCryptPasswordEncoder);
+        loginService.isLoginIncorrect(client, loginRequest.password(), bCryptPasswordEncoder);
 
         var jwtValue = tokenService.generateToken(client.orElseThrow().getEmail());
 
