@@ -34,18 +34,8 @@ const props = defineProps({
 		</div>
 	</header>
 	<header class="header-desktop">
-		<div class="flex flex-row gap-4 w-[75%] items-center justify-center h-full" v-if="logo">
-			<img src="../../assets/img/logo_header.png" class="logo" alt="Logo">
-		</div>
-		<div class="flex flex-row gap-4 w-[75%] items-center justify-between h-full" v-if="!logo">
-			<div>
-				<Button href="#">Login</Button>
-			</div>
-			<div>
-				<Button @click="goToPage('user-register')"
-						class="h-full w-[50%] flex items-center justify-center border-b-2 border-primary"
-						inversed href="#">Cadastrar</Button>
-			</div>
+		<div class="desktop-content">
+			<Button href="#" @click="goToPage('home')"><img src="../../assets/img/logo_header.png" class="logo" alt="Logo"></Button>
 		</div>
 	</header>
 </template>
@@ -56,18 +46,21 @@ const props = defineProps({
 	}
 
 	.header {
-		@apply w-full h-[70px] bg-white flex flex-row  justify-center items-center rounded-b-3xl font-default text-lg border-b-4;
-	}
-	.header-desktop {
-		@apply hidden;
-	}
-
-	.header {
+		@apply w-full h-[70px] bg-white flex flex-row justify-center items-center rounded-b-3xl font-default text-lg border-b-4;
 		@apply md:hidden;
 	}
 
 	.header-desktop {
-		@apply w-full h-[70px] bg-white flex flex-row justify-center items-center font-default border-b-4 text-lg;
+		@apply hidden;
+		@apply w-full h-[70px] bg-white md:flex flex-row justify-center items-center font-default border-b-4 text-lg;
+	}
+	.desktop-content {
+		@apply w-full flex flex-row justify-center;
+		@apply max-w-[1278px];
+	}
+
+	.button {
+		@apply flex items-center justify-center border-2 border-primary px-2 py-1 rounded-md
 	}
 
 
