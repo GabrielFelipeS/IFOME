@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { MaskInput } from 'vue-3-mask';
+import Alert from '../Page/Alert.vue';
 
 const emit = defineEmits(['submit']);
 
@@ -33,7 +34,7 @@ function submitForm() {
         errors.value.phone = '';
     }
 
-    if(errors.value.name || errors.value.email || errors.value.phone){
+    if (errors.value.name || errors.value.email || errors.value.phone) {
         return;
     }
 
@@ -43,22 +44,26 @@ function submitForm() {
 }
 </script>
 <template>
+    <div class="fixed top-10 right-5 flex flex-col z-50">
+        <Alert type="success" message="Cadastro realizado com sucesso!" id="1"/>
+        <Alert type="danger" message="Erro ao cadastrar" />
+    </div>
     <form class="form" @submit.prevent="submitForm">
         <h2>Cadastre seu negócio</h2>
         <div class="form-group">
             <label for="name">Nome Completo</label>
-            <input type="text" v-model="name" id="name" name="name" placeholder="Seu Nome Completo" required/>
+            <input type="text" v-model="name" id="name" name="name" placeholder="Seu Nome Completo" required />
             <p v-if="errors.name">{{ errors.name.value }}</p>
         </div>
         <div class="form-group">
             <label for="email">E-mail</label>
-            <input type="email" v-model="email" id="email" name="email" placeholder="E-mail" required/>
+            <input type="email" v-model="email" id="email" name="email" placeholder="E-mail" required />
             <p v-if="errors.email">{{ errors.email.value }}</p>
         </div>
 
         <div class="form-group">
             <label for="phone">Celular</label>
-            <MaskInput v-model="phone" mask="(##) #####-####" placeholder="Celular" required/>
+            <MaskInput v-model="phone" mask="(##) #####-####" placeholder="Celular" required />
             <p v-if="errors.phone">{{ errors.phone.value }}</p>
         </div>
 
@@ -87,7 +92,7 @@ function submitForm() {
             @apply w-full h-[50px] border border-gray-300 rounded-lg px-3;
         }
 
-        p{
+        p {
             @apply text-red-500 text-sm mt-1;
         }
     }
@@ -103,6 +108,7 @@ function submitForm() {
             text-decoration: underline;
         }
     }
+
     @media (max-width: 768px) {
         @apply mr-[100px];
     }
