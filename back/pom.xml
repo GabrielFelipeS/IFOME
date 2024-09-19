@@ -94,6 +94,18 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M8</version>
+                <configuration>
+                    <excludes>
+                        <!-- Exclui classes que seguem o padrão *IT (que são testes de integração) -->
+                        <exclude>**/*IT.java</exclude>
+                        <exclude>**/integration/**</exclude> <!-- Exemplo: pasta separada -->
+                    </excludes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
