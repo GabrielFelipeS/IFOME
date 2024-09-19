@@ -110,7 +110,7 @@ function submitForm() {
     }
 
     @media (max-width: 768px) {
-        @apply mr-[100px];
+        @apply mr-0;
     }
 
     @media (min-width: 768px) {
