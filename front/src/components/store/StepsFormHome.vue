@@ -660,11 +660,11 @@ const returnSteps = () => {
 
         <div class="step" v-if="currentStep === 7">
             <div class="final">
-                <img src="../../assets/img/logo_header.png" alt="Logo Ifome">
+                <img src="../../assets/img/store/shop.png" alt="Logo Ifome">
                 <h2>Seja Bem Vindo, {{ name }}</h2>
-                <img src="../../assets/img/store/balloon.png" alt="Icone Balão" class="baloon">
-                <img src="../../assets/img/store/balloon_2.png" alt="Icone Balão" class="baloon1">
-                <img src="../../assets/img/store/balloon_3.png" alt="Icone Balão" class="baloon2">
+                <img src="../../assets/img/store/sushi.png" alt="Icone Sushi" class="baloon">
+                <img src="../../assets/img/store/hamburguer-de-queijo.png" alt="Icone Hamburguer" class="baloon1">
+                <img src="../../assets/img/store/plait.png" alt="Icone Prato" class="baloon2">
                 <button type="submit" class="btn-text">Começar a Vender</button>
             </div>
         </div>
