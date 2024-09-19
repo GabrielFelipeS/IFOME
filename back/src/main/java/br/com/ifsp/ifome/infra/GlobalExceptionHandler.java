@@ -1,6 +1,8 @@
 package br.com.ifsp.ifome.infra;
 
 import br.com.ifsp.ifome.exceptions.InvalidTokenException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -14,9 +16,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.*;
 
+
 @RestControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class GlobalExceptionHandler {
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -27,6 +31,7 @@ public class GlobalExceptionHandler {
             String name = getNameWithError(error);
             List<String> errorMessage = new LinkedList<>(Collections.singletonList(error.getDefaultMessage()));
             addContraintViolation(errors, name, errorMessage);
+            logger.warn(error.getDefaultMessage());
         });
         return errors;
     }
