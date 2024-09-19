@@ -4,7 +4,7 @@ import HeaderSteps from './HeaderSteps.vue';
 import { MaskInput } from 'vue-3-mask';
 import { fetchViaCep } from '@/services/viaCep';
 
-const currentStep = ref(4);
+const currentStep = ref(1);
 
 const stepsActive = ref(false);
 
@@ -819,7 +819,7 @@ const returnSteps = () => {
             }
 
             p {
-                @apply text-red-500;
+                @apply text-red-500 font-light mt-1;
             }
 
             span {
