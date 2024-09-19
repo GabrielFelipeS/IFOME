@@ -9,6 +9,7 @@ import FormAddress from "@/components/user/register/FormAddress.vue";
 import api from "@/services/api.js";
 import Button from "@/components/Button.vue";
 import FormSuccess from "@/components/user/register/FormSuccess.vue";
+import axios from "axios";
 
 document.querySelector('#app').setAttribute('style', 'overflow-x: hidden');
 
@@ -53,34 +54,31 @@ const loadComponent = computed(() => {
 });
 
 const sendForm = () => {
-	const form = new FormData();
-	form.append("email", formData.value.email);
-	form.append("password", formData.value.password);
-	form.append("confirmationPassword", formData.value.passwordConfirmation);
-
 	let [day, month, year] = formData.value.dateOfBirth.split('/').map(String);
 	let date = year + '-' + month + '-' + day;
-	form.append("dateOfBirth", date);
+	let data = {
+		"email": formData.value.email,
+		"password": formData.value.password,
+		"confirmationPassword": formData.value.passwordConfirmation,
+		"dateOfBirth": date,
+		"cpf": formData.value.cpf,
+		"phone": formData.value.phone,
+		"address": [
+			{
+				"nameAddress": "Endereço Principal",
+				"cep": formData.value.cep,
+				"neighborhood": formData.value.neighborhood,
+				"city": formData.value.city,
+				"state": formData.value.state,
+				"address": formData.value.address,
+				"complement": formData.value.complement,
+				"number": formData.value.houseNumber + '',
+				"details": formData.value.details
+			}
+		]
+	}
 
-	form.append("cpf", formData.value.cpf);
-	form.append("phone", formData.value.phone);
-
-	const address = new Array(
-		{
-			nameAddress: 'Endereço Principal',
-			cep: formData.value.cep,
-			neighborhood: formData.value.neighborhood,
-			city: formData.value.city,
-			state: formData.value.state,
-			address: formData.value.address,
-			complement: formData.value.complement,
-			number: formData.value.houseNumber,
-			details: formData.value.details,
-		},
-	);
-	form.append("address", address);
-
-	api.post('client', form)
+	api.post('client', JSON.stringify(data))
 		.then(response => {
 			console.log('Response:', response.data);
 			currentStep.value++;
@@ -88,40 +86,33 @@ const sendForm = () => {
 		.catch(error => {
 			console.error('Error:', error);
 		});
-	// currentStep.value++;
-	console.log(Object.fromEntries(form));
+	console.log(JSON.stringify(data));
 };
 
 const sendFormTest = () => {
-	const form = new FormData();
-	form.append('name', 'nome');
-	form.append("email", 'teste@email.com');
-	form.append("password", 'Senha@123');
-	form.append("confirmationPassword", 'Senha@123');
+	let data = {
+		"email":"lsyigfkiysfgbjksbg@email.com",
+		"password":"Senha@123",
+		"confirmationPassword":"Senha@123",
+		"dateOfBirth":"2004-02-24",
+		"cpf":"497.029.968-48",
+		"phone":"(11) 96702-3233",
+		"address":[
+			{
+				"nameAddress":"Endereço Principal",
+				"cep":"07152-340",
+				"neighborhood":"Parque Santos Dumont",
+				"city":"Guarulhos",
+				"state":"São Paulo",
+				"address":"Rua José da Penha",
+				"complement":"casa",
+				"number":"11",
+				"details":""
+			}
+		]
+	}
 
-	form.append("dateOfBirth", '2001-02-03');
-
-	form.append("cpf", '497.029.968-48');
-	form.append("phone", '(11) 96702-3233');
-
-	const address = new Array(
-		{
-			nameAddress: 'Endereço Principal',
-			cep: '07152-340',
-			neighborhood: 'rua feliz',
-			city: 'cidade felix',
-			state: 'estado da depressão',
-			address: 'rua do tião',
-			complement: 'casa',
-			number: '3',
-			details: 'detalhes',
-		},
-	);
-	form.append("address", address);
-
-
-
-	api.post('client', form)
+	api.post('client', JSON.stringify(data))
 		.then(response => {
 			console.log('Response:', response.data);
 		})
