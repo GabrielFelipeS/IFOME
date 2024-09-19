@@ -4,7 +4,7 @@ import HeaderSteps from './HeaderSteps.vue';
 import { MaskInput } from 'vue-3-mask';
 import { fetchViaCep } from '@/services/viaCep';
 
-const currentStep = ref(1);
+const currentStep = ref(4);
 
 const stepsActive = ref(false);
 
@@ -532,7 +532,7 @@ const returnSteps = () => {
             <!-- Área de upload de fotos -->
             <div class="border-2 border-dashed border-gray-300 rounded-lg p-5 text-center h-[300px] flex items-center justify-center"
                 @dragover.prevent="dragOver" @dragleave.prevent="dragLeave" @drop.prevent="drop">
-                <input type="file" id="photo" name="photo" multiple class="hidden" @change="handleFileChange" />
+                <input type="file" id="photo" name="photo" class="hidden" @change="handleFileChange" />
                 <label for="photo" class="cursor-pointer flex flex-col items-center justify-center">
                     <svg data-name="Livello 1" id="Livello_1" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg"
                         width="30" height="30" class="mb-2">
@@ -543,7 +543,7 @@ const returnSteps = () => {
                             d="M125,88a3,3,0,0,0-3,3v22a9,9,0,0,1-9,9H15a9,9,0,0,1-9-9V91a3,3,0,0,0-6,0v22a15,15,0,0,0,15,15h98a15,15,0,0,0,15-15V91A3,3,0,0,0,125,88Z" />
                     </svg>
 
-                    <span>Arraste e solte suas fotos aqui</span>
+                    <span>Arraste e solte sua foto aqui</span>
                     <span class="text-sm text-gray-400">ou <span class="text-blue-500">clique aqui</span> e
                         selecione</span>
                 </label>
@@ -551,11 +551,11 @@ const returnSteps = () => {
             <p v-if="step4Erros.photos">** Selecione pelo menos uma foto **</p>
 
             <!-- Lista de fotos selecionadas -->
-            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="mt-4 w-full">
                 <div v-for="(file, index) in selectedFiles" :key="index"
                     class="flex items-center justify-between border-gray-300 border-dashed border-2 rounded-3xl font-thin pl-5">
                     <span class="truncate">{{ file.name }}</span>
-                    <button class="bg-red-500 text-white w-[15%] py-2 rounded-r-3xl" @click="removeFile(index)">
+                    <button class="bg-red-500 text-white w-[30%] md:w-[10%] h-[50px] py-2 rounded-r-3xl" @click="removeFile(index)">
                         X
                     </button>
                 </div>
