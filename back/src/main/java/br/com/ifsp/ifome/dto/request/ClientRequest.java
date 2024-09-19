@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.br.CPF;
 import java.time.LocalDate;
 import java.util.List;
 
-@ConfirmartionPasswordEqualsPassword
+@ConfirmartionPasswordEqualsPassword(message = "As senhas não coincidem")
 public record ClientRequest (
         @NotBlank
         String name,
@@ -29,7 +29,7 @@ public record ClientRequest (
         String confirmationPassword,
 
         @Past(message = "Data de nascimento deve estar no passado")
-        @MinAgeToUse(minAge = 14, message = "É necessário ter pelo menos 13 anos")
+        @MinAgeToUse(minAge = 13, message = "Para cadastro no sistema, é necessário ter pelo menos 13 anos de idade.")
         @NotNull(message = "Data de nascimento é obrigatório")
         LocalDate dateOfBirth,
 

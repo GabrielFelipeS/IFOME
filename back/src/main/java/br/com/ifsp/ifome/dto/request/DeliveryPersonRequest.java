@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.br.CPF;
 import java.time.LocalDate;
 import java.util.List;
 
-@ConfirmartionPasswordEqualsPassword
+@ConfirmartionPasswordEqualsPassword(message = "As senhas não coincidem")
 public record DeliveryPersonRequest(
         String name,
 

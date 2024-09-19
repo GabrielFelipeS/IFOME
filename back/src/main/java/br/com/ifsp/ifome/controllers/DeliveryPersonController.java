@@ -10,6 +10,7 @@ import br.com.ifsp.ifome.dto.response.DeliveryPersonResponse;
 import br.com.ifsp.ifome.services.DeliveryPersonService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,11 +30,11 @@ public class DeliveryPersonController {
     }
     @DocsCreateDeliveryPerson
     @PostMapping
-    public ResponseEntity<DeliveryPersonResponse> create(@Valid @RequestBody DeliveryPersonRequest deliveryPersonRequest, UriComponentsBuilder ucb){
+    public ResponseEntity<DeliveryPersonResponse> create(@Valid @RequestBody DeliveryPersonRequest deliveryPersonRequest, UriComponentsBuilder ucb) throws MethodArgumentNotValidException {
         DeliveryPersonResponse deliveryPersonResponse = deliveryPersonService.create(deliveryPersonRequest);
         URI locationOfNewDeliveryPerson = ucb
                 .path("deliveryPerson/{id}")
-                .buildAndExpand(1)
+                .buildAndExpand(deliveryPersonResponse.id())
                 .toUri();
         return ResponseEntity.created(locationOfNewDeliveryPerson).body(deliveryPersonResponse);
     }

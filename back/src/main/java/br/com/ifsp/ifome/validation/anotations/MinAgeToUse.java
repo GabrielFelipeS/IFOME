@@ -1,6 +1,6 @@
 package br.com.ifsp.ifome.validation.anotations;
 
-import br.com.ifsp.ifome.validation.validators.MinAgeToUseValidator;
+import br.com.ifsp.ifome.validation.validators.anotations.MinAgeToUseValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

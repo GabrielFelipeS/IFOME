@@ -4,12 +4,14 @@ import br.com.ifsp.ifome.dto.request.RestaurantRequest;
 import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "RESTAURANTS")
+// TODO esta faltando a parte de user details junto com roles
 public class Restaurant implements PasswordPolicy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +38,7 @@ public class Restaurant implements PasswordPolicy {
 
     public Restaurant() {}
 
-    public Restaurant(RestaurantRequest restaurantRequest){
+    public Restaurant(RestaurantRequest restaurantRequest, BCryptPasswordEncoder bCryptPasswordEncoder){
         this.nameRestaurant = restaurantRequest.nameRestaurant();
         this.cnpj = restaurantRequest.cnpj();
         this.foodCategory = restaurantRequest.foodCategory();
@@ -46,13 +48,18 @@ public class Restaurant implements PasswordPolicy {
         this.personResponsible = restaurantRequest.personResponsible();
         this.personResponsibleCPF = restaurantRequest.personResponsibleCPF();
         this.email = restaurantRequest.email();
-        this.password = restaurantRequest.password();
+        this.password = bCryptPasswordEncoder.encode(restaurantRequest.password());
         this.paymentMethods = restaurantRequest.paymentMethods();
         this.restaurantImage = restaurantRequest.restaurantImage();
         this.bankAccount = new BankAccount(restaurantRequest.bankAccount());
     }
 
-    public Restaurant(Long id, String nameRestaurant, String cnpj, String foodCategory, List<Address> address, String telephone, List<OpeningHours> openingHours, String personResponsible, String personResponsibleCPF, String email, String password, String paymentMethods, String restaurantImage, BankAccount bankAccount) {
+    public Restaurant(Long id, String nameRestaurant, String cnpj, String foodCategory, List<Address> address, String telephone, List<OpeningHours> openingHours, String personResponsible, String personResponsibleCPF, String email, String password, String paymentMethods, String restaurantImage, BankAccount bankAccount) {}
+    public Restaurant(Long id, String nameRestaurant, String cnpj,
+                      String foodCategory, List<Address> address, String telephone,
+                      String openingHoursStart, String openingHoursEnd, String personResponsible,
+                      String personResponsibleCPF, String email, String password, String paymentMethods,
+                      String restaurantImage, BankAccount bankAccount,  BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.id = id;
         this.nameRestaurant = nameRestaurant;
         this.cnpj = cnpj;
@@ -63,7 +70,7 @@ public class Restaurant implements PasswordPolicy {
         this.personResponsible = personResponsible;
         this.personResponsibleCPF = personResponsibleCPF;
         this.email = email;
-        this.password = password;
+        this.password = bCryptPasswordEncoder.encode(password);
         this.paymentMethods = paymentMethods;
         this.restaurantImage = restaurantImage;
         this.bankAccount = bankAccount;
@@ -182,7 +189,7 @@ public class Restaurant implements PasswordPolicy {
     }
 
     @Override
-    public boolean isLoginCorrect(String rawPassword, BCryptPasswordEncoder passwordEncoder) {
+    public boolean isLoginCorrect(String rawPassword, PasswordEncoder passwordEncoder) {
         System.out.println(rawPassword);
         return passwordEncoder.matches(rawPassword, this.password);
     }

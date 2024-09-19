@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.Payload;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -18,7 +17,233 @@ import java.lang.annotation.Target;
 
 @Operation(summary = "Cadastrar um novo cliente")
 @RequestBody(
-    description = "Detalhes do cliente a ser criado",
+    description = """
+        # Detalhes do cliente a ser criado
+        Campos obrigatórios: Nome completo, E-mail, Telefone, Senha, Confirmação de senha, Data de nascimento, CPF, Endereços
+        
+        Validações dos campos:
+        
+        ## name:
+        
+        Tipo: String
+        
+        Validação: Não aceita valores nulos, vazios ou contendo apenas espaços.
+        
+        Anotação: @NotBlank
+        
+        ## email:
+        
+        Tipo: String
+        
+        Validações:
+        
+        - Validação sintática do e-mail.
+       
+        - Não aceita e-mails repetidos no sistema.
+        
+        - Não aceita valores nulos, vazios ou contendo apenas espaços.
+        
+        Anotações: @Email, @NotBlank, @NotRegisteredEmail
+        
+        ## password:
+       
+        Tipo: String
+        
+        Validações:
+        
+        - Senha precisa conter pelo menos uma letra minúscula.
+        
+        - Senha precisa conter pelo menos uma letra maiúscula.
+        
+        - Senha precisa conter pelo menos um número.
+        
+        - Senha precisa conter pelo menos um caractere especial.
+        
+        - Senha precisa possui pelo menos 6 caracteres.
+        
+        - Não pode conter espaços.
+        
+        - Não aceita valores nulos ou vazios.
+        
+        Anotações: @ValidPassword, @NotBlank
+        
+        ## confirmationPassword:
+        
+        Tipo: String
+        
+        Validações:
+        
+        - Deve ser igual ao campo password.
+        
+        - Não aceita valores nulos ou vazios.
+        
+        Anotações: @NotBlank, @ConfirmationPasswordEqualsPassword
+        
+        ## dateOfBirth:
+        
+        Tipo: LocalDate
+        
+        Validações:
+        
+        - A data deve estar no passado.
+        
+        - A idade mínima deve ser de 13 anos para cadastro no sistema.
+        
+        - Não aceita valores nulos.
+        
+        Anotações: @Past, @MinAgeToUse(minAge = 14), @NotNull
+        
+        ## cpf:
+        
+        Tipo: String
+        
+        Validações:
+        
+        - CPF válido com verificação sintática e com o algoritmo de Módulo 11.
+        
+        - Não aceita valores nulos ou vazios.
+        
+        - Não aceita CPF repetidos
+        
+        Anotações: @CPF, @NotBlank
+        
+        ## phone:
+        
+        Tipo: String
+        
+        Validações:
+        
+        - Formato de telefone válido: (11) 2000-0000 ou (11) 90000-0000
+        
+        - regex: ^\\([1-9]{2}\\) (?:[2-8]|9[0-9])[0-9]{3}-[0-9]{4}$.
+        
+        - Não aceita valores nulos ou vazios.
+       
+        Anotações: @Pattern, @NotBlank
+        
+        ## address:
+        
+        Tipo: List<@Valid AddressRequest>
+        
+        Validações:
+        
+        - A lista não pode estar vazia.
+        
+        - Lista de endereços, onde cada item é validado individualmente.
+        
+        Anotação: @NotEmpty
+        
+        # Detalhes do AddressRequest
+        
+        Campos obrigatórios: CEP, Nome do Endereço, Bairro, Cidade, Estado, Endereço, Complemento, Número, Tipo de Residência.
+        
+        Validações dos campos:
+        
+        ## cep:
+        
+        Tipo: String
+        
+        Validações:
+        
+        - Não aceita valores nulos ou vazios.
+        
+        - Validação do formato do CEP (utiliza a anotação @CEP).
+        
+        Anotações: @NotBlank, @CEP
+        
+        ## nameAddress:
+        
+        Tipo: String
+        
+        Validações:
+        
+        - Não aceita valores nulos ou vazios.
+        
+        Anotação: @NotBlank
+        
+        ## neighborhood:
+        
+        Tipo: String
+        
+        Validações:
+        
+        - Não aceita valores nulos ou vazios.
+        
+        Anotação: @NotBlank
+        
+        ## city:
+        
+        Tipo: String
+        
+        Validações:
+        
+        - Não aceita valores nulos ou vazios.
+        
+        Anotação: @NotBlank
+        
+        ## state:
+        
+        Tipo: String
+        
+        Validações:
+        
+        - Não aceita valores nulos ou vazios.
+        
+        Anotação: @NotBlank
+        
+        ## address:
+        
+        Tipo: String
+        
+        Validações:
+        
+        - Não aceita valores nulos ou vazios.
+        
+        Anotação: @NotBlank
+        
+        ## complement:
+        
+        Tipo: String
+        
+        Validações:
+        
+        - Não aceita valores nulos ou vazios.
+        
+        Anotação: @NotBlank
+        
+        ## number:
+        
+        Tipo: String
+        
+        Validações:
+        
+        - Não aceita valores nulos ou vazios.
+        
+        - Deve ser um número (um ou mais dígitos).
+        
+        Anotações: @NotBlank, @Pattern(regexp = "\\\\d{1,}")
+        
+        ## typeResidence:
+        
+        Tipo: String
+        
+        Validações:
+        
+        - Não aceita valores nulos ou vazios.
+        
+        - Deve ser um dos seguintes valores: "casa", "apartamento", "condomínio".
+        
+        Anotações: @NotBlank, @Pattern(regexp = "(casa|apartamento|condom[ií]nio)")
+        
+        ## details:
+        
+        Tipo: String
+        
+        Validações:
+        
+        - Não obrigatório.
+        
+        Anotação: (Nenhuma validação)""",
     required = true,
     content = @Content(
         mediaType = "application/json",
@@ -29,6 +254,7 @@ import java.lang.annotation.Target;
             description = "Inserindo cliente válido",
             value = """
                     {
+                      "name": "Gabriel",
                       "email": "novo@cliente.com",
                       "password": "Abc@1234",
                       "confirmationPassword": "Abc@1234",
@@ -45,7 +271,8 @@ import java.lang.annotation.Target;
                           "address": "address",
                           "complement": "complement",
                           "number": "12",
-                          "details": "details"
+                          "details": "details",
+                          "typeResidence": "casa"
                         }
                       ]
                     }
@@ -57,12 +284,15 @@ import java.lang.annotation.Target;
                 """
                     Inserindo cliente inválido
                     cpf: falta 1 número
+                    
                     email: não possui @
+                    
                     password: não possui letra maiúscula, número e caractere especial
-                    address: esta vazio
-                """,
+                    
+                    address: esta vazio""",
                 value = """
                     {
+                        "name": "Gabriel",
                         "cpf": "4860867801",
                         "email" : "gabgmail.com",
                         "password": "password",
