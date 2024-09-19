@@ -44,7 +44,7 @@ function submitForm() {
 }
 </script>
 <template>
-    <div class="fixed top-10 right-5 flex flex-col z-50">
+    <div class="fixed top-[100px] right-5 flex flex-col z-50">
         <Alert type="success" message="Cadastro realizado com sucesso!" id="1"/>
         <Alert type="danger" message="Erro ao cadastrar" />
     </div>

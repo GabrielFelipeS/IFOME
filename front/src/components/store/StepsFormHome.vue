@@ -399,7 +399,7 @@ const returnSteps = () => {
 </script>
 
 <template>
-    <div class="steps" v-if="stepsActive">
+    <div class="steps py-[100px]" v-if="stepsActive">
         <!-- Passar a etapa atual para o componente filho -->
         <HeaderSteps :currentStep="currentStep" @returnBack="returnSteps" />
 
