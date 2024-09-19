@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.Payload;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -25,7 +24,7 @@ import java.lang.annotation.Target;
         Validações dos campos:
         
         ## name:
-               
+        
         Tipo: String
         
         Validação: Não aceita valores nulos, vazios ou contendo apenas espaços.
@@ -33,7 +32,7 @@ import java.lang.annotation.Target;
         Anotação: @NotBlank
         
         ## email:
-               
+        
         Tipo: String
         
         Validações:
@@ -47,7 +46,7 @@ import java.lang.annotation.Target;
         Anotações: @Email, @NotBlank, @NotRegisteredEmail
         
         ## password:
-               
+       
         Tipo: String
         
         Validações:
@@ -69,7 +68,7 @@ import java.lang.annotation.Target;
         Anotações: @ValidPassword, @NotBlank
         
         ## confirmationPassword:
-               
+        
         Tipo: String
         
         Validações:
@@ -81,7 +80,7 @@ import java.lang.annotation.Target;
         Anotações: @NotBlank, @ConfirmationPasswordEqualsPassword
         
         ## dateOfBirth:
-               
+        
         Tipo: LocalDate
         
         Validações:
@@ -95,7 +94,7 @@ import java.lang.annotation.Target;
         Anotações: @Past, @MinAgeToUse(minAge = 14), @NotNull
         
         ## cpf:
-               
+        
         Tipo: String
         
         Validações:
@@ -109,7 +108,7 @@ import java.lang.annotation.Target;
         Anotações: @CPF, @NotBlank
         
         ## phone:
-               
+        
         Tipo: String
         
         Validações:
@@ -123,11 +122,11 @@ import java.lang.annotation.Target;
         Anotações: @Pattern, @NotBlank
         
         ## address:
-               
+        
         Tipo: List<@Valid AddressRequest>
         
         Validações:
-                
+        
         - A lista não pode estar vazia.
         
         - Lista de endereços, onde cada item é validado individualmente.
@@ -137,11 +136,11 @@ import java.lang.annotation.Target;
         # Detalhes do AddressRequest
         
         Campos obrigatórios: CEP, Nome do Endereço, Bairro, Cidade, Estado, Endereço, Complemento, Número, Tipo de Residência.
-                
+        
         Validações dos campos:
         
         ## cep:
-                
+        
         Tipo: String
         
         Validações:
@@ -153,7 +152,7 @@ import java.lang.annotation.Target;
         Anotações: @NotBlank, @CEP
         
         ## nameAddress:
-                
+        
         Tipo: String
         
         Validações:
@@ -163,7 +162,7 @@ import java.lang.annotation.Target;
         Anotação: @NotBlank
         
         ## neighborhood:
-                
+        
         Tipo: String
         
         Validações:
@@ -173,7 +172,7 @@ import java.lang.annotation.Target;
         Anotação: @NotBlank
         
         ## city:
-                
+        
         Tipo: String
         
         Validações:
@@ -183,7 +182,7 @@ import java.lang.annotation.Target;
         Anotação: @NotBlank
         
         ## state:
-                
+        
         Tipo: String
         
         Validações:
@@ -193,7 +192,7 @@ import java.lang.annotation.Target;
         Anotação: @NotBlank
         
         ## address:
-                
+        
         Tipo: String
         
         Validações:
@@ -203,7 +202,7 @@ import java.lang.annotation.Target;
         Anotação: @NotBlank
         
         ## complement:
-                
+        
         Tipo: String
         
         Validações:
@@ -213,7 +212,7 @@ import java.lang.annotation.Target;
         Anotação: @NotBlank
         
         ## number:
-                
+        
         Tipo: String
         
         Validações:
@@ -225,7 +224,7 @@ import java.lang.annotation.Target;
         Anotações: @NotBlank, @Pattern(regexp = "\\\\d{1,}")
         
         ## typeResidence:
-                
+        
         Tipo: String
         
         Validações:
@@ -237,7 +236,7 @@ import java.lang.annotation.Target;
         Anotações: @NotBlank, @Pattern(regexp = "(casa|apartamento|condom[ií]nio)")
         
         ## details:
-                
+        
         Tipo: String
         
         Validações:
@@ -272,7 +271,8 @@ import java.lang.annotation.Target;
                           "address": "address",
                           "complement": "complement",
                           "number": "12",
-                          "details": "details"
+                          "details": "details",
+                          "typeResidence": "casa"
                         }
                       ]
                     }

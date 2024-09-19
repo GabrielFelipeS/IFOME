@@ -48,7 +48,7 @@ public class RestaurantController {
 
         URI locationOfNewRestaurant = ucb
             .path("restaurant/{id}")
-            .buildAndExpand(1)
+            .buildAndExpand(restaurantResponse.id())
             .toUri();
         return ResponseEntity.created(locationOfNewRestaurant).body(restaurantResponse);
     }
