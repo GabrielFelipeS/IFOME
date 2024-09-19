@@ -29,7 +29,7 @@ public record ClientRequest (
         String confirmationPassword,
 
         @Past(message = "Data de nascimento deve estar no passado")
-        @MinAgeToUse(minAge = 14, message = "Para cadastro no sistema, é necessário ter pelo menos 13 anos de idade.")
+        @MinAgeToUse(minAge = 13, message = "Para cadastro no sistema, é necessário ter pelo menos 13 anos de idade.")
         @NotNull(message = "Data de nascimento é obrigatório")
         LocalDate dateOfBirth,
 
