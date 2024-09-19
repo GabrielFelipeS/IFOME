@@ -2,6 +2,11 @@
 
 import Modal from "@/components/user/register/Modal.vue";
 import Button from "@/components/Button.vue";
+
+const goToPage = async (page) => {
+	await router.push({ name: page }); // Substitua pelo nome da rota
+};
+
 </script>
 
 <template>
@@ -11,7 +16,7 @@ import Button from "@/components/Button.vue";
 		</header>
 		<div class="main">
 			<div class="btn-container">
-				<Button href="#" @click="nextStep"
+				<Button href="#" @click="goToPage('home')"
 						class="button bg-primary text-white font-semibold">Finalizar<v-icon name="fa-check" class="ml-5"/></Button>
 			</div>
 		</div>
