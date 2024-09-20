@@ -18,7 +18,7 @@ const errors = ref({
 	phone: '',
 	dateOfBirth: '',
 	cpf: '',
-	password: '',
+	password: {},
 	passwordConfirmation: '',
 })
 
@@ -54,23 +54,38 @@ const validateForm = () => {
 	}
 
 	if (props.formData.password.length < 8) {
-		errors.value.password = 'A senha deve conter pelo menos 8 caracteres.';
-		valid = false;
-	} else if (!/[A-Z]/.test(props.formData.password)) {
-		errors.value.password = 'A senha deve conter pelo menos uma letra maiúscula.';
-		valid = false;
-	} else if (!/[a-z]/.test(props.formData.password)) {
-		errors.value.password = 'A senha deve conter pelo menos uma letra minúscula.';
-		valid = false;
-	} else if (!/[@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(props.formData.password)) {
-		errors.value.password = 'A senha deve conter pelo menos um caractere especial.';
+		errors.value.password[0] = 'A senha deve conter pelo menos 8 caracteres.';
 		valid = false;
 	} else {
-		errors.value.password = '';
+		errors.value.password[0] = ''; // Limpa o erro se a condição for satisfeita
+	}
+	if (!/[A-Z]/.test(props.formData.password)) {
+		errors.value.password[1] = 'A senha deve conter pelo menos uma letra maiúscula.';
+		valid = false;
+	} else {
+		errors.value.password[1] = ''; // Limpa o erro se a condição for satisfeita
+	}
+	if (!/[a-z]/.test(props.formData.password)) {
+		errors.value.password[2] = 'A senha deve conter pelo menos uma letra minúscula.';
+		valid = false;
+	} else {
+		errors.value.password[2] = ''; // Limpa o erro se a condição for satisfeita
+	}
+	if (!/[@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(props.formData.password)) {
+		errors.value.password[3] = 'A senha deve conter pelo menos um caractere especial.';
+		valid = false;
+	} else {
+		errors.value.password[3] = ''; // Limpa o erro se a condição for satisfeita
+	}
+	if (!/\d/.test(props.formData.password)) {
+		errors.value.password[4] = 'A senha deve conter pelo menos um número.';
+		valid = false;
+	} else {
+		errors.value.password[4] = ''; // Limpa o erro se a condição for satisfeita
 	}
 
 	if (props.formData.passwordConfirmation.length < 8) {
-		errors.value.passwordConfirmation = 'A senha deve conter pelo menos 8 caracteres.';
+		errors.value.passwordConfirmation = 'As senhas não conferem.';
 		valid = false;
 	} else if (props.formData.passwordConfirmation !== props.formData.password) {
 		errors.value.passwordConfirmation = 'As senhas não correspondem.';
@@ -102,7 +117,7 @@ watch(props.formData, () => {
 		errors.value.cpf = '';
 	}
 	if (props.formData.password.length >= 1) {
-		errors.value.password = '';
+		errors.value.password = [];
 	}
 	if (props.formData.passwordConfirmation.length >= 1) {
 		errors.value.passwordConfirmation = '';
@@ -139,7 +154,11 @@ watch(props.formData, () => {
 				<label for="" class="form-label">Senha</label>
 				<input type="password" placeholder="******" class="form-input"
 					   v-model="formData.password" >
-				<p class="invalid-input-text" v-if="errors.password !== ''">{{ errors.password }}</p>
+				<p class="invalid-input-text" v-if="errors.password[0] !== '' ">{{ errors.password[0] }}</p>
+				<p class="invalid-input-text" v-if="errors.password[1] !== '' ">{{ errors.password[1] }}</p>
+				<p class="invalid-input-text" v-if="errors.password[2] !== '' ">{{ errors.password[2] }}</p>
+				<p class="invalid-input-text" v-if="errors.password[3] !== '' ">{{ errors.password[3] }}</p>
+				<p class="invalid-input-text" v-if="errors.password[4] !== '' ">{{ errors.password[4] }}</p>
 				<label for="" class="form-label">Confirmar Senha</label>
 				<input type="password" placeholder="******" class="form-input"
 					   v-model="formData.passwordConfirmation" >
