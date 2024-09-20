@@ -9,6 +9,8 @@ import FormAddress from "@/components/user/register/FormAddress.vue";
 import api from "@/services/api.js";
 import FormSuccess from "@/components/user/register/FormSuccess.vue";
 import axios from "axios";
+import Alert from "@/components/Page/Alert.vue";
+import {useToast} from "vue-toast-notification";
 
 document.querySelector('#app').setAttribute('style', 'overflow-x: hidden');
 
@@ -51,7 +53,7 @@ const loadComponent = computed(() => {
 	return steps[currentStep.value];
 });
 
-const sendForm = () => {
+const sendForm = async () => {
 	let [day, month, year] = formData.value.dateOfBirth.split('/').map(String);
 	let date = year + '-' + month + '-' + day;
 	let data = {
@@ -78,24 +80,34 @@ const sendForm = () => {
 		]
 	}
 
-	axios.post(import.meta.env.VITE_API_URL + 'auth/client', JSON.stringify(data), {
+	await axios.post(import.meta.env.VITE_API_URL + 'auth/client', JSON.stringify(data), {
 		headers: {
 			"Content-Type": "application/json",
 		}
 	})
-		.then(response => {
-			console.log('Response:', response.data);
-			currentStep.value++;
-		})
-		.catch(error => {
-			console.error('Error:', error);
-		});
-	console.log(JSON.stringify(data));
+	.then((response) => {
+		if (response.status === 200 || response.status === 201) {
+			nextStep();
+		} else {
+			$toast.error(response.data.message, {});
+		}
+	})
+	.catch(error => {
+		const errorMessage = JSON.stringify(error.response?.data) || 'Erro ao enviar os dados.';
+		$toast.error(errorMessage, {duration: 10000});
+		console.error('Error:', error);
+	});
 };
 
+const $toast = useToast();
 </script>
 
 <template>
+	<div class="fixed top-[120px] right-5 flex flex-col z-50">
+		<template>
+			<Alert id="1" type="error" message="erro" />
+		</template>
+	</div>
 	<div class="content"
 		 v-bind:class="[currentStep === 0 ? 'bg-image' : '']">
 		<div class="header">
