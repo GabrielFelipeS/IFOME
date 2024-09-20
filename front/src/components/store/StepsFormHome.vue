@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue';
 import HeaderSteps from './HeaderSteps.vue';
 import { MaskInput } from 'vue-3-mask';
 import { fetchViaCep } from '@/services/viaCep';
+import api from '@/services/api';
 
 const currentStep = ref(1);
 
@@ -337,7 +338,7 @@ function showConfirmation() {
     }
 }
 
-function submitForm() {
+async function submitForm() {
     const formData = new FormData();
 
     let formatedAddress = [{
@@ -386,9 +387,16 @@ function submitForm() {
         formData.append(`restaurantImages_${index}`, file);
     });
 
-    console.log(Object.fromEntries(formData));
+    $response  = await api.post('/restaurant', formData);
 
-    nextStep();
+    if ($response.status === 201) {
+        emit('responseApi', [type => "success", message => $response.message]);
+        nextStep();
+    }
+
+    if($response.status === 400) {
+        emit('responseApi', [type => "error", message => $response.message , errors => $response.errors]);
+    }
 }
 
 

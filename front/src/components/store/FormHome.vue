@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { MaskInput } from 'vue-3-mask';
 import Alert from '../Page/Alert.vue';
 
@@ -13,6 +13,20 @@ const errors = ref({
     name: '',
     email: '',
     phone: ''
+});
+
+const errosApi = ref([]);
+
+function showAlerts(response) {
+    errosApi.value = response;
+}
+
+watch(() => errosApi.value, (newValue) => {
+    if (newValue.length) {
+        setTimeout(() => {
+            errosApi.value = [];
+        }, 5000);
+    }
 });
 
 function submitForm() {
@@ -44,11 +58,17 @@ function submitForm() {
 }
 </script>
 <template>
-    <div class="fixed top-[100px] right-5 flex flex-col z-50">
-        <Alert type="success" message="Cadastro realizado com sucesso!" id="1"/>
-        <Alert type="danger" message="Erro ao cadastrar" />
+    <div class="fixed top-[120px] right-5 flex flex-col z-50">
+        <template v-for="error in errosApi">
+            <Alert id="1" :type="error.type" :message="error.message" />
+            <template v-if="error.erros">
+                <template v-for="erro in error.erros">
+                    <Alert id="1" :type="error.type" :message="erro.message" />
+                </template>
+            </template>
+        </template>
     </div>
-    <form class="form" @submit.prevent="submitForm">
+    <form class="form" @submit.prevent="submitForm" @responseApi="showAlerts">
         <h2>Cadastre seu negócio</h2>
         <div class="form-group">
             <label for="name">Nome Completo</label>
