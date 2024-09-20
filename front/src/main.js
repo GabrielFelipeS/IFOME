@@ -9,6 +9,9 @@ import router from './router'
 import { OhVueIcon, addIcons } from "oh-vue-icons";
 import * as FaIcons from "oh-vue-icons/icons/fa";
 
+import ToastPlugin from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-bootstrap.css';
+
 const Fa = Object.values({ ...FaIcons });
 addIcons(...Fa);
 
@@ -16,6 +19,7 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+app.use(ToastPlugin)
 
 app.component("v-icon", OhVueIcon);
 
