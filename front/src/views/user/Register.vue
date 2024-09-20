@@ -55,6 +55,7 @@ const sendForm = () => {
 	let [day, month, year] = formData.value.dateOfBirth.split('/').map(String);
 	let date = year + '-' + month + '-' + day;
 	let data = {
+		"name": formData.value.name,
 		"email": formData.value.email,
 		"password": formData.value.password,
 		"confirmationPassword": formData.value.passwordConfirmation,
