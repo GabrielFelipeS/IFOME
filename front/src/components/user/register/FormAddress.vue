@@ -128,7 +128,6 @@ const validateForm = () => {
 const sendSubmit = () => {
 	if (validateForm()) {
 		emit('submit-form');
-		emit('next-step');
 	}
 }
 
