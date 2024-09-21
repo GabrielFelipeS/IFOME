@@ -48,4 +48,9 @@ public class ClientController {
         ApiResponse apiResponse = new ApiResponse("sucess", loginResponse, "Cliente logado com sucesso");
         return ResponseEntity.ok(apiResponse);
     }
+
+    @PostMapping("/forgot-password")
+    public void forgotPassword() {
+
+    }
 }
