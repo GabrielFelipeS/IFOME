@@ -245,4 +245,11 @@ public class ClienteControllerIT {
         assertThat(countOfInvalidFields).isEqualTo(1);
     }
 
+    @Test
+    public void shouldSendEmailResetPassword() {
+       ResponseEntity<Void> response = restTemplate.postForEntity("/api/auth/client/forgot-password", null, Void.class);
+
+       assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
 }
