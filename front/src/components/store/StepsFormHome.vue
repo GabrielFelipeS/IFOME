@@ -709,7 +709,7 @@ const returnSteps = () => {
         }
 
         p {
-            @apply text-lg text-gray-500 mb-5 font-bold;
+            @apply text-lg text-gray-500 mb-5 font-semibold;
         }
 
         .checkform-payment {
