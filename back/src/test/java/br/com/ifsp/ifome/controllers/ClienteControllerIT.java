@@ -2,12 +2,17 @@ package br.com.ifsp.ifome.controllers;
 
 
 import br.com.ifsp.ifome.dto.request.AddressRequest;
-import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
+import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.entities.Address;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.ServerSetupTest;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +22,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @WithMockUser
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ClienteControllerIT {
 
@@ -246,10 +254,52 @@ public class ClienteControllerIT {
     }
 
     @Test
-    public void shouldSendEmailResetPassword() {
-       ResponseEntity<Void> response = restTemplate.postForEntity("/api/auth/client/forgot-password", null, Void.class);
+    public void shouldSendEmailResetPassword() throws MessagingException, IOException {
+        GreenMail greenMail = new GreenMail(ServerSetupTest.SMTP);
+        greenMail.setUser("teste.ifome@gmail.com", "teste");
+        greenMail.setUser("user1@gmail.com", "test@example.com");
+        greenMail.start();
 
-       assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/forgot-password", "user1@gmail.com", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+
+        assertThat(receivedMessages.length).isEqualTo(1);
+
+        Message message = receivedMessages[0];
+
+        assertThat(message.getAllRecipients()[0].toString()).isEqualTo("user1@gmail.com");
+        assertThat(message.getSubject()).isEqualTo("Redefinição de senha da conta do IFOME");
+
+        String text = message.getContent().toString();
+
+
+        greenMail.stop();
     }
 
+    @Test
+    public void shouldNotSendEmailResetPasswordWithUserNotExists() throws MessagingException {
+        GreenMail greenMail = new GreenMail(ServerSetupTest.SMTP);
+        greenMail.setUser("teste.ifome@gmail.com", "teste");
+        greenMail.setUser("test@example.com", "test@example.com");
+        greenMail.start();
+
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/forgot-password", "test@example.com", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+
+        assertThat(receivedMessages.length).isEqualTo(0);
+        greenMail.stop();
+    }
+
+    @Test
+    public void shouldResetPassword() {
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/change-password", "user1@gmail.com", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
 }
