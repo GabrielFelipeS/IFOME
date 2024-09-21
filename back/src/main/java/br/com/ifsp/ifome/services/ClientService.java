@@ -64,7 +64,7 @@ public class ClientService {
 
         String token = loginService.generateTokenForgotPassword(client.get());
         System.out.println(token);
-        String body = String.format("link: %s/%s", request.getServerName(), token);
+        String body = String.format("link: http://%s:%d/api/auth/client/change_password?token=%s", request.getServerName(), request.getServerPort(), token);
 
         emailService.sendEmail(email,
             "Redefinição de senha da conta do IFOME",

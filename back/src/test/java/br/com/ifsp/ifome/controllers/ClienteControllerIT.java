@@ -260,7 +260,7 @@ public class ClienteControllerIT {
         greenMail.setUser("user1@gmail.com", "test@example.com");
         greenMail.start();
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/forgot-password", "user1@gmail.com", String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/forgot_password", "user1@gmail.com", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -286,7 +286,7 @@ public class ClienteControllerIT {
         greenMail.setUser("test@example.com", "test@example.com");
         greenMail.start();
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/forgot-password", "test@example.com", String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/forgot_password", "test@example.com", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
