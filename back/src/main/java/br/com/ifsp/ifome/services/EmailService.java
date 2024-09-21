@@ -11,8 +11,8 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    @Value("${spring.mail.username}")
-    private String from;
+    //@Value("${spring.mail.username}")
+    private String from = "teste.ifome@gmail.com";
 
     public void sendEmail(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
