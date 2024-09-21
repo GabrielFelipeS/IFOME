@@ -36,7 +36,7 @@ watch(() => props.currentStep, (newStep) => {
 
 <style lang="scss" scoped>
 .headerSteps {
-    @apply w-full h-[100px] bg-tertiary flex flex-row items-center rounded-b-3xl font-default text-lg border drop-shadow-md fixed top-0 z-50;
+    @apply w-full h-[100px] bg-white flex flex-row items-center rounded-b-3xl font-default text-lg border drop-shadow-md fixed top-0 z-50;
 
     .img {
         @apply w-[100px] h-[100px] ml-[-1.25rem];
