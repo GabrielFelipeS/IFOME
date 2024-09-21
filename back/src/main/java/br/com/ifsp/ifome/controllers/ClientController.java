@@ -3,12 +3,15 @@ package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.docs.DocsCreateClient;
 import br.com.ifsp.ifome.dto.ApiResponse;
-import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
-import br.com.ifsp.ifome.dto.response.LoginResponse;
+import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.response.ClientResponse;
+import br.com.ifsp.ifome.dto.response.LoginResponse;
 import br.com.ifsp.ifome.services.ClientService;
+import br.com.ifsp.ifome.services.EmailService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +27,7 @@ import java.net.URI;
 public class ClientController {
     private final ClientService clientService;
 
-    public ClientController(ClientService clientService) {
+    public ClientController(ClientService clientService, EmailService emailService) {
         this.clientService = clientService;
     }
 
@@ -50,7 +53,13 @@ public class ClientController {
     }
 
     @PostMapping("/forgot-password")
-    public void forgotPassword() {
+    public void forgotPassword(HttpServletRequest request, @RequestBody @Valid @Email String email) throws Exception {
+        System.err.println(request.getServerName());
+        clientService.forgotPassword(request, email);
+    }
+
+    @PostMapping("/change-password")
+    public void changePassword(@RequestBody @Valid @Email String email) throws Exception {
 
     }
 }
