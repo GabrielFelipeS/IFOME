@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class EmailServiceTest {
+public class EmailServiceIT {
     private GreenMail greenMail;
 
     @Autowired
