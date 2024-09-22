@@ -62,15 +62,5 @@ public class RestaurantController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @PostMapping("forgot-password")
-    public void forgotPassword(HttpServletRequest request, @RequestBody @Valid @Email String email) throws Exception{
-        System.err.println(request.getServerName());
-        restaurantService.forgotPassword(request, email);
-    }
-
-    @PostMapping("/change-password")
-    public void changePassword(@RequestBody @Valid @Email String email) throws Exception{
-
-    }
 
 }
