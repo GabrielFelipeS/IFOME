@@ -13,7 +13,7 @@ import java.util.List;
 
 @ConfirmartionPasswordEqualsPassword(message = "As senhas não coincidem")
 public record ClientRequest (
-        @NotBlank
+        @NotBlank(message = "Nome é obrigatório")
         String name,
 
         @Email(message = "E-mail inválido")
@@ -25,7 +25,7 @@ public record ClientRequest (
         @NotBlank(message = "Senha é obrigatório")
         String password,
 
-        @NotBlank
+        @NotBlank(message = "Confirmação da senha é obrigatório")
         String confirmationPassword,
 
         @Past(message = "Data de nascimento deve estar no passado")
@@ -37,10 +37,10 @@ public record ClientRequest (
         @NotBlank(message = "CPF é obrigatório")
         String cpf,
 
-        @NotBlank
+        @NotBlank(message = "Telefone é obrigatório")
         @Pattern(regexp = "^\\([1-9]{2}\\) (?:[2-8]|9[0-9])[0-9]{3}-[0-9]{4}$")
         String phone,
 
-        @NotEmpty
+        @NotEmpty(message = "É necessário ter pelo menos um endereço")
         List<@Valid AddressRequest> address
 ) { }

@@ -17,17 +17,19 @@ import java.util.Optional;
 
 @Service
 public class RestaurantService {
+    private final TokenService tokenService;
+    private final LoginService loginService;
     private final RestaurantRepository restaurantRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ValidatorService<RestaurantRequest> validatorService;
-    private final TokenService tokenService;
 
     public RestaurantService(TokenService tokenService, RestaurantRepository restaurantRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-                             List<Validator<RestaurantRequest>> validators) {
+                             List<Validator<RestaurantRequest>> validators, LoginService loginService) {
         this.tokenService = tokenService;
         this.restaurantRepository = restaurantRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.validatorService = new ValidatorService<>(validators);
+        this.loginService = loginService;
     }
     public RestaurantResponse create(RestaurantRequest restaurantRequest) throws MethodArgumentNotValidException {
         validatorService.isValid(restaurantRequest);
@@ -39,9 +41,8 @@ public class RestaurantService {
     public RestaurantLoginResponse login(LoginRequest loginRequest) {
         System.out.println(restaurantRepository.existsByEmailIgnoreCase(loginRequest.email()));
         Optional<Restaurant> restaurant = restaurantRepository.findByEmail(loginRequest.email());
-        System.err.println(loginRequest.email());
-        System.err.println(restaurant.isPresent());
-        tokenService.isLoginIncorrect(restaurant, loginRequest.password(), bCryptPasswordEncoder);
+
+        loginService.isLoginIncorrect(restaurant, loginRequest.password(), bCryptPasswordEncoder);
 
         var jwtValue = tokenService.generateToken(restaurant.orElseThrow().getEmail());
 
