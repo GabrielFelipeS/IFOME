@@ -2,12 +2,17 @@ package br.com.ifsp.ifome.controllers;
 
 
 import br.com.ifsp.ifome.dto.request.AddressRequest;
-import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
+import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.entities.Address;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.ServerSetupTest;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +22,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @WithMockUser
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ClienteControllerIT {
 
@@ -74,7 +82,7 @@ public class ClienteControllerIT {
             LocalDate.now().minusYears(18), "48608678071", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
-                "12", "details")));
+                "12", "casa","details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -104,7 +112,31 @@ public class ClienteControllerIT {
         assertThat(addressJson.getComplement()).isEqualTo("complement");
         assertThat(addressJson.getNumber()).isEqualTo("12");
         assertThat(addressJson.getComplement()).isEqualTo("complement");
+        assertThat(addressJson.getTypeResidence()).isEqualTo("casa");
     }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("should be return error with cpf already registred")
+    public void shouldReturnErrorWithCpfAlreadyRegistred() throws JsonProcessingException {
+        ClientRequest client = new ClientRequest("Nome completo", "teste@teste.com", "@Password1", "@Password1",
+            LocalDate.now().minusYears(18), "528.003.140-28", "(11) 99248-1491",
+            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                "address", "complement",
+                "12", "casa","details")));
+
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        Number countOfInvalidFields = documentContext.read("$.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+
+        List<String> message = documentContext.read("$.cpf");
+
+        assertThat(message).containsExactlyInAnyOrder("Cpf já cadastrado");
+    }
+
 
     @Test
     @DirtiesContext
@@ -113,7 +145,7 @@ public class ClienteControllerIT {
         ClientRequest client = new ClientRequest("Nome completo","user1@gmail.com", "@Password1", "@Password1",
             LocalDate.now().minusYears(14), "019.056.440-78", "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
             "address",  "complement",
-             "12", "details")));
+             "12", "condominio","details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -134,7 +166,7 @@ public class ClienteControllerIT {
         ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", " ", " ",
             LocalDate.now().minusYears(18), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address",  "complement",
-            "12", "details")));
+            "12", "condomínio","details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -162,7 +194,7 @@ public class ClienteControllerIT {
         ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", "@Teste123", "@Teste123",
             LocalDate.now().plusDays(1), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address",  "complement",
-             "12", "details")));
+             "12", "condominio","details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -175,7 +207,7 @@ public class ClienteControllerIT {
         assertThat(dateOfBirth)
             .containsExactlyInAnyOrder(
                 "Data de nascimento deve estar no passado",
-                "É necessário ter pelo menos 13 anos"
+               "Para cadastro no sistema, é necessário ter pelo menos 13 anos de idade."
             );
     }
 
@@ -186,7 +218,7 @@ public class ClienteControllerIT {
         ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", "@Teste123", "@Teste123",
             LocalDate.now().minusYears(18), "cpf",  "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address", "complement",
-            "12", "details")));
+            "12", "condominio","details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -210,7 +242,7 @@ public class ClienteControllerIT {
             LocalDate.now().minusYears(18), "48608678071", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address",  "complement",
-                 "12", "details")));
+                 "12", "condominio","details")));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -221,4 +253,53 @@ public class ClienteControllerIT {
         assertThat(countOfInvalidFields).isEqualTo(1);
     }
 
+    @Test
+    public void shouldSendEmailResetPassword() throws MessagingException, IOException {
+        GreenMail greenMail = new GreenMail(ServerSetupTest.SMTP);
+        greenMail.setUser("teste.ifome@gmail.com", "teste");
+        greenMail.setUser("user1@gmail.com", "test@example.com");
+        greenMail.start();
+
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/forgot-password", "user1@gmail.com", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+
+        assertThat(receivedMessages.length).isEqualTo(1);
+
+        Message message = receivedMessages[0];
+
+        assertThat(message.getAllRecipients()[0].toString()).isEqualTo("user1@gmail.com");
+        assertThat(message.getSubject()).isEqualTo("Redefinição de senha da conta do IFOME");
+
+        String text = message.getContent().toString();
+
+
+        greenMail.stop();
+    }
+
+    @Test
+    public void shouldNotSendEmailResetPasswordWithUserNotExists() throws MessagingException {
+        GreenMail greenMail = new GreenMail(ServerSetupTest.SMTP);
+        greenMail.setUser("teste.ifome@gmail.com", "teste");
+        greenMail.setUser("test@example.com", "test@example.com");
+        greenMail.start();
+
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/forgot-password", "test@example.com", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+
+        assertThat(receivedMessages.length).isEqualTo(0);
+        greenMail.stop();
+    }
+
+    @Test
+    public void shouldResetPassword() {
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/change-password", "user1@gmail.com", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
 }

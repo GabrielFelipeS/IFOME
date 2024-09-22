@@ -5,31 +5,36 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 public record AddressRequest(
-    @NotBlank
+
     @CEP
+    @NotBlank(message = "Cep é obrigatório")
     String cep,
 
-    @NotBlank
+    @NotBlank(message = "Nome do endereço é obrigatório")
     String nameAddress,
 
-    @NotBlank
+    @NotBlank(message = "Bairro é obrigatório")
     String neighborhood,
 
-    @NotBlank
+    @NotBlank(message = "Cidade é obrigatório")
     String city,
 
-    @NotBlank
+    @NotBlank(message = "Estado é obrigatório")
     String state,
 
-    @NotBlank
+    @NotBlank(message = "Address é obrigatório")
     String address,
 
-    @NotBlank
+    @NotBlank(message = "Complemento é obrigatório")
     String complement,
 
-    @NotBlank
+    @NotBlank(message = "Número é obrigatório")
     @Pattern(regexp = "\\d{1,}")
     String number,
+
+    @NotBlank(message = "Tipo de residência é obrigatório")
+    @Pattern(regexp = "(casa|apartamento|condom[ií]nio)")
+    String typeResidence,
 
     String details
 ) { }

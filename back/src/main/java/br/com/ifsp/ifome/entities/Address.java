@@ -13,11 +13,12 @@ public class Address {
     private Integer id;
     private String cep;
     private String neighborhood;
-    private  String city;
+    private String city;
     private String state;
     private String address;
     private String number;
     private String complement;
+    private String typeResidence;
 
     public Address(AddressRequest addressRequest) {
         this.cep = addressRequest.cep();
@@ -27,10 +28,28 @@ public class Address {
         this.address = addressRequest.address();
         this.complement = addressRequest.complement();
         this.number = addressRequest.number();
+        this.typeResidence = addressRequest.typeResidence();
     }
 
     public Address() {
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getTypeResidence() {
+        return typeResidence;
+    }
+
+    public void setTypeResidence(String typeResidence) {
+        this.typeResidence = typeResidence;
+    }
+
     public String getCep() {
         return cep;
     }

@@ -3,6 +3,7 @@ package br.com.ifsp.ifome.controllers;
 import br.com.ifsp.ifome.dto.request.*;
 import br.com.ifsp.ifome.entities.Address;
 import br.com.ifsp.ifome.entities.OpeningHours;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -76,7 +78,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -137,9 +139,59 @@ public class RestaurantControllerIT {
         assertThat(addressJson.getComplement()).isEqualTo("complement");
         assertThat(addressJson.getNumber()).isEqualTo("12");
         assertThat(addressJson.getComplement()).isEqualTo("complement");
+        assertThat(addressJson.getTypeResidence()).isEqualTo("condominio");
 
     }
 
+    @Test
+    @DirtiesContext
+    @DisplayName("should be return error with cnpj already registred")
+    public void shouldReturnErrorWithCnpjAlreadyRegistred() throws JsonProcessingException {
+        RestaurantRequest restaurant = new RestaurantRequest(
+            "Nome Restaurante",
+            "email@email.com",
+            "@Senha1",
+            "@Senha1",
+            "58.911.612/0001-16",
+            List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
+                "address", "complement",
+                "12", "condominio","details")),
+            "(11) 1234-5678",
+            "Pizzaria",
+            "Dinheiro, Cartão",
+                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça","11:00", "23:00")),
+
+                "responsavel",
+            "033.197.356-16",
+            "imagem.jpeg",
+            new BankAccountRequest("123", "1255", "4547-7")
+
+        );
+
+        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        System.out.println("File?");
+
+        // Criar o mapa de parâmetros para enviar o objeto e o arquivo
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("restaurant", restaurant);
+        body.add("file", fileResource);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity(
+            "/api/auth/restaurant",
+            body,
+            String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        Number countOfInvalidFields = documentContext.read("$.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+
+        List<String> message = documentContext.read("$.cnpj");
+
+        assertThat(message).containsExactlyInAnyOrder("Cnpj já cadastrado");
+    }
     @Test
     @DirtiesContext
     @DisplayName("should not be possible to create a new restaurant with already registered email")
@@ -152,7 +204,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -197,7 +249,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -250,7 +302,7 @@ public class RestaurantControllerIT {
                 "10.882.594000165",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -297,7 +349,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -344,7 +396,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -385,7 +437,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -426,7 +478,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1"," ", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
