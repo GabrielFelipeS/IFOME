@@ -4,6 +4,7 @@ package br.com.ifsp.ifome.controllers;
 import br.com.ifsp.ifome.docs.DocsCreateClient;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
+import br.com.ifsp.ifome.dto.request.ForgotPasswordRequest;
 import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.response.ClientResponse;
 import br.com.ifsp.ifome.dto.response.LoginResponse;
@@ -14,10 +15,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -52,14 +50,15 @@ public class ClientController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @PostMapping("/forgot-password")
-    public void forgotPassword(HttpServletRequest request, @RequestBody @Valid @Email String email) throws Exception {
+    @PostMapping("/forgot_password")
+    public void forgotPassword(HttpServletRequest request, @RequestBody @Valid ForgotPasswordRequest forgotPasswordRequest) throws Exception {
         System.err.println(request.getServerName());
-        clientService.forgotPassword(request, email);
+        System.out.println(forgotPasswordRequest.email());
+        clientService.forgotPassword(request, forgotPasswordRequest.email());
     }
 
-    @PostMapping("/change-password")
-    public void changePassword(@RequestBody @Valid @Email String email) throws Exception {
-
+    @GetMapping("/change_password")
+    public void changePassword(@RequestParam("token") String token) throws Exception {
+        System.err.println(token);
     }
 }
