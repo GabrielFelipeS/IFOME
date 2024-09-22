@@ -67,6 +67,37 @@ const password = ref('');
 const confirmPassword = ref('');
 const details = ref('');
 
+
+//mockar dados
+
+// email.value = 'teste@teste.com';
+// cep.value = '01310-100';
+// state.value = 'SP';
+// city.value = 'São Paulo';
+// address.value = 'Avenida Paulista';
+// number.value = '1000';
+// complement.value = 'Apto 100';
+// name.value = 'João da Silva';
+// cpf.value = '123.456.789-00';
+// cnpj.value = '12.345.678/0001-00';
+// nameStore.value = 'Restaurante do João';
+// phone.value = '(11) 99999-9999';
+// neighborhood.value = 'Bela Vista';
+// specialty.value = 'Pizza';
+// opening.value = '08:00';
+// closing.value = '18:00';
+// daysSelected.value = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+// paymentMethods.value = ['dinner', 'credit', 'pix'];
+// bank.value = '001';
+// agency.value = '1234';
+// account.value = '12345';
+// digit.value = '1';
+// password.value = 'Teste@123';
+// confirmPassword.value = 'Teste@123';
+// details.value = 'Detalhes do restaurante';
+// stepsActive.value = true;
+
+
 watch(specialty, (value) => {
     if (value === 'Outro') {
         document.querySelector('#other').closest('.form-group').classList.remove('hidden');
@@ -385,27 +416,20 @@ async function submitForm() {
     formData.append('restaurantImages', selectedFiles.value[0]);
     formData.append('bankAccount', JSON.stringify(bankAccount));
 
-    console.log(formData);
-    console.log(selectedFiles.value[0]);
-
-    let response = await axios.post('http://127.0.0.1:8000/api/store/create', formData, {
+    await axios.post('http://127.0.0.1:8000/api/store/create', formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }
+    }).then((response) => {
+        if (response.status === 201) {
+            emit('responseApi', response.data);
+            nextStep();
+        } else {
+            emit('responseApi', response.data);
+        }
+    }).catch((error) => {
+        emit('responseApi', error.response.data);
     });
-
-    if (response.status === 201) {
-        emit('responseApi', [type => "success", message => $response.message]);
-        nextStep();
-    }
-
-    if (response.status === 400) {
-        emit('responseApi', [type => "error", message => $response.message , errors => $response.errors]);
-    }
-
-    if(response.status === 500){
-        emit('responseApi', [type => "error", message => "Erro interno no servidor"]);
-    }
 }
 
 const returnSteps = () => {
@@ -423,7 +447,8 @@ const returnSteps = () => {
             <p>Preencha as informações de endereço da sua loja.</p>
             <div class="form-group">
                 <label for="cep">CEP</label>
-                <MaskInput type="text" id="cep" name="cep" v-model="cep" :value="cep" placeholder="CEP" mask="#####-###" required />
+                <MaskInput type="text" id="cep" name="cep" v-model="cep" :value="cep" placeholder="CEP" mask="#####-###"
+                    required />
             </div>
             <div class="mid">
                 <div class="form-group">
@@ -437,7 +462,8 @@ const returnSteps = () => {
             </div>
             <div class="form-group">
                 <label for="neighborhood">Bairro</label>
-                <input type="text" id="neighborhood" name="neighborhood" v-model="neighborhood" placeholder="Bairro" required />
+                <input type="text" id="neighborhood" name="neighborhood" v-model="neighborhood" placeholder="Bairro"
+                    required />
             </div>
             <div class="form-group">
                 <label for="address">Endereço</label>
@@ -445,7 +471,8 @@ const returnSteps = () => {
             </div>
             <div class="form-group">
                 <label for="number">Número</label>
-                <MaskInput type="text" id="number" name="number" v-model="number" :value="number" placeholder="Número" mask="######" required />
+                <MaskInput type="text" id="number" name="number" v-model="number" :value="number" placeholder="Número"
+                    mask="######" required />
             </div>
             <div class="form-group">
                 <label for="complement">Complemento</label>
@@ -455,7 +482,8 @@ const returnSteps = () => {
                 <label for="details">Detalhes</label>
                 <textarea id="details" name="details" v-model="details" placeholder="Detalhes"></textarea>
             </div>
-            <button type="submit" class="btn-text" :class="stepCompleted ? '' : 'disable'" :disabled="!stepCompleted" @click="nextStep">Próximo</button>
+            <button type="submit" class="btn-text" :class="stepCompleted ? '' : 'disable'" :disabled="!stepCompleted"
+                @click="nextStep">Próximo</button>
         </div>
 
         <div class="step" v-if="currentStep === 2">
@@ -468,9 +496,11 @@ const returnSteps = () => {
             </div>
             <div class="form-group">
                 <label for="cpf">CPF</label>
-                <MaskInput type="text" id="cpf" v-model="cpf" name="cpf" :value="cpf" placeholder="CPF" mask="###.###.###-##" required />
+                <MaskInput type="text" id="cpf" v-model="cpf" name="cpf" :value="cpf" placeholder="CPF"
+                    mask="###.###.###-##" required />
             </div>
-            <button type="submit" class="btn-primary" :class="step2Completed ? '' : 'disable'" :disabled="!step2Completed" @click="nextStep">Próximo</button>
+            <button type="submit" class="btn-primary" :class="step2Completed ? '' : 'disable'"
+                :disabled="!step2Completed" @click="nextStep">Próximo</button>
         </div>
 
         <div class="step" v-if="currentStep === 3">
@@ -478,17 +508,20 @@ const returnSteps = () => {
             <p>Preencha com os dados do seu negócio</p>
             <div class="form-group">
                 <label for="cnpj">CNPJ</label>
-                <MaskInput type="text" id="cnpj" v-model="cnpj" name="cnpj" :value="cnpj" placeholder="CNPJ" mask="##.###.###/####-##" required />
+                <MaskInput type="text" id="cnpj" v-model="cnpj" name="cnpj" :value="cnpj" placeholder="CNPJ"
+                    mask="##.###.###/####-##" required />
                 <p v-if="step3Erros.cnpj">** Digite um valor válido **</p>
             </div>
             <div class="form-group">
                 <label for="nameStore">Nome do Restaurante (como aparecerá no app)</label>
-                <input type="text" id="nameStore" v-model="nameStore" name="nameStore" placeholder="Nome da loja" required />
+                <input type="text" id="nameStore" v-model="nameStore" name="nameStore" placeholder="Nome da loja"
+                    required />
                 <p v-if="step3Erros.nameStore">** Digite um nome valido ( Minimo 3 letras ) **</p>
             </div>
             <div class="form-group">
                 <label for="phone">Telefone do Restaurante</label>
-                <MaskInput type="text" id="phone" v-model="phone" :value="phone" name="phone" placeholder="Telefone" mask="(##) #####-####" required />
+                <MaskInput type="text" id="phone" v-model="phone" :value="phone" name="phone" placeholder="Telefone"
+                    mask="(##) #####-####" required />
                 <p v-if="step3Erros.phone">** Digite um valor válido **</p>
             </div>
             <div class="mid">
@@ -527,14 +560,16 @@ const returnSteps = () => {
                 <label for="days">Dias de funcionamento</label>
                 <div class="mid-check">
                     <div class="checkform" v-for="day in days">
-                        <input type="checkbox" id="dayselect" name="dayselect" v-model="daysSelected" :value="day.value" />
+                        <input type="checkbox" id="dayselect" name="dayselect" v-model="daysSelected"
+                            :value="day.value" />
                         <label for="sunday">{{ day.name }}</label>
                     </div>
                 </div>
                 <p v-if="step3Erros.daysSelected">** Selecione pelo menos um dia **</p>
             </div>
 
-            <button type="submit" class="btn-text" :class="step3Completed ? '' : 'disable'" :disabled="!step3Completed" @click="nextStep">Próximo</button>
+            <button type="submit" class="btn-text" :class="step3Completed ? '' : 'disable'" :disabled="!step3Completed"
+                @click="nextStep">Próximo</button>
         </div>
         <div class="step" v-if="currentStep === 4">
             <h2>Fotos da loja</h2>
@@ -545,7 +580,8 @@ const returnSteps = () => {
                 @dragover.prevent="dragOver" @dragleave.prevent="dragLeave" @drop.prevent="drop">
                 <input type="file" id="photo" name="photo" class="hidden" @change="handleFileChange" />
                 <label for="photo" class="cursor-pointer flex flex-col items-center justify-center">
-                    <svg data-name="Livello 1" id="Livello_1" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" width="30" height="30" class="mb-2">
+                    <svg data-name="Livello 1" id="Livello_1" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg"
+                        width="30" height="30" class="mb-2">
                         <title />
                         <path
                             d="M37.09,32.91A3,3,0,0,0,39.21,32L61,10.24V91a3,3,0,0,0,6,0V10.24L88.79,32A3,3,0,0,0,93,27.79L66.12.88A3,3,0,0,0,65.66.5L65.43.38a3,3,0,0,0-.29-.15,3,3,0,0,0-.31-.1L64.59.06a3,3,0,0,0-1.18,0l-.25.08a2.93,2.93,0,0,0-.31.1,3,3,0,0,0-.29.15L62.34.5a3,3,0,0,0-.46.38L35,27.79a3,3,0,0,0,2.12,5.12Z" />
@@ -554,7 +590,8 @@ const returnSteps = () => {
                     </svg>
 
                     <span>Arraste e solte sua foto aqui</span>
-                    <span class="text-sm text-gray-400">ou <span class="text-blue-500">clique aqui</span> e selecione</span>
+                    <span class="text-sm text-gray-400">ou <span class="text-blue-500">clique aqui</span> e
+                        selecione</span>
                 </label>
             </div>
             <p v-if="step4Erros.photos">** Selecione pelo menos uma foto **</p>
@@ -564,13 +601,15 @@ const returnSteps = () => {
                 <div v-for="(file, index) in selectedFiles" :key="index"
                     class="flex items-center justify-between border-gray-300 border-dashed border-2 rounded-3xl font-thin pl-5">
                     <span class="truncate">{{ file.name }}</span>
-                    <button class="bg-red-500 text-white w-[30%] md:w-[10%] h-[50px] py-2 rounded-r-3xl" @click="removeFile">
+                    <button class="bg-red-500 text-white w-[30%] md:w-[10%] h-[50px] py-2 rounded-r-3xl"
+                        @click="removeFile">
                         X
                     </button>
                 </div>
             </div>
 
-            <button type="submit" class="btn-primary" :class="step4Completed ? '' : 'disable'" :disabled="!step4Completed" @click="nextStep">Próximo</button>
+            <button type="submit" class="btn-primary" :class="step4Completed ? '' : 'disable'"
+                :disabled="!step4Completed" @click="nextStep">Próximo</button>
         </div>
 
         <div class="step" v-if="currentStep === 5">
@@ -618,19 +657,23 @@ const returnSteps = () => {
             </div>
             <div class="form-group">
                 <label for="agency">Agência</label>
-                <MaskInput type="text" id="agency" v-model="agency" name="agency" :value="agency" placeholder="Agência" mask="####" required />
+                <MaskInput type="text" id="agency" v-model="agency" name="agency" :value="agency" placeholder="Agência"
+                    mask="####" required />
             </div>
             <div class="mid-payment">
                 <div class="form-group">
                     <label for="account">Conta</label>
-                    <MaskInput type="text" id="account" v-model="account" :value="account" name="account" placeholder="Conta" mask="####" required />
+                    <MaskInput type="text" id="account" v-model="account" :value="account" name="account"
+                        placeholder="Conta" mask="####" required />
                 </div>
                 <div class="form-group dig">
                     <label for="digit">Dígito</label>
-                    <MaskInput type="text" id="digit" v-model="digit" name="digit" :value="digit" placeholder="Dígito" mask="#" required />
+                    <MaskInput type="text" id="digit" v-model="digit" name="digit" :value="digit" placeholder="Dígito"
+                        mask="#" required />
                 </div>
             </div>
-            <button type="submit" class="btn-text" :class="step5Completed ? '' : 'disable'" :disabled="!step5Completed" @click="nextStep">Próximo</button>
+            <button type="submit" class="btn-text" :class="step5Completed ? '' : 'disable'" :disabled="!step5Completed"
+                @click="nextStep">Próximo</button>
 
         </div>
         <div class="step" v-if="currentStep === 6">
@@ -639,15 +682,18 @@ const returnSteps = () => {
                 <label for="password">Senha</label>
                 <input type="password" id="password" name="password" placeholder="Senha" v-model="password" required />
                 <span @click="showPassword" v-if="password.length > 0">Mostrar senha</span>
-                <p v-if="passwordErrors.password">** A senha deve conter no mínimo 8 caracteres, uma letra maiúscula, uma letra minúscula e um número **</p>
+                <p v-if="passwordErrors.password">** A senha deve conter no mínimo 8 caracteres, uma letra maiúscula,
+                    uma letra minúscula e um número **</p>
             </div>
             <div class="form-group">
                 <label for="confirmPassword">Confirmar Senha</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" v-model="confirmPassword" placeholder="Confirmar Senha" required />
+                <input type="password" id="confirmPassword" name="confirmPassword" v-model="confirmPassword"
+                    placeholder="Confirmar Senha" required />
                 <span @click="showConfirmation" v-if="confirmPassword.length > 0">Mostrar Confirmação</span>
                 <p v-if="passwordErrors.confirmPassword">** As senhas não conferem **</p>
             </div>
-            <button type="submit" class="btn-primary" :class="step6Completed ? '' : 'disable'" :disabled="!step6Completed" @click="submitForm">Concluir</button>
+            <button type="submit" class="btn-primary" :class="step6Completed ? '' : 'disable'"
+                :disabled="!step6Completed" @click="submitForm">Concluir</button>
         </div>
 
         <div class="step" v-if="currentStep === 7">
