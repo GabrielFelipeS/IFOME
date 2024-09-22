@@ -31,12 +31,13 @@ import java.lang.annotation.Target;
                       "email" : "email@email.com",
                       "password" : "@Senha1",
                       "confirmationPassword" : "@Senha1",
-                      "dateOfBirth : "1999-02-01",
+                      "dateOfBirth : 1999-02-01,
                       "typeOfVehicle" : "Carro",
                       "plate" : "DIT-4987"
                       "telephone" : "(11) 1234-5678",
                       "cnhNumber" : "document.jpg"
-                      "vehicleDocument" : "DOCUMENTO DO VEICULO",
+                      "cnhValidity: 2028-1-2,
+                      "vehicleDocument" : "111456789",
                       "address": [
                         {
                           "nameAddress": "casa principal",
@@ -81,7 +82,7 @@ import java.lang.annotation.Target;
                         "confirmationPassword": "password",
                         "bankAccount": [],
                         "address": []
-                        "plate": "DIT-4987"
+                        "plate": "DIT4987"
                     }
                     """
                         )
