@@ -3,6 +3,7 @@ package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.dto.request.AddressRequest;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
+import br.com.ifsp.ifome.dto.request.ForgotPasswordRequest;
 import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.entities.Address;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -259,12 +260,14 @@ public class ClienteControllerIT {
         greenMail.setUser("teste.ifome@gmail.com", "teste");
         greenMail.setUser("user1@gmail.com", "test@example.com");
         greenMail.start();
-
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/forgot_password", "user1@gmail.com", String.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest("user1@gmail.com");
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/forgot_password", forgotPasswordRequest, String.class);
 
         MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+
+        greenMail.stop();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         assertThat(receivedMessages.length).isEqualTo(1);
 
@@ -274,9 +277,6 @@ public class ClienteControllerIT {
         assertThat(message.getSubject()).isEqualTo("Redefinição de senha da conta do IFOME");
 
         String text = message.getContent().toString();
-
-
-        greenMail.stop();
     }
 
     @Test
@@ -286,19 +286,21 @@ public class ClienteControllerIT {
         greenMail.setUser("test@example.com", "test@example.com");
         greenMail.start();
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/forgot_password", "test@example.com", String.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest("test@example.com");
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/forgot_password", forgotPasswordRequest, String.class);
 
         MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
 
-        assertThat(receivedMessages.length).isEqualTo(0);
         greenMail.stop();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        assertThat(receivedMessages.length).isEqualTo(0);
     }
 
     @Test
     public void shouldResetPassword() {
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/change-password", "user1@gmail.com", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("/api/auth/client/change_password?token=teste",  String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
