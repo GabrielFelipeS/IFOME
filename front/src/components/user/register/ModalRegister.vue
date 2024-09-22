@@ -1,6 +1,6 @@
 <script setup>
 import Button from "@/components/Button.vue";
-import Modal from "@/components/user/register/Modal.vue";
+import Modal from "@/components/user/Modal.vue";
 </script>
 
 <template>

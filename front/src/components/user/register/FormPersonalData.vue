@@ -1,5 +1,5 @@
 <script setup>
-import Modal from "@/components/user/register/Modal.vue";
+import Modal from "@/components/user/Modal.vue";
 import Button from "@/components/Button.vue";
 import { MaskInput } from "vue-3-mask";
 import {ref, watch} from "vue";

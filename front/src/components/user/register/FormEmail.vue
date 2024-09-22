@@ -1,5 +1,5 @@
 <script setup>
-import Modal from "@/components/user/register/Modal.vue";
+import Modal from "@/components/user/Modal.vue";
 import Button from "@/components/Button.vue";
 import {onMounted, ref} from "vue";
 
