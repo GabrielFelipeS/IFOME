@@ -186,10 +186,10 @@ public class RestaurantControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> message = documentContext.read("$.cnpj");
+        List<String> message = documentContext.read("$.errors.cnpj");
 
         assertThat(message).containsExactlyInAnyOrder("Cnpj já cadastrado");
     }
