@@ -3,9 +3,6 @@ package br.com.ifsp.ifome.dto.response;
 import br.com.ifsp.ifome.entities.Address;
 import br.com.ifsp.ifome.entities.BankAccount;
 import br.com.ifsp.ifome.entities.DeliveryPerson;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,8 +14,10 @@ public record DeliveryPersonResponse(
         String email,
         LocalDate dateOfBirth,
         String typeOfVehicle,
+        String plate,
         String telephone,
-        String cnh,
+        String cnhNumber,
+        LocalDate cnhValidity,
         String vehicleDocument,
         List<Address> address,
         BankAccount bankAccount
@@ -31,8 +30,10 @@ public record DeliveryPersonResponse(
         deliveryPerson.getEmail(),
         deliveryPerson.getDateOfBirth(),
         deliveryPerson.getTypeOfVehicle(),
+        deliveryPerson.getPlate(),
         deliveryPerson.getTelephone(),
-        deliveryPerson.getCnh(),
+        deliveryPerson.getCnhNumber(),
+        deliveryPerson.getCnhValidity(),
         deliveryPerson.getVehicleDocument(),
         deliveryPerson.getAddress(),
         deliveryPerson.getBankAccount());

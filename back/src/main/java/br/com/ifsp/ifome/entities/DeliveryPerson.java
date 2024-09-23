@@ -25,8 +25,10 @@ public class DeliveryPerson  implements PasswordPolicy {
     private String password;
     private LocalDate dateOfBirth;
     private String typeOfVehicle;
+    private String plate;
     private String telephone;
-    private String cnh;
+    private String cnhNumber;
+    private LocalDate cnhValidity;
     private String vehicleDocument;
     @OneToMany
     @JoinColumn(name = "address", referencedColumnName = "cpf")
@@ -43,8 +45,10 @@ public class DeliveryPerson  implements PasswordPolicy {
         this.password = passwordEncoder.encode(deliveryPersonRequest.password());
         this.dateOfBirth =deliveryPersonRequest.convertDateOfBirth();
         this.typeOfVehicle = deliveryPersonRequest.vehicleDocument();
+        this.plate = deliveryPersonRequest.plate();
         this.telephone = deliveryPersonRequest.telephone();
-        this.cnh = deliveryPersonRequest.cnh();
+        this.cnhNumber = deliveryPersonRequest.cnhNumber();
+        this.cnhValidity = deliveryPersonRequest.cnhValidity();
         this.vehicleDocument = deliveryPersonRequest.vehicleDocument();
         this.address = deliveryPersonRequest.address().stream().map(Address::new).collect(Collectors.toList());
         this.bankAccount = new BankAccount(deliveryPersonRequest.bankAccount());
@@ -54,7 +58,9 @@ public class DeliveryPerson  implements PasswordPolicy {
     public DeliveryPerson(Long id, String name, String cpf, String email, String password,
                           LocalDate dateOfBirth, String typeOfVehicle, String telephone,
                           String cnh, String vehicleDocument, List<Address> address,
-                          BankAccount bankAccount,  PasswordEncoder passwordEncoder) {
+                          BankAccount bankAccount,  PasswordEncoder passwordEncoder) {}
+
+    public DeliveryPerson(Long id, String name, String cpf, String email, String password, LocalDate dateOfBirth, String typeOfVehicle, String plate,String telephone, String cnhNumber, LocalDate cnhValidity, String vehicleDocument, List<Address> address, BankAccount bankAccount, PasswordEncoder passwordEncoder) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
@@ -62,8 +68,10 @@ public class DeliveryPerson  implements PasswordPolicy {
         this.password = passwordEncoder.encode(password);
         this.dateOfBirth = dateOfBirth;
         this.typeOfVehicle = typeOfVehicle;
+        this.plate = plate;
         this.telephone = telephone;
-        this.cnh = cnh;
+        this.cnhNumber = cnhNumber;
+        this.cnhValidity = cnhValidity;
         this.vehicleDocument = vehicleDocument;
         this.address = address;
         this.bankAccount = bankAccount;
@@ -133,12 +141,12 @@ public class DeliveryPerson  implements PasswordPolicy {
         this.telephone = telephone;
     }
 
-    public String getCnh() {
-        return cnh;
+    public String getCnhNumber() {
+        return cnhNumber;
     }
 
-    public void setCnh(String cnh) {
-        this.cnh = cnh;
+    public void setCnhNumber(String cnhNumber) {
+        this.cnhNumber = cnhNumber;
     }
 
     public String getVehicleDocument() {
@@ -163,6 +171,22 @@ public class DeliveryPerson  implements PasswordPolicy {
 
     public void setBankAccount(BankAccount bankAccount) {
         this.bankAccount = bankAccount;
+    }
+
+    public String getPlate() {
+        return plate;
+    }
+
+    public void setPlate(String plate) {
+        this.plate = plate;
+    }
+
+    public LocalDate getCnhValidity() {
+        return cnhValidity;
+    }
+
+    public void LocalDate(LocalDate cnhValidity) {
+        this.cnhValidity = cnhValidity;
     }
 
     @Override
