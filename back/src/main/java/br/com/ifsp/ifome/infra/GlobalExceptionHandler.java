@@ -62,13 +62,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(BadCredentialsException.class)
-    public Map<String, Object> handleBadCredentialExceptions(
+    public  ResponseEntity<Map<String, Object>>  handleBadCredentialExceptions(
         BadCredentialsException ex) {
         logger.warn(ex.getMessage());
         Map<String, Object> response = new HashMap<>();
         response.put("message", ex.getMessage());
-        return response;
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 }
