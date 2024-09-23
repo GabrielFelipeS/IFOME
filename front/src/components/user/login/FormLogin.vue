@@ -46,29 +46,31 @@ const submitLogin = () => {
 </script>
 
 <template>
-	<Modal class="gap-2">
-		<header class="title">
-			Login
-		</header>
-		<div class="main" @submit="submitLogin">
-			<div class="form-group">
-				<label for="email" class="form-label">E-mail</label>
-				<input type="email" placeholder="nome@email.com" class="form-input"
-					   v-model="email" required id="email">
-				<p class="invalid-input-text" v-if=" errors.email !== '' ">{{ errors.email }}</p>
-				<label for="password" class="form-label">Senha</label>
-				<input type="password" placeholder="********" class="form-input"
-					   v-model="password" required id="password">
-				<p class="invalid-input-text" v-if=" errors.password !== '' ">{{ errors.password }}</p>
-				<a class="hiper-link" href="#" @click="$emit('load-component', 'password-reset')">
-					Esqueceu a Senha ?</a>
-			</div>
-			<div class="btn-container">
-				<Button href="#" @click="submitLogin" class="button bg-primary text-white hover:bg-primary-dark
+	<div class="max-w-[600px] flex flex-row w-full">
+		<Modal class="gap-2">
+			<header class="title">
+				Login
+			</header>
+			<div class="main" @submit="submitLogin">
+				<div class="form-group">
+					<label for="email" class="form-label">E-mail</label>
+					<input type="email" placeholder="nome@email.com" class="form-input"
+						   v-model="email" required id="email">
+					<p class="invalid-input-text" v-if=" errors.email !== '' ">{{ errors.email }}</p>
+					<label for="password" class="form-label">Senha</label>
+					<input type="password" placeholder="********" class="form-input"
+						   v-model="password" required id="password">
+					<p class="invalid-input-text" v-if=" errors.password !== '' ">{{ errors.password }}</p>
+					<a class="hiper-link" href="#" @click="$emit('load-component', 'password-reset')">
+						Esqueceu a Senha ?</a>
+				</div>
+				<div class="btn-container">
+					<Button href="#" @click="submitLogin" class="button bg-primary text-white hover:bg-primary-dark
 					 active:bg-primary-darker">Fazer login <v-icon name="fa-chevron-right"/></Button>
+				</div>
 			</div>
-		</div>
-	</Modal>
+		</Modal>
+	</div>
 </template>
 
 <style scoped>
