@@ -3,9 +3,11 @@ import {computed, ref} from "vue";
 import ModalLogin from "@/components/user/login/ModalLogin.vue";
 import Header from "@/components/user/Header.vue";
 import {useRouter} from "vue-router";
+import FormLogin from "@/components/user/login/FormLogin.vue";
 
 const components = {
 	'modal-login': ModalLogin,
+	'form-login': FormLogin,
 }
 const componentName = ref('modal-login');
 const currentComponent = computed(() => {
@@ -28,10 +30,11 @@ const goToPage = async (page) => {
 	await router.push({ name: page });
 };
 
-const formData = ref({
+function submitLogin(email, password) {
+	console.log('login-submitado');
+}
 
-});
-function sendForm() {
+function submitPasswordReset (email) {
 
 }
 </script>
@@ -47,9 +50,9 @@ function sendForm() {
 			<KeepAlive >
 				<component
 					:is="currentComponent"
-					v-model:formData="formData"
 					@load-component="loadComponent"
-					@submit-form="sendForm"
+					@submit-login="submitLogin"
+					@submit-password-reset="submitPasswordReset"
 				/>
 			</KeepAlive>
 		</div>
