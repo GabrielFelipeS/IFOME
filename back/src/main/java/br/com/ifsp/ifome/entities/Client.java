@@ -44,7 +44,7 @@ public class Client implements PasswordPolicy, UserDetails  {
         this.name = clientRequest.name();
         this.email = clientRequest.email();
         this.password = bCryptPasswordEncoder.encode(clientRequest.password());
-        this.dateOfBirth = clientRequest.dateOfBirth();
+        this.dateOfBirth = clientRequest.convertDateOfBirth();
         this.cpf = clientRequest.cpf();
         this.address = clientRequest.address().stream().map(Address::new).collect(Collectors.toList());
     }
