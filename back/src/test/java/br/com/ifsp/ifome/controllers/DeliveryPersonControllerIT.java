@@ -143,13 +143,14 @@ public class DeliveryPersonControllerIT {
         );
 
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson", deliveryPersonRequest, String.class);
+        System.out.println(response.getBody());
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> message = documentContext.read("$.cpf");
+        List<String> message = documentContext.read("$.errors.cpf");
 
         assertThat(message).containsExactlyInAnyOrder("Cpf já cadastrado");
     }

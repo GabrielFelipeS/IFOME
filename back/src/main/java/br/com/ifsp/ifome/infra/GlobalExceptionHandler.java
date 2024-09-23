@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.infra;
 
+import br.com.ifsp.ifome.dto.response.ErrorResponse;
 import br.com.ifsp.ifome.exceptions.InvalidTokenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 
@@ -24,16 +26,22 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, List<String>> handleValidationExceptions(
+    public  Map<String, Object> handleValidationExceptions(
+
         MethodArgumentNotValidException ex) {
-        Map<String, List<String>> errors = new HashMap<>();
+        Map<String, List<String>> errorsMap = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String name = getNameWithError(error);
             List<String> errorMessage = new LinkedList<>(Collections.singletonList(error.getDefaultMessage()));
-            addContraintViolation(errors, name, errorMessage);
+            addContraintViolation(errorsMap, name, errorMessage);
             logger.warn(error.getDefaultMessage());
         });
-        return errors;
+        List< Map<String, List<String>>> errors = List.of(errorsMap);
+//        return new ErrorResponse("Erro ao cadastrar cliente", errorsMap.entrySet());
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Erro ao cadastrar cliente");
+        response.put("errors", errorsMap);
+        return response;
     }
 
     private String getNameWithError(ObjectError error) {
@@ -55,5 +63,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<String> invalidTokenExceptionHandler(InvalidTokenException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DateTimeParseException.class)
+    public void handleValidationExceptions(
+        DateTimeParseException ex) {
+        logger.warn(ex.getMessage());
     }
 }

@@ -80,7 +80,7 @@ public class ClienteControllerIT {
     @DisplayName("should be possible to create a new client")
     public void shouldBeAbleToCreateANewClient() throws JsonProcessingException {
         ClientRequest client = new ClientRequest("Nome completo", "teste@teste.com", "@Password1", "@Password1",
-            LocalDate.now().minusYears(18), "48608678071", "(11) 99248-1491",
+            LocalDate.now().minusYears(18).toString(), "48608678071", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
                 "12", "casa","details")));
@@ -121,7 +121,7 @@ public class ClienteControllerIT {
     @DisplayName("should be return error with cpf already registred")
     public void shouldReturnErrorWithCpfAlreadyRegistred() throws JsonProcessingException {
         ClientRequest client = new ClientRequest("Nome completo", "teste@teste.com", "@Password1", "@Password1",
-            LocalDate.now().minusYears(18), "528.003.140-28", "(11) 99248-1491",
+            LocalDate.now().minusYears(18).toString(), "528.003.140-28", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
                 "12", "casa","details")));
@@ -130,10 +130,10 @@ public class ClienteControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> message = documentContext.read("$.cpf");
+        List<String> message = documentContext.read("$.errors.cpf");
 
         assertThat(message).containsExactlyInAnyOrder("Cpf já cadastrado");
     }
@@ -144,7 +144,7 @@ public class ClienteControllerIT {
     @DisplayName("should not be possible to create a new client with already registered email")
     public void shouldReturnErrorWhenCreatingClientWithAlreadyRegisteredEmail() {
         ClientRequest client = new ClientRequest("Nome completo","user1@gmail.com", "@Password1", "@Password1",
-            LocalDate.now().minusYears(14), "019.056.440-78", "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
+            LocalDate.now().minusYears(14).toString(), "019.056.440-78", "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
             "address",  "complement",
              "12", "condominio","details")));
 
@@ -152,10 +152,10 @@ public class ClienteControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> message = documentContext.read("$.email");
+        List<String> message = documentContext.read("$.errors.email");
 
         assertThat(message).containsExactlyInAnyOrder("E-mail já registrado");
     }
@@ -165,7 +165,7 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the password field")
     public void shouldReturnAllValidationErrorsInThePasswordField() {
         ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", " ", " ",
-            LocalDate.now().minusYears(18), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            LocalDate.now().minusYears(18).toString(), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address",  "complement",
             "12", "condomínio","details")));
 
@@ -173,10 +173,10 @@ public class ClienteControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(2);
 
-        List<String> passwordErrors = documentContext.read("$.password");
+        List<String> passwordErrors = documentContext.read("$.errors.password");
         assertThat(passwordErrors)
             .containsExactlyInAnyOrder(
                 "Senha é obrigatório",
@@ -193,7 +193,7 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the dateOfBirth field")
     public void shouldReturnAllValidationErrorsInThDateOfBirthField() {
         ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", "@Teste123", "@Teste123",
-            LocalDate.now().plusDays(1), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            LocalDate.now().plusDays(1).toString(), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address",  "complement",
              "12", "condominio","details")));
 
@@ -201,10 +201,10 @@ public class ClienteControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> dateOfBirth = documentContext.read("$.dateOfBirth");
+        List<String> dateOfBirth = documentContext.read("$.errors.dateOfBirth");
         assertThat(dateOfBirth)
             .containsExactlyInAnyOrder(
                 "Data de nascimento deve estar no passado",
@@ -217,7 +217,7 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the cpf field")
     public void shouldReturnAllValidationErrorsInTheCPFField() {
         ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", "@Teste123", "@Teste123",
-            LocalDate.now().minusYears(18), "cpf",  "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            LocalDate.now().minusYears(18).toString(), "cpf",  "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address", "complement",
             "12", "condominio","details")));
 
@@ -225,10 +225,10 @@ public class ClienteControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> cpf = documentContext.read("$.cpf");
+        List<String> cpf = documentContext.read("$.errors.cpf");
         assertThat(cpf)
             .containsExactlyInAnyOrder(
                 "CPF inválido"
@@ -240,7 +240,7 @@ public class ClienteControllerIT {
     @DisplayName("should return error when registering a client with different password and password confirmation")
     public void shouldReturnErrorWhenCreatingClientWithdifferentPasswordAndPasswordConfirmation() throws JsonProcessingException {
         ClientRequest client = new ClientRequest("Nome completo","teste@teste.com", "@Password1", "@Password",
-            LocalDate.now().minusYears(18), "48608678071", "(11) 99248-1491",
+            LocalDate.now().minusYears(18).toString(), "48608678071", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address",  "complement",
                  "12", "condominio","details")));
@@ -250,7 +250,7 @@ public class ClienteControllerIT {
         System.out.println(response.getBody());
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
     }
 
