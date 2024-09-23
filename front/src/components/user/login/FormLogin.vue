@@ -37,7 +37,10 @@ const submitLogin = () => {
 	if (validateInputs()) {
 		errors.value.email = '';
 		errors.value.password = '';
-		emit('submit-login', [email.value, password.value]);
+		emit('submit-login', {
+			email: email.value,
+			password: password.value,
+		});
 	}
 }
 </script>

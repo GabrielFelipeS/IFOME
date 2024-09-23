@@ -4,6 +4,9 @@ import ModalLogin from "@/components/user/login/ModalLogin.vue";
 import Header from "@/components/user/Header.vue";
 import {useRouter} from "vue-router";
 import FormLogin from "@/components/user/login/FormLogin.vue";
+import api from "@/services/api.js";
+import axios from "axios";
+import {useToast} from "vue-toast-notification";
 
 const components = {
 	'modal-login': ModalLogin,
@@ -30,8 +33,27 @@ const goToPage = async (page) => {
 	await router.push({ name: page });
 };
 
-function submitLogin(email, password) {
-	console.log('login-submitado');
+const $toast = useToast();
+async function submitLogin(data) {
+	if (!data.email || !data.password) {
+		$toast.error('Parâmetros Inválidos', {duration: 10000});
+		return;
+	}
+	console.log(JSON.stringify(data));
+	await api.post('auth/client/login', JSON.stringify(data))
+		.then((response) => {
+			if (response.status === 200 || response.status === 201) {
+				console.log(response);
+			} else {
+				console.log(response)
+				$toast.error(response.data.message, {});
+			}
+		})
+		.catch(error => {
+			const errorMessage = JSON.stringify(error.response?.data) || 'Erro ao enviar os dados.';
+			$toast.error(errorMessage, {duration: 10000});
+			console.error('Error:', error);
+		});
 }
 
 function submitPasswordReset (email) {
