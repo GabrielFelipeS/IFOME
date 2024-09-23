@@ -16,7 +16,7 @@ public class LoginService {
 
     public void isLoginIncorrect(Optional<? extends PasswordPolicy> passwordPolicyOptional, String rawPassword , BCryptPasswordEncoder bCryptPasswordEncoder) {
         if(passwordPolicyOptional.isEmpty() || passwordPolicyOptional.get().isLoginIncorrect(rawPassword, bCryptPasswordEncoder)) {
-            throw new BadCredentialsException("email or password is invalid!");
+            throw new BadCredentialsException("email ou senha incorretos!");
         }
     }
 
