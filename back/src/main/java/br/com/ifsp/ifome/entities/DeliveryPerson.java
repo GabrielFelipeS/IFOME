@@ -41,7 +41,7 @@ public class DeliveryPerson  implements PasswordPolicy {
         this.cpf = deliveryPersonRequest.cpf();
         this.email = deliveryPersonRequest.email();
         this.password = passwordEncoder.encode(deliveryPersonRequest.password());
-        this.dateOfBirth =deliveryPersonRequest.dateOfBirth();
+        this.dateOfBirth =deliveryPersonRequest.convertDateOfBirth();
         this.typeOfVehicle = deliveryPersonRequest.vehicleDocument();
         this.telephone = deliveryPersonRequest.telephone();
         this.cnh = deliveryPersonRequest.cnh();
