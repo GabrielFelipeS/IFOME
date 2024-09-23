@@ -184,16 +184,13 @@ public class DeliveryPersonControllerIT {
         Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> message = documentContext.read("$.errors.cpf");
-
-        List<String> cnh = documentContext.read("$.cnhNumber");
+        List<String> cnh = documentContext.read("$.errors.cnhNumber");
         assertThat(cnh)
                 .containsExactlyInAnyOrder(
                         "CNH obrigatória",
-                        "O número da CNH deve conter exatamente 9 dígitos numéricos"
+                        "O número da CNH deve conter exatamente 9 dígitos numéricos",
+                    "Número do CNH é obrigatório"
                 );
-
-
     }
 
 
@@ -224,10 +221,10 @@ public class DeliveryPersonControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(2);
 
-        List<String> passwordErrors = documentContext.read("$.password");
+        List<String> passwordErrors = documentContext.read("$.errors.password");
         assertThat(passwordErrors)
                 .containsExactlyInAnyOrder(
                         "Senha é obrigatório",
@@ -266,11 +263,11 @@ public class DeliveryPersonControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
         System.out.println(response.getBody());
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
 
-        List<String> cpf = documentContext.read("$.cpf");
+        List<String> cpf = documentContext.read("$.errors.cpf");
         assertThat(cpf)
                 .containsExactlyInAnyOrder(
                         "CPF inválido"
@@ -304,11 +301,11 @@ public class DeliveryPersonControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
         System.out.println(response.getBody());
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
 
-        List<String> plate = documentContext.read("$.plate");
+        List<String> plate = documentContext.read("$.errors.plate");
         assertThat(plate)
                 .containsExactlyInAnyOrder(
                         "A placa deve estar no formato XXX-9999",
@@ -344,11 +341,11 @@ public class DeliveryPersonControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
         System.out.println(response.getBody());
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
 
-        List<String> cnhNumber = documentContext.read("$.cnhNumber");
+        List<String> cnhNumber = documentContext.read("$.errors.cnhNumber");
         assertThat(cnhNumber)
                 .containsExactlyInAnyOrder(
                         "O número da CNH deve conter exatamente 9 dígitos numéricos"
@@ -382,11 +379,11 @@ public class DeliveryPersonControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
         System.out.println(response.getBody());
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
 
-        List<String> cnhValidity = documentContext.read("$.cnhValidity");
+        List<String> cnhValidity = documentContext.read("$.errors.cnhValidity");
         assertThat(cnhValidity )
                 .containsExactlyInAnyOrder(
                         "CNH fora de validade"
@@ -420,11 +417,11 @@ public class DeliveryPersonControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
         System.out.println(response.getBody());
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
 
-        List<String> vehicleDocument = documentContext.read("$.vehicleDocument");
+        List<String> vehicleDocument = documentContext.read("$.errors.vehicleDocument");
         assertThat(vehicleDocument)
                 .containsExactlyInAnyOrder(
                         "O RENAVAM deve conter entre 9 e 11 dígitos numéricos"
@@ -466,11 +463,11 @@ public class DeliveryPersonControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
         System.out.println(response.getBody());
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
 
-        List<String> dateOfBirth = documentContext.read("$.dateOfBirth");
+        List<String> dateOfBirth = documentContext.read("$.errors.dateOfBirth");
         assertThat(dateOfBirth)
                 .containsExactlyInAnyOrder(
                         "Para cadastro no sistema, é necessário ter pelo menos 18 anos de idade."

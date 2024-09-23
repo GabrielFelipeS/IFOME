@@ -1,8 +1,7 @@
 package br.com.ifsp.ifome.dto.request;
 
-import br.com.ifsp.ifome.validation.anotations.ConfirmartionPasswordEqualsPassword;
-import br.com.ifsp.ifome.validation.anotations.ValidPassword;
-import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmailDeliveryPerson;
+import br.com.ifsp.ifome.validation.anotations.*;
+import br.com.ifsp.ifome.validation.anotations.Past;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;
@@ -37,7 +36,7 @@ public record DeliveryPersonRequest(
         @DateFormat(message = "Formato incorreto para data de nascimento")
         String dateOfBirth,
 
-        @Pattern(regexp = "^(carro|moto)$", message = "Tipo do veículo inválido")
+        @Pattern(regexp = "^([Cc]arro|[Mm]oto)$", message = "Tipo do veículo inválido")
         String typeOfVehicle,
 
         @NotBlank(message = "Verique a placa")
@@ -48,11 +47,7 @@ public record DeliveryPersonRequest(
         @Pattern(regexp = "\\(\\d{2}\\) \\d{4,5}-\\d{4}", message = "Telefone deve estar no formato (XX) XXXXX-XXXX")
         String telephone,
 
-        // TODO não deveria ser dois campos?
-        @NotBlank(message = "Cnh é obrigatório")
-        String cnh,
-
-        @NotBlank(message = "Documento do veiculo é obrigatório")
+        @NotBlank(message = "Número do CNH é obrigatório")
         @NotBlank(message = "CNH obrigatória")
         @Pattern(regexp = "\\d{9}", message = "O número da CNH deve conter exatamente 9 dígitos numéricos")
         String cnhNumber,
