@@ -11,6 +11,7 @@ import java.util.List;
 
 @ConfirmartionPasswordEqualsPassword(message = "As senhas não coincidem")
 public record DeliveryPersonRequest(
+        @NotBlank(message = "Nome é obrigatório")
         String name,
 
         @CPF(message = "CPF inválido")
@@ -25,6 +26,7 @@ public record DeliveryPersonRequest(
         @ValidPassword
         @NotBlank(message = "Senha é obrigatório")
         String password,
+
         @NotBlank(message = "Confirmação de senha é obrigatório")
         String confirmationPassword,
 
@@ -34,19 +36,23 @@ public record DeliveryPersonRequest(
         @DateFormat(message = "Formato incorreto para data de nascimento")
         String dateOfBirth,
 
+        @Pattern(regexp = "^(carro|moto)$", message = "Tipo do veículo inválido")
         String typeOfVehicle,
 
         @NotBlank(message = "Telefone é obrigatório")
         @Pattern(regexp = "\\(\\d{2}\\) \\d{4,5}-\\d{4}", message = "Telefone deve estar no formato (XX) XXXXX-XXXX")
         String telephone,
 
-        @NotBlank
+        // TODO não deveria ser dois campos?
+        @NotBlank(message = "Cnh é obrigatório")
         String cnh,
-        @NotBlank
+
+        @NotBlank(message = "Documento do veiculo é obrigatório")
         String vehicleDocument,
 
-        @NotEmpty
+        @NotEmpty(message = "É necessário ter pelo menos um endereço")
         List<@Valid AddressRequest> address,
+
         @Valid
         BankAccountRequest bankAccount
 ) {
