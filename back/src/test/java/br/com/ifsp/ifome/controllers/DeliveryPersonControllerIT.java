@@ -54,7 +54,7 @@ public class DeliveryPersonControllerIT {
         LoginRequest clientLogin = new LoginRequest("invalid_email@gmail.com", "@Password1");
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson/login", clientLogin, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class DeliveryPersonControllerIT {
         LoginRequest clientLogin = new LoginRequest("user1@gmail.com", "invalid_password");
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson/login", clientLogin, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test

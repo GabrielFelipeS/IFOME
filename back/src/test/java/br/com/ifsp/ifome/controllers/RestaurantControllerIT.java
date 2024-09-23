@@ -57,7 +57,7 @@ public class RestaurantControllerIT {
         LoginRequest restaurantLogin = new LoginRequest("invalid_email@gmail.com", "@Password1");
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/restaurant/login", restaurantLogin, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
@@ -65,7 +65,7 @@ public class RestaurantControllerIT {
         LoginRequest restaurantLogin = new LoginRequest("user1@gmail.com", "invalid_password");
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/restaurant/login", restaurantLogin, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
 
