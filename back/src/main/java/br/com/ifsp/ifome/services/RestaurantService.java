@@ -7,7 +7,7 @@ import br.com.ifsp.ifome.dto.response.RestaurantResponse;
 import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
 import br.com.ifsp.ifome.validation.interfaces.Validator;
-import org.springframework.beans.factory.annotation.Qualifier;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -49,5 +49,8 @@ public class RestaurantService {
         RestaurantResponse restaurantResponse = new RestaurantResponse(restaurant.orElseThrow());
 
         return new RestaurantLoginResponse(restaurantResponse, jwtValue);
+    }
+
+    public void forgotPassword(HttpServletRequest request, String email) {
     }
 }
