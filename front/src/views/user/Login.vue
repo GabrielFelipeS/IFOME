@@ -5,12 +5,14 @@ import Header from "@/components/user/Header.vue";
 import {useRouter} from "vue-router";
 import FormLogin from "@/components/user/login/FormLogin.vue";
 import api from "@/services/api.js";
-import axios from "axios";
 import {useToast} from "vue-toast-notification";
+import PasswordReset from "@/components/user/login/PasswordReset.vue";
+import {data} from "autoprefixer";
 
 const components = {
 	'modal-login': ModalLogin,
 	'form-login': FormLogin,
+	'password-reset': PasswordReset,
 }
 const componentName = ref('modal-login');
 const currentComponent = computed(() => {
@@ -56,8 +58,8 @@ async function submitLogin(data) {
 		});
 }
 
-function submitPasswordReset (email) {
-
+function submitPasswordReset (data) {
+	console.log(data);
 }
 </script>
 
@@ -69,14 +71,12 @@ function submitPasswordReset (email) {
 			<Header logo v-if="componentName !== 'modal-login'" />
 		</div>
 		<div class="main">
-			<KeepAlive >
-				<component
-					:is="currentComponent"
-					@load-component="loadComponent"
-					@submit-login="submitLogin"
-					@submit-password-reset="submitPasswordReset"
-				/>
-			</KeepAlive>
+			<component
+				:is="currentComponent"
+				@load-component="loadComponent"
+				@submit-login="submitLogin"
+				@submit-password-reset="submitPasswordReset"
+			/>
 		</div>
 	</div>
 </template>
