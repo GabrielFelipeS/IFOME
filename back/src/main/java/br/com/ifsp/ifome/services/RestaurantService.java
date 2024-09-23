@@ -39,7 +39,6 @@ public class RestaurantService {
     }
 
     public RestaurantLoginResponse login(LoginRequest loginRequest) {
-        System.out.println(restaurantRepository.existsByEmailIgnoreCase(loginRequest.email()));
         Optional<Restaurant> restaurant = restaurantRepository.findByEmail(loginRequest.email());
 
         loginService.isLoginIncorrect(restaurant, loginRequest.password(), bCryptPasswordEncoder);
