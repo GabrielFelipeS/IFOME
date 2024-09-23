@@ -3,6 +3,7 @@ package br.com.ifsp.ifome.controllers;
 import br.com.ifsp.ifome.dto.request.*;
 import br.com.ifsp.ifome.entities.Address;
 import br.com.ifsp.ifome.entities.OpeningHours;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -20,6 +22,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class RestaurantControllerIT {
 
@@ -52,7 +55,7 @@ public class RestaurantControllerIT {
         LoginRequest restaurantLogin = new LoginRequest("invalid_email@gmail.com", "@Password1");
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/restaurant/login", restaurantLogin, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
@@ -60,7 +63,7 @@ public class RestaurantControllerIT {
         LoginRequest restaurantLogin = new LoginRequest("user1@gmail.com", "invalid_password");
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/restaurant/login", restaurantLogin, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
 
@@ -76,7 +79,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -137,6 +140,7 @@ public class RestaurantControllerIT {
         assertThat(addressJson.getComplement()).isEqualTo("complement");
         assertThat(addressJson.getNumber()).isEqualTo("12");
         assertThat(addressJson.getComplement()).isEqualTo("complement");
+        assertThat(addressJson.getTypeResidence()).isEqualTo("condominio");
 
     }
 
@@ -152,7 +156,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -177,10 +181,10 @@ public class RestaurantControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> message = documentContext.read("$.email");
+        List<String> message = documentContext.read("$.errors.email");
 
         assertThat(message).containsExactlyInAnyOrder("E-mail já registrado");
     }
@@ -197,7 +201,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -223,10 +227,10 @@ public class RestaurantControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(2);
 
-        List<String> passwordErrors = documentContext.read("$.password");
+        List<String> passwordErrors = documentContext.read("$.errors.password");
         assertThat(passwordErrors)
                 .containsExactlyInAnyOrder(
                         "Senha é obrigatório",
@@ -250,7 +254,7 @@ public class RestaurantControllerIT {
                 "10.882.594000165",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -275,10 +279,10 @@ public class RestaurantControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> cnpj = documentContext.read("$.cnpj");
+        List<String> cnpj = documentContext.read("$.errors.cnpj");
         assertThat(cnpj)
                 .containsExactlyInAnyOrder(
                         "CNPJ inválido"
@@ -297,7 +301,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -321,11 +325,11 @@ public class RestaurantControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
         System.out.println(response.getBody());
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
 
-        List<String> personResponsibleCPF = documentContext.read("$.personResponsibleCPF");
+        List<String> personResponsibleCPF = documentContext.read("$.errors.personResponsibleCPF");
         assertThat(personResponsibleCPF)
                 .containsExactlyInAnyOrder(
                         "CPF inválido"
@@ -344,7 +348,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -369,7 +373,7 @@ public class RestaurantControllerIT {
         System.out.println(response.getBody());
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
     }
 
@@ -385,7 +389,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -411,7 +415,7 @@ public class RestaurantControllerIT {
         System.out.println(response.getBody());
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(3);
     }
     @Test
@@ -426,7 +430,7 @@ public class RestaurantControllerIT {
                 "10.882.594/0001-65",
                 List.of(new AddressRequest("35170-222", "casa 1"," ", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
@@ -451,7 +455,7 @@ public class RestaurantControllerIT {
         System.out.println(response.getBody());
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
     }
 }

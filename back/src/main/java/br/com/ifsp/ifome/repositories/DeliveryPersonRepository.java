@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface DeliveryPersonRepository extends CrudRepository<DeliveryPerson, Long> {
-    boolean existsByEmail(String email);
+    boolean existsByEmailIgnoreCase(String email);
+    boolean existsByCpf(String cpf);
     Optional<DeliveryPerson> findByEmail(String email);
 }

@@ -7,7 +7,6 @@ on:
       - 'back/**'
 
   pull_request:
-    branches: [ "dev" ]
     paths:
       - 'back/**'
 
@@ -23,14 +22,10 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
+    - name: Build with Maven and run tests
       run: | 
         cd ./back/
-        mvn -B package --file pom.xml -DskipTests
-    - name: Run tests
-      run: | 
-        cd ./back/
-        mvn verify
+        mvn clean verify
       
   build:
     runs-on: ubuntu-latest
@@ -46,6 +41,7 @@ jobs:
 
   deploy:
       runs-on: ubuntu-latest
+      if: github.event_name == 'pull_request'
       needs: [build, test]
       steps:
       - name: Deploy via SSH

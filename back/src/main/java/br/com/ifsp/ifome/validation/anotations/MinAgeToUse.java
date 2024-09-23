@@ -1,6 +1,6 @@
 package br.com.ifsp.ifome.validation.anotations;
 
-import br.com.ifsp.ifome.validation.validators.MinAgeToUseValidator;
+import br.com.ifsp.ifome.validation.validators.anotations.MinAgeToUseValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {MinAgeToUseValidator.class})
 public @interface MinAgeToUse {
-    String message() default "É necessário ter mais de 18 anos";
+    String message() default "Para cadastro no sistema, é necessário ter pelo menos 18 anos de idade.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 

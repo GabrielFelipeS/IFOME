@@ -1,9 +1,7 @@
 package br.com.ifsp.ifome.dto.request;
 
-import br.com.ifsp.ifome.validation.anotations.ConfirmartionPasswordEqualsPassword;
-import br.com.ifsp.ifome.validation.anotations.MinAgeToUse;
-import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmail;
-import br.com.ifsp.ifome.validation.anotations.ValidPassword;
+import br.com.ifsp.ifome.validation.anotations.*;
+import br.com.ifsp.ifome.validation.anotations.Past;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;
@@ -11,9 +9,9 @@ import org.hibernate.validator.constraints.br.CPF;
 import java.time.LocalDate;
 import java.util.List;
 
-@ConfirmartionPasswordEqualsPassword
+@ConfirmartionPasswordEqualsPassword(message = "As senhas não coincidem")
 public record ClientRequest (
-        @NotBlank
+        @NotBlank(message = "Nome é obrigatório")
         String name,
 
         @Email(message = "E-mail inválido")
@@ -25,22 +23,27 @@ public record ClientRequest (
         @NotBlank(message = "Senha é obrigatório")
         String password,
 
-        @NotBlank
+        @NotBlank(message = "Confirmação da senha é obrigatório")
         String confirmationPassword,
 
         @Past(message = "Data de nascimento deve estar no passado")
-        @MinAgeToUse(minAge = 14, message = "É necessário ter pelo menos 13 anos")
+        @MinAgeToUse(minAge = 13, message = "Para cadastro no sistema, é necessário ter pelo menos 13 anos de idade.")
         @NotNull(message = "Data de nascimento é obrigatório")
-        LocalDate dateOfBirth,
+        @DateFormat(message = "Formato incorreto para data de nascimento")
+        String dateOfBirth,
 
         @CPF(message = "CPF inválido")
         @NotBlank(message = "CPF é obrigatório")
         String cpf,
 
-        @NotBlank
-        @Pattern(regexp = "^\\([1-9]{2}\\) (?:[2-8]|9[0-9])[0-9]{3}-[0-9]{4}$")
+        @NotBlank(message = "Telefone é obrigatório")
+        @Pattern(message = "O telefone deve estar no formato válido", regexp = "^\\([1-9]{2}\\) (?:[2-8]|9[0-9])[0-9]{3}-[0-9]{4}$")
         String phone,
 
-        @NotEmpty
+        @NotEmpty(message = "É necessário ter pelo menos um endereço")
         List<@Valid AddressRequest> address
-) { }
+) {
+        public LocalDate convertDateOfBirth() {
+                return LocalDate.parse(this.dateOfBirth);
+        }
+}
