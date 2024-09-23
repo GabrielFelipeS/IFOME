@@ -57,7 +57,7 @@ public class RestaurantControllerIT {
         LoginRequest restaurantLogin = new LoginRequest("invalid_email@gmail.com", "@Password1");
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/restaurant/login", restaurantLogin, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
@@ -65,7 +65,7 @@ public class RestaurantControllerIT {
         LoginRequest restaurantLogin = new LoginRequest("user1@gmail.com", "invalid_password");
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/restaurant/login", restaurantLogin, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
 
@@ -188,10 +188,10 @@ public class RestaurantControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> message = documentContext.read("$.cnpj");
+        List<String> message = documentContext.read("$.errors.cnpj");
 
         assertThat(message).containsExactlyInAnyOrder("Cnpj já cadastrado");
     }
@@ -232,10 +232,10 @@ public class RestaurantControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> message = documentContext.read("$.email");
+        List<String> message = documentContext.read("$.errors.email");
 
         assertThat(message).containsExactlyInAnyOrder("E-mail já registrado");
     }
@@ -278,10 +278,10 @@ public class RestaurantControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(2);
 
-        List<String> passwordErrors = documentContext.read("$.password");
+        List<String> passwordErrors = documentContext.read("$.errors.password");
         assertThat(passwordErrors)
                 .containsExactlyInAnyOrder(
                         "Senha é obrigatório",
@@ -330,10 +330,10 @@ public class RestaurantControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> cnpj = documentContext.read("$.cnpj");
+        List<String> cnpj = documentContext.read("$.errors.cnpj");
         assertThat(cnpj)
                 .containsExactlyInAnyOrder(
                         "CNPJ inválido"
@@ -377,11 +377,11 @@ public class RestaurantControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
         System.out.println(response.getBody());
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
 
-        List<String> personResponsibleCPF = documentContext.read("$.personResponsibleCPF");
+        List<String> personResponsibleCPF = documentContext.read("$.errors.personResponsibleCPF");
         assertThat(personResponsibleCPF)
                 .containsExactlyInAnyOrder(
                         "CPF inválido"
@@ -426,7 +426,7 @@ public class RestaurantControllerIT {
         System.out.println(response.getBody());
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
     }
 
@@ -468,7 +468,7 @@ public class RestaurantControllerIT {
         System.out.println(response.getBody());
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(3);
     }
     @Test
@@ -509,7 +509,7 @@ public class RestaurantControllerIT {
         System.out.println(response.getBody());
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
     }
 }

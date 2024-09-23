@@ -54,7 +54,7 @@ public class DeliveryPersonControllerIT {
         LoginRequest clientLogin = new LoginRequest("invalid_email@gmail.com", "@Password1");
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson/login", clientLogin, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class DeliveryPersonControllerIT {
         LoginRequest clientLogin = new LoginRequest("user1@gmail.com", "invalid_password");
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson/login", clientLogin, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class DeliveryPersonControllerIT {
                 "email@email.com",
                 "@Senha1",
                 "@Senha1",
-                LocalDate.of(1999, 1, 2),
+                LocalDate.of(1999, 1, 2).toString(),
                 "Carro",
                 "(11) 95455-4565",
                 "CNH",
@@ -130,7 +130,7 @@ public class DeliveryPersonControllerIT {
             "email@email.com",
             "@Senha1",
             "@Senha1",
-            LocalDate.of(1999, 1, 2),
+            LocalDate.of(1999, 1, 2).toString(),
             "Carro",
             "(11) 95455-4565",
             "CNH",
@@ -143,13 +143,14 @@ public class DeliveryPersonControllerIT {
         );
 
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson", deliveryPersonRequest, String.class);
+        System.out.println(response.getBody());
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> message = documentContext.read("$.cpf");
+        List<String> message = documentContext.read("$.errors.cpf");
 
         assertThat(message).containsExactlyInAnyOrder("Cpf já cadastrado");
     }
