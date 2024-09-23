@@ -1,6 +1,5 @@
 package br.com.ifsp.ifome.infra;
 
-import br.com.ifsp.ifome.dto.response.ErrorResponse;
 import br.com.ifsp.ifome.exceptions.InvalidTokenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,8 +35,6 @@ public class GlobalExceptionHandler {
             addContraintViolation(errorsMap, name, errorMessage);
             logger.warn(error.getDefaultMessage());
         });
-        List< Map<String, List<String>>> errors = List.of(errorsMap);
-//        return new ErrorResponse("Erro ao cadastrar cliente", errorsMap.entrySet());
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Erro ao cadastrar cliente");
         response.put("errors", errorsMap);
