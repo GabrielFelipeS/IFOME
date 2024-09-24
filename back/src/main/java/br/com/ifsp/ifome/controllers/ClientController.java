@@ -9,10 +9,8 @@ import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.response.ClientResponse;
 import br.com.ifsp.ifome.dto.response.LoginResponse;
 import br.com.ifsp.ifome.services.ClientService;
-import br.com.ifsp.ifome.services.EmailService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +23,7 @@ import java.net.URI;
 public class ClientController {
     private final ClientService clientService;
 
-    public ClientController(ClientService clientService, EmailService emailService) {
+    public ClientController(ClientService clientService) {
         this.clientService = clientService;
     }
 
@@ -44,7 +42,7 @@ public class ClientController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest clientLogin) {
+    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest clientLogin)  {
         LoginResponse loginResponse = clientService.login(clientLogin);
         ApiResponse apiResponse = new ApiResponse("sucess", loginResponse, "Cliente logado com sucesso");
         return ResponseEntity.ok(apiResponse);
@@ -58,7 +56,7 @@ public class ClientController {
     }
 
     @GetMapping("/change_password")
-    public void changePassword(@RequestParam("token") String token) throws Exception {
+    public void changePassword(@RequestParam("token") String token) {
         System.err.println(token);
     }
 }
