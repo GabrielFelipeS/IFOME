@@ -55,7 +55,7 @@ import java.lang.annotation.Target;
             description = "Inserindo cliente válido",
             value = """
                     {
-                      "email" : "email1@gmail.com",
+                      "email" : "email1@email.com",
                       "password": "@Password1"
                     }
                 """
@@ -68,7 +68,7 @@ import java.lang.annotation.Target;
                     """,
                 value = """
                     {
-                        "email" : "email1@gmail.com",
+                        "email" : "email1@email.com",
                         "password": "senha_incorreta"
                     }
                     """
@@ -88,7 +88,7 @@ import java.lang.annotation.Target;
                         "user": {
                             "id": 2,
                             "name": "Gabriel",
-                            "email": "email1@gmail.com",
+                            "email": "email1@email.com",
                             "dateOfBirth": "2003-04-14",
                             "cpf": "920.513.620-41",
                             "address": []
@@ -110,4 +110,4 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DocsLogin { }
+public @interface DocsClientLogin { }

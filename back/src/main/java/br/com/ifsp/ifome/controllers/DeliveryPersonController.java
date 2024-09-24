@@ -1,6 +1,6 @@
 package br.com.ifsp.ifome.controllers;
 
-import br.com.ifsp.ifome.docs.DocsLogin;
+import br.com.ifsp.ifome.docs.DocsClientLogin;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.DeliveryPersonRequest;
 import br.com.ifsp.ifome.dto.request.LoginRequest;
@@ -39,7 +39,6 @@ public class DeliveryPersonController {
     }
 
     @PostMapping("/login")
-    @DocsLogin
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest clientLogin) {
         System.err.println(clientLogin.email());
         LoginResponse loginResponse = deliveryPersonService.login(clientLogin);
