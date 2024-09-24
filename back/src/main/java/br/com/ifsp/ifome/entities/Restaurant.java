@@ -25,6 +25,7 @@ public class Restaurant implements PasswordPolicy {
     private List<Address> address;
 
     private String telephone;
+    // TODO arrumar relacionamento
     @OneToMany
     @JoinColumn(name = "opening_hours", referencedColumnName = "cnpj")
     private List<OpeningHours> openingHours;
