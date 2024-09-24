@@ -7,12 +7,14 @@ import FormLogin from "@/components/user/login/FormLogin.vue";
 import api from "@/services/api.js";
 import {useToast} from "vue-toast-notification";
 import PasswordReset from "@/components/user/login/PasswordReset.vue";
+import PasswordResetSuccess from "@/components/user/login/PasswordResetSuccess.vue";
 
 const components = {
 	'modal-login': ModalLogin,
 	'form-login': FormLogin,
 	'password-reset': [
 		PasswordReset,
+		PasswordResetSuccess,
 	],
 }
 const homeComponent = 'modal-login';
@@ -97,7 +99,7 @@ function submitPasswordReset (data) {
 		 v-bind:class="[componentName === 'modal-login' ? 'bg-image' : '']">
 		<div class="header">
 			<Header :logo="componentName !== 'modal-login'" @go-back="goBack"
-				:home-page="'user-login'"/>
+				:home-page="'user-login'" :back-button="(componentName !== 'modal-login')" />
 		</div>
 		<div class="main">
 			<component

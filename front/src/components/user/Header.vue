@@ -13,6 +13,10 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
+	backButton: {
+		type: Boolean,
+		default: false,
+	},
 	homePage: {
 		type: String,
 		default: 'home',
@@ -47,7 +51,7 @@ const goBack = () => {
 		</div>
 	</header>
 	<header class="header-desktop">
-		<div class="back-div"> <a href="#" @click="goBack"><v-icon name="fa-arrow-left" class="text-primary" /></a> </div>
+		<div class="back-div"> <a v-if="props.backButton === true" href="#" @click="goBack"><v-icon name="fa-arrow-left" class="text-primary" /></a> </div>
 		<div class="desktop-content">
 			<Button href="#" @click="goToPage(props.homePage)">
 				<img src="../../assets/img/logo_header.png" class="logo" alt="Logo"></Button>
