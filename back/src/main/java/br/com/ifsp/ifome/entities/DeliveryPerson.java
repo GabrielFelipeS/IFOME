@@ -30,8 +30,8 @@ public class DeliveryPerson  implements PasswordPolicy {
     private String cnhNumber;
     private LocalDate cnhValidity;
     private String vehicleDocument;
-    @OneToMany
-    @JoinColumn(name = "address", referencedColumnName = "cpf")
+
+    @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Address> address;
     @Embedded
     private BankAccount bankAccount;
@@ -50,7 +50,11 @@ public class DeliveryPerson  implements PasswordPolicy {
         this.cnhNumber = deliveryPersonRequest.cnhNumber();
         this.cnhValidity = deliveryPersonRequest.cnhValidity();
         this.vehicleDocument = deliveryPersonRequest.vehicleDocument();
-        this.address = deliveryPersonRequest.address().stream().map(Address::new).collect(Collectors.toList());
+        this.address = deliveryPersonRequest.address().stream().map(addressRequest -> {
+            Address address = new Address(addressRequest);
+            address.setDelivery(this);
+            return address;
+        }).collect(Collectors.toList());
         this.bankAccount = new BankAccount(deliveryPersonRequest.bankAccount());
     }
 
