@@ -52,7 +52,7 @@ import java.lang.annotation.Target;
         examples = {
             @ExampleObject(
             name = "login válido",
-            description = "Inserindo cliente válido",
+            description = "Locado com cliente válido",
             value = """
                     {
                       "email" : "email1@email.com",
@@ -78,7 +78,7 @@ import java.lang.annotation.Target;
     )
 )
 @ApiResponses({
-    @ApiResponse(responseCode = "200", description = "Logado com sucesso",
+    @ApiResponse(responseCode = "200", description = "Cliente logado com sucesso",
     content = @Content(mediaType = "application/json",
         schema = @Schema(implementation = br.com.ifsp.ifome.dto.ApiResponse.class),
         examples =  @ExampleObject(value = """
@@ -95,7 +95,7 @@ import java.lang.annotation.Target;
                         },
                         "token": "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJhcGlfaWZvbWUiLCJzdWIiOiJlbWFpbDFAZ21haWwuY29tIiwiZXhwIjoxNzI3MTg3MDY2LCJpYXQiOjE3MjcxODY3NjZ9.mxpDmAveBrq6SGOELPfthhHobx9DIiHTWE7Yigv_yBNfei1atWXxsQnlhhTrpM3IzE8-hTrY_BtPTvAWHR3pgq0N_ZC2g8DnJz5LfE1rfsAqiWDur_xgHnApD6O08fN-8wvVo9kUvy-taEN5cvoV-s7TIeNTu-lvcR1St8MFwr9NeXtcFRy3O09FFRB2AgLcP52_-IjpK_2jhmi_10dBDGd6HAL3P_e6esG71Qn6fOHnDz2E7340T5JU3ngg3Iij176jR7EYg-yRw1wEf6Ijw1r04sOXkWhPjmSWtH18IVFS7Zx4o56ojjta5q5J5Se99DgPLXRKffnptkzJUchpOw"
                     },
-                    "message": "Logado com sucesso"
+                    "message": "Cliente logado com sucesso"
                 }
             """)
       )),
