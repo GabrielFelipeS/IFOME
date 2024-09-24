@@ -12,8 +12,17 @@ const props = defineProps({
 	logo: {
 		type: Boolean,
 		default: false,
-	}
-})
+	},
+	homePage: {
+		type: String,
+		default: 'home',
+	},
+});
+
+const emit = defineEmits(['go-back']);
+const goBack = () => {
+	emit('go-back');
+}
 
 </script>
 
@@ -24,13 +33,13 @@ const props = defineProps({
 		</div>
 		<div class="flex flex-row gap-4 w-[75%] items-center justify-between h-full" v-if="!logo">
 			<div>
-				<Button @click="goToPage('user-register')"
+				<Button @click="goToPage(props.homePage)"
 						class="h-full flex items-center justify-center border-b-2 border-white
 						active:border-primary active:text-primary"
 						href="#">Login</Button>
 			</div>
 			<div>
-				<Button @click="goToPage('user-register')"
+				<Button @click="goToPage(props.homePage)"
 						class="h-full flex items-center justify-center border-b-2 border-white
 						 active:border-primary active:text-primary"
 						href="#">Cadastrar</Button>
@@ -38,10 +47,12 @@ const props = defineProps({
 		</div>
 	</header>
 	<header class="header-desktop">
+		<div class="back-div"> <a href="#" @click="goBack"><v-icon name="fa-arrow-left" class="text-primary" /></a> </div>
 		<div class="desktop-content">
-			<Button href="#" @click="goToPage('home')">
+			<Button href="#" @click="goToPage(props.homePage)">
 				<img src="../../assets/img/logo_header.png" class="logo" alt="Logo"></Button>
 		</div>
+		<div></div>
 	</header>
 </template>
 
@@ -57,7 +68,7 @@ const props = defineProps({
 
 	.header-desktop {
 		@apply hidden;
-		@apply w-full h-[70px] bg-white md:flex flex-row justify-center items-center font-default border-b-4 text-lg;
+		@apply w-full h-[70px] bg-white md:flex flex-row justify-between items-center font-default border-b-4 text-lg;
 	}
 	.desktop-content {
 		@apply w-full flex flex-row justify-center;
@@ -68,6 +79,9 @@ const props = defineProps({
 		@apply flex items-center justify-center border-2 border-primary px-2 py-1 rounded-md
 	}
 
+	.back-div {
+		@apply flex flex-row justify-center items-center pl-8;
+	}
 
 .logo {
 	@apply w-[70px] h-[70px]
