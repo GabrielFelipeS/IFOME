@@ -46,7 +46,11 @@ public class Restaurant implements PasswordPolicy {
         this.nameRestaurant = restaurantRequest.nameRestaurant();
         this.cnpj = restaurantRequest.cnpj();
         this.foodCategory = restaurantRequest.foodCategory();
-        this.address = restaurantRequest.address().stream().map(Address::new).collect(Collectors.toList());
+        this.address = restaurantRequest.address().stream().map(addressRequest -> {
+            Address address = new Address(addressRequest);
+            address.setRestaurant(this);
+            return address;
+        }).collect(Collectors.toList());
         this.telephone = restaurantRequest.telephone();
         this.openingHoursStart = restaurantRequest.openingHoursStart();
         this.openingHoursEnd = restaurantRequest.openingHoursEnd();

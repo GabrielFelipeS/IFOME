@@ -46,7 +46,11 @@ public class DeliveryPerson  implements PasswordPolicy {
         this.telephone = deliveryPersonRequest.telephone();
         this.cnh = deliveryPersonRequest.cnh();
         this.vehicleDocument = deliveryPersonRequest.vehicleDocument();
-        this.address = deliveryPersonRequest.address().stream().map(Address::new).collect(Collectors.toList());
+        this.address = deliveryPersonRequest.address().stream().map(addressRequest -> {
+            Address address = new Address(addressRequest);
+            address.setDelivery(this);
+            return address;
+        }).collect(Collectors.toList());
         this.bankAccount = new BankAccount(deliveryPersonRequest.bankAccount());
     }
 
