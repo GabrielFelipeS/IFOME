@@ -3,7 +3,7 @@ import Modal from "@/components/user/Modal.vue";
 import {onMounted, ref} from "vue";
 import Button from "@/components/Button.vue";
 
-const emit = defineEmits(["submit-login"]);
+const emit = defineEmits(["submit-login", 'load-component']);
 const errors = ref({
 	email: '',
 	password: '',

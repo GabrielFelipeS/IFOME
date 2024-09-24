@@ -7,16 +7,24 @@ import FormLogin from "@/components/user/login/FormLogin.vue";
 import api from "@/services/api.js";
 import {useToast} from "vue-toast-notification";
 import PasswordReset from "@/components/user/login/PasswordReset.vue";
-import {data} from "autoprefixer";
 
 const components = {
 	'modal-login': ModalLogin,
 	'form-login': FormLogin,
-	'password-reset': PasswordReset,
+	'password-reset': [
+		PasswordReset,
+	],
 }
+const homeComponent = 'modal-login';
 const componentName = ref('modal-login');
+const lastComponent = ref('modal-login');
+const componentStep = ref(0);
+
 const currentComponent = computed(() => {
 	if (components[componentName.value]) {
+		if (Array.isArray(components[componentName.value])) {
+			return components[componentName.value][componentStep.value];
+		}
 		return components[componentName.value];
 	} else {
 		return components['modal-login'];
@@ -25,7 +33,27 @@ const currentComponent = computed(() => {
 
 function loadComponent(name) {
 	if (name) {
+		lastComponent.value = componentName.value;
 		componentName.value = name;
+		componentStep.value = 0;
+	}
+}
+
+function nextStep() {
+	componentStep.value++;
+}
+
+function goBack() {
+	if (componentName.value === lastComponent.value) {
+		componentName.value = homeComponent;
+		return;
+	}
+
+	if (Array.isArray(components[componentName.value]) && componentStep.value > 0) {
+		componentStep.value--;
+	} else {
+		componentName.value = lastComponent.value;
+		componentStep.value = 0;
 	}
 }
 
@@ -60,6 +88,7 @@ async function submitLogin(data) {
 
 function submitPasswordReset (data) {
 	console.log(data);
+	nextStep();
 }
 </script>
 
@@ -67,8 +96,8 @@ function submitPasswordReset (data) {
 	<div class="content"
 		 v-bind:class="[componentName === 'modal-login' ? 'bg-image' : '']">
 		<div class="header">
-			<Header v-if="componentName === 'modal-login'" />
-			<Header logo v-if="componentName !== 'modal-login'" />
+			<Header :logo="componentName !== 'modal-login'" @go-back="goBack"
+				:home-page="'user-login'"/>
 		</div>
 		<div class="main">
 			<component
@@ -76,6 +105,7 @@ function submitPasswordReset (data) {
 				@load-component="loadComponent"
 				@submit-login="submitLogin"
 				@submit-password-reset="submitPasswordReset"
+				@go-back="goBack"
 			/>
 		</div>
 	</div>
