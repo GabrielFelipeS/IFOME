@@ -19,31 +19,31 @@ import java.lang.annotation.Target;
     description = """
         # Detalhes para login
         Campos obrigatórios: E-mail e Senha
-        
+      
         Validações dos campos:
-        
+      
         ## email:
-        
+      
         Tipo: String
-        
+      
         Validações:
-        
+      
         - Validação sintática do e-mail.
-        
+      
         - Não aceita valores nulos, vazios ou contendo apenas espaços.
-        
+      
         Anotações: @Email, @NotBlank
-        
+      
         ## password:
-       
+      
         Tipo: String
-        
+      
         Validações:
-        
+      
         - Não aceita valores nulos ou vazios.
-        
+      
         Anotações: @NotBlank
-        
+      
       """,
     required = true,
     content = @Content(
