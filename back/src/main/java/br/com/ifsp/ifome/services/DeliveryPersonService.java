@@ -7,6 +7,7 @@ import br.com.ifsp.ifome.dto.response.LoginResponse;
 import br.com.ifsp.ifome.entities.DeliveryPerson;
 import br.com.ifsp.ifome.repositories.DeliveryPersonRepository;
 import br.com.ifsp.ifome.validation.interfaces.Validator;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,15 +22,20 @@ public class DeliveryPersonService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final DeliveryPersonRepository deliveryPersonRepository;
     private final ValidatorService<DeliveryPersonRequest> validatorService;
+    private final EmailService emailService;
+
+
 
     public DeliveryPersonService(TokenService tokenService, DeliveryPersonRepository deliveryPersonRepository,
                                  BCryptPasswordEncoder bCryptPasswordEncoder,
-                                 List<Validator<DeliveryPersonRequest>> validators, LoginService loginService) {
+                                 List<Validator<DeliveryPersonRequest>> validators, LoginService loginService, EmailService emailService) {
         this.tokenService = tokenService;
         this.deliveryPersonRepository = deliveryPersonRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.validatorService = new ValidatorService<>(validators);
         this.loginService = loginService;
+        this.emailService = emailService;
+
     }
     public DeliveryPersonResponse create(DeliveryPersonRequest deliveryPersonRequest) throws MethodArgumentNotValidException {
         validatorService.isValid(deliveryPersonRequest);
@@ -49,4 +55,6 @@ public class DeliveryPersonService {
 
         return new LoginResponse(deliveryPersonResponse, jwtValue);
     }
+
+
 }

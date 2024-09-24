@@ -1,10 +1,8 @@
 package br.com.ifsp.ifome.controllers;
 
-import br.com.ifsp.ifome.dto.request.AddressRequest;
-import br.com.ifsp.ifome.dto.request.BankAccountRequest;
-import br.com.ifsp.ifome.dto.request.LoginRequest;
-import br.com.ifsp.ifome.dto.request.RestaurantRequest;
+import br.com.ifsp.ifome.dto.request.*;
 import br.com.ifsp.ifome.entities.Address;
+import br.com.ifsp.ifome.entities.OpeningHours;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -85,8 +83,8 @@ public class RestaurantControllerIT {
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
-                "12:00",
-                "23:00",
+                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
+                        new OpeningHoursRequest("terça","11:00", "23:00")),
                 "responsavel",
                 "033.197.356-16",
                 "imagem.jpeg",
@@ -123,10 +121,9 @@ public class RestaurantControllerIT {
         String telephone = document.read("$.telephone");
         String foodCategory = document.read("$.foodCategory");
         String paymentMethods = document.read("$.paymentMethods");
-        String openingHoursStart = document.read("$.openingHoursStart");
-        String openingHoursEnd = document.read("$.openingHoursEnd");
+        OpeningHours openingHoursJson = document.read("$.openingHours", OpeningHours.class);
         String personResponsibleCPF = document.read("$.personResponsibleCPF");
-        String restaurantImages = document.read("$.restaurantImages");
+        String restaurantImages = document.read("$.restaurantImage");
 
 
         assertThat(id).isNotNull();
@@ -152,23 +149,24 @@ public class RestaurantControllerIT {
     @DisplayName("should be return error with cnpj already registred")
     public void shouldReturnErrorWithCnpjAlreadyRegistred() throws JsonProcessingException {
         RestaurantRequest restaurant = new RestaurantRequest(
-            "Nome Restaurante",
-            "email@email.com",
-            "@Senha1",
-            "@Senha1",
-            "58.911.612/0001-16",
-            List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
-                "address", "complement",
-                "12", "condominio","details")),
-            "(11) 1234-5678",
-            "Pizzaria",
-            "Dinheiro, Cartão",
-            "12:00",
-            "23:00",
-            "responsavel",
-            "033.197.356-16",
-            "imagem.jpeg",
-            new BankAccountRequest("123", "1255", "4547-7")
+                "Nome Restaurante",
+                "email@email.com",
+                "@Senha1",
+                "@Senha1",
+                "58.911.612/0001-16",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "condominio","details")),
+                "(11) 1234-5678",
+                "Pizzaria",
+                "Dinheiro, Cartão",
+                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça","11:00", "23:00")),
+                "responsavel",
+                "033.197.356-16",
+                "imagem.jpeg",
+                new BankAccountRequest("123","1255", "4547-7")
+
 
         );
 
@@ -195,6 +193,7 @@ public class RestaurantControllerIT {
 
         assertThat(message).containsExactlyInAnyOrder("Cnpj já cadastrado");
     }
+
     @Test
     @DirtiesContext
     @DisplayName("should not be possible to create a new restaurant with already registered email")
@@ -211,8 +210,8 @@ public class RestaurantControllerIT {
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
-                "12:00",
-                "23:00",
+                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça","11:00", "23:00")),
                 "responsavel",
                 "033.197.356-16",
                 "imagem.jpeg",
@@ -256,8 +255,8 @@ public class RestaurantControllerIT {
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
-                "12:00",
-                "23:00",
+                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça","11:00", "23:00")),
                 "responsavel",
                 "033.197.356-16",
                 "imagem.jpeg",
@@ -309,8 +308,8 @@ public class RestaurantControllerIT {
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
-                "12:00",
-                "23:00",
+                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça","11:00", "23:00")),
                 "responsavel",
                 "033.197.356-16",
                 "imagem.jpeg",
@@ -356,9 +355,8 @@ public class RestaurantControllerIT {
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
-                "12:00",
-                "23:00",
-                "responsavel",
+                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça","11:00", "23:00")),                "responsavel",
                 "CPF",
                 "imagem.jpeg",
                 new BankAccountRequest("123","1255", "4547-7")
@@ -404,9 +402,8 @@ public class RestaurantControllerIT {
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
-                "12:00",
-                "23:00",
-                "responsavel",
+                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça","11:00", "23:00")),                "responsavel",
                 "033.197.356-16",
                 "imagem.jpeg",
                 new BankAccountRequest("123","1255", "4547-7")
@@ -446,8 +443,8 @@ public class RestaurantControllerIT {
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
-                "12:00",
-                "23:00",
+                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça","11:00", "23:00")),
                 "responsavel",
                 "033.197.356-16",
                 "imagem.jpeg",
@@ -471,6 +468,7 @@ public class RestaurantControllerIT {
         Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(3);
     }
+
     @Test
     @DirtiesContext
     @DisplayName("should return all validation errors in the address fields")
@@ -487,9 +485,8 @@ public class RestaurantControllerIT {
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
-                "12:00",
-                "23:00",
-                "responsavel",
+                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça","11:00", "23:00")),                "responsavel",
                 "033.197.356-16",
                 "imagem.jpeg",
                 new BankAccountRequest("111","2222", "2156-1")
@@ -497,7 +494,6 @@ public class RestaurantControllerIT {
 
         );
         ClassPathResource fileResource = new ClassPathResource("testfile.txt");
-        System.out.println("File?");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();

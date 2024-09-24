@@ -18,8 +18,7 @@ CREATE TABLE restaurants (
     cep VARCHAR(10),
     address TEXT,
     telephone VARCHAR(15),
-    opening_hours_start TIME,
-    opening_hours_end TIME,
+    opening_hours TEXT,
     person_responsible VARCHAR(255),
     person_responsible_CPF VARCHAR(11),
     email VARCHAR(255) UNIQUE,
@@ -47,4 +46,12 @@ CREATE TABLE Address (
     typeResidence   VARCHAR(50) NOT NULL,
     number          VARCHAR(50) NOT NULL,
     complement      VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE opening_hours(
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    cnpj        VARCHAR(14) NOT NULL REFERENCES restaurants(cnpj),
+    day_of_the_week    VARCHAR(16) NOT NULL,
+    opening     VARCHAR(16) NOT NULL,
+    closing     VARCHAR(16) NOT NULL
 );
