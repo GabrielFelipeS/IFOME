@@ -28,8 +28,8 @@ public class DeliveryPerson  implements PasswordPolicy {
     private String telephone;
     private String cnh;
     private String vehicleDocument;
-    @OneToMany
-    @JoinColumn(name = "address", referencedColumnName = "cpf")
+
+    @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Address> address;
     @Embedded
     private BankAccount bankAccount;

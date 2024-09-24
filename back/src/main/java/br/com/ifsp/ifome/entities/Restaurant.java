@@ -22,8 +22,8 @@ public class Restaurant implements PasswordPolicy {
     private String nameRestaurant;
     private String cnpj;
     private String foodCategory;
-    @OneToMany
-    @JoinColumn(name = "address", referencedColumnName = "cnpj")
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Address> address;
 
     private String telephone;
