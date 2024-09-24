@@ -193,6 +193,7 @@ public class RestaurantControllerIT {
 
         assertThat(message).containsExactlyInAnyOrder("Cnpj já cadastrado");
     }
+
     @Test
     @DirtiesContext
     @DisplayName("should not be possible to create a new restaurant with already registered email")
@@ -467,6 +468,7 @@ public class RestaurantControllerIT {
         Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(3);
     }
+
     @Test
     @DirtiesContext
     @DisplayName("should return all validation errors in the address fields")
@@ -492,7 +494,6 @@ public class RestaurantControllerIT {
 
         );
         ClassPathResource fileResource = new ClassPathResource("testfile.txt");
-        System.out.println("File?");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
