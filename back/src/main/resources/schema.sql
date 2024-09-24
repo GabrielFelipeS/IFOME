@@ -34,7 +34,6 @@ CREATE TABLE delivery_person (
     cpf VARCHAR(14) NOT NULL, -- CPF deve ser único, com formato 999.999.999-99
     email VARCHAR(255) NOT NULL, -- Email é obrigatório e validado
     password VARCHAR(255) NOT NULL, -- Senha é obrigatória
-    confirmation_password VARCHAR(255) NOT NULL, -- Confirmação de senha obrigatória
     date_of_birth DATE NOT NULL, -- Data de nascimento é obrigatória e deve estar no passado
     type_of_vehicle VARCHAR(10), -- Tipo do veículo: carro ou moto (valores válidos são 'carro', 'moto')
     plate VARCHAR(8), -- Placa no formato XXX-9999

@@ -45,7 +45,6 @@ INSERT INTO delivery_person (
     password,
     cpf,
     name,
-    confirmation_password,
     date_of_birth,
     type_of_vehicle,
     plate,
@@ -56,16 +55,15 @@ INSERT INTO delivery_person (
 )
 VALUES (
    'email1@email.com',
-   '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', -- Senha hash
+   '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
    '528.003.140-28',
-   'João da Silva', -- Nome obrigatório
-   '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', -- Confirmação de senha
-   '1985-06-15', -- Data de nascimento válida
-   'carro', -- Tipo de veículo válido (carro ou moto)
-   'ABC-1234', -- Placa no formato correto
-   '(11) 98765-4321', -- Telefone no formato (XX) XXXXX-XXXX
-   '123456789', -- Número da CNH (9 dígitos)
-   '2026-12-31', -- Validade da CNH (data futura)
-   '987654321' -- RENAVAM (entre 9 e 11 dígitos)
+   'João da Silva',
+   '1985-06-15',
+   'carro',
+   'ABC-1234',
+   '(11) 98765-4321',
+   '123456789',
+   '2026-12-31',
+   '987654321'
 );
 
