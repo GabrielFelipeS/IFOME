@@ -14,6 +14,7 @@ import br.com.ifsp.ifome.services.ClientService;
 import br.com.ifsp.ifome.services.EmailService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +63,7 @@ public class ClientController {
     }
 
     @GetMapping("/change_password")
-    public void changePassword(@RequestParam("token") String token) throws Exception {
+    public void changePassword(@RequestParam("token") String token) {
         System.err.println(token);
     }
 }

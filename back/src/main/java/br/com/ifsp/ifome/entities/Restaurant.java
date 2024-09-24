@@ -1,8 +1,10 @@
 package br.com.ifsp.ifome.entities;
 
+import br.com.ifsp.ifome.dto.request.BankAccountRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
 import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -25,18 +27,15 @@ public class Restaurant implements PasswordPolicy {
     private List<Address> address;
 
     private String telephone;
-
-    private String openingHoursStart;
-    private String openingHoursEnd;
-
+    @OneToMany
+    @JoinColumn(name = "opening_hours", referencedColumnName = "cnpj")
+    private List<OpeningHours> openingHours;
     private String personResponsible;
     private String personResponsibleCPF;
     private String email;
     private String password;
     private String paymentMethods;
-
-    private String restaurantImages;
-
+    private String restaurantImage;
     @Embedded
     private BankAccount bankAccount;
 
@@ -52,20 +51,19 @@ public class Restaurant implements PasswordPolicy {
             return address;
         }).collect(Collectors.toList());
         this.telephone = restaurantRequest.telephone();
-        this.openingHoursStart = restaurantRequest.openingHoursStart();
-        this.openingHoursEnd = restaurantRequest.openingHoursEnd();
+        this.openingHours = restaurantRequest.openingHours().stream().map(OpeningHours::new).collect(Collectors.toList());
         this.personResponsible = restaurantRequest.personResponsible();
         this.personResponsibleCPF = restaurantRequest.personResponsibleCPF();
         this.email = restaurantRequest.email();
         this.password = bCryptPasswordEncoder.encode(restaurantRequest.password());
         this.paymentMethods = restaurantRequest.paymentMethods();
-        this.restaurantImages = restaurantRequest.restaurantImages();
+        this.restaurantImage = restaurantRequest.restaurantImage();
         this.bankAccount = new BankAccount(restaurantRequest.bankAccount());
     }
 
     public Restaurant(Long id, String nameRestaurant, String cnpj,
                       String foodCategory, List<Address> address, String telephone,
-                      String openingHoursStart, String openingHoursEnd, String personResponsible,
+                      List<OpeningHours> openingHours, String personResponsible,
                       String personResponsibleCPF, String email, String password, String paymentMethods,
                       String restaurantImage, BankAccount bankAccount,  BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.id = id;
@@ -74,14 +72,13 @@ public class Restaurant implements PasswordPolicy {
         this.foodCategory = foodCategory;
         this.address = address;
         this.telephone = telephone;
-        this.openingHoursStart = openingHoursStart;
-        this.openingHoursEnd = openingHoursEnd;
+        this.openingHours = openingHours;
         this.personResponsible = personResponsible;
         this.personResponsibleCPF = personResponsibleCPF;
         this.email = email;
         this.password = bCryptPasswordEncoder.encode(password);
         this.paymentMethods = paymentMethods;
-        this.restaurantImages = restaurantImage;
+        this.restaurantImage = restaurantImage;
         this.bankAccount = bankAccount;
     }
 
@@ -133,20 +130,12 @@ public class Restaurant implements PasswordPolicy {
         this.telephone = telephone;
     }
 
-    public String getOpeningHoursStart() {
-        return openingHoursStart;
+    public List<OpeningHours> getOpeningHours() {
+        return openingHours;
     }
 
-    public void setOpeningHoursStart(String openingHoursStart) {
-        this.openingHoursStart = openingHoursStart;
-    }
-
-    public String getOpeningHoursEnd() {
-        return openingHoursEnd;
-    }
-
-    public void setOpeningHoursEnd(String openingHoursEnd) {
-        this.openingHoursEnd = openingHoursEnd;
+    public void setOpeningHours(List<OpeningHours> openingHours) {
+        this.openingHours = openingHours;
     }
 
     public String getPersonResponsible() {
@@ -189,12 +178,12 @@ public class Restaurant implements PasswordPolicy {
         this.paymentMethods = paymentMethods;
     }
 
-    public String getRestaurantImages() {
-        return restaurantImages;
+    public String getRestaurantImage() {
+        return restaurantImage;
     }
 
-    public void setRestaurantImages(String restaurantImages) {
-        this.restaurantImages = restaurantImages;
+    public void setRestaurantImage(String restaurantImage) {
+        this.restaurantImage = restaurantImage;
     }
 
     public BankAccount getBankAccount() {

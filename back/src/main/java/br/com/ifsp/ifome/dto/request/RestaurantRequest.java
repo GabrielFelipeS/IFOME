@@ -1,6 +1,5 @@
 package br.com.ifsp.ifome.dto.request;
 
-import br.com.ifsp.ifome.entities.BankAccount;
 import br.com.ifsp.ifome.validation.anotations.ConfirmartionPasswordEqualsPassword;
 import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmailRestaurant;
 import br.com.ifsp.ifome.validation.anotations.ValidPassword;
@@ -16,7 +15,7 @@ import java.util.List;
 
 @ConfirmartionPasswordEqualsPassword(message = "As senhas não coincidem")
 public record RestaurantRequest(
-        @NotBlank
+        @NotBlank(message = "Nome do restaurante é obrigatório")
         String nameRestaurant,
 
         @Email(message = "E-mail inválido")
@@ -34,7 +33,7 @@ public record RestaurantRequest(
         @NotBlank(message = "CNPJ é obrigatório")
         String cnpj,
 
-        @NotEmpty
+        @NotEmpty(message = "É necessário ter pelo menos um endereço")
         List<@Valid AddressRequest> address,
 
         @NotBlank(message = "Telefone é obrigatório")
@@ -47,11 +46,8 @@ public record RestaurantRequest(
         @NotBlank(message = "Formas de pagamento são obrigatórias")
         String paymentMethods,
 
-        @NotBlank(message = "Horário de funcionamento inicial é obrigatório")
-        String openingHoursStart,
-
-        @NotBlank(message = "Horário de funcionamento final é obrigatório")
-        String openingHoursEnd,
+        @NotEmpty(message = "Horário de funcionamento é obrigatório")
+        List<OpeningHoursRequest> openingHours,
 
         String personResponsible,
 
@@ -59,7 +55,7 @@ public record RestaurantRequest(
         @NotBlank(message = "CPF é obrigatório")
         String personResponsibleCPF,
 
-        String restaurantImages,
+        String restaurantImage,
         @Valid
         BankAccountRequest bankAccount
 ) { }

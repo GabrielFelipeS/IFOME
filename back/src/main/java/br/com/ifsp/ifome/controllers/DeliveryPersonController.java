@@ -39,8 +39,7 @@ public class DeliveryPersonController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest clientLogin) {
-        System.err.println(clientLogin.email());
+    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest clientLogin)   {
         LoginResponse loginResponse = deliveryPersonService.login(clientLogin);
         ApiResponse apiResponse = new ApiResponse("sucess", loginResponse, "Cliente logado com sucesso");
         return ResponseEntity.ok(apiResponse);
