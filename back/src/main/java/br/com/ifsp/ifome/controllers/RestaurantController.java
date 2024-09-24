@@ -1,6 +1,7 @@
 package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.docs.DocsCreateRestaurant;
+import br.com.ifsp.ifome.docs.DocsLogin;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
@@ -54,6 +55,7 @@ public class RestaurantController {
     }
 
     @PostMapping("/login")
+    @DocsLogin
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest restaurantLogin) {
         RestaurantLoginResponse restaurantLoginResponse = restaurantService.login(restaurantLogin);
         ApiResponse apiResponse = new ApiResponse("sucess", restaurantLoginResponse, "Cliente logado com sucesso");

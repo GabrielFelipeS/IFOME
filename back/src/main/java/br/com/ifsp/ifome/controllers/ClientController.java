@@ -2,6 +2,7 @@ package br.com.ifsp.ifome.controllers;
 
 
 import br.com.ifsp.ifome.docs.DocsCreateClient;
+import br.com.ifsp.ifome.docs.DocsLogin;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
 import br.com.ifsp.ifome.dto.request.ForgotPasswordRequest;
@@ -44,6 +45,7 @@ public class ClientController {
     }
 
     @PostMapping("/login")
+    @DocsLogin
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest clientLogin) {
         LoginResponse loginResponse = clientService.login(clientLogin);
         ApiResponse apiResponse = new ApiResponse("sucess", loginResponse, "Cliente logado com sucesso");
