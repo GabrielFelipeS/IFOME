@@ -35,8 +35,8 @@ import java.lang.annotation.Target;
                       "typeOfVehicle" : "Carro",
                       "plate" : "DIT-4987"
                       "telephone" : "(11) 1234-5678",
-                      "cnhNumber" : "document.jpg"
-                      "cnhValidity: 2028-1-2,
+                      "cnhNumber" : "document.jpg",
+                      "cnhValidity": "2028-01-02",
                       "vehicleDocument" : "111456789",
                       "address": [
                         {
@@ -52,13 +52,11 @@ import java.lang.annotation.Target;
                           "details": "details"
                         }
                       ],
-                      "bankAccount" : [
-                          {
+                      "bankAccount" : {
                               "bank" : "123",
                               "agency" : "1255",
                               "account" : "4547-7"
                            }
-                      ]
                     }
                 """
                         ),
