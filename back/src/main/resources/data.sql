@@ -43,11 +43,29 @@ INSERT INTO restaurants (
 INSERT INTO delivery_person (
     email,
     password,
-    cpf
+    cpf,
+    name,
+    confirmation_password,
+    date_of_birth,
+    type_of_vehicle,
+    plate,
+    telephone,
+    cnh_number,
+    cnh_validity,
+    vehicle_document
 )
 VALUES (
    'email1@email.com',
-   '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
-   '528.003.140-28'
+   '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', -- Senha hash
+   '528.003.140-28',
+   'João da Silva', -- Nome obrigatório
+   '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', -- Confirmação de senha
+   '1985-06-15', -- Data de nascimento válida
+   'carro', -- Tipo de veículo válido (carro ou moto)
+   'ABC-1234', -- Placa no formato correto
+   '(11) 98765-4321', -- Telefone no formato (XX) XXXXX-XXXX
+   '123456789', -- Número da CNH (9 dígitos)
+   '2026-12-31', -- Validade da CNH (data futura)
+   '987654321' -- RENAVAM (entre 9 e 11 dígitos)
 );
 
