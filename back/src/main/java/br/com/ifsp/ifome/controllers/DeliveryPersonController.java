@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.docs.DocsCreateDeliveryPerson;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.DeliveryPersonRequest;
 import br.com.ifsp.ifome.dto.request.LoginRequest;

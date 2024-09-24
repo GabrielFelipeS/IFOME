@@ -28,15 +28,15 @@ import java.lang.annotation.Target;
                     {
                       "name" : "Nome entregador",
                       "cpf" : "033.197.356-16"
-                      "email" : "email@email.com",
-                      "password" : "@Senha1",
+                      "email": "email@email.com",
+                      "password": "@Senha1",
                       "confirmationPassword" : "@Senha1",
-                      "dateOfBirth : 1999-02-01,
+                      "dateOfBirth": "1999-02-01",
                       "typeOfVehicle" : "Carro",
                       "plate" : "DIT-4987"
                       "telephone" : "(11) 1234-5678",
                       "cnhNumber" : "document.jpg"
-                      "cnhValidity: 2028-1-2,
+                      "cnhValidity": "2028-1-2",
                       "vehicleDocument" : "111456789",
                       "address": [
                         {
