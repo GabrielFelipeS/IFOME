@@ -34,17 +34,3 @@ CREATE TABLE delivery_person (
      email VARCHAR(255) UNIQUE,
      password VARCHAR(255) NOT NULL
 );
-
-CREATE TABLE Address (
-    id              BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name_address    VARCHAR(30) NOT NULL,
-    cpf             VARCHAR(14) NOT NULL REFERENCES clients(cpf),
-    cep             VARCHAR(8) NOT NULL,
-    city            VARCHAR(70) NOT NULL,
-    state           VARCHAR(50) NOT NULL,
-    address         VARCHAR(50) NOT NULL,
-    zipCode         VARCHAR(50) NOT NULL,
-    typeResidence   VARCHAR(50) NOT NULL,
-    number          VARCHAR(50) NOT NULL,
-    complement      VARCHAR(50) NOT NULL
-);
