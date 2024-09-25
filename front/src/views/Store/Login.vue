@@ -4,10 +4,10 @@ import Header from "@/components/user/Header.vue";
 import {useRouter} from "vue-router";
 import api from "@/services/api.js";
 import {useToast} from "vue-toast-notification";
+import ModalLogin from "@/components/store/login/ModalLogin.vue";
 
 const components = {
-	'modal-login': '',
-	'form-login': '',
+	'modal-login': ModalLogin,
 	'password-reset': [
 
 	],
@@ -99,6 +99,7 @@ function submitPasswordReset (data) {
 		<div class="main">
 			<component
 				:is="currentComponent"
+				v-model:go-to-page="goToPage"
 				@load-component="loadComponent"
 				@submit-login="submitLogin"
 				@submit-password-reset="submitPasswordReset"
