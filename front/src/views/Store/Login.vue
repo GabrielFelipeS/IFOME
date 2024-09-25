@@ -5,11 +5,14 @@ import {useRouter} from "vue-router";
 import api from "@/services/api.js";
 import {useToast} from "vue-toast-notification";
 import ModalLogin from "@/components/store/login/ModalLogin.vue";
+import PasswordReset from "@/components/store/login/PasswordReset.vue";
+import PasswordResetSuccess from "@/components/store/login/PasswordResetSuccess.vue";
 
 const components = {
 	'modal-login': ModalLogin,
 	'password-reset': [
-
+		PasswordReset,
+		PasswordResetSuccess,
 	],
 }
 const homeComponent = 'modal-login';
@@ -118,7 +121,11 @@ function submitPasswordReset (data) {
 	background-size: cover;
 }
 .bg-image {
-	background-image: url("../../assets/img/user/bg-cadastro.jpg");
+	background-image: url('../../assets/img/store/background_register_store_mob.jpg');
+
+	@media (min-width: 768px) {
+		background-image: url('../../assets/img/store/background_register_store.webp');
+	}
 }
 
 .header {
