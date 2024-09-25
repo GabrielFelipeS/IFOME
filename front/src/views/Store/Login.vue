@@ -122,9 +122,13 @@ function submitPasswordReset (data) {
 }
 .bg-image {
 	background-image: url('../../assets/img/store/background_register_store_mob.jpg');
+	background-position: top;
+	background-size: cover;
+	background-repeat: no-repeat;
 
 	@media (min-width: 768px) {
 		background-image: url('../../assets/img/store/background_register_store.webp');
+		@apply w-full h-screen;
 	}
 }
 
