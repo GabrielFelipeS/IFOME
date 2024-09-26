@@ -38,6 +38,10 @@ public class Restaurant implements PasswordPolicy {
     @Embedded
     private BankAccount bankAccount;
 
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Dish> dishes;
+    
+
     public Restaurant() {}
 
     public Restaurant(RestaurantRequest restaurantRequest, BCryptPasswordEncoder bCryptPasswordEncoder){
