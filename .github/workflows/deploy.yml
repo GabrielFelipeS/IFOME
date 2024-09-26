@@ -2,12 +2,10 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "dev" ]
     paths:
       - 'back/**'
 
   pull_request:
-    branches: [ "dev" ]
     paths:
       - 'back/**'
 
@@ -42,6 +40,7 @@ jobs:
 
   deploy:
       runs-on: ubuntu-latest
+      if: github.event_name == 'pull_request' && github.event.action != 'closed'
       needs: [build, test]
       steps:
       - name: Deploy via SSH

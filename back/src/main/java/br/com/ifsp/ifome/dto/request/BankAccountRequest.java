@@ -1,15 +1,15 @@
 package br.com.ifsp.ifome.dto.request;
 
-import br.com.ifsp.ifome.entities.BankAccount;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 
 public record BankAccountRequest(
-        @NotBlank
+        @NotBlank(message = "Banco é obrigatório")
         String bank,
-        @NotBlank
+
+        @NotBlank(message = "Agência é obrigatório")
         String agency,
-        @NotBlank
+
+        @NotBlank(message = "Conta é obrigatório")
         String account
 )  {
 }

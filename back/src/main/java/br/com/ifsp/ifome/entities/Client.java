@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -26,9 +27,8 @@ public class Client implements PasswordPolicy, UserDetails  {
     private LocalDate dateOfBirth;
     private String cpf;
 
-    @OneToMany
-    @JoinColumn(name = "address", referencedColumnName = "cpf")
-    private List<Address> address;
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Address> address= new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
@@ -44,9 +44,13 @@ public class Client implements PasswordPolicy, UserDetails  {
         this.name = clientRequest.name();
         this.email = clientRequest.email();
         this.password = bCryptPasswordEncoder.encode(clientRequest.password());
-        this.dateOfBirth = clientRequest.dateOfBirth();
+        this.dateOfBirth = clientRequest.convertDateOfBirth();
         this.cpf = clientRequest.cpf();
-        this.address = clientRequest.address().stream().map(Address::new).collect(Collectors.toList());
+        this.address = clientRequest.address().stream().map(addressRequest -> {
+            Address address = new Address(addressRequest);
+            address.setClient(this);
+            return address;
+        }).collect(Collectors.toList());
     }
 
     public Client(Long id, String name, String email, String password, LocalDate dateOfBirth, String cpf,  List<Address> address, String paymentMethods, BCryptPasswordEncoder bCryptPasswordEncoder) {

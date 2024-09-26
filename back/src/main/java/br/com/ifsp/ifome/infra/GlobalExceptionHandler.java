@@ -7,6 +7,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,16 +25,20 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, List<String>> handleValidationExceptions(
+    public  Map<String, Object> handleValidationExceptions(
+
         MethodArgumentNotValidException ex) {
-        Map<String, List<String>> errors = new HashMap<>();
+        Map<String, List<String>> errorsMap = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String name = getNameWithError(error);
             List<String> errorMessage = new LinkedList<>(Collections.singletonList(error.getDefaultMessage()));
-            addContraintViolation(errors, name, errorMessage);
+            addContraintViolation(errorsMap, name, errorMessage);
             logger.warn(error.getDefaultMessage());
         });
-        return errors;
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Erro ao cadastrar cliente");
+        response.put("errors", errorsMap);
+        return response;
     }
 
     private String getNameWithError(ObjectError error) {
@@ -55,5 +60,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<String> invalidTokenExceptionHandler(InvalidTokenException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public  ResponseEntity<Map<String, Object>>  handleBadCredentialExceptions(
+        BadCredentialsException ex) {
+        logger.warn(ex.getMessage());
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 }

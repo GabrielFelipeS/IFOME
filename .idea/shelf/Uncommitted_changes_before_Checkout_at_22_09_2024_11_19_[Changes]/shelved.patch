@@ -1,0 +1,65 @@
+Index: back/src/main/java/br/com/ifsp/ifome/controllers/RestaurantController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package br.com.ifsp.ifome.controllers;\r\n\r\nimport br.com.ifsp.ifome.docs.DocsCreateRestaurant;\r\nimport br.com.ifsp.ifome.dto.ApiResponse;\r\nimport br.com.ifsp.ifome.dto.request.LoginRequest;\r\nimport br.com.ifsp.ifome.dto.request.RestaurantRequest;\r\nimport br.com.ifsp.ifome.dto.response.RestaurantLoginResponse;\r\nimport br.com.ifsp.ifome.dto.response.RestaurantResponse;\r\nimport br.com.ifsp.ifome.services.FileStorageService;\r\nimport br.com.ifsp.ifome.services.RestaurantService;\r\nimport jakarta.servlet.annotation.MultipartConfig;\r\nimport jakarta.validation.Valid;\r\nimport org.springframework.http.MediaType;\r\nimport org.springframework.http.ResponseEntity;\r\nimport org.springframework.transaction.annotation.Transactional;\r\nimport org.springframework.web.bind.annotation.*;\r\nimport org.springframework.web.multipart.MultipartFile;\r\nimport org.springframework.web.util.UriComponentsBuilder;\r\n\r\nimport java.io.IOException;\r\nimport java.net.URI;\r\n\r\n@RestController\r\n\r\n@MultipartConfig\r\n@RequestMapping(\"/api/auth/restaurant\")\r\npublic class RestaurantController {\r\n    private final RestaurantService restaurantService;\r\n    private final FileStorageService fileStorageService;\r\n\r\n    public RestaurantController(RestaurantService restaurantService, FileStorageService fileStorageService){\r\n        this.restaurantService = restaurantService;\r\n        this.fileStorageService = fileStorageService;\r\n    }\r\n\r\n    @Transactional\r\n    @DocsCreateRestaurant\r\n    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)\r\n    public ResponseEntity<RestaurantResponse> create(\r\n        @RequestPart(\"file\")  MultipartFile multipartFile,\r\n        @Valid @RequestPart(\"restaurant\") RestaurantRequest restaurantRequest,\r\n        UriComponentsBuilder ucb) throws IOException {\r\n        System.out.println( fileStorageService.storeFile(multipartFile));\r\n        RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest);\r\n\r\n        URI locationOfNewRestaurant = ucb\r\n            .path(\"restaurant/{id}\")\r\n            .buildAndExpand(1)\r\n            .toUri();\r\n        return ResponseEntity.created(locationOfNewRestaurant).body(restaurantResponse);\r\n    }\r\n\r\n    @PostMapping(\"/login\")\r\n    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest restaurantLogin) {\r\n        RestaurantLoginResponse restaurantLoginResponse = restaurantService.login(restaurantLogin);\r\n        ApiResponse apiResponse = new ApiResponse(\"sucess\", restaurantLoginResponse, \"Cliente logado com sucesso\");\r\n        return ResponseEntity.ok(apiResponse);\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/back/src/main/java/br/com/ifsp/ifome/controllers/RestaurantController.java b/back/src/main/java/br/com/ifsp/ifome/controllers/RestaurantController.java
+--- a/back/src/main/java/br/com/ifsp/ifome/controllers/RestaurantController.java	(revision 8fc06e4aff97fa652f0ea7f06b7a0aec9d9e670b)
++++ b/back/src/main/java/br/com/ifsp/ifome/controllers/RestaurantController.java	(date 1727014657415)
+@@ -9,10 +9,13 @@
+ import br.com.ifsp.ifome.services.FileStorageService;
+ import br.com.ifsp.ifome.services.RestaurantService;
+ import jakarta.servlet.annotation.MultipartConfig;
++import jakarta.servlet.http.HttpServletRequest;
+ import jakarta.validation.Valid;
++import jakarta.validation.constraints.Email;
+ import org.springframework.http.MediaType;
+ import org.springframework.http.ResponseEntity;
+ import org.springframework.transaction.annotation.Transactional;
++import org.springframework.web.bind.MethodArgumentNotValidException;
+ import org.springframework.web.bind.annotation.*;
+ import org.springframework.web.multipart.MultipartFile;
+ import org.springframework.web.util.UriComponentsBuilder;
+@@ -37,16 +40,18 @@
+     @DocsCreateRestaurant
+     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+     public ResponseEntity<RestaurantResponse> create(
+-        @RequestPart("file")  MultipartFile multipartFile,
+-        @Valid @RequestPart("restaurant") RestaurantRequest restaurantRequest,
+-        UriComponentsBuilder ucb) throws IOException {
++            @RequestPart("file")  MultipartFile multipartFile,
++            @Valid @RequestPart("restaurant") RestaurantRequest restaurantRequest,
++            UriComponentsBuilder ucb)
++            throws IOException, MethodArgumentNotValidException {
++
+         System.out.println( fileStorageService.storeFile(multipartFile));
+         RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest);
+ 
+         URI locationOfNewRestaurant = ucb
+-            .path("restaurant/{id}")
+-            .buildAndExpand(1)
+-            .toUri();
++                .path("restaurant/{id}")
++                .buildAndExpand(restaurantResponse.id())
++                .toUri();
+         return ResponseEntity.created(locationOfNewRestaurant).body(restaurantResponse);
+     }
+ 
+@@ -57,4 +62,15 @@
+         return ResponseEntity.ok(apiResponse);
+     }
+ 
++    @PostMapping("forgot-password")
++    public void forgotPassword(HttpServletRequest request, @RequestBody @Valid @Email String email) throws Exception{
++        System.err.println(request.getServerName());
++        restaurantService.forgotPassword(request, email);
++    }
++
++    @PostMapping("/change-password")
++    public void changePassword(@RequestBody @Valid @Email String email) throws Exception{
++
++    }
++
+ }

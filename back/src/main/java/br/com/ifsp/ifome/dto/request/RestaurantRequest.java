@@ -15,7 +15,7 @@ import java.util.List;
 
 @ConfirmartionPasswordEqualsPassword(message = "As senhas não coincidem")
 public record RestaurantRequest(
-        @NotBlank
+        @NotBlank(message = "Nome do restaurante é obrigatório")
         String nameRestaurant,
 
         @Email(message = "E-mail inválido")
@@ -33,7 +33,7 @@ public record RestaurantRequest(
         @NotBlank(message = "CNPJ é obrigatório")
         String cnpj,
 
-        @NotEmpty
+        @NotEmpty(message = "É necessário ter pelo menos um endereço")
         List<@Valid AddressRequest> address,
 
         @NotBlank(message = "Telefone é obrigatório")

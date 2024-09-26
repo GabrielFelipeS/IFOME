@@ -2,11 +2,14 @@ package br.com.ifsp.ifome.controllers;
 
 
 import br.com.ifsp.ifome.docs.DocsCreateClient;
+import br.com.ifsp.ifome.docs.DocsClientLogin;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
+import br.com.ifsp.ifome.dto.request.ForgotPasswordRequest;
 import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.response.ClientResponse;
 import br.com.ifsp.ifome.dto.response.LoginResponse;
+import br.com.ifsp.ifome.repositories.ClientRepository;
 import br.com.ifsp.ifome.services.ClientService;
 import br.com.ifsp.ifome.services.EmailService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,10 +17,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -26,9 +26,11 @@ import java.net.URI;
 @RequestMapping("/api/auth/client")
 public class ClientController {
     private final ClientService clientService;
+    private final ClientRepository clientRepository;
 
-    public ClientController(ClientService clientService, EmailService emailService) {
+    public ClientController(ClientService clientService, EmailService emailService, ClientRepository clientRepository) {
         this.clientService = clientService;
+        this.clientRepository = clientRepository;
     }
 
     @PostMapping
@@ -46,20 +48,22 @@ public class ClientController {
     }
 
     @PostMapping("/login")
+    @DocsClientLogin
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest clientLogin) {
         LoginResponse loginResponse = clientService.login(clientLogin);
         ApiResponse apiResponse = new ApiResponse("sucess", loginResponse, "Cliente logado com sucesso");
         return ResponseEntity.ok(apiResponse);
     }
 
-    @PostMapping("/forgot-password")
-    public void forgotPassword(HttpServletRequest request, @RequestBody @Valid @Email String email) throws Exception {
+    @PostMapping("/forgot_password")
+    public void forgotPassword(HttpServletRequest request, @RequestBody @Valid ForgotPasswordRequest forgotPasswordRequest) throws Exception {
         System.err.println(request.getServerName());
-        clientService.forgotPassword(request, email);
+        System.out.println(forgotPasswordRequest.email());
+        clientService.forgotPassword(request, forgotPasswordRequest.email());
     }
 
-    @PostMapping("/change-password")
-    public void changePassword(@RequestBody @Valid @Email String email) throws Exception {
-
+    @GetMapping("/change_password")
+    public void changePassword(@RequestParam("token") String token) {
+        System.err.println(token);
     }
 }

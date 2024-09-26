@@ -3,6 +3,7 @@ package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.dto.request.AddressRequest;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
+import br.com.ifsp.ifome.dto.request.ForgotPasswordRequest;
 import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.entities.Address;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -63,7 +64,7 @@ public class ClienteControllerIT {
         LoginRequest clientLogin = new LoginRequest("invalid_email@gmail.com", "@Password1");
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/login", clientLogin, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
@@ -71,7 +72,7 @@ public class ClienteControllerIT {
         LoginRequest clientLogin = new LoginRequest("user1@gmail.com", "invalid_password");
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/login", clientLogin, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
@@ -79,7 +80,7 @@ public class ClienteControllerIT {
     @DisplayName("should be possible to create a new client")
     public void shouldBeAbleToCreateANewClient() throws JsonProcessingException {
         ClientRequest client = new ClientRequest("Nome completo", "teste@teste.com", "@Password1", "@Password1",
-            LocalDate.now().minusYears(18), "48608678071", "(11) 99248-1491",
+            LocalDate.now().minusYears(18).toString(), "48608678071", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
                 "12", "casa","details")));
@@ -120,7 +121,7 @@ public class ClienteControllerIT {
     @DisplayName("should be return error with cpf already registred")
     public void shouldReturnErrorWithCpfAlreadyRegistred() throws JsonProcessingException {
         ClientRequest client = new ClientRequest("Nome completo", "teste@teste.com", "@Password1", "@Password1",
-            LocalDate.now().minusYears(18), "528.003.140-28", "(11) 99248-1491",
+            LocalDate.now().minusYears(18).toString(), "528.003.140-28", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
                 "12", "casa","details")));
@@ -129,10 +130,10 @@ public class ClienteControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> message = documentContext.read("$.cpf");
+        List<String> message = documentContext.read("$.errors.cpf");
 
         assertThat(message).containsExactlyInAnyOrder("Cpf já cadastrado");
     }
@@ -143,7 +144,7 @@ public class ClienteControllerIT {
     @DisplayName("should not be possible to create a new client with already registered email")
     public void shouldReturnErrorWhenCreatingClientWithAlreadyRegisteredEmail() {
         ClientRequest client = new ClientRequest("Nome completo","user1@gmail.com", "@Password1", "@Password1",
-            LocalDate.now().minusYears(14), "019.056.440-78", "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
+            LocalDate.now().minusYears(14).toString(), "019.056.440-78", "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
             "address",  "complement",
              "12", "condominio","details")));
 
@@ -151,10 +152,10 @@ public class ClienteControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> message = documentContext.read("$.email");
+        List<String> message = documentContext.read("$.errors.email");
 
         assertThat(message).containsExactlyInAnyOrder("E-mail já registrado");
     }
@@ -164,7 +165,7 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the password field")
     public void shouldReturnAllValidationErrorsInThePasswordField() {
         ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", " ", " ",
-            LocalDate.now().minusYears(18), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            LocalDate.now().minusYears(18).toString(), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address",  "complement",
             "12", "condomínio","details")));
 
@@ -172,10 +173,10 @@ public class ClienteControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(2);
 
-        List<String> passwordErrors = documentContext.read("$.password");
+        List<String> passwordErrors = documentContext.read("$.errors.password");
         assertThat(passwordErrors)
             .containsExactlyInAnyOrder(
                 "Senha é obrigatório",
@@ -192,7 +193,7 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the dateOfBirth field")
     public void shouldReturnAllValidationErrorsInThDateOfBirthField() {
         ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", "@Teste123", "@Teste123",
-            LocalDate.now().plusDays(1), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            LocalDate.now().plusDays(1).toString(), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address",  "complement",
              "12", "condominio","details")));
 
@@ -200,10 +201,10 @@ public class ClienteControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> dateOfBirth = documentContext.read("$.dateOfBirth");
+        List<String> dateOfBirth = documentContext.read("$.errors.dateOfBirth");
         assertThat(dateOfBirth)
             .containsExactlyInAnyOrder(
                 "Data de nascimento deve estar no passado",
@@ -216,7 +217,7 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the cpf field")
     public void shouldReturnAllValidationErrorsInTheCPFField() {
         ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", "@Teste123", "@Teste123",
-            LocalDate.now().minusYears(18), "cpf",  "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            LocalDate.now().minusYears(18).toString(), "cpf",  "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address", "complement",
             "12", "condominio","details")));
 
@@ -224,10 +225,10 @@ public class ClienteControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> cpf = documentContext.read("$.cpf");
+        List<String> cpf = documentContext.read("$.errors.cpf");
         assertThat(cpf)
             .containsExactlyInAnyOrder(
                 "CPF inválido"
@@ -239,7 +240,7 @@ public class ClienteControllerIT {
     @DisplayName("should return error when registering a client with different password and password confirmation")
     public void shouldReturnErrorWhenCreatingClientWithdifferentPasswordAndPasswordConfirmation() throws JsonProcessingException {
         ClientRequest client = new ClientRequest("Nome completo","teste@teste.com", "@Password1", "@Password",
-            LocalDate.now().minusYears(18), "48608678071", "(11) 99248-1491",
+            LocalDate.now().minusYears(18).toString(), "48608678071", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address",  "complement",
                  "12", "condominio","details")));
@@ -249,7 +250,7 @@ public class ClienteControllerIT {
         System.out.println(response.getBody());
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
     }
 
@@ -259,12 +260,14 @@ public class ClienteControllerIT {
         greenMail.setUser("teste.ifome@gmail.com", "teste");
         greenMail.setUser("user1@gmail.com", "test@example.com");
         greenMail.start();
-
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/forgot-password", "user1@gmail.com", String.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest("user1@gmail.com");
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/forgot_password", forgotPasswordRequest, String.class);
 
         MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+
+        greenMail.stop();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         assertThat(receivedMessages.length).isEqualTo(1);
 
@@ -274,9 +277,6 @@ public class ClienteControllerIT {
         assertThat(message.getSubject()).isEqualTo("Redefinição de senha da conta do IFOME");
 
         String text = message.getContent().toString();
-
-
-        greenMail.stop();
     }
 
     @Test
@@ -286,19 +286,21 @@ public class ClienteControllerIT {
         greenMail.setUser("test@example.com", "test@example.com");
         greenMail.start();
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/forgot-password", "test@example.com", String.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest("test@example.com");
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/forgot_password", forgotPasswordRequest, String.class);
 
         MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
 
-        assertThat(receivedMessages.length).isEqualTo(0);
         greenMail.stop();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        assertThat(receivedMessages.length).isEqualTo(0);
     }
 
     @Test
     public void shouldResetPassword() {
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/change-password", "user1@gmail.com", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("/api/auth/client/change_password?token=teste",  String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
