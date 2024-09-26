@@ -1,10 +1,10 @@
 package br.com.ifsp.ifome.entities;
 
 import br.com.ifsp.ifome.dto.request.DishRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "dishes")
 public class Dish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +15,10 @@ public class Dish {
     private String dishImage;
     private String availability;
 
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    private Restaurant restaurant;
 
     public Dish() {}
 
@@ -26,13 +30,22 @@ public class Dish {
         this.availability = dishRequest.availability();
     }
 
-    public Dish(Long id, String name, Double price, String dishCategory, String dishImage, String availability) {
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
+
+    public Dish(Long id, String name, Double price, String dishCategory, String dishImage, String availability, Restaurant restaurant) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.dishCategory = dishCategory;
         this.dishImage = dishImage;
         this.availability = availability;
+        this.restaurant = restaurant;
     }
 
     public Long getId() {
