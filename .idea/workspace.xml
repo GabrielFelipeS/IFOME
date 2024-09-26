@@ -4,246 +4,54 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="14b75a5c-e296-43c3-a638-51350f85b6b6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/controllers/ValidationController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/docs/DocsClientLogin.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/docs/DocsCreateDeliveryPerson.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/docs/DocsDeliveryLogin.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/docs/DocsRestaurantLogin.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/request/CnpjValidatorRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/request/CpfValidatorRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/request/EmailValidatorRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/request/ForgotPasswordRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/validation/anotations/DateFormat.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/validation/anotations/Past.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/validation/validators/anotations/DateFormatValidator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/validation/validators/anotations/PastValidator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back/src/test/java/br/com/ifsp/ifome/controllers/ValidationControllerIT.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/deploy.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/deploy.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/IFOME.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/back/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/back/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/controllers/ClientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/controllers/ClientController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/controllers/DeliveryPersonController.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/controllers/DeliveryPersonController.java" afterDir="false" />
+    <list default="true" id="331421b4-8ae3-423f-a106-0b618a53fef8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_09_2024_11_19_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_09_2024_11_19__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_09_2024_11_21_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_09_2024_11_21__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/controllers/RestaurantController.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/controllers/RestaurantController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/docs/DocsCreateRestaurant.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/docs/DocsCreateRestaurant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/request/BankAccountRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/request/BankAccountRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/request/ClientRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/request/ClientRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/request/DeliveryPersonRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/request/DeliveryPersonRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/request/RestaurantRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/request/RestaurantRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/response/DeliveryPersonResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/response/DeliveryPersonResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/entities/Address.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/entities/Address.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/entities/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/entities/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/entities/DeliveryPerson.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/entities/DeliveryPerson.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/entities/Restaurant.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/entities/Restaurant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/infra/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/infra/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/services/ClientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/services/ClientService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/services/DeliveryPersonService.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/services/DeliveryPersonService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/services/LoginService.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/services/LoginService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/services/RestaurantService.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/services/RestaurantService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/validation/anotations/MinAgeToUse.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/validation/anotations/MinAgeToUse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/validation/validators/anotations/MinAgeToUseValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/validation/validators/anotations/MinAgeToUseValidator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/resources/data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/resources/data.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/resources/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/resources/schema.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/test/java/br/com/ifsp/ifome/controllers/ClienteControllerIT.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/test/java/br/com/ifsp/ifome/controllers/ClienteControllerIT.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/test/java/br/com/ifsp/ifome/controllers/DeliveryPersonControllerIT.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/test/java/br/com/ifsp/ifome/controllers/DeliveryPersonControllerIT.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/test/java/br/com/ifsp/ifome/controllers/RestaurantControllerIT.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/test/java/br/com/ifsp/ifome/controllers/RestaurantControllerIT.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/test/java/br/com/ifsp/ifome/validation/validators/MinAgeToUseValidatorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/test/java/br/com/ifsp/ifome/validation/validators/MinAgeToUseValidatorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/resources/static/images/testfile.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Interface" />
-        <option value="AnnotationType" />
-        <option value="Class" />
-        <option value="Record" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="feature/cadastrar_cliente" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 7
-}</component>
-  <component name="ProjectId" id="2m6b0iy4ymwNQXRopD6oMTIHG9S" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="1" id="Add" />
-  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="2mcp6arfbdxmQb1PSZRxRyyQErc" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.IfomeApplication.executor": "Run",
-    "JUnit.BackApplicationTests.executor": "Run",
-    "JUnit.ClienteControllerIT.executor": "Run",
-    "JUnit.DeliveryPersonControllerIT.executor": "Run",
-    "JUnit.DeliveryPersonControllerIT.shouldBeAbleToCreateANewDeliveryPerson.executor": "Run",
-    "JUnit.DeliveryPersonControllerIT.shouldBeAbleToCreateANewDeliveryPersonWithWrongPlate.executor": "Run",
-    "JUnit.DeliveryPersonControllerIT.shouldBeAbleToCreateANewDeliveryPersonWithoutCNH.executor": "Run",
-    "JUnit.DeliveryPersonControllerIT.shouldDetectAUnderAgeDeliveryPerson.executor": "Run",
-    "JUnit.DeliveryPersonControllerIT.shouldReturnAllValidationErrorsInTheCNHNValidityFields.executor": "Run",
-    "JUnit.DeliveryPersonControllerIT.shouldReturnAllValidationErrorsInTheCNHNumberFields.executor": "Run",
-    "JUnit.DeliveryPersonControllerIT.shouldReturnAllValidationErrorsInThePasswordFields.executor": "Run",
-    "JUnit.DeliveryPersonControllerIT.shouldReturnAllValidationErrorsInThePersonResponsibleCPFField.executor": "Run",
-    "JUnit.DeliveryPersonControllerIT.shouldReturnAllValidationErrorsInTheVehicleDocumentField.executor": "Run",
     "JUnit.RestaurantControllerIT.executor": "Run",
-    "JUnit.RestaurantControllerIT.shouldBeAbleLoginWithValidUser.executor": "Run",
-    "JUnit.RestaurantControllerIT.shouldBeAbleToCreateANewRestaurant.executor": "Run",
-    "JUnit.RestaurantControllerIT.shouldReturnAllValidationErrorsInTheAddressFields.executor": "Run",
-    "JUnit.RestaurantControllerIT.shouldReturnAllValidationErrorsInTheBankAccountField.executor": "Run",
-    "JUnit.RestaurantControllerIT.shouldReturnAllValidationErrorsInTheBankAccountFields.executor": "Run",
-    "JUnit.RestaurantControllerIT.shouldReturnAllValidationErrorsInThePasswordConfirmationField.executor": "Run",
-    "JUnit.ifome in ifome.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Merging feature/cadastrar__restaurante",
+    "git-widget-placeholder": "feature/cadastrar__restaurante",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/amand/IFOME",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.grazie"
+    "last_opened_file_path": "C:/Users/amand/IFOME"
   }
 }]]></component>
-  <component name="RecentsManager">
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="br.com.ifsp.ifome.validation.validators" />
-      <recent name="br.com.ifsp.ifome.docs" />
-    </key>
-  </component>
-  <component name="RunManager" selected="JUnit.ifome in ifome">
-    <configuration name="DeliveryPersonControllerIT" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="ifome" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="br.com.ifsp.ifome.controllers.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="br.com.ifsp.ifome.controllers" />
-      <option name="MAIN_CLASS_NAME" value="br.com.ifsp.ifome.controllers.DeliveryPersonControllerIT" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="DeliveryPersonControllerIT.shouldDetectAUnderAgeDeliveryPerson" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="ifome" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="br.com.ifsp.ifome.controllers.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="br.com.ifsp.ifome.controllers" />
-      <option name="MAIN_CLASS_NAME" value="br.com.ifsp.ifome.controllers.DeliveryPersonControllerIT" />
-      <option name="METHOD_NAME" value="shouldDetectAUnderAgeDeliveryPerson" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="DeliveryPersonControllerIT.shouldReturnAllValidationErrorsInTheCNHNValidityFields" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="ifome" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="br.com.ifsp.ifome.controllers.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="br.com.ifsp.ifome.controllers" />
-      <option name="MAIN_CLASS_NAME" value="br.com.ifsp.ifome.controllers.DeliveryPersonControllerIT" />
-      <option name="METHOD_NAME" value="shouldReturnAllValidationErrorsInTheCNHNValidityFields" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="DeliveryPersonControllerIT.shouldReturnAllValidationErrorsInTheVehicleDocumentField" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="ifome" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="br.com.ifsp.ifome.controllers.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="br.com.ifsp.ifome.controllers" />
-      <option name="MAIN_CLASS_NAME" value="br.com.ifsp.ifome.controllers.DeliveryPersonControllerIT" />
-      <option name="METHOD_NAME" value="shouldReturnAllValidationErrorsInTheVehicleDocumentField" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ifome in ifome" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="ifome" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/back/src/test/java/br/com/ifsp/ifome" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="IFOME" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="IFOME" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="JUnit.ifome in ifome" />
-        <item itemvalue="JUnit.DeliveryPersonControllerIT.shouldReturnAllValidationErrorsInTheVehicleDocumentField" />
-        <item itemvalue="JUnit.DeliveryPersonControllerIT.shouldReturnAllValidationErrorsInTheCNHNValidityFields" />
-        <item itemvalue="JUnit.DeliveryPersonControllerIT.shouldDetectAUnderAgeDeliveryPerson" />
-        <item itemvalue="JUnit.DeliveryPersonControllerIT" />
-      </list>
-    </recent_temporary>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="14b75a5c-e296-43c3-a638-51350f85b6b6" name="Changes" comment="" />
-      <created>1726399752001</created>
+      <changelist id="331421b4-8ae3-423f-a106-0b618a53fef8" name="Changes" comment="" />
+      <created>1727385543477</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1726399752001</updated>
+      <updated>1727385543477</updated>
     </task>
     <servers />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
   </component>
 </project>
