@@ -4,19 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="331421b4-8ae3-423f-a106-0b618a53fef8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_09_2024_11_19_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_09_2024_11_19__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_09_2024_11_21_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_09_2024_11_21__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/controllers/RestaurantController.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/controllers/RestaurantController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/request/RestaurantRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/request/RestaurantRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/entities/Restaurant.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/entities/Restaurant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/services/RestaurantService.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/services/RestaurantService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/resources/static/images/testfile.txt" beforeDir="false" />
-    </list>
+    <list default="true" id="331421b4-8ae3-423f-a106-0b618a53fef8" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -37,7 +25,7 @@
   "keyToString": {
     "JUnit.RestaurantControllerIT.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feature/cadastrar__restaurante",
+    "git-widget-placeholder": "feature/cadastrar__pratos",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/amand/IFOME"
