@@ -10,7 +10,7 @@ import java.io.IOException;
 @Service
 public class FileStorageService {
 
-    @Value("${file.upload-dir}") // Use a propriedade configurada para o diretório de upload
+    private final String PATH_TO_FOLDER_IMAGES =  "/src/main/resources/static/images/";
     private String uploadDir;
 
     public String storeFile(MultipartFile file) throws IOException {
@@ -25,9 +25,9 @@ public class FileStorageService {
         }
 
         // Define o caminho completo do arquivo
-        String pathName = uploadDir + file.getOriginalFilename();
+        String pathName = System.getProperty("user.dir") + PATH_TO_FOLDER_IMAGES + file.getOriginalFilename();
+        System.out.println(pathName);
         File uploadedFile = new File(pathName);
-
         // Transferir o arquivo para o diretório especificado
         file.transferTo(uploadedFile);
 

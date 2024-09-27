@@ -4,54 +4,140 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="331421b4-8ae3-423f-a106-0b618a53fef8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_09_2024_11_19_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_09_2024_11_19__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_09_2024_11_21_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_09_2024_11_21__Changes_.xml" beforeDir="false" />
+    <list default="true" id="79041101-a699-4e78-8142-2c4a23e470fe" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/controllers/RestaurantController.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/controllers/RestaurantController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/request/RestaurantRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/request/RestaurantRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/entities/Restaurant.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/entities/Restaurant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/services/FileStorageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/services/FileStorageService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/services/RestaurantService.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/services/RestaurantService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/src/main/resources/static/images/testfile.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/test/java/br/com/ifsp/ifome/controllers/RestaurantControllerIT.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/test/java/br/com/ifsp/ifome/controllers/RestaurantControllerIT.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
-  <component name="ProjectId" id="2mcp6arfbdxmQb1PSZRxRyyQErc" />
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2menjaCidIhB1Z5dHi7UhSXuEcC" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "JUnit.RestaurantControllerIT.executor": "Run",
+    "Application.IfomeApplication.executor": "Debug",
+    "JUnit.RestaurantControllerIT.executor": "Debug",
+    "JUnit.RestaurantControllerIT.shouldBeAbleToCreateANewRestaurant.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "feature/cadastrar__restaurante",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/amand/IFOME"
   }
 }]]></component>
+  <component name="RunManager" selected="Application.IfomeApplication">
+    <configuration name="IfomeApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="br.com.ifsp.ifome.IfomeApplication" />
+      <module name="ifome" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="br.com.ifsp.ifome.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RestaurantControllerIT.shouldBeAbleToCreateANewRestaurant" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ifome" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="br.com.ifsp.ifome.controllers.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="br.com.ifsp.ifome.controllers" />
+      <option name="MAIN_CLASS_NAME" value="br.com.ifsp.ifome.controllers.RestaurantControllerIT" />
+      <option name="METHOD_NAME" value="shouldBeAbleToCreateANewRestaurant" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.IfomeApplication" />
+        <item itemvalue="JUnit.RestaurantControllerIT.shouldBeAbleToCreateANewRestaurant" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="331421b4-8ae3-423f-a106-0b618a53fef8" name="Changes" comment="" />
-      <created>1727385543477</created>
+      <changelist id="79041101-a699-4e78-8142-2c4a23e470fe" name="Changes" comment="" />
+      <created>1727446046171</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1727385543477</updated>
+      <updated>1727446046171</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/controllers/RestaurantController.java</url>
+          <line>52</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/controllers/RestaurantController.java</url>
+          <line>56</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/controllers/RestaurantController.java</url>
+          <line>60</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/controllers/RestaurantController.java</url>
+          <line>67</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="JUnit">
+        <watch expression="imageFile" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

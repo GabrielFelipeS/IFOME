@@ -39,11 +39,6 @@ public class RestaurantController {
         this.fileStorageService = fileStorageService;
     }
 
-    @Value("${file.upload-dir}")
-    private String uploadDir;
-
-    @Value("${file.base-url}")
-    private String baseUrl;
 
     @Transactional
     @DocsCreateRestaurant
@@ -51,6 +46,7 @@ public class RestaurantController {
     public ResponseEntity<RestaurantResponse> create(
         @RequestPart("file")  MultipartFile multipartFile,
         @Valid @RequestPart("restaurant") RestaurantRequest restaurantRequest,
+
         UriComponentsBuilder ucb)
         throws IOException, MethodArgumentNotValidException {
 
@@ -60,8 +56,9 @@ public class RestaurantController {
         // Armazenar o arquivo e obter a URL da imagem
         String restaurantImageUrl = fileStorageService.storeFile(multipartFile);
 
+
         // Criar o restaurante e passar a URL da imagem para ser armazenada no banco
-        RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest, restaurantImageUrl);
+        RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest);
 
 
         URI locationOfNewRestaurant = ucb

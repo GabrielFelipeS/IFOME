@@ -56,7 +56,7 @@ public record RestaurantRequest(
         @NotBlank(message = "CPF é obrigatório")
         String personResponsibleCPF,
 
-        String restaurantImage,
+        MultipartFile  restaurantImage,
         @Valid
         BankAccountRequest bankAccount
 ) { }
