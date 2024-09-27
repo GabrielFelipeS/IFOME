@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,7 +34,11 @@ public class DishControllerIT {
                 "Disponível"
 
         );
-        ResponseEntity<String> response = testRestTemplate.postForEntity("/dish", dishRequest, String.class);
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("dish", dishRequest);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/dish", body, String.class);
         System.out.println(response.getBody());
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
