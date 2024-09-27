@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="331421b4-8ae3-423f-a106-0b618a53fef8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_09_2024_11_19_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_09_2024_11_19__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_09_2024_11_21_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_09_2024_11_21__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/controllers/RestaurantController.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/controllers/RestaurantController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/request/RestaurantRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/dto/request/RestaurantRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/entities/Restaurant.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/entities/Restaurant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/services/RestaurantService.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/br/com/ifsp/ifome/services/RestaurantService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back/src/main/resources/static/images/testfile.txt" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="2mcp6arfbdxmQb1PSZRxRyyQErc" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JUnit.RestaurantControllerIT.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "feature/cadastrar__restaurante",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/amand/IFOME"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="331421b4-8ae3-423f-a106-0b618a53fef8" name="Changes" comment="" />
+      <created>1727385543477</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1727385543477</updated>
+    </task>
+    <servers />
+  </component>
+</project>

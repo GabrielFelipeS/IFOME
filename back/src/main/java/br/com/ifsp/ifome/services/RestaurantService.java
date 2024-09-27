@@ -31,9 +31,10 @@ public class RestaurantService {
         this.validatorService = new ValidatorService<>(validators);
         this.loginService = loginService;
     }
-    public RestaurantResponse create(RestaurantRequest restaurantRequest) throws MethodArgumentNotValidException {
+    public RestaurantResponse create(RestaurantRequest restaurantRequest, String restaurantImageUrl) throws MethodArgumentNotValidException {
         validatorService.isValid(restaurantRequest);
         Restaurant restaurant = new Restaurant(restaurantRequest, bCryptPasswordEncoder);
+        restaurant.setRestaurantImage(restaurantImageUrl);  // Atribuir a URL da imagem
         restaurant = restaurantRepository.save(restaurant);
         return new RestaurantResponse(restaurant);
     }

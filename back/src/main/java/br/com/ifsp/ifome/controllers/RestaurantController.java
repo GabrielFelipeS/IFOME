@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,12 @@ public class RestaurantController {
         this.fileStorageService = fileStorageService;
     }
 
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
+    @Value("${file.base-url}")
+    private String baseUrl;
+
     @Transactional
     @DocsCreateRestaurant
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -48,7 +55,14 @@ public class RestaurantController {
         throws IOException, MethodArgumentNotValidException {
 
         System.out.println( fileStorageService.storeFile(multipartFile));
-        RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest);
+        //RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest);
+
+        // Armazenar o arquivo e obter a URL da imagem
+        String restaurantImageUrl = fileStorageService.storeFile(multipartFile);
+
+        // Criar o restaurante e passar a URL da imagem para ser armazenada no banco
+        RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest, restaurantImageUrl);
+
 
         URI locationOfNewRestaurant = ucb
             .path("restaurant/{id}")
