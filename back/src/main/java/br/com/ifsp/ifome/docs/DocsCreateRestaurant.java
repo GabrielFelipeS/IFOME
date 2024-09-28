@@ -49,11 +49,16 @@ import java.lang.annotation.Target;
                             "telephone": "(11) 1234-5678",
                             "foodCategory": "Pizzaria",
                             "paymentMethods": "Dinheiro, Cartão",
-                            "openingHoursStart": "12:00",
-                            "openingHoursEnd": "23:00",
+                            "openingHours" : [
+                                {
+                                "dayOfTheWeek:": "Segunda",
+                                "opening" : "11:00",
+                                "closing": "23:00"
+                                }
+                            ]
                             "personResponsible": "responsavel",
                             "personResponsibleCPF": "033.197.356-16",
-                            "restaurantImages": "imagem.jpeg",
+                            "restaurantImage": "imagem.jpeg",
                             "bankAccount": [
                                 {
                                     "bank" : "123",
@@ -69,22 +74,44 @@ import java.lang.annotation.Target;
                                 description =
                                         """
                                             Inserindo restaurante inválido
+                                            nameRestaurant : esta vazio
+                                            foodCategory : esta vazio
+                                            telephone: esta vazio ou fora do padrão
                                             cnpj: fora do padrão
+                                            openingHours : esta vazio ou fora do padrão
+                                            personResponsible : esta vazio
                                             personResponsibleCPF: fora do padrão
                                             email: não possui @
                                             password: não possui letra maiúscula, número e caractere especial
-                                            address: esta vazio
+                                            address: esta vazio, possui campos vazios
                                             bankAccount: esta vazio
+                                            paymentMethods : esta vazio
+                                            restaurantImage : esta sem imagem
                                         """,
                                 value = """
                                     {
+                                        "nameRestaurant" : [],
+                                        "foodCategory" : [],
+                                        "telephone" : 454477745,
+                                        "openingHours" : [],
+                                        "personResponsible" : [],
                                         "personResponsibleCPF": "4860867801",
                                         "cnpj" : "155455554"
                                         "email" : "testeemail.com",
                                         "password": "password",
                                         "confirmationPassword": "password",
                                         "bankAccount": [],
-                                        "address": []
+                                        "address": [],
+                                        "paymentMethods" : [],
+                                        "restaurantImage" : []
+                                        "openingHours" : [
+                                                {
+                                                "dayOfTheWeek:": "Segund",
+                                                "opening" : "11:00",
+                                                "closing": "10:00"
+                                                }
+                                              ],
+                                    
                                     }
                                     """
                         )
@@ -124,7 +151,7 @@ import java.lang.annotation.Target;
                           "paymentMethods" : "Dinheiro, Cartão",
                           "openingHours" : [
                             {
-                            "dayOfTheWeek:": "Segunda",
+                            "dayOfTheWeek:": "Segunda-feira",
                             "opening" : "11:00",
                             "closing": "23:00"
                             }
@@ -179,13 +206,33 @@ import java.lang.annotation.Target;
                                   "paymentMethods" :[
                                     "não deve estar em branco"
                                   ],
-                                  "openingHours" :[
-                                    "não deve estar em branco"
+                                  "openingHours": [
+                                      {
+                                          "dayOfTheWeek": [
+                                              "O dia da semana deve ser um valor válido."
+                                          ],
+                                          "opening": [
+                                              "Horário de abertura deve estar no formato HH:mm"
+                                          ],
+                                          "closing": [
+                                              "Horário de fechamento deve estar no formato HH:mm",
+                                              "Horário de abertura deve ser anterior ao de fechamento"
+                                          ]
+                                      }
                                   ],
                                   "personResponsible" : [
                                     "O nome não deve estar em branco"
                                   ],
                                   "personResponsibleCPF" : [
+                                    "não deve estar em branco"
+                                  ],
+                                  "restaurantImage" : [
+                                    "não deve estar vazio"
+                                  ],
+                                  "nameRestaurant" : [
+                                    "não deve estar em branco"
+                                  ],
+                                  "foodCategory" : [
                                     "não deve estar em branco"
                                   ]
                             }
