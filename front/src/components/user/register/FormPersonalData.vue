@@ -51,8 +51,11 @@ const validateForm = () => {
 	} else if ((parseInt(month) === 2 && day > 29) || (day > 31) || (year > today.getFullYear())) {
 		errors.value.dateOfBirth = 'Digite uma data válida';
 		valid = false;
-	} else if ((year > minDate.getFullYear()) || (year < maxDate.getFullYear())) {
-		errors.value.dateOfBirth = 'A idade deve ser entre 13 e 90 anos';
+	} else if (year > minDate.getFullYear()) {
+		errors.value.dateOfBirth = 'Para cadastro no sistema, é necessário ter pelo menos 13 anos de idade';
+		valid = false;
+	} else if (year < maxDate.getFullYear()) {
+		errors.value.dateOfBirth = 'Para cadastro no sistema, é necessário ter no máximo 90 anos de idade';
 		valid = false;
 	} else {
 		errors.value.dateOfBirth = '';
