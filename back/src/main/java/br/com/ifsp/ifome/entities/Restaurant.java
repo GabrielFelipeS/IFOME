@@ -3,16 +3,19 @@ package br.com.ifsp.ifome.entities;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
 import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "RESTAURANTS")
 // TODO esta faltando a parte de user details junto com roles
-public class Restaurant implements PasswordPolicy {
+public class Restaurant implements PasswordPolicy, UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,6 +40,9 @@ public class Restaurant implements PasswordPolicy {
     private String restaurantImage;
     @Embedded
     private BankAccount bankAccount;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public Restaurant() {}
 
@@ -79,6 +85,7 @@ public class Restaurant implements PasswordPolicy {
         this.paymentMethods = paymentMethods;
         this.restaurantImage = restaurantImage;
         this.bankAccount = bankAccount;
+        this.role = Role.RESTAURANT;
     }
 
     public Long getId() {
@@ -161,8 +168,38 @@ public class Restaurant implements PasswordPolicy {
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.role.getAuthorities();
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return "";
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
     }
 
     public void setPassword(String password) {
