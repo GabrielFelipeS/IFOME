@@ -111,8 +111,8 @@ const $toast = useToast();
 	<div class="content"
 		 v-bind:class="[currentStep === 0 ? 'bg-image' : '']">
 		<div class="header">
-			<Header v-if="currentStep === 0" />
-			<Header logo v-if="currentStep > 0" />
+			<Header :logo="currentStep !== 0" @go-back="previousStep"
+					:home-page="'user-login'" :back-button="(currentStep !== 0)" />
 		</div>
 		<div class="main">
 			<KeepAlive>
