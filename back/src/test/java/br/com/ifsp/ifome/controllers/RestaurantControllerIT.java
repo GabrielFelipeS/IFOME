@@ -119,18 +119,18 @@ public class RestaurantControllerIT {
 
         DocumentContext document = JsonPath.parse(response.getBody());
 
-        Number id = document.read("$.id");
-        String nameRestaurant = document.read("$.nameRestaurant");
-        String email = document.read("$.email");
-        String cnpj = document.read("$.cnpj");
-        //String address = document.read("$.address");
-        Address addressJson = document.read("$.address[0]", Address.class);
-        String telephone = document.read("$.telephone");
-        String foodCategory = document.read("$.foodCategory");
-        String paymentMethods = document.read("$.paymentMethods");
-        OpeningHours openingHoursJson = document.read("$.openingHours", OpeningHours.class);
-        String personResponsibleCPF = document.read("$.personResponsibleCPF");
-        String restaurantImages = document.read("$.restaurantImage");
+        Number id = document.read("$.data.id");
+        String nameRestaurant = document.read("$.data.nameRestaurant");
+        String email = document.read("$.data.email");
+        String cnpj = document.read("$.data.cnpj");
+        //String address = document.read("$.data.address");
+        Address addressJson = document.read("$.data.address[0]", Address.class);
+        String telephone = document.read("$.data.telephone");
+        String foodCategory = document.read("$.data.foodCategory");
+        String paymentMethods = document.read("$.data.paymentMethods");
+        OpeningHours openingHoursJson = document.read("$.data.openingHours", OpeningHours.class);
+        String personResponsibleCPF = document.read("$.data.personResponsibleCPF");
+        String restaurantImages = document.read("$.data.restaurantImage");
 
 
         assertThat(id).isNotNull();
