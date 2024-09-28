@@ -439,7 +439,7 @@ const returnSteps = () => {
 </script>
 
 <template>
-    <div class="steps py-[100px]" v-if="stepsActive">
+    <div class="steps" v-if="stepsActive">
         <HeaderSteps :currentStep="currentStep" @returnBack="returnSteps" />
 
         <div class="step" v-if="currentStep === 1">
