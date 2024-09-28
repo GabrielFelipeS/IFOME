@@ -24,8 +24,8 @@ watch(() => props.currentStep, (newStep) => {
 </script>
 
 <template>
-    <header class="headerSteps" :class="props.currentStep > 1 &&  props.currentStep < 4? 'justify-center md:justify-between': 'justify-center md:justify-center'">
-        <div class="arrow" @click="returnBack" v-if="props.currentStep > 1 &&  props.currentStep < 4">
+    <header class="headerSteps" :class="props.currentStep > 1 &&  props.currentStep < 5? 'justify-center md:justify-between': 'justify-center md:justify-center'">
+        <div class="arrow" @click="returnBack" v-if="props.currentStep > 1 &&  props.currentStep < 5">
             <img src="../../assets/img/store/arrow.svg" class="img">
         </div>
         <img src="../../assets/img/logo_header.png" class="img">
@@ -36,7 +36,7 @@ watch(() => props.currentStep, (newStep) => {
 
 <style lang="scss" scoped>
 .headerSteps {
-    @apply w-full h-[100px] bg-white flex flex-row items-center rounded-b-3xl font-default text-lg border drop-shadow-md fixed top-0 z-50;
+    @apply w-full h-[100px] bg-white flex flex-row items-center rounded-b-3xl font-default text-lg border drop-shadow-md;
 
     .img {
         @apply w-[100px] h-[100px] ml-[-1.25rem];
