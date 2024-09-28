@@ -506,7 +506,7 @@ const returnSteps = () => {
                 </div>
                 <div class="form-group">
                     <label for="renavam">Renavam</label>
-                    <MaskInput type="text" id="renavam" v-model="renavam" placeholder="Renavam" mask="#########"
+                    <MaskInput type="text" id="renavam" v-model="renavam" placeholder="Renavam" mask="###########"
                         required />
                     <template v-if="step2Erros.renavam">
                         <p v-for="error in step2Erros.renavam">{{ error }}</p>
