@@ -26,6 +26,7 @@ public class DishControllerIT {
     @Test
     @DirtiesContext
     public void shouldBeAbleToCreateADish(){
+        Long restaurantId = 1L; // ID de exemplo
         DishRequest dishRequest = new DishRequest(
                 "Lasanha",
                "Massa fresca, molho bolonhesa",
@@ -42,6 +43,7 @@ public class DishControllerIT {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("dish", dishRequest);
         body.add("file", fileResource);
+        body.add("restaurantId", 1L);
 
         // Definir os headers da requisição
         HttpHeaders headers = new HttpHeaders();
@@ -62,10 +64,10 @@ public class DishControllerIT {
         Number id = document.read("$.id");
         String name = document.read("$.name");
         String description = document.read("$.description");
-        String price = document.read("$.price");
+        Number price = document.read("$.price");
         String dishCategory = document.read("$.dishCategory");
         String dishImage = document.read("$.dishImage");
-        String dishAvailability = document.read("$.dishAvailability");
+        String availability = document.read("$.availability");
 
 
         assertThat(id).isNotNull();

@@ -43,9 +43,10 @@ public class DishController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<DishResponse> create(
             @RequestPart("file") MultipartFile multipartFile,
-            @Valid @RequestPart("dish")DishRequest dishRequest, UriComponentsBuilder ucb)
+            @Valid @RequestPart("dish")DishRequest dishRequest,
+            @RequestPart("restaurantId") Long restaurantId, UriComponentsBuilder ucb)
         throws IOException, MethodArgumentNotValidException{
-        DishResponse dishResponse = dishService.create(dishRequest, multipartFile);
+        DishResponse dishResponse = dishService.create(dishRequest, multipartFile, restaurantId);
 
         URI locationOfNewDish = ucb
                 .path("dish/{id}")
