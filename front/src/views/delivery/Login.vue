@@ -80,9 +80,17 @@ async function submitLogin(data) {
 			}
 		})
 		.catch(error => {
-			const errorMessage = JSON.stringify(error.response?.data) || 'Erro ao enviar os dados.';
+			let errorMessage = error.response?.data?.message;
 			$toast.error(errorMessage, {duration: 10000});
-			console.error('Error:', error);
+			if (error.response?.data?.errors) {
+				let errors = error.response?.data?.errors;
+				errors = new Map(Object.entries(errors));
+				errors.forEach((messageArray, errorType) => {
+					messageArray.forEach((message) => {
+						$toast.error(errorType + ' - ' + message, {duration: 10000});
+					})
+				})
+			}
 		});
 }
 
