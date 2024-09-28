@@ -3,12 +3,6 @@ name: Java CI with Maven
 on:
   push:
     branches: ["dev"]
-    paths:
-      - 'back/**'
-
-  pull_request:
-    paths:
-      - 'back/**'
 
 jobs:
   test:
