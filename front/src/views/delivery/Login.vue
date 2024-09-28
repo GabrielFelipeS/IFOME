@@ -4,7 +4,7 @@ import Header from "@/components/user/Header.vue";
 import {useRouter} from "vue-router";
 import api from "@/services/api.js";
 import {useToast} from "vue-toast-notification";
-import ModalLogin from "@/components/store/login/ModalLogin.vue";
+import ModalLogin from "@/components/delivery/login/ModalLogin.vue";
 import PasswordReset from "@/components/store/login/PasswordReset.vue";
 import PasswordResetSuccess from "@/components/store/login/PasswordResetSuccess.vue";
 
@@ -70,7 +70,7 @@ async function submitLogin(data) {
 		return;
 	}
 	console.log(JSON.stringify(data));
-	await api.post('auth/restaurant/login', JSON.stringify(data))
+	await api.post('auth/deliveryPerson/login', JSON.stringify(data))
 		.then((response) => {
 			if (response.status === 200 || response.status === 201) {
 				console.log(response);
