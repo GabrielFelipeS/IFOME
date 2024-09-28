@@ -45,11 +45,10 @@ const validateForm = () => {
 	minDate.setFullYear(today.getFullYear() - 13);
 	let maxDate = new Date();
 	maxDate.setFullYear(today.getFullYear() - 90);
-	let date = new Date(year + '-' + month + '-' + day);
 	if (props.formData.dateOfBirth.length < 10) {
 		errors.value.dateOfBirth = 'Preencha o campo de data de nascimento.';
 		valid = false;
-	} else if ((month == 2 && day > 29) || (day > 31) || (year > today.getFullYear())) {
+	} else if ((parseInt(month) === 2 && day > 29) || (day > 31) || (year > today.getFullYear())) {
 		errors.value.dateOfBirth = 'Digite uma data válida';
 		valid = false;
 	} else if ((year > minDate.getFullYear()) || (year < maxDate.getFullYear())) {
