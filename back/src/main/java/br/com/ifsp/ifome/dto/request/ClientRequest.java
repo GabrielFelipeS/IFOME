@@ -37,7 +37,7 @@ public record ClientRequest (
         String cpf,
 
         @NotBlank(message = "Telefone é obrigatório")
-        @Pattern(message = "O telefone deve estar no formato válido", regexp = "^\\([1-9]{2}\\) (?:[2-8]|9[0-9])[0-9]{3}-[0-9]{4}$")
+        @Pattern(regexp = "\\(\\d{2}\\) \\d{4,5}-\\d{4}", message = "Telefone deve estar no formato (XX) XXXXX-XXXX")
         String phone,
 
         @NotEmpty(message = "É necessário ter pelo menos um endereço")

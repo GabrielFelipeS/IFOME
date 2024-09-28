@@ -31,8 +31,10 @@ public class PastValidator implements ConstraintValidator<Past,String> {
             LocalDate dateOfBirth = LocalDate.parse(dateOfBirthStr);
             final LocalDate today = LocalDate.now();
             return today.isAfter(dateOfBirth);
-        } catch(DateTimeParseException e) {}
-
-        return false;
+        } catch(DateTimeParseException e) {
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

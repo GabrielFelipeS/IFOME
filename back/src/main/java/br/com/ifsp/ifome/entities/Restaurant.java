@@ -20,11 +20,12 @@ public class Restaurant implements PasswordPolicy {
     private String nameRestaurant;
     private String cnpj;
     private String foodCategory;
-    @OneToMany
-    @JoinColumn(name = "address", referencedColumnName = "cnpj")
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Address> address;
 
     private String telephone;
+    // TODO arrumar relacionamento
     @OneToMany
     @JoinColumn(name = "opening_hours", referencedColumnName = "cnpj")
     private List<OpeningHours> openingHours;
@@ -43,7 +44,11 @@ public class Restaurant implements PasswordPolicy {
         this.nameRestaurant = restaurantRequest.nameRestaurant();
         this.cnpj = restaurantRequest.cnpj();
         this.foodCategory = restaurantRequest.foodCategory();
-        this.address = restaurantRequest.address().stream().map(Address::new).collect(Collectors.toList());
+        this.address = restaurantRequest.address().stream().map(addressRequest -> {
+            Address address = new Address(addressRequest);
+            address.setRestaurant(this);
+            return address;
+        }).collect(Collectors.toList());
         this.telephone = restaurantRequest.telephone();
         this.openingHours = restaurantRequest.openingHours().stream().map(OpeningHours::new).collect(Collectors.toList());
         this.personResponsible = restaurantRequest.personResponsible();

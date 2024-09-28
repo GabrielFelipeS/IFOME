@@ -25,8 +25,10 @@ public class MinAgeToUseValidator implements ConstraintValidator<MinAgeToUse, St
             LocalDate dateOfBirth = LocalDate.parse(dateOfBirthStr);
             final Period period = Period.between(dateOfBirth, today);
             return period.getYears() >= minAgeValue;
-        } catch(DateTimeParseException e) {}
-
-       return false;
+        } catch(DateTimeParseException e) {
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
