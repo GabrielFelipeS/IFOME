@@ -88,8 +88,8 @@ const submitLogin = () => {
 
 @media (min-width: 768px) {
 	.modal {
-		@apply w-full justify-end gap-4;
-		@apply md:ml-96;
+		@apply w-full justify-end gap-4 max-w-[800px];
+		@apply md:ml-80;
 		margin-left: 60%;
 		padding: 1%;
 	}
