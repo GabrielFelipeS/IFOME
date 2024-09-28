@@ -39,8 +39,21 @@ const validateForm = () => {
 		errors.value.phone = '';
 	}
 
+	let [day, month, year] = props.formData.dateOfBirth.split('/').map(String);
+	let today = new Date();
+	let minDate = new Date();
+	minDate.setFullYear(today.getFullYear() - 13);
+	let maxDate = new Date();
+	maxDate.setFullYear(today.getFullYear() - 90);
+	let date = new Date(year + '-' + month + '-' + day);
 	if (props.formData.dateOfBirth.length < 10) {
 		errors.value.dateOfBirth = 'Preencha o campo de data de nascimento.';
+		valid = false;
+	} else if ((month == 2 && day > 29) || (day > 31) || (year > today.getFullYear())) {
+		errors.value.dateOfBirth = 'Digite uma data válida';
+		valid = false;
+	} else if ((year > minDate.getFullYear()) || (year < maxDate.getFullYear())) {
+		errors.value.dateOfBirth = 'A idade deve ser entre 13 e 90 anos';
 		valid = false;
 	} else {
 		errors.value.dateOfBirth = '';
