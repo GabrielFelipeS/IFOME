@@ -8,6 +8,8 @@ public record DishRequest(
         @NotBlank (message = "O nome do prato é obrigatório")
         String name,
 
+        String description,
+
         @NotNull(message = "O preço é obrigatório")
         @Positive(message = "Insira um valor de preço válido.")
         Double price,

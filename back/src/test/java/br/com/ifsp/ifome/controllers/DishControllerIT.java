@@ -28,6 +28,7 @@ public class DishControllerIT {
     public void shouldBeAbleToCreateADish(){
         DishRequest dishRequest = new DishRequest(
                 "Lasanha",
+               "Massa fresca, molho bolonhesa",
                45.5,
                 "Massas",
                 "image.png",
@@ -46,6 +47,7 @@ public class DishControllerIT {
 
         Number id = document.read("$.id");
         String name = document.read("$.name");
+        String description = document.read("$.description");
         String price = document.read("$.price");
         String dishCategory = document.read("$.dishCategory");
         String dishImage = document.read("$.dishImage");
