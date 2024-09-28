@@ -42,7 +42,7 @@ import java.lang.annotation.Target;
                                         """,
                                 value = """
                                         {
-                                        "price" : ""45.0
+                                        "price" : "-450"
                                         }
                                         """
                         )
