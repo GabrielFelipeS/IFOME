@@ -30,7 +30,7 @@ const formData = ref({
 	houseNumber: '',
 	complement: '',
 	details: '',
-	typeResidence: '',
+	typeResidence: 'casa',
 });
 
 const currentStep = ref(0);
