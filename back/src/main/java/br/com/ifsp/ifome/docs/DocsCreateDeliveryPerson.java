@@ -142,7 +142,7 @@ import java.lang.annotation.Target;
            
             Validações:
            
-            Deve conter exatamente 9 dígitos numéricos.
+            O número da CNH deve conter entre 9 e 11 dígitos numéricos.
            
             Não aceita valores nulos ou vazios.
            
@@ -285,7 +285,7 @@ import java.lang.annotation.Target;
                                             telephone : telefone fora do padrão
                                             bankAccount: esta vazio
                                             plate:  Verique a placa
-                                            cnhNumber : Número do documento fora do padrão de 9 digitos numéricos
+                                            cnhNumber : O número da CNH deve conter entre 9 e 11 dígitos numéricos
                                             cnhValidity": CNH com data inválida. Verifique a válidade
                                             vehicleDocument : O renavam deve conter de 9 à 11 digitos numéricos
                                      
