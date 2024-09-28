@@ -188,7 +188,7 @@ public class DeliveryPersonControllerIT {
         assertThat(cnh)
                 .containsExactlyInAnyOrder(
                         "CNH obrigatória",
-                        "O número da CNH deve conter exatamente 9 dígitos numéricos",
+                        "O número da CNH deve conter entre 9 e 11 dígitos numéricos",
                     "Número do CNH é obrigatório"
                 );
     }
@@ -348,7 +348,7 @@ public class DeliveryPersonControllerIT {
         List<String> cnhNumber = documentContext.read("$.errors.cnhNumber");
         assertThat(cnhNumber)
                 .containsExactlyInAnyOrder(
-                        "O número da CNH deve conter exatamente 9 dígitos numéricos"
+                        "O número da CNH deve conter entre 9 e 11 dígitos numéricos"
                 );
     }
 

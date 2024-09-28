@@ -49,7 +49,7 @@ public record DeliveryPersonRequest(
 
         @NotBlank(message = "Número do CNH é obrigatório")
         @NotBlank(message = "CNH obrigatória")
-        @Pattern(regexp = "\\d{9}", message = "O número da CNH deve conter exatamente 9 dígitos numéricos")
+        @Pattern(regexp = "\\d{9,11}", message = "O número da CNH deve conter entre 9 e 11 dígitos numéricos")
         String cnhNumber,
 
         @Future(message = "CNH fora de validade")
