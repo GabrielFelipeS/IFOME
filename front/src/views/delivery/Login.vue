@@ -100,7 +100,7 @@ function submitPasswordReset (data) {
 					:home-page="'user-login'" :back-button="(componentName !== 'modal-login')" />
 		</div>
 		<div class="main">
-			<component
+			<component class="component"
 				:is="currentComponent"
 				v-model:go-to-page="goToPage"
 				@load-component="loadComponent"
@@ -138,6 +138,10 @@ function submitPasswordReset (data) {
 
 .main {
 	@apply flex flex-row flex-grow h-full w-full justify-center items-center;
+}
+
+.component {
+	@apply max-w-[600px];
 }
 
 </style>

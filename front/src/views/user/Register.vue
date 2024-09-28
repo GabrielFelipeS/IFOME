@@ -116,7 +116,7 @@ const $toast = useToast();
 		</div>
 		<div class="main">
 			<KeepAlive>
-				<component
+				<component class="component"
 					:is="loadComponent"
 					v-model:formData="formData"
 					@next-step="nextStep"
@@ -146,6 +146,10 @@ const $toast = useToast();
 
 	.main {
 		@apply flex flex-row flex-grow h-full w-full justify-center items-center;
+	}
+
+	.component {
+		@apply max-w-[600px];
 	}
 
 </style>
