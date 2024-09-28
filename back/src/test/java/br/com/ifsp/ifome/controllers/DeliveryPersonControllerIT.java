@@ -94,17 +94,17 @@ public class DeliveryPersonControllerIT {
 
         DocumentContext document = JsonPath.parse(response.getBody());
 
-        Number id = document.read("$.id");
-        String name = document.read("$.name");
-        String cnpj = document.read("$.cpf");
-        String email = document.read("$.email");
-        String dateOfBirth = document.read("$.dateOfBirth");
-        String typeOfVehicle = document.read("$.typeOfVehicle");
-        String telephone = document.read("$.telephone");
-        String cnhNumber = document.read("$.cnhNumber");
-        String cnhValidity = document.read("$.cnhNumber");
-        String vehicleDocument = document.read("$.vehicleDocument");
-        Address addressJson = document.read("$.address[0]", Address.class);
+        Number id = document.read("$.data.id");
+        String name = document.read("$.data.name");
+        String cnpj = document.read("$.data.cpf");
+        String email = document.read("$.data.email");
+        String dateOfBirth = document.read("$.data.dateOfBirth");
+        String typeOfVehicle = document.read("$.data.typeOfVehicle");
+        String telephone = document.read("$.data.telephone");
+        String cnhNumber = document.read("$.data.cnhNumber");
+        String cnhValidity = document.read("$.data.cnhNumber");
+        String vehicleDocument = document.read("$.data.vehicleDocument");
+        Address addressJson = document.read("$.data.address[0]", Address.class);
         //BankAccount bankAccountJson = document.read("$.bankAccount[0]", BankAccount.class);
 
 

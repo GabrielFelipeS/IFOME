@@ -1,10 +1,7 @@
 package br.com.ifsp.ifome.entities;
 
 import br.com.ifsp.ifome.dto.request.OpeningHoursRequest;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class OpeningHours {
@@ -15,6 +12,9 @@ public class OpeningHours {
     private String opening;
     private String closing;
 
+    @ManyToOne
+    @JoinColumn(name = "opening_hours", referencedColumnName = "cnpj")
+    private Restaurant restaurant;
 
     public OpeningHours() {}
 
@@ -54,5 +54,13 @@ public class OpeningHours {
 
     public void setClosing(String closing) {
         this.closing = closing;
+    }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 }

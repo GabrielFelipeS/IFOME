@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,23 +39,24 @@ public class RestaurantController {
         this.fileStorageService = fileStorageService;
     }
 
+
     @Transactional
     @DocsCreateRestaurant
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<RestaurantResponse> create(
+    public ResponseEntity<ApiResponse> create(
         @RequestPart("file")  MultipartFile multipartFile,
         @Valid @RequestPart("restaurant") RestaurantRequest restaurantRequest,
         UriComponentsBuilder ucb)
         throws IOException, MethodArgumentNotValidException {
 
-        System.out.println( fileStorageService.storeFile(multipartFile));
-        RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest);
+        RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest, multipartFile);
 
         URI locationOfNewRestaurant = ucb
             .path("restaurant/{id}")
             .buildAndExpand(restaurantResponse.id())
             .toUri();
-        return ResponseEntity.created(locationOfNewRestaurant).body(restaurantResponse);
+        ApiResponse apiResponse = new ApiResponse("sucess", restaurantResponse, "Restaurante cadastrado com sucesso");
+        return ResponseEntity.created(locationOfNewRestaurant).body(apiResponse);
     }
 
     @PostMapping("/login")

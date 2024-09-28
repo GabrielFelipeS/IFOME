@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.LinkedMultiValueMap;
@@ -87,24 +88,30 @@ public class RestaurantControllerIT {
                         new OpeningHoursRequest("terça","11:00", "23:00")),
                 "responsavel",
                 "033.197.356-16",
-                "imagem.jpeg",
                 new BankAccountRequest("123","1255", "4547-7")
 
         );
 
         // Carregar o arquivo de exemplo do classpath
-        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
-        System.out.println("File?");
+        ClassPathResource fileResource = new ClassPathResource("image.png");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("restaurant", restaurant);
         body.add("file", fileResource);
 
+        // Definir os headers da requisição
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        // Criar a entidade Http com o body e os headers
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+
         ResponseEntity<String> response = testRestTemplate.postForEntity(
-                                    "/api/auth/restaurant",
-                                        body,
-                                        String.class);
+                "/api/auth/restaurant",
+                requestEntity,
+                String.class);
 
         System.out.println(response.getBody());
 
@@ -112,18 +119,18 @@ public class RestaurantControllerIT {
 
         DocumentContext document = JsonPath.parse(response.getBody());
 
-        Number id = document.read("$.id");
-        String nameRestaurant = document.read("$.nameRestaurant");
-        String email = document.read("$.email");
-        String cnpj = document.read("$.cnpj");
-        //String address = document.read("$.address");
-        Address addressJson = document.read("$.address[0]", Address.class);
-        String telephone = document.read("$.telephone");
-        String foodCategory = document.read("$.foodCategory");
-        String paymentMethods = document.read("$.paymentMethods");
-        OpeningHours openingHoursJson = document.read("$.openingHours", OpeningHours.class);
-        String personResponsibleCPF = document.read("$.personResponsibleCPF");
-        String restaurantImages = document.read("$.restaurantImage");
+        Number id = document.read("$.data.id");
+        String nameRestaurant = document.read("$.data.nameRestaurant");
+        String email = document.read("$.data.email");
+        String cnpj = document.read("$.data.cnpj");
+        //String address = document.read("$.data.address");
+        Address addressJson = document.read("$.data.address[0]", Address.class);
+        String telephone = document.read("$.data.telephone");
+        String foodCategory = document.read("$.data.foodCategory");
+        String paymentMethods = document.read("$.data.paymentMethods");
+        OpeningHours openingHoursJson = document.read("$.data.openingHours", OpeningHours.class);
+        String personResponsibleCPF = document.read("$.data.personResponsibleCPF");
+        String restaurantImages = document.read("$.data.restaurantImage");
 
 
         assertThat(id).isNotNull();
@@ -164,13 +171,12 @@ public class RestaurantControllerIT {
                         new OpeningHoursRequest("Terça","11:00", "23:00")),
                 "responsavel",
                 "033.197.356-16",
-                "imagem.jpeg",
                 new BankAccountRequest("123","1255", "4547-7")
 
 
         );
 
-        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        ClassPathResource fileResource = new ClassPathResource("image.png");
         System.out.println("File?");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
@@ -214,12 +220,11 @@ public class RestaurantControllerIT {
                         new OpeningHoursRequest("Terça","11:00", "23:00")),
                 "responsavel",
                 "033.197.356-16",
-                "imagem.jpeg",
                 new BankAccountRequest("123","1255", "4547-7")
 
 
         );
-        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        ClassPathResource fileResource = new ClassPathResource("image.png");
         System.out.println("File?");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
@@ -259,13 +264,12 @@ public class RestaurantControllerIT {
                         new OpeningHoursRequest("Terça","11:00", "23:00")),
                 "responsavel",
                 "033.197.356-16",
-                "imagem.jpeg",
                 new BankAccountRequest("123","1255", "4547-7")
 
 
         );
 
-        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        ClassPathResource fileResource = new ClassPathResource("image.png");
         System.out.println("File?");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
@@ -312,12 +316,11 @@ public class RestaurantControllerIT {
                         new OpeningHoursRequest("Terça","11:00", "23:00")),
                 "responsavel",
                 "033.197.356-16",
-                "imagem.jpeg",
                 new BankAccountRequest("123","1255", "4547-7")
 
 
         );
-        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        ClassPathResource fileResource = new ClassPathResource("image.png");
         System.out.println("File?");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
@@ -358,12 +361,11 @@ public class RestaurantControllerIT {
                 List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
                         new OpeningHoursRequest("Terça","11:00", "23:00")),                "responsavel",
                 "CPF",
-                "imagem.jpeg",
                 new BankAccountRequest("123","1255", "4547-7")
 
 
         );
-        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        ClassPathResource fileResource = new ClassPathResource("image.png");
         System.out.println("File?");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
@@ -405,12 +407,11 @@ public class RestaurantControllerIT {
                 List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
                         new OpeningHoursRequest("Terça","11:00", "23:00")),                "responsavel",
                 "033.197.356-16",
-                "imagem.jpeg",
                 new BankAccountRequest("123","1255", "4547-7")
 
 
         );
-        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        ClassPathResource fileResource = new ClassPathResource("image.png");
         System.out.println("File?");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
@@ -447,12 +448,11 @@ public class RestaurantControllerIT {
                         new OpeningHoursRequest("Terça","11:00", "23:00")),
                 "responsavel",
                 "033.197.356-16",
-                "imagem.jpeg",
                 new BankAccountRequest(" "," ", "")
 
 
         );
-        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        ClassPathResource fileResource = new ClassPathResource("image.png");
         System.out.println("File?");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
@@ -488,12 +488,11 @@ public class RestaurantControllerIT {
                 List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
                         new OpeningHoursRequest("Terça","11:00", "23:00")),                "responsavel",
                 "033.197.356-16",
-                "imagem.jpeg",
                 new BankAccountRequest("111","2222", "2156-1")
 
 
         );
-        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        ClassPathResource fileResource = new ClassPathResource("image.png");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
