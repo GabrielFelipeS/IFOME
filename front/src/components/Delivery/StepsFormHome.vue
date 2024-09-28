@@ -156,15 +156,33 @@ watch([cpf, cnh, expirationDate, vehicle, plate, renavam, dateOfBirth], () => {
         step2Erros.value.cnh = ['** Insira um CNH válido (9 a 11 dígitos) **'];
     }
 
+    async function validateCPF(cpf) {
+        try {
+            const response = await axios.post(
+                'http://146.235.31.246/api/auth/validation/delivery/cpf',
+                {
+                    cpf: String(cpf),  // Certifica-se de que o CPF seja enviado como string
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+            return true; 
+        } catch (error) {
+            return false;  
+        }
+    }
+
     if (cpf.value.length === 14) {
         step2Erros.value.cpf = false;
+        if (!validateCPF(cpf.value)) {
+            step2Erros.value.cpf = ['** CPF já cadastrado **'];
+        }
     } else {
         step2Erros.value.cpf = ['** Insira um CPF válido **'];
     }
-
-    //validar se é um cpf válido
-
-    
 
     if (plate.value.length === 8) {
         step2Erros.value.plate = false;
@@ -573,7 +591,7 @@ const returnSteps = () => {
                 </template>
             </div>
             <button type="submit" class="btn-primary" :class="step4Completed ? '' : 'disable'"
-                :disabled="!step4Completed" @click="submitForm" >{{ buttonFinal }}</button>
+                :disabled="!step4Completed" @click="submitForm">{{ buttonFinal }}</button>
         </div>
 
         <div class="step" v-if="currentStep === 5">
