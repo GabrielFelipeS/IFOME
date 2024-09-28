@@ -43,29 +43,20 @@ public class RestaurantController {
     @Transactional
     @DocsCreateRestaurant
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<RestaurantResponse> create(
+    public ResponseEntity<ApiResponse> create(
         @RequestPart("file")  MultipartFile multipartFile,
         @Valid @RequestPart("restaurant") RestaurantRequest restaurantRequest,
-
         UriComponentsBuilder ucb)
         throws IOException, MethodArgumentNotValidException {
 
-        System.out.println( fileStorageService.storeFile(multipartFile));
-        //RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest);
-
-        // Armazenar o arquivo e obter a URL da imagem
-        String restaurantImageUrl = fileStorageService.storeFile(multipartFile);
-
-
-        // Criar o restaurante e passar a URL da imagem para ser armazenada no banco
-        RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest);
-
+        RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest, multipartFile);
 
         URI locationOfNewRestaurant = ucb
             .path("restaurant/{id}")
             .buildAndExpand(restaurantResponse.id())
             .toUri();
-        return ResponseEntity.created(locationOfNewRestaurant).body(restaurantResponse);
+        ApiResponse apiResponse = new ApiResponse("sucess", restaurantResponse, "Restaurante cadastrado com sucesso");
+        return ResponseEntity.created(locationOfNewRestaurant).body(apiResponse);
     }
 
     @PostMapping("/login")
