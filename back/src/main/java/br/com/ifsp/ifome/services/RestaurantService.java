@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -34,14 +35,13 @@ public class RestaurantService {
         this.loginService = loginService;
         this.fileStorageService = fileStorageService;
     }
-    public RestaurantResponse create(RestaurantRequest restaurantRequest) throws MethodArgumentNotValidException, IOException {
+
+    public RestaurantResponse create(RestaurantRequest restaurantRequest, MultipartFile multipartFile) throws MethodArgumentNotValidException, IOException {
         validatorService.isValid(restaurantRequest);
 
-        // Faz o upload da imagem e obtém a URL
-        String imageUrl = fileStorageService.storeFile(restaurantRequest.restaurantImage());
+        String imageUrl = fileStorageService.storeFile(restaurantRequest.cnpj(), multipartFile);
 
         Restaurant restaurant = new Restaurant(restaurantRequest, bCryptPasswordEncoder, imageUrl);
-        //restaurant.setRestaurantImage(imageUrl);
 
         restaurant = restaurantRepository.save(restaurant);
         return new RestaurantResponse(restaurant);
