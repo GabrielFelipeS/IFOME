@@ -71,7 +71,7 @@ const validateForm = () => {
 	} else {
 		errors.value.password[2] = ''; // Limpa o erro se a condição for satisfeita
 	}
-	if (!/[@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(props.formData.password)) {
+	if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(props.formData.password)) {
 		errors.value.password[3] = 'A senha deve conter pelo menos um caractere especial.';
 		valid = false;
 	} else {
