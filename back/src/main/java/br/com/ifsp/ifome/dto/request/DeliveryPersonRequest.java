@@ -64,6 +64,7 @@ public record DeliveryPersonRequest(
         List<@Valid AddressRequest> address,
 
         @Valid
+        @NotNull(message = "É necessário ter ao menos uma conta")
         BankAccountRequest bankAccount
 ) {
         public LocalDate convertDateOfBirth() {

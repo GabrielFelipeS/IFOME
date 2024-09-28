@@ -5,6 +5,7 @@ import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,8 +27,7 @@ public class Restaurant implements PasswordPolicy {
 
     private String telephone;
     // TODO arrumar relacionamento
-    @OneToMany
-    @JoinColumn(name = "opening_hours", referencedColumnName = "cnpj")
+    @OneToMany(mappedBy = "restaurant")
     private List<OpeningHours> openingHours;
     private String personResponsible;
     private String personResponsibleCPF;
@@ -38,9 +38,13 @@ public class Restaurant implements PasswordPolicy {
     @Embedded
     private BankAccount bankAccount;
 
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Dish> dishes;
+    
+
     public Restaurant() {}
 
-    public Restaurant(RestaurantRequest restaurantRequest, BCryptPasswordEncoder bCryptPasswordEncoder){
+    public Restaurant(RestaurantRequest restaurantRequest, BCryptPasswordEncoder bCryptPasswordEncoder, String imageUrl){
         this.nameRestaurant = restaurantRequest.nameRestaurant();
         this.cnpj = restaurantRequest.cnpj();
         this.foodCategory = restaurantRequest.foodCategory();
@@ -56,7 +60,7 @@ public class Restaurant implements PasswordPolicy {
         this.email = restaurantRequest.email();
         this.password = bCryptPasswordEncoder.encode(restaurantRequest.password());
         this.paymentMethods = restaurantRequest.paymentMethods();
-        this.restaurantImage = restaurantRequest.restaurantImage();
+        this.restaurantImage = imageUrl;
         this.bankAccount = new BankAccount(restaurantRequest.bankAccount());
     }
 

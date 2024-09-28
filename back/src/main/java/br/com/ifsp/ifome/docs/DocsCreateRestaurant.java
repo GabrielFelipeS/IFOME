@@ -21,8 +21,7 @@ import java.lang.annotation.Target;
         description = "Detalhes do restaurante a ser criado",
         required = true,
         content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RestaurantRequest.class),
+                mediaType = "multipart/form-data",
                 examples = {
                 @ExampleObject(
                     name = "Restaurante válido",
