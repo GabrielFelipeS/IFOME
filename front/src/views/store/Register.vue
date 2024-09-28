@@ -30,7 +30,7 @@ const showToast = (response) => {
 <template>
     <div class="content">
         <Header />
-        <FormHome @submit="submitForm" />
+        <FormHome @submit="submitForm" @responseApi="showToast"/>
         <StepsFormHome :data="data" @responseApi="showToast" />
     </div>
 </template>
