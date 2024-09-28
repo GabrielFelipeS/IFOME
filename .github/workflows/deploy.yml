@@ -3,12 +3,6 @@ name: Java CI with Maven
 on:
   push:
     branches: ["dev"]
-    paths:
-      - 'back/**'
-
-  pull_request:
-    paths:
-      - 'back/**'
 
 jobs:
   test:
@@ -54,6 +48,7 @@ jobs:
           script: |
             cd ${{ secrets.APP_PATH }}
             git pull origin dev
+            docker compose down
             docker compose up -d --build
 
   

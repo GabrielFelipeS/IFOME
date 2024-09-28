@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.docs.DocCreateDish;
 import br.com.ifsp.ifome.dto.request.DishRequest;
 import br.com.ifsp.ifome.dto.response.DishResponse;
 import br.com.ifsp.ifome.services.DishService;
@@ -21,7 +22,7 @@ import java.net.URI;
 
 @MultipartConfig
 @RestController
-@RequestMapping("/dish")
+@RequestMapping("/api/auth/dish")
 public class DishController {
     private final DishService dishService;
     private final FileStorageService fileStorageService;
@@ -36,6 +37,7 @@ public class DishController {
     RequestPart só é usado quando o controller é anotado com multipart e o tipo do mapping é colocado como multi part
     como vai esta a seguir
      */
+    @DocCreateDish
     @Transactional
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<DishResponse> create(

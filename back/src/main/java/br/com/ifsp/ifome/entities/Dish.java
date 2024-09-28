@@ -10,6 +10,7 @@ public class Dish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String description;
     private Double price;
     private String dishCategory;
     private String dishImage;
@@ -24,6 +25,7 @@ public class Dish {
 
     public Dish(DishRequest dishRequest) {
         this.name = dishRequest.name();
+        this.description = dishRequest.description();
         this.price = dishRequest.price();
         this.dishCategory = dishRequest.dishCategory();
         this.dishImage = dishRequest.dishImage();
@@ -38,14 +40,23 @@ public class Dish {
         this.restaurant = restaurant;
     }
 
-    public Dish(Long id, String name, Double price, String dishCategory, String dishImage, String availability, Restaurant restaurant) {
+    public Dish(Long id, String name, String description, Double price, String dishCategory, String dishImage, String availability, Restaurant restaurant) {
         this.id = id;
         this.name = name;
+        this.description = description;
         this.price = price;
         this.dishCategory = dishCategory;
         this.dishImage = dishImage;
         this.availability = availability;
         this.restaurant = restaurant;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Long getId() {
