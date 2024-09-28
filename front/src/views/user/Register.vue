@@ -97,9 +97,9 @@ const sendForm = async () => {
 		if (error.response?.data?.errors) {
 			let errors = error.response?.data?.errors;
 			errors = new Map(Object.entries(errors));
-			errors.forEach((messageArray, errorType) => {
+			errors.forEach((messageArray) => {
 				messageArray.forEach((message) => {
-					$toast.error(errorType + ' - ' + message, {duration: 10000});
+					$toast.error(message, {duration: 10000});
 				})
 			})
 		}
