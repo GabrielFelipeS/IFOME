@@ -1,6 +1,6 @@
 <script setup>
 import Modal from "@/components/user/Modal.vue";
-import {onMounted, ref} from "vue";
+import {ref} from "vue";
 import Button from "@/components/Button.vue";
 
 const emit = defineEmits(["submit-password-reset"]);
@@ -81,15 +81,9 @@ const submitPasswordReset = () => {
 .form-input {
 	@apply rounded-md border border-tertiary-subtle p-2 w-full
 }
-.form-label {
-	@apply my-1 text-sm;
-}
 
 .invalid-input-text {
 	@apply font-light text-sm text-red-500 px-2;
-}
-.hiper-link {
-	@apply underline mt-3 text-primary;
 }
 
 </style>
