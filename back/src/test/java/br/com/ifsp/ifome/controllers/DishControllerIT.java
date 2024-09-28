@@ -23,9 +23,9 @@ public class DishControllerIT {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
-//    @Test
-//    @DirtiesContext
-//    public void shouldBeAbleToCreateADish(){
+    @Test
+    @DirtiesContext
+    public void shouldBeAbleToCreateADish(){
 //        DishRequest dishRequest = new DishRequest(
 //                "Lasanha",
 //               "Massa fresca, molho bolonhesa",
@@ -55,6 +55,6 @@ public class DishControllerIT {
 //
 //
 //        assertThat(id).isNotNull();
-//
-//    }
+
+    }
 }
