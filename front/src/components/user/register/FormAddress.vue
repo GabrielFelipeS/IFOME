@@ -186,7 +186,7 @@ const sendSubmit = () => {
 				<div class="checkbox-div">
 					<div class="checkbox-row">
 						<input type="radio" placeholder="Exemplo: Em frente a padaria do seu zé" class="form-checkbox" id="checkbox-casa"
-							   v-model="formData.typeResidence" value="casa">
+							   v-model="formData.typeResidence" value="casa" checked>
 						<label for="checkbox-casa" class="form-label">Casa</label>
 					</div>
 					<div class="checkbox-row">
