@@ -78,7 +78,7 @@ const submitLogin = () => {
 			</div>
 		</div>
 		<footer class="footer">
-			<span> Ainda não tem cadastro?  <a href="#" @click="goToPage('store-register')">Cadastre-se agora</a>.</span>
+			<span> Ainda não tem cadastro?  <a href="#" @click="goToPage('delivery-register')">Cadastre-se agora</a>.</span>
 		</footer>
 	</Modal>
 </template>
