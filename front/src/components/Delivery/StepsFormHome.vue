@@ -52,6 +52,8 @@ const complement = ref('');
 const neighborhood = ref('');
 const details = ref('');
 
+const buttonFinal = ref('Concluir');
+
 const cpf = ref('');
 const cnh = ref('');
 const expirationDate = ref('');
@@ -295,6 +297,11 @@ function showConfirmation() {
 }
 
 async function submitForm() {
+
+    step4Completed.value = false;
+
+    buttonFinal.value = 'Aguarde...';
+
     let formatedAddress = [{
         nameAddress: "residência",
         cep: cep.value,
@@ -343,6 +350,8 @@ async function submitForm() {
             nextStep();
         } else if (response.status === 400) {
             emit('responseApi', { type: "error", message: response.data.message, errors: response.data.errors });
+            step4Completed.value = true;
+            buttonFinal.value = 'Concluir';
         }
     } catch (error) {
         if (error.response) {
@@ -358,8 +367,12 @@ async function submitForm() {
                 message: error.response.data.message || "Erro ao cadastrar",
                 errors: error.response.data.errors || {}
             });
+            step4Completed.value = true;
+            buttonFinal.value = 'Concluir';
         } else {
             emit('responseApi', { type: "error", message: "Erro de rede ou problema inesperado" });
+            step4Completed.value = true;
+            buttonFinal.value = 'Concluir';
         }
     }
 }
@@ -560,7 +573,7 @@ const returnSteps = () => {
                 </template>
             </div>
             <button type="submit" class="btn-primary" :class="step4Completed ? '' : 'disable'"
-                :disabled="!step4Completed" @click="submitForm">Concluir</button>
+                :disabled="!step4Completed" @click="submitForm" >{{ buttonFinal }}</button>
         </div>
 
         <div class="step" v-if="currentStep === 5">
