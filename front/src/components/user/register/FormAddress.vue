@@ -203,11 +203,8 @@ const sendSubmit = () => {
 				<p v-if="erros.details !== ''" class="invalid-input-text">{{ erros.details }}</p>
 			</div>
 			<div class="btn-container">
-				<Button href="#" @click="$emit('previous-step')" inversed
-						class="button text-primary-subtle border border-primary mr-[15%] hover:text-white
-						 hover:bg-primary active:bg-primary-dark hover:border-white">Voltar</Button>
 				<Button href="#" @click="sendSubmit"
-						class="button bg-primary text-white hover:bg-primary-dark active:bg-primary-darker">Continuar</Button>
+						class="button bg-primary text-white hover:bg-primary-dark active:bg-primary-darker">Finalizar cadastro</Button>
 			</div>
 		</div>
 	</Modal>
