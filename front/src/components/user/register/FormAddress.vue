@@ -122,6 +122,21 @@ const validateForm = () => {
 		erros.value.complement = '';
 	}
 
+	let checkboxOk = false;
+	let checkboxes = [
+		document.getElementById('checkbox-casa'),
+		document.getElementById('checkbox-apartamento'),
+		document.getElementById('checkbox-condominio'),
+	];
+	checkboxes.forEach((checkbox) => {
+		if (checkbox.checked) {
+			checkboxOk = true
+		}
+	});
+	if (checkboxOk === false) {
+		valid = false;
+	}
+
 	return valid;
 };
 
