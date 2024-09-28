@@ -8,6 +8,7 @@ public record DishRequest(
         @NotBlank (message = "O nome do prato é obrigatório")
         String name,
 
+        @NotBlank(message = "A descrição do prato é obrigatória")
         String description,
 
         @NotNull(message = "O preço é obrigatório")
@@ -16,8 +17,6 @@ public record DishRequest(
 
         @NotBlank(message = "A categoria do prato é obrigatória")
         String dishCategory,
-
-        String dishImage,
 
         @NotBlank(message = "A disponibilidade é obrigatória")
         String availability
