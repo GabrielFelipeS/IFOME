@@ -40,7 +40,7 @@ public class AuthRestaurantController {
     @Transactional
     @DocsCreateRestaurant
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<RestaurantResponse> create(
+    public ResponseEntity<ApiResponse> create(
         @RequestPart("file")  MultipartFile multipartFile,
         @Valid @RequestPart("restaurant") RestaurantRequest restaurantRequest,
         UriComponentsBuilder ucb)
@@ -52,14 +52,15 @@ public class AuthRestaurantController {
             .path("restaurant/{id}")
             .buildAndExpand(restaurantResponse.id())
             .toUri();
-        return ResponseEntity.created(locationOfNewRestaurant).body(restaurantResponse);
+        ApiResponse apiResponse = new ApiResponse("sucess", restaurantResponse, "Restaurante cadastrado com sucesso");
+        return ResponseEntity.created(locationOfNewRestaurant).body(apiResponse);
     }
 
     @PostMapping("/login")
     @DocsRestaurantLogin
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest restaurantLogin) {
         RestaurantLoginResponse restaurantLoginResponse = restaurantService.login(restaurantLogin);
-        ApiResponse apiResponse = new ApiResponse("sucess", restaurantLoginResponse, "Cliente logado com sucesso");
+        ApiResponse apiResponse = new ApiResponse("sucess", restaurantLoginResponse, "Restaurante logado com sucesso");
         return ResponseEntity.ok(apiResponse);
     }
 
