@@ -11,9 +11,9 @@ import org.hibernate.validator.constraints.br.CPF;
 import java.time.LocalDate;
 import java.util.List;
 
-@ConfirmartionPasswordEqualsPassword
+@ConfirmartionPasswordEqualsPassword(message = "As senhas não coincidem")
 public record ClientRequest (
-        @NotBlank
+        @NotBlank(message = "Nome é obrigatório")
         String name,
 
         @Email(message = "E-mail inválido")
@@ -25,11 +25,11 @@ public record ClientRequest (
         @NotBlank(message = "Senha é obrigatório")
         String password,
 
-        @NotBlank
+        @NotBlank(message = "Confirmação da senha é obrigatório")
         String confirmationPassword,
 
         @Past(message = "Data de nascimento deve estar no passado")
-        @MinAgeToUse(minAge = 14, message = "É necessário ter pelo menos 13 anos")
+        @MinAgeToUse(minAge = 13, message = "Para cadastro no sistema, é necessário ter pelo menos 13 anos de idade.")
         @NotNull(message = "Data de nascimento é obrigatório")
         LocalDate dateOfBirth,
 
@@ -37,10 +37,10 @@ public record ClientRequest (
         @NotBlank(message = "CPF é obrigatório")
         String cpf,
 
-        @NotBlank
+        @NotBlank(message = "Telefone é obrigatório")
         @Pattern(regexp = "^\\([1-9]{2}\\) (?:[2-8]|9[0-9])[0-9]{3}-[0-9]{4}$")
         String phone,
 
-        @NotEmpty
+        @NotEmpty(message = "É necessário ter pelo menos um endereço")
         List<@Valid AddressRequest> address
 ) { }

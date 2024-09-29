@@ -1,8 +1,7 @@
 package br.com.ifsp.ifome.validation.anotations;
 
 
-import br.com.ifsp.ifome.validation.validators.EmailValidatorDeliveryPerson;
-import br.com.ifsp.ifome.validation.validators.EmailValidatorRestaurant;
+import br.com.ifsp.ifome.validation.validators.anotations.EmailValidatorDeliveryPerson;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

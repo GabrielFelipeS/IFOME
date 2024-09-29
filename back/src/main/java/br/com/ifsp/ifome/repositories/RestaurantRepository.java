@@ -6,7 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface RestaurantRepository extends CrudRepository<Restaurant, Long> {
-    boolean existsByEmail(String email);
+    boolean existsByEmailIgnoreCase(String email);
+    boolean existsByCnpj(String email);
 
     Optional<Restaurant> findByEmail(String email);
 }

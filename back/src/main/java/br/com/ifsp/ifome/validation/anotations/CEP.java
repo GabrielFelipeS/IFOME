@@ -1,6 +1,6 @@
 package br.com.ifsp.ifome.validation.anotations;
 
-import br.com.ifsp.ifome.validation.validators.CEPValidator;
+import br.com.ifsp.ifome.validation.validators.anotations.CEPValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import jakarta.validation.constraints.Pattern;

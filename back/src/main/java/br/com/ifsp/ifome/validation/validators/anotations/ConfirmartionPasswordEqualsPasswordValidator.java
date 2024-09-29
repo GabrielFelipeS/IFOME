@@ -1,4 +1,4 @@
-package br.com.ifsp.ifome.validation.validators;
+package br.com.ifsp.ifome.validation.validators.anotations;
 
 import br.com.ifsp.ifome.dto.request.ClientRequest;
 import br.com.ifsp.ifome.dto.request.DeliveryPersonRequest;
@@ -15,7 +15,7 @@ public class ConfirmartionPasswordEqualsPasswordValidator implements ConstraintV
 
     @Override
     public boolean isValid(Object object, ConstraintValidatorContext constraintValidatorContext) {
-        if(object == null) return false;
+        if(object == null ) return false;
 
         String password = "";
         String confirmationPassword = "";
@@ -33,6 +33,6 @@ public class ConfirmartionPasswordEqualsPasswordValidator implements ConstraintV
             return false;
         }
 
-        return password.equals(confirmationPassword);
+        return password != null && password.equals(confirmationPassword);
     }
 }

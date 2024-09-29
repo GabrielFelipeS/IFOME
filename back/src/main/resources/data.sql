@@ -36,10 +36,12 @@ INSERT INTO restaurants (
 
 INSERT INTO delivery_person (
     email,
-    password
+    password,
+    cpf
 )
 VALUES (
    'email1@email.com',
-   '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG'
+   '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
+   '528.003.140-28'
 );
 

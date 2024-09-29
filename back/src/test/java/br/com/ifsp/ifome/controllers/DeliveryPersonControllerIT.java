@@ -5,6 +5,7 @@ import br.com.ifsp.ifome.dto.request.BankAccountRequest;
 import br.com.ifsp.ifome.dto.request.DeliveryPersonRequest;
 import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.entities.Address;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.DisplayName;
@@ -79,7 +80,7 @@ public class DeliveryPersonControllerIT {
                 "dOCUMENTO DO VEICULO",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "details")),
+                        "12", "condominio","details")),
                 new BankAccountRequest("123","1255", "4547-7")
 
         );
@@ -114,7 +115,40 @@ public class DeliveryPersonControllerIT {
         assertThat(addressJson.getComplement()).isEqualTo("complement");
         assertThat(addressJson.getNumber()).isEqualTo("12");
         assertThat(addressJson.getComplement()).isEqualTo("complement");
-
+        assertThat(addressJson.getTypeResidence()).isEqualTo("condominio");
     }
 
+    @Test
+    @DirtiesContext
+    @DisplayName("should be return error with cpf already registred")
+    public void shouldReturnErrorWithCpfAlreadyRegistred() throws JsonProcessingException {
+        DeliveryPersonRequest deliveryPersonRequest = new DeliveryPersonRequest(
+            "Nome entregador",
+            "528.003.140-28",
+            "email@email.com",
+            "@Senha1",
+            "@Senha1",
+            LocalDate.of(1999, 1, 2),
+            "Carro",
+            "(11) 95455-4565",
+            "CNH",
+            "dOCUMENTO DO VEICULO",
+            List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
+                "address", "complement",
+                "12", "condominio","details")),
+            new BankAccountRequest("123", "1255", "4547-7")
+
+        );
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson", deliveryPersonRequest, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        Number countOfInvalidFields = documentContext.read("$.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+
+        List<String> message = documentContext.read("$.cpf");
+
+        assertThat(message).containsExactlyInAnyOrder("Cpf já cadastrado");
+    }
 }

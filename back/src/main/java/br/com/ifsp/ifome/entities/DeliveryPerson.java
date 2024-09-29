@@ -4,6 +4,7 @@ import br.com.ifsp.ifome.dto.request.DeliveryPersonRequest;
 import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "delivery_person")
+// TODO esta faltando a parte de user details junto com roles
 public class DeliveryPerson  implements PasswordPolicy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,11 +36,11 @@ public class DeliveryPerson  implements PasswordPolicy {
 
     public DeliveryPerson(){}
 
-    public DeliveryPerson(DeliveryPersonRequest deliveryPersonRequest) {
+    public DeliveryPerson(DeliveryPersonRequest deliveryPersonRequest, PasswordEncoder passwordEncoder) {
         this.name = deliveryPersonRequest.name();
         this.cpf = deliveryPersonRequest.cpf();
         this.email = deliveryPersonRequest.email();
-        this.password = deliveryPersonRequest.password();
+        this.password = passwordEncoder.encode(deliveryPersonRequest.password());
         this.dateOfBirth =deliveryPersonRequest.dateOfBirth();
         this.typeOfVehicle = deliveryPersonRequest.vehicleDocument();
         this.telephone = deliveryPersonRequest.telephone();
@@ -49,12 +51,15 @@ public class DeliveryPerson  implements PasswordPolicy {
     }
 
 
-    public DeliveryPerson(Long id, String name, String cpf, String email, String password, LocalDate dateOfBirth, String typeOfVehicle, String telephone, String cnh, String vehicleDocument, List<Address> address, BankAccount bankAccount) {
+    public DeliveryPerson(Long id, String name, String cpf, String email, String password,
+                          LocalDate dateOfBirth, String typeOfVehicle, String telephone,
+                          String cnh, String vehicleDocument, List<Address> address,
+                          BankAccount bankAccount,  PasswordEncoder passwordEncoder) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
         this.email = email;
-        this.password = password;
+        this.password = passwordEncoder.encode(password);
         this.dateOfBirth = dateOfBirth;
         this.typeOfVehicle = typeOfVehicle;
         this.telephone = telephone;
@@ -161,7 +166,7 @@ public class DeliveryPerson  implements PasswordPolicy {
     }
 
     @Override
-    public boolean isLoginCorrect(String rawPassword, BCryptPasswordEncoder passwordEncoder) {
+    public boolean isLoginCorrect(String rawPassword, PasswordEncoder passwordEncoder) {
         return passwordEncoder.matches(rawPassword, this.password);
     }
 }

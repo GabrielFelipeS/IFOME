@@ -1,4 +1,4 @@
-package br.com.ifsp.ifome.validation.validators;
+package br.com.ifsp.ifome.validation.validators.anotations;
 
 import br.com.ifsp.ifome.repositories.DeliveryPersonRepository;
 import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmailDeliveryPerson;
@@ -25,7 +25,7 @@ public class EmailValidatorDeliveryPerson implements ConstraintValidator<NotRegi
             return true;
         }
 
-        boolean emailExists = deliveryPersonRepository.existsByEmail(email);
+        boolean emailExists = deliveryPersonRepository.existsByEmailIgnoreCase(email);
 
         if (emailExists) {
             context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
