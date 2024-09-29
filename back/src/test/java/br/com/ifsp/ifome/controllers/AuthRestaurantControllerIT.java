@@ -75,7 +75,7 @@ public class AuthRestaurantControllerIT {
             "email@email.com",
             "@Senha1",
             "@Senha1",
-            "10.882.594/0001-65",
+            "10882594000165",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
                 "12", "condominio","details")),
