@@ -266,6 +266,52 @@ public class DishControllerIT {
                 );
     }
 
+    @Test
+    @DirtiesContext
+    public void shouldBeAbleToReturnErrorInDescriptionField(){
+        Long restaurantId = 1L; // ID de exemplo
+        DishRequest dishRequest = new DishRequest(
+                "Lasanha",
+                " ",
+                45.,
+                "Massas",
+                "Indisponível"
+
+        );
+
+        // Carregar o arquivo de exemplo do classpath
+        ClassPathResource fileResource = new ClassPathResource("image.png");
+
+        // Criar o mapa de parâmetros para enviar o objeto e o arquivo
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("dish", dishRequest);
+        body.add("file", fileResource);
+        body.add("restaurantId", 1L);
+
+        // Definir os headers da requisição
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        // Criar a entidade Http com o body e os headers
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity
+                ("/api/auth/dish",
+                        requestEntity, String.class);
+        System.out.println(response.getBody());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+
+        List<String> descriptionErrors = documentContext.read("$.errors.description");
+        assertThat(descriptionErrors)
+                .containsExactlyInAnyOrder(
+                        "A descrição do prato é obrigatória"
+                );
+    }
 
 
 }
