@@ -11,4 +11,5 @@ public interface DeliveryPersonRepository extends CrudRepository<DeliveryPerson,
     //boolean existsByCnh(String cnhNumber);
 
     Optional<DeliveryPerson> findByEmail(String email);
+    boolean existsByCnhNumber(String cnhNumber);
 }
