@@ -95,7 +95,7 @@ function submitForm() {
 </template>
 <style lang="scss" scoped>
 .form {
-    @apply w-[95%] h-[60%] bg-white rounded-lg shadow-lg mb-[50px] flex flex-col justify-around p-5;
+    @apply w-full max-w-[800px] bg-white rounded-lg shadow-lg mb-[50px] flex flex-col justify-around p-5;
 
     h2 {
         @apply text-4xl font-semibold text-gray-800 mb-5;
@@ -130,11 +130,11 @@ function submitForm() {
     }
 
     @media (max-width: 768px) {
-        @apply mr-0;
+        @apply mr-0 mt-36 mb-8;
     }
 
     @media (min-width: 768px) {
-        @apply w-[500px] mb-[100px] mr-[200px] min-w-[500px];
+        @apply w-full mr-[4.2%] max-w-[600px] mt-24;
     }
 }
 </style>
