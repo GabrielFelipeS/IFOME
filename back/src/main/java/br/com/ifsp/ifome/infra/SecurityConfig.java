@@ -39,10 +39,11 @@ public class SecurityConfig {
             .authorizeHttpRequests(request ->
                 request
                     .requestMatchers("/actuator/health").permitAll()
-                    .requestMatchers("/h2-console").permitAll()
+                    .requestMatchers("/h2-console/**").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/static/**").permitAll()
+                    .requestMatchers("/api/restaurant/**").permitAll()
                     .anyRequest().authenticated())
             .csrf(AbstractHttpConfigurer::disable)
             .oauth2ResourceServer(auth02 -> auth02.jwt(Customizer.withDefaults()))
