@@ -15,6 +15,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
@@ -74,5 +76,52 @@ public class DishControllerIT {
         assertThat(name).isEqualTo(dishRequest.name());
         assertThat(price).isEqualTo(dishRequest.price());
 
+    }
+
+    @Test
+    @DirtiesContext
+    public void shouldBeAbleToReturnErrorInAvailabilityField(){
+        Long restaurantId = 1L; // ID de exemplo
+        DishRequest dishRequest = new DishRequest(
+                "Lasanha",
+                "Massa fresca, molho bolonhesa",
+                45.5,
+                "Massas",
+                "isponível"
+
+        );
+
+        // Carregar o arquivo de exemplo do classpath
+        ClassPathResource fileResource = new ClassPathResource("image.png");
+
+        // Criar o mapa de parâmetros para enviar o objeto e o arquivo
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("dish", dishRequest);
+        body.add("file", fileResource);
+        body.add("restaurantId", 1L);
+
+        // Definir os headers da requisição
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        // Criar a entidade Http com o body e os headers
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity
+                ("/api/auth/dish",
+                        requestEntity, String.class);
+        System.out.println(response.getBody());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+
+        List<String> availabilityErrors = documentContext.read("$.errors.availability");
+        assertThat(availabilityErrors)
+                .containsExactlyInAnyOrder(
+                        "A disponibilidade deve ser 'Disponível' ou 'Indisponível'"
+                );
     }
 }
