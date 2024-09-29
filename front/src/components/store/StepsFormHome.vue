@@ -92,14 +92,15 @@ const step5Completed = ref(false);
 const step6Completed = ref(false);
 
 const step3Erros = ref({
-    cnpj: false,
-    nameStore: false,
-    phone: false,
-    specialty: false,
-    opening: false,
-    closing: false,
-    daysSelected: false,
-    other: false,
+    cpf: [],
+    cnpj: [],
+    nameStore: [],
+    phone: [],
+    specialty: [],
+    opening: [],
+    closing: [],
+    daysSelected: [],
+    other: [],
 });
 
 watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other], () => {
@@ -107,7 +108,7 @@ watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other]
     if (cnpj.value) {
         let cnpjValue = cnpj.value.replace(/\D/g, '');
         if (cnpjValue.length !== 14) {
-            step3Erros.value.cnpj = true;
+            step3Erros.value.cnpj = ['** Digite um valor válido **'];
         } else {
             step3Erros.value.cnpj = false;
         }
@@ -115,7 +116,7 @@ watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other]
 
     if (nameStore.value) {
         if (nameStore.value.length < 3) {
-            step3Erros.value.nameStore = true;
+            step3Erros.value.nameStore = ['** Digite um nome valido, minimo de 3 letras **'];
         } else {
             step3Erros.value.nameStore = false;
         }
@@ -124,71 +125,64 @@ watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other]
     if (phone.value) {
         let phoneValue = phone.value.replace(/\D/g, '');
         if (phoneValue.length !== 10 && phoneValue.length !== 11) {
-            step3Erros.value.phone = true;
+            step3Erros.value.phone = ['** Digite um valor válido **'];
         } else {
             step3Erros.value.phone = false;
         }
     }
 
     if (specialty.value === 'Outro' && !other.value) {
-        step3Erros.value.other = true;
+        step3Erros.value.other = ['** Digite um valor valido **'];
     } else {
         step3Erros.value.other = false;
     }
 
     if (specialty.value === 'none') {
-        step3Erros.value.specialty = true;
+        step3Erros.value.specialty = ['** Selecione uma opção valida **'];
     } else {
         step3Erros.value.specialty = false;
     }
 
     if (opening.value && opening.value.includes(':')) {
         let openingValue = opening.value.split(':');
-        let hour = parseInt(openingValue[0], 10);
-        let minute = parseInt(openingValue[1], 10);
-
-        if (isNaN(hour) || isNaN(minute) || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-            step3Erros.value.opening = true;
+        if(isNaN(parseInt(openingValue[0], 10)) || isNaN(parseInt(openingValue[1], 10))) {
+            step3Erros.value.opening = ['** Digite um horario valido **'];
         } else {
             step3Erros.value.opening = false;
         }
     } else {
-        step3Erros.value.opening = true;
+        step3Erros.value.opening = ['** Digite um horario valido **'];
     }
 
     // Verificação de Fechamento
     if (closing.value && closing.value.includes(':')) {
         let closingValue = closing.value.split(':');
-        let hour = parseInt(closingValue[0], 10);
-        let minute = parseInt(closingValue[1], 10);
-
-        // Verificar se os valores são válidos
-        if (isNaN(hour) || isNaN(minute) || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-            step3Erros.value.closing = true;
+        if(isNaN(parseInt(closingValue[0], 10)) || isNaN(parseInt(closingValue[1], 10))) {
+            step3Erros.value.closing = ['** Digite um horario valido **'];
         } else {
             step3Erros.value.closing = false;
         }
     } else {
-        step3Erros.value.closing = true;
+        step3Erros.value.closing = ['** Digite um horario valido **'];
     }
 
     if (!step3Erros.value.opening && !step3Erros.value.closing) {
         let openingValue = opening.value.split(':');
         let closingValue = closing.value.split(':');
-        let openingHour = parseInt(openingValue[0], 10);
-        let openingMinute = parseInt(openingValue[1], 10);
-        let closingHour = parseInt(closingValue[0], 10);
-        let closingMinute = parseInt(closingValue[1], 10);
-
-        if (closingHour < openingHour || (closingHour === openingHour && closingMinute <= openingMinute)) {
-            step3Erros.value.closing = true;
+        if (parseInt(openingValue[0], 10) > parseInt(closingValue[0], 10)) {
+            step3Erros.value.opening = ['** O horario de abertura deve ser menor que o de fechamento **'];
+            step3Erros.value.closing = ['** O horario de fechamento deve ser maior que o de abertura **'];
+        } else if (parseInt(openingValue[0], 10) === parseInt(closingValue[0], 10) && parseInt(openingValue[1], 10) >= parseInt(closingValue[1], 10)) {
+            step3Erros.value.opening = ['** O horario de abertura deve ser menor que o de fechamento **'];
+            step3Erros.value.closing = ['** O horario de fechamento deve ser maior que o de abertura **'];
         } else {
+            step3Erros.value.opening = false;
             step3Erros.value.closing = false;
         }
     }
 
     if (daysSelected.value.length === 0) {
-        step3Erros.value.daysSelected = true;
+        step3Erros.value.daysSelected = ['** Selecione pelo menos um dia **'];
     } else {
         step3Erros.value.daysSelected = false;
     }
@@ -198,6 +192,8 @@ watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other]
     } else {
         step3Completed.value = true;
     }
+
+    console.log(step3Erros.value);
 });
 
 watch([name, cpf], () => {
@@ -243,7 +239,7 @@ const errorPhotos = ref(false);
 
 function handleFileChange(event) {
     const files = Array.from(event.target.files);
-    const file = files[0];
+    const file = files.value[0];
 
     if (file.size > 2 * 1024 * 1024) {
         errorPhotos.value = ['O arquivo deve ter no máximo 2MB'];
@@ -266,7 +262,7 @@ function dragLeave(event) {
 function drop(event) {
     event.currentTarget.classList.remove('bg-gray-100');
     const files = Array.from(event.dataTransfer.files);
-    selectedFiles.value = [files[0]];
+    selectedFiles.value = [files.value[0]];
 }
 
 function removeFile() {
@@ -399,7 +395,7 @@ async function submitForm() {
         };
 
         if (selectedFiles.value.length > 0) {
-            formData.append('file', selectedFiles.value[0]);
+            formData.append('file', selectedFiles.value.value[0]);
         } else {
             throw new Error("Nenhum arquivo selecionado.");
         }
@@ -510,19 +506,25 @@ const returnSteps = () => {
                 <label for="cnpj">CNPJ</label>
                 <MaskInput type="text" id="cnpj" v-model="cnpj" name="cnpj" :value="cnpj" placeholder="CNPJ"
                     mask="##.###.###/####-##" required />
-                <p v-if="step3Erros.cnpj">** Digite um valor válido **</p>
+                    <template v-if="step3Erros.cpf">
+                        <p v-for="error in step3Erros.cpf">{{ error }}</p>
+                    </template>
             </div>
             <div class="form-group">
                 <label for="nameStore">Nome do Restaurante (como aparecerá no app)</label>
                 <input type="text" id="nameStore" v-model="nameStore" name="nameStore" placeholder="Nome da loja"
                     required />
-                <p v-if="step3Erros.nameStore">** Digite um nome valido ( Minimo 3 letras ) **</p>
+                <template v-if="step3Erros.nameStore">
+                    <p v-for="error in step3Erros.nameStore">{{ error }}</p>
+                </template>
             </div>
             <div class="form-group">
                 <label for="phone">Telefone do Restaurante</label>
                 <MaskInput type="text" id="phone" v-model="phone" :value="phone" name="phone" placeholder="Telefone"
                     mask="(##) #####-####" required />
-                <p v-if="step3Erros.phone">** Digite um valor válido **</p>
+                <template v-if="step3Erros.phone">
+                    <p v-for="error in step3Erros.phone">{{ error }}</p>
+                </template>
             </div>
             <div class="mid">
                 <div class="form-group">
@@ -535,12 +537,16 @@ const returnSteps = () => {
                         <option value="Comida Saudável">Comida Saudável</option>
                         <option value="Outro">Outro</option>
                     </select>
-                    <p v-if="step3Erros.specialty">** Selecione uma opção valida **</p>
+                    <template v-if="step3Erros.specialty">
+                        <p v-for="error in step3Erros.specialty">{{ error }}</p>
+                    </template>
                 </div>
                 <div class="form-group" :class="specialty === 'Outro' ? '' : 'hidden'">
                     <label for="other">Outro</label>
                     <input type="text" id="other" v-model="other" name="other" placeholder="Outro" />
-                    <p v-if="step3Erros.other">** Digite um valor valido **</p>
+                    <template v-if="step3Erros.other">
+                        <p v-for="error in step3Erros.other">{{ error }}</p>
+                    </template>
                 </div>
             </div>
             <h3>Funcionamento</h3>
@@ -548,12 +554,16 @@ const returnSteps = () => {
                 <div class="form-group">
                     <label for="opening">Abertura</label>
                     <input type="time" id="opening" v-model="opening" name="opening" required />
-                    <p v-if="step3Erros.opening">** Digite um horario valido **</p>
+                    <template v-if="step3Erros.opening">
+                        <p v-for="error in step3Erros.opening">{{ error }}</p>
+                    </template>
                 </div>
                 <div class="form-group ">
                     <label for="closing">Fechamento</label>
                     <input type="time" id="closing" v-model="closing" name="closing" required />
-                    <p v-if="step3Erros.closing">** Digite um horario valido, e maior que a abertura**</p>
+                    <template v-if="step3Erros.closing">
+                        <p v-for="error in step3Erros.closing">{{ error }}</p>
+                    </template>
                 </div>
             </div>
             <div class="form-group">
@@ -565,7 +575,9 @@ const returnSteps = () => {
                         <label for="sunday">{{ day.name }}</label>
                     </div>
                 </div>
-                <p v-if="step3Erros.daysSelected">** Selecione pelo menos um dia **</p>
+                <template v-if="step3Erros.daysSelected">
+                    <p v-for="error in step3Erros.daysSelected">{{ error }}</p>
+                </template>
             </div>
 
             <button type="submit" class="btn-text" :class="step3Completed ? '' : 'disable'" :disabled="!step3Completed"
@@ -594,7 +606,7 @@ const returnSteps = () => {
                         selecione</span>
                 </label>
             </div>
-            <p v-if="errorPhotos" class="alert">{{ errorPhotos[0] }}</p>
+            <p v-if="errorPhotos" class="alert">{{ errorPhotos.value[0] }}</p>
 
             <!-- Lista de fotos selecionadas -->
             <div class="mt-4 w-full">
@@ -606,7 +618,7 @@ const returnSteps = () => {
                         X
                     </button>
                 </div>
-                
+
             </div>
 
             <button type="submit" class="btn-primary" :class="step4Completed ? '' : 'disable'"
