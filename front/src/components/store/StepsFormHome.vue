@@ -5,11 +5,11 @@ import { MaskInput } from 'vue-3-mask';
 import { fetchViaCep } from '@/services/viaCep';
 import axios from 'axios';
 
-const currentStep = ref(4);
+const currentStep = ref(1);
 
 const emit = defineEmits(['responseApi']);
 
-const stepsActive = ref(true);
+const stepsActive = ref(false);
 
 const props = defineProps({
     data: Object,
@@ -66,36 +66,6 @@ const digit = ref('');
 const password = ref('');
 const confirmPassword = ref('');
 const details = ref('');
-
-
-//mockar dados
-
-email.value = 'teste@teste.com';
-cep.value = '01310-100';
-state.value = 'SP';
-city.value = 'São Paulo';
-address.value = 'Avenida Paulista';
-number.value = '1000';
-complement.value = 'Apto 100';
-name.value = 'João da Silva';
-cpf.value = '469.623.750-85';
-cnpj.value = '00.909.537/0001-79';
-nameStore.value = 'Restaurante do João';
-phone.value = '(11) 99999-9999';
-neighborhood.value = 'Bela Vista';
-specialty.value = 'Pizza';
-opening.value = '08:00';
-closing.value = '18:00';
-daysSelected.value = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira','Sábado','Domingo'];
-paymentMethods.value = ['dinner', 'credit', 'pix'];
-bank.value = '001';
-agency.value = '1234';
-account.value = '12345';
-digit.value = '1';
-password.value = 'Teste@123';
-confirmPassword.value = 'Teste@123';
-details.value = 'Detalhes do restaurante';
-stepsActive.value = true;
 
 
 watch(specialty, (value) => {
@@ -434,7 +404,6 @@ async function submitForm() {
             throw new Error("Nenhum arquivo selecionado.");
         }
 
-        console.log(JSON.stringify(restaurantData));
 
         formData.append('restaurant', new Blob([JSON.stringify(restaurantData)], {
             type: 'application/json',
@@ -445,9 +414,6 @@ async function submitForm() {
                 'Content-Type': 'multipart/form-data',
             }
         });
-
-        console.log(restaurantData);
-        console.log("Imagem que foi enviada", selectedFiles.value[0]);
 
         if (response.status === 201) {
             emit('responseApi', response.data);
