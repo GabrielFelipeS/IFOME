@@ -38,7 +38,7 @@ CREATE TABLE delivery_person (
     type_of_vehicle VARCHAR(10), -- Tipo do veículo: carro ou moto (valores válidos são 'carro', 'moto')
     plate VARCHAR(8), -- Placa no formato XXX-9999
     telephone VARCHAR(20), -- Telefone no formato (XX) XXXXX-XXXX
-    cnh_number VARCHAR(9) NOT NULL, -- Número da CNH com exatamente 9 dígitos
+    cnh_number VARCHAR(11) NOT NULL, -- Número da CNH com exatamente 9 dígitos
     cnh_validity DATE NOT NULL, -- Validade da CNH deve ser uma data futura
     vehicle_document VARCHAR(11), -- RENAVAM deve conter entre 9 e 11 dígitos numéricos
     bank_account_id BIGINT, -- Referência para a tabela de contas bancárias (se aplicável)

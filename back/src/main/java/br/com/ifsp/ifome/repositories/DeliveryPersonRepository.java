@@ -9,4 +9,5 @@ public interface DeliveryPersonRepository extends CrudRepository<DeliveryPerson,
     boolean existsByEmailIgnoreCase(String email);
     boolean existsByCpf(String cpf);
     Optional<DeliveryPerson> findByEmail(String email);
+    boolean existsByCnhNumber(String cnhNumber);
 }
