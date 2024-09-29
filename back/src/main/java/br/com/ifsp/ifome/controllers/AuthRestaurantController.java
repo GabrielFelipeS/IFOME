@@ -46,8 +46,7 @@ public class AuthRestaurantController {
         UriComponentsBuilder ucb)
         throws IOException, MethodArgumentNotValidException {
 
-        System.out.println( fileStorageService.storeFile(multipartFile));
-        RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest);
+        RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest, multipartFile);
 
         URI locationOfNewRestaurant = ucb
             .path("restaurant/{id}")
