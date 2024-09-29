@@ -43,7 +43,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/static/**").permitAll()
                     .requestMatchers("/api/restaurant/**").permitAll()
-
+                    .requestMatchers("/h2-console/**").permitAll()
                     .requestMatchers("/dish/**").permitAll()
                     .anyRequest().authenticated())
             .csrf(AbstractHttpConfigurer::disable)
