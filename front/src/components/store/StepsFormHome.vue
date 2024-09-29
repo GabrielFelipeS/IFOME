@@ -5,11 +5,11 @@ import { MaskInput } from 'vue-3-mask';
 import { fetchViaCep } from '@/services/viaCep';
 import axios from 'axios';
 
-const currentStep = ref(1);
+const currentStep = ref(4);
 
 const emit = defineEmits(['responseApi']);
 
-const stepsActive = ref(false);
+const stepsActive = ref(true);
 
 const props = defineProps({
     data: Object,
@@ -70,32 +70,32 @@ const details = ref('');
 
 //mockar dados
 
-// email.value = 'teste@teste.com';
-// cep.value = '01310-100';
-// state.value = 'SP';
-// city.value = 'São Paulo';
-// address.value = 'Avenida Paulista';
-// number.value = '1000';
-// complement.value = 'Apto 100';
-// name.value = 'João da Silva';
-// cpf.value = '123.456.789-00';
-// cnpj.value = '12.345.678/0001-00';
-// nameStore.value = 'Restaurante do João';
-// phone.value = '(11) 99999-9999';
-// neighborhood.value = 'Bela Vista';
-// specialty.value = 'Pizza';
-// opening.value = '08:00';
-// closing.value = '18:00';
-// daysSelected.value = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
-// paymentMethods.value = ['dinner', 'credit', 'pix'];
-// bank.value = '001';
-// agency.value = '1234';
-// account.value = '12345';
-// digit.value = '1';
-// password.value = 'Teste@123';
-// confirmPassword.value = 'Teste@123';
-// details.value = 'Detalhes do restaurante';
-// stepsActive.value = true;
+email.value = 'teste@teste.com';
+cep.value = '01310-100';
+state.value = 'SP';
+city.value = 'São Paulo';
+address.value = 'Avenida Paulista';
+number.value = '1000';
+complement.value = 'Apto 100';
+name.value = 'João da Silva';
+cpf.value = '469.623.750-85';
+cnpj.value = '00.909.537/0001-79';
+nameStore.value = 'Restaurante do João';
+phone.value = '(11) 99999-9999';
+neighborhood.value = 'Bela Vista';
+specialty.value = 'Pizza';
+opening.value = '08:00';
+closing.value = '18:00';
+daysSelected.value = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira','Sábado','Domingo'];
+paymentMethods.value = ['dinner', 'credit', 'pix'];
+bank.value = '001';
+agency.value = '1234';
+account.value = '12345';
+digit.value = '1';
+password.value = 'Teste@123';
+confirmPassword.value = 'Teste@123';
+details.value = 'Detalhes do restaurante';
+stepsActive.value = true;
 
 
 watch(specialty, (value) => {
@@ -259,21 +259,29 @@ watch(cep, async (value) => {
 });
 
 const days = [
-    { name: 'Domingo', value: 'sunday' },
-    { name: 'Segunda-feira', value: 'monday' },
-    { name: 'Terça-feira', value: 'tuesday' },
-    { name: 'Quarta-feira', value: 'wednesday' },
-    { name: 'Quinta-feira', value: 'thursday' },
-    { name: 'Sexta-feira', value: 'friday' },
-    { name: 'Sábado', value: 'saturday' },
+    { name: 'Domingo', value: 'Segunda-feira' },
+    { name: 'Segunda-feira', value: 'Terça-feira' },
+    { name: 'Terça-feira', value: 'Quarta-feira' },
+    { name: 'Quarta-feira', value: 'Quinta-feira' },
+    { name: 'Quinta-feira', value: 'Sexta-feira' },
+    { name: 'Sexta-feira', value: 'Sábado' },
+    { name: 'Sábado', value: 'Domingo' },
 ];
 
 const selectedFiles = ref([]);
+const errorPhotos = ref(false);
 
 function handleFileChange(event) {
     const files = Array.from(event.target.files);
-    // Permitindo apenas uma imagem
-    selectedFiles.value = [files[0]];
+    const file = files[0];
+
+    if (file.size > 2 * 1024 * 1024) {
+        errorPhotos.value = ['O arquivo deve ter no máximo 2MB'];
+        selectedFiles.value = []; // Garantir que nenhum arquivo seja selecionado se o tamanho for maior que 2MB
+    } else {
+        errorPhotos.value = false;
+        selectedFiles.value = [file]; // Aqui, garantimos que estamos modificando a variável 'selectedFiles' corretamente
+    }
 }
 
 function dragOver(event) {
@@ -288,7 +296,6 @@ function dragLeave(event) {
 function drop(event) {
     event.currentTarget.classList.remove('bg-gray-100');
     const files = Array.from(event.dataTransfer.files);
-    // Permitindo apenas uma imagem
     selectedFiles.value = [files[0]];
 }
 
@@ -373,63 +380,90 @@ function showConfirmation() {
 }
 
 async function submitForm() {
-    const formData = new FormData();
+    try {
+        const formData = new FormData();
 
-    let formatedAddress = [{
-        nameAddress: "casa principal",
-        cep: cep.value,
-        neighborhood: neighborhood.value,
-        city: city.value,
-        state: state.value,
-        address: address.value,
-        complement: complement.value,
-        number: number.value,
-        details: details.value
-    }];
-
-    const bankAccount = [{
-        bank: bank.value,
-        agency: agency.value,
-        account: `${account.value}-${digit.value}`
-    }];
-
-    const openingHours = daysSelected.value.map((day) => {
-        return {
-            dayOfTheWeek: day,
-            opening: opening.value,
-            closing: closing.value
+        const bankAccount = {
+            bank: bank.value,
+            agency: agency.value,
+            account: `${account.value}-${digit.value}`
         };
-    });
 
-    formData.append('nameRestaurant', nameStore.value);
-    formData.append('email', email.value);
-    formData.append('password', password.value);
-    formData.append('confirmationPassword', confirmPassword.value);
-    formData.append('cnpj', cnpj.value);
-    formData.append('address', JSON.stringify(formatedAddress));
-    formData.append('telephone', phone.value);
-    formData.append('foodCategory', specialty.value == 'Outro' ? other.value : specialty.value);
-    formData.append('paymentMethods', paymentMethods.value);
-    formData.append('openingHours', JSON.stringify(openingHours));
-    formData.append('personResponsible', name.value);
-    formData.append('personResponsibleCPF', cpf.value);
-    formData.append('restaurantImages', selectedFiles.value[0]);
-    formData.append('bankAccount', JSON.stringify(bankAccount));
+        const openingHours = daysSelected.value.map((day) => {
+            return {
+                dayOfTheWeek: day,
+                opening: opening.value,
+                closing: closing.value
+            };
+        });
 
-    await axios.post('http://127.0.0.1:8000/api/store/create', formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data'
+        const restaurantData = {
+            nameRestaurant: nameStore.value,
+            email: email.value,
+            password: password.value,
+            confirmationPassword: confirmPassword.value,
+            cnpj: cnpj.value,
+            address: [
+                {
+                    nameAddress: "casa principal",
+                    cep: cep.value,
+                    typeResidence: "casa",
+                    neighborhood: neighborhood.value,
+                    city: city.value,
+                    state: state.value,
+                    address: address.value,
+                    complement: complement.value,
+                    number: number.value,
+                    details: details.value
+                }
+            ],
+            telephone: phone.value,
+            foodCategory: specialty.value === 'Outro' ? other.value : specialty.value,
+            paymentMethods: paymentMethods.value.toString(),
+            openingHoursStart: opening.value,
+            openingHoursEnd: closing.value,
+            openingHours: openingHours,
+            personResponsible: name.value,
+            personResponsibleCPF: cpf.value,
+            bankAccount: bankAccount
+        };
+
+        if (selectedFiles.value.length > 0) {
+            formData.append('file', selectedFiles.value[0]);
+        } else {
+            throw new Error("Nenhum arquivo selecionado.");
         }
-    }).then((response) => {
+
+        console.log(JSON.stringify(restaurantData));
+
+        formData.append('restaurant', new Blob([JSON.stringify(restaurantData)], {
+            type: 'application/json',
+        }));
+
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}auth/restaurant`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        });
+
+        console.log(restaurantData);
+        console.log("Imagem que foi enviada", selectedFiles.value[0]);
+
         if (response.status === 201) {
             emit('responseApi', response.data);
             nextStep();
         } else {
             emit('responseApi', response.data);
         }
-    }).catch((error) => {
-        emit('responseApi', error.response.data);
-    });
+
+    } catch (error) {
+        console.error(error);
+        if (error.response) {
+            emit('responseApi', error.response.data);
+        } else {
+            emit('responseApi', { message: error.message });
+        }
+    }
 }
 
 const returnSteps = () => {
@@ -594,7 +628,7 @@ const returnSteps = () => {
                         selecione</span>
                 </label>
             </div>
-            <p v-if="step4Erros.photos">** Selecione pelo menos uma foto **</p>
+            <p v-if="errorPhotos" class="alert">{{ errorPhotos[0] }}</p>
 
             <!-- Lista de fotos selecionadas -->
             <div class="mt-4 w-full">
@@ -606,6 +640,7 @@ const returnSteps = () => {
                         X
                     </button>
                 </div>
+                
             </div>
 
             <button type="submit" class="btn-primary" :class="step4Completed ? '' : 'disable'"
@@ -740,6 +775,10 @@ const returnSteps = () => {
 
         p {
             @apply text-lg text-gray-500 mb-5 font-semibold;
+
+            &.alert {
+                @apply text-red-500;
+            }
         }
 
         .checkform-payment {
