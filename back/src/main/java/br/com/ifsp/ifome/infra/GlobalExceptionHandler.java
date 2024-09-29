@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
             logger.warn(error.getDefaultMessage());
         });
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "Erro ao cadastrar cliente");
+        response.put("message", "Erro ao realizar operação");
         response.put("errors", errorsMap);
         return response;
     }
