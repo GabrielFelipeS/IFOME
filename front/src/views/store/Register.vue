@@ -1,7 +1,7 @@
 <script setup>
-import FormHome from '@/components/store/FormHome.vue';
+import FormHome from '@/components/store/register/FormHome.vue';
 import Header from '@/components/store/Header.vue';
-import StepsFormHome from '@/components/store/StepsFormHome.vue';
+import StepsFormHome from '@/components/store/register/StepsFormHome.vue';
 import { ref } from 'vue';
 import { useToast } from 'vue-toast-notification';
 
