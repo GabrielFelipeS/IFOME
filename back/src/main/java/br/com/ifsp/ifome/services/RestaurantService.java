@@ -44,7 +44,7 @@ public class RestaurantService {
         Restaurant restaurant = new Restaurant(restaurantRequest, bCryptPasswordEncoder, imageUrl);
 
         restaurant = restaurantRepository.save(restaurant);
-        return new RestaurantResponse(restaurant);
+        return RestaurantResponse.from(restaurant);
     }
 
     public RestaurantLoginResponse login(LoginRequest loginRequest) {
@@ -54,7 +54,7 @@ public class RestaurantService {
 
         var jwtValue = tokenService.generateToken(restaurant.orElseThrow().getEmail());
 
-        RestaurantResponse restaurantResponse = new RestaurantResponse(restaurant.orElseThrow());
+        RestaurantResponse restaurantResponse = RestaurantResponse.from(restaurant.orElseThrow());
 
         return new RestaurantLoginResponse(restaurantResponse, jwtValue);
     }

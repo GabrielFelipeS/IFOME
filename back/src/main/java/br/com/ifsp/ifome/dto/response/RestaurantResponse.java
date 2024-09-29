@@ -25,8 +25,8 @@ public record RestaurantResponse(
         BankAccount bankAccount
 
 ) {
-    public RestaurantResponse(Restaurant restaurant){
-        this( restaurant.getId(),
+    public static RestaurantResponse from(Restaurant restaurant) {
+            return new RestaurantResponse( restaurant.getId(),
                 restaurant.getNameRestaurant(),
                 restaurant.getCnpj(),
                 restaurant.getFoodCategory(),
