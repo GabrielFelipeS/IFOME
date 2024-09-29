@@ -50,7 +50,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
 
     public Restaurant() {}
 
-    public Restaurant(RestaurantRequest restaurantRequest, BCryptPasswordEncoder bCryptPasswordEncoder){
+    public Restaurant(RestaurantRequest restaurantRequest, BCryptPasswordEncoder bCryptPasswordEncoder, String restaurantImage){
         this.nameRestaurant = restaurantRequest.nameRestaurant();
         this.cnpj = restaurantRequest.cnpj();
         this.foodCategory = restaurantRequest.foodCategory();
@@ -66,7 +66,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.email = restaurantRequest.email();
         this.password = bCryptPasswordEncoder.encode(restaurantRequest.password());
         this.paymentMethods = restaurantRequest.paymentMethods();
-        this.restaurantImage = restaurantRequest.restaurantImage();
+        this.restaurantImage = restaurantImage;
         this.bankAccount = new BankAccount(restaurantRequest.bankAccount());
     }
 
