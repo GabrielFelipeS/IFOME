@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -26,17 +27,11 @@ public class Client implements PasswordPolicy, UserDetails  {
     private LocalDate dateOfBirth;
     private String cpf;
 
-    @OneToMany
-    @JoinColumn(name = "address", referencedColumnName = "cpf")
-    private List<Address> address;
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Address> address= new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-        name = "tb_users_roles",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public Client() {}
 
@@ -44,9 +39,14 @@ public class Client implements PasswordPolicy, UserDetails  {
         this.name = clientRequest.name();
         this.email = clientRequest.email();
         this.password = bCryptPasswordEncoder.encode(clientRequest.password());
-        this.dateOfBirth = clientRequest.dateOfBirth();
+        this.dateOfBirth = clientRequest.convertDateOfBirth();
         this.cpf = clientRequest.cpf();
-        this.address = clientRequest.address().stream().map(Address::new).collect(Collectors.toList());
+        this.address = clientRequest.address().stream().map(addressRequest -> {
+            Address address = new Address(addressRequest);
+            address.setClient(this);
+            return address;
+        }).collect(Collectors.toList());
+
     }
 
     public Client(Long id, String name, String email, String password, LocalDate dateOfBirth, String cpf,  List<Address> address, String paymentMethods, BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -57,6 +57,7 @@ public class Client implements PasswordPolicy, UserDetails  {
         this.dateOfBirth = dateOfBirth;
         this.cpf = cpf;
         this.address = address;
+        this.role = Role.CLIENT;
     }
 
     public Client(Long id, String fullName, String email, String password, LocalDate dateOfBirth, String cpf,  Address address, String paymentMethods, BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -71,12 +72,12 @@ public class Client implements PasswordPolicy, UserDetails  {
         this.name = name;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRole(Role roles) {
+        this.role = role;
     }
 
     public Long getId() {
@@ -97,7 +98,7 @@ public class Client implements PasswordPolicy, UserDetails  {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return this.role.getAuthorities();
     }
 
     public String getPassword() {

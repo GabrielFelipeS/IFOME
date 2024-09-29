@@ -4,10 +4,6 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-# Project
-/src/main/resources/app.key
-/src/main/resources/app.pub
-
 ### STS ###
 .apt_generated
 .classpath
@@ -38,3 +34,4 @@ build/
 .vscode/
 
 
+/.env

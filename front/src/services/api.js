@@ -1,11 +1,14 @@
 import axios from 'axios';
 
+const token = localStorage.getItem('token');
+const headers = {
+    'Content-Type': 'application/json',
+    ...(token && { Authorization: `Bearer ${token}` }),
+}
+
 const api = axios.create({
-    baseURL: process.env.DEFAULT_API_URL,
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + localStorage.getItem('token')
-    }
+    baseURL: import.meta.env.VITE_API_URL,
+    headers: headers,
 });
 
 export default api;

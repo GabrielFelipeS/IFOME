@@ -1,16 +1,15 @@
 package br.com.ifsp.ifome.entities;
 
 import br.com.ifsp.ifome.dto.request.AddressRequest;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 @Entity
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private String nameAddress;
     private String cep;
     private String neighborhood;
     private String city;
@@ -20,8 +19,24 @@ public class Address {
     private String complement;
     private String typeResidence;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id")
+    @JsonIgnore
+    private Client client;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "delivery_id")
+    private DeliveryPerson delivery;
+
     public Address(AddressRequest addressRequest) {
         this.cep = addressRequest.cep();
+        this.nameAddress = addressRequest.nameAddress();
         this.neighborhood = addressRequest.neighborhood();
         this.city = addressRequest.city();
         this.state = addressRequest.state();
@@ -32,6 +47,38 @@ public class Address {
     }
 
     public Address() {
+    }
+
+    public String getNameAddress() {
+        return nameAddress;
+    }
+
+    public void setNameAddress(String nameAddress) {
+        this.nameAddress = nameAddress;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
+
+    public DeliveryPerson getDelivery() {
+        return delivery;
+    }
+
+    public void setDelivery(DeliveryPerson delivery) {
+        this.delivery = delivery;
     }
 
     public Integer getId() {
