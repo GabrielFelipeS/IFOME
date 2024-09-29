@@ -1,7 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { MaskInput } from 'vue-3-mask';
-import Alert from '../Page/Alert.vue';
 import axios from 'axios';
 
 const emit = defineEmits(['submit', 'responseApi']);
