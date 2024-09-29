@@ -84,17 +84,16 @@ public class AuthRestaurantControllerIT {
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
-                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
-                        new OpeningHoursRequest("terça","11:00", "23:00")),
+                List.of(new OpeningHoursRequest("Segunda-feira","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça-feira","11:00", "23:00")),
                 "responsavel",
                 "033.197.356-16",
-                "imagem.jpeg",
                 new BankAccountRequest("123","1255", "4547-7")
 
         );
 
         // Carregar o arquivo de exemplo do classpath
-        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        ClassPathResource fileResource = new ClassPathResource("image.png");
         System.out.println("File?");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
@@ -161,17 +160,16 @@ public class AuthRestaurantControllerIT {
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
-                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
-                        new OpeningHoursRequest("Terça","11:00", "23:00")),
+                List.of(new OpeningHoursRequest("Segunda-feira","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça-feira","11:00", "23:00")),
                 "responsavel",
                 "033.197.356-16",
-                "imagem.jpeg",
                 new BankAccountRequest("123","1255", "4547-7")
 
 
         );
 
-        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        ClassPathResource fileResource = new ClassPathResource("image.png");
         System.out.println("File?");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
@@ -211,16 +209,15 @@ public class AuthRestaurantControllerIT {
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
-                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
-                        new OpeningHoursRequest("Terça","11:00", "23:00")),
+                List.of(new OpeningHoursRequest("Segunda-feira","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça-feira","11:00", "23:00")),
                 "responsavel",
                 "033.197.356-16",
-                "imagem.jpeg",
                 new BankAccountRequest("123","1255", "4547-7")
 
 
         );
-        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        ClassPathResource fileResource = new ClassPathResource("image.png");
         System.out.println("File?");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
@@ -256,17 +253,16 @@ public class AuthRestaurantControllerIT {
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
-                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
-                        new OpeningHoursRequest("Terça","11:00", "23:00")),
+                List.of(new OpeningHoursRequest("Segunda-feira","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça-feira","11:00", "23:00")),
                 "responsavel",
                 "033.197.356-16",
-                "imagem.jpeg",
                 new BankAccountRequest("123","1255", "4547-7")
 
 
         );
 
-        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        ClassPathResource fileResource = new ClassPathResource("image.png");
         System.out.println("File?");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
@@ -309,16 +305,15 @@ public class AuthRestaurantControllerIT {
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
-                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
-                        new OpeningHoursRequest("Terça","11:00", "23:00")),
+                List.of(new OpeningHoursRequest("Segunda-feira","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça-feira","11:00", "23:00")),
                 "responsavel",
                 "033.197.356-16",
-                "imagem.jpeg",
                 new BankAccountRequest("123","1255", "4547-7")
 
 
         );
-        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        ClassPathResource fileResource = new ClassPathResource("image.png");
         System.out.println("File?");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
@@ -356,15 +351,14 @@ public class AuthRestaurantControllerIT {
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
-                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
-                        new OpeningHoursRequest("Terça","11:00", "23:00")),                "responsavel",
+                List.of(new OpeningHoursRequest("Segunda-feira","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça-feira","11:00", "23:00")),                "responsavel",
                 "CPF",
-                "imagem.jpeg",
                 new BankAccountRequest("123","1255", "4547-7")
 
 
         );
-        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        ClassPathResource fileResource = new ClassPathResource("image.png");
         System.out.println("File?");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
@@ -403,15 +397,14 @@ public class AuthRestaurantControllerIT {
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
-                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
-                        new OpeningHoursRequest("Terça","11:00", "23:00")),                "responsavel",
+                List.of(new OpeningHoursRequest("Segunda-feira","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça-feira","11:00", "23:00")),                "responsavel",
                 "033.197.356-16",
-                "imagem.jpeg",
                 new BankAccountRequest("123","1255", "4547-7")
 
 
         );
-        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        ClassPathResource fileResource = new ClassPathResource("image.png");
         System.out.println("File?");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
@@ -444,16 +437,15 @@ public class AuthRestaurantControllerIT {
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
-                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
-                        new OpeningHoursRequest("Terça","11:00", "23:00")),
+                List.of(new OpeningHoursRequest("Segunda-feira","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça-feira","11:00", "23:00")),
                 "responsavel",
                 "033.197.356-16",
-                "imagem.jpeg",
                 new BankAccountRequest(" "," ", "")
 
 
         );
-        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        ClassPathResource fileResource = new ClassPathResource("image.png");
         System.out.println("File?");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
@@ -486,15 +478,14 @@ public class AuthRestaurantControllerIT {
                 "(11) 1234-5678",
                 "Pizzaria",
                 "Dinheiro, Cartão",
-                List.of(new OpeningHoursRequest("segunda","11:00", "23:00"),
-                        new OpeningHoursRequest("Terça","11:00", "23:00")),                "responsavel",
+                List.of(new OpeningHoursRequest("Segunda-feira","11:00", "23:00"),
+                        new OpeningHoursRequest("Terça-feira","11:00", "23:00")),                "responsavel",
                 "033.197.356-16",
-                "imagem.jpeg",
                 new BankAccountRequest("111","2222", "2156-1")
 
 
         );
-        ClassPathResource fileResource = new ClassPathResource("testfile.txt");
+        ClassPathResource fileResource = new ClassPathResource("image.png");
 
         // Criar o mapa de parâmetros para enviar o objeto e o arquivo
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
