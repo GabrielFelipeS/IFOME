@@ -1,0 +1,66 @@
+package br.com.ifsp.ifome.entities;
+
+import br.com.ifsp.ifome.dto.request.OpeningHoursRequest;
+import jakarta.persistence.*;
+
+@Entity
+public class OpeningHours {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    private String dayOfTheWeek;
+    private String opening;
+    private String closing;
+
+    @ManyToOne
+    @JoinColumn(name = "opening_hours", referencedColumnName = "cnpj")
+    private Restaurant restaurant;
+
+    public OpeningHours() {}
+
+    public OpeningHours(OpeningHoursRequest openingHoursRequest) {
+        this.dayOfTheWeek = openingHoursRequest.dayOfTheWeek();
+        this.opening = openingHoursRequest.opening();
+        this.closing = openingHoursRequest.closing();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getDayOfTheWeek() {
+        return dayOfTheWeek;
+    }
+
+    public void setDayOfTheWeek(String dayOfTheWeek) {
+        this.dayOfTheWeek = dayOfTheWeek;
+    }
+
+    public String getOpening() {
+        return opening;
+    }
+
+    public void setOpening(String opening) {
+        this.opening = opening;
+    }
+
+    public String getClosing() {
+        return closing;
+    }
+
+    public void setClosing(String closing) {
+        this.closing = closing;
+    }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
+}

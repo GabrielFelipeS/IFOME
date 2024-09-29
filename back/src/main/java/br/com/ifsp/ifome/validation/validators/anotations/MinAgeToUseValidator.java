@@ -6,8 +6,9 @@ import jakarta.validation.ConstraintValidatorContext;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeParseException;
 
-public class MinAgeToUseValidator implements ConstraintValidator<MinAgeToUse, LocalDate> {
+public class MinAgeToUseValidator implements ConstraintValidator<MinAgeToUse, String> {
     private int minAgeValue;
 
     @Override
@@ -16,11 +17,18 @@ public class MinAgeToUseValidator implements ConstraintValidator<MinAgeToUse, Lo
     }
 
     @Override
-    public boolean isValid(LocalDate dateOfBirth, ConstraintValidatorContext constraintValidatorContext) {
-        if(dateOfBirth == null) return false;
+    public boolean isValid(String dateOfBirthStr, ConstraintValidatorContext constraintValidatorContext) {
+        if (dateOfBirthStr == null || dateOfBirthStr.isEmpty()) return false;
 
-        final LocalDate today = LocalDate.now();
-        final Period period = Period.between(dateOfBirth, today);
-        return period.getYears() >= minAgeValue;
+        try {
+            final LocalDate today = LocalDate.now();
+            LocalDate dateOfBirth = LocalDate.parse(dateOfBirthStr);
+            final Period period = Period.between(dateOfBirth, today);
+            return period.getYears() >= minAgeValue;
+        } catch(DateTimeParseException e) {
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

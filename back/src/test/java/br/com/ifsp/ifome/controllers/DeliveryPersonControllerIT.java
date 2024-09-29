@@ -54,7 +54,7 @@ public class DeliveryPersonControllerIT {
         LoginRequest clientLogin = new LoginRequest("invalid_email@gmail.com", "@Password1");
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson/login", clientLogin, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class DeliveryPersonControllerIT {
         LoginRequest clientLogin = new LoginRequest("user1@gmail.com", "invalid_password");
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson/login", clientLogin, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
@@ -75,11 +75,13 @@ public class DeliveryPersonControllerIT {
                 "email@email.com",
                 "@Senha1",
                 "@Senha1",
-                LocalDate.of(1999, 1, 2),
+                LocalDate.of(1999, 1, 2).toString(),
                 "Carro",
+                "DIT-4987",
                 "(11) 95455-4565",
-                "CNH",
-                "dOCUMENTO DO VEICULO",
+                "123456789",
+                LocalDate.of(2030, 1, 2),
+                "12345678910",
                 List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
                         "12", "condominio","details")),
@@ -92,16 +94,18 @@ public class DeliveryPersonControllerIT {
 
         DocumentContext document = JsonPath.parse(response.getBody());
 
-        Number id = document.read("$.id");
-        String name = document.read("$.name");
-        String cnpj = document.read("$.cpf");
-        String email = document.read("$.email");
-        String dateOfBirth = document.read("$.dateOfBirth");
-        String typeOfVehicle = document.read("$.typeOfVehicle");
-        String telephone = document.read("$.telephone");
-        String cnh = document.read("$.cnh");
-        String vehicleDocument = document.read("$.vehicleDocument");
-        Address addressJson = document.read("$.address[0]", Address.class);
+        Number id = document.read("$.data.id");
+        String name = document.read("$.data.name");
+        String cnpj = document.read("$.data.cpf");
+        String email = document.read("$.data.email");
+        String dateOfBirth = document.read("$.data.dateOfBirth");
+        String typeOfVehicle = document.read("$.data.typeOfVehicle");
+        String telephone = document.read("$.data.telephone");
+        String cnhNumber = document.read("$.data.cnhNumber");
+        String cnhValidity = document.read("$.data.cnhNumber");
+        String vehicleDocument = document.read("$.data.vehicleDocument");
+        Address addressJson = document.read("$.data.address[0]", Address.class);
+        //BankAccount bankAccountJson = document.read("$.bankAccount[0]", BankAccount.class);
 
 
         assertThat(id).isNotNull();
@@ -130,27 +134,348 @@ public class DeliveryPersonControllerIT {
             "email@email.com",
             "@Senha1",
             "@Senha1",
-            LocalDate.of(1999, 1, 2),
+            LocalDate.of(1999, 1, 2).toString(),
             "Carro",
             "(11) 95455-4565",
             "CNH",
             "dOCUMENTO DO VEICULO",
-            List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
-                "address", "complement",
-                "12", "condominio","details")),
-            new BankAccountRequest("123", "1255", "4547-7")
+            LocalDate.of(2030, 1, 2),
+            "123456789",
+            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                    "address", "complement",
+                    "12", "condominio","details")),
+            new BankAccountRequest("123","1255", "4547-7")
+
+    );
+
+        //assertThat(bankAccountJson.getAccount()).isEqualTo("1255");
+
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("Should be possible to not create a new delivery person without cnhNumber")
+    public void  shouldBeAbleToNoTCreateANewDeliveryPersonWithoutCNH(){
+        DeliveryPersonRequest deliveryPersonRequest = new DeliveryPersonRequest(
+                "Nome entregador",
+                "033.197.356-16",
+                "email@email.com",
+                "@Senha1",
+                "@Senha1",
+                LocalDate.of(1999, 1, 2).toString(),
+                "Carro",
+                "DIT-4987",
+                "(11) 95455-4565",
+                " ",
+                LocalDate.of(2030, 1, 2),
+                "123456789",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "condominio","details")),
+                new BankAccountRequest("123","1255", "4547-7")
 
         );
 
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson", deliveryPersonRequest, String.class);
+        System.out.println(response.getBody());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        System.out.println(response.getBody());
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+
+        List<String> cnh = documentContext.read("$.errors.cnhNumber");
+        assertThat(cnh)
+                .containsExactlyInAnyOrder(
+                        "CNH obrigatória",
+                        "O número da CNH deve conter exatamente 9 dígitos numéricos",
+                    "Número do CNH é obrigatório"
+                );
+    }
+
+
+    @Test
+    @DirtiesContext
+    @DisplayName("should return all validation errors in the password fields")
+    public void shouldReturnAllValidationErrorsInThePasswordFields() {
+        DeliveryPersonRequest deliveryPersonRequest = new DeliveryPersonRequest(
+                "Nome entregador",
+                "033.197.356-16",
+                "email@email.com",
+                " ",
+                " ",
+                LocalDate.of(1999, 1, 2).toString(),
+                "Carro",
+                "DIT-4987",
+                "(11) 95455-4565",
+                "123456789",
+                LocalDate.of(2030, 1, 2),
+                "123456789",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "condominio","details")),
+                new BankAccountRequest("123","1255", "4547-7")
+
+        );
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson", deliveryPersonRequest, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Number countOfInvalidFields = documentContext.read("$.length()");
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
+        assertThat(countOfInvalidFields).isEqualTo(2);
+
+        List<String> passwordErrors = documentContext.read("$.errors.password");
+        assertThat(passwordErrors)
+                .containsExactlyInAnyOrder(
+                        "Senha é obrigatório",
+                        "A senha precisa possui pelo menos 6 caracteres",
+                        "Senha precisa conter pelo menos um número",
+                        "Senha precisa conter pelo menos um caractere minúsculo",
+                        "Senha precisa conter pelo menos um caractere maiúsculo",
+                        "Senha precisa conter pelo menos um caractere especial",
+                        "Senha não pode conter espaço");
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("should return all validation errors in the CPF field")
+    public void shouldReturnAllValidationErrorsInThePersonResponsibleCPFField() {
+        DeliveryPersonRequest deliveryPersonRequest = new DeliveryPersonRequest(
+                "Nome entregador",
+                "0A197.356-16",
+                "email@email.com",
+                "@Senha1",
+                "@Senha1",
+                LocalDate.of(1999, 1, 2).toString(),
+                "Carro",
+                "DIT-4987",
+                "(11) 95455-4565",
+                "123456789",
+                LocalDate.of(2030, 1, 2),
+                "123456789",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "condominio","details")),
+                new BankAccountRequest("123","1255", "4547-7")
+
+        );
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson", deliveryPersonRequest, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        System.out.println(response.getBody());
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
         assertThat(countOfInvalidFields).isEqualTo(1);
 
-        List<String> message = documentContext.read("$.cpf");
 
-        assertThat(message).containsExactlyInAnyOrder("Cpf já cadastrado");
+        List<String> cpf = documentContext.read("$.errors.cpf");
+        assertThat(cpf)
+                .containsExactlyInAnyOrder(
+                        "CPF inválido"
+                );
     }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("should return all validation errors in the plate field")
+    public void shouldReturnAllValidationErrorsInThePlateField() {
+        DeliveryPersonRequest deliveryPersonRequest = new DeliveryPersonRequest(
+                "Nome entregador",
+                "033.197.356-16",
+                "email@email.com",
+                "@Senha1",
+                "@Senha1",
+                LocalDate.of(1999, 1, 2).toString(),
+                "Carro",
+                " ",
+                "(11) 95455-4565",
+                "123456789",
+                LocalDate.of(2030, 1, 2),
+                "123456789",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "condominio","details")),
+                new BankAccountRequest("123","1255", "4547-7")
+
+        );
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson", deliveryPersonRequest, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        System.out.println(response.getBody());
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+
+
+        List<String> plate = documentContext.read("$.errors.plate");
+        assertThat(plate)
+                .containsExactlyInAnyOrder(
+                        "A placa deve estar no formato XXX-9999",
+                        "Verique a placa"
+                );
+
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("should return all validation errors in the CNH number fields")
+    public void shouldReturnAllValidationErrorsInTheCNHNumberFields() {
+        DeliveryPersonRequest deliveryPersonRequest = new DeliveryPersonRequest(
+                "Nome entregador",
+                "033.197.356-16",
+                "email@email.com",
+                "@Senha1",
+                "@Senha1",
+                LocalDate.of(1999, 1, 2).toString(),
+                "Carro",
+                "DIT-4987",
+                "(11) 95455-4565",
+                "12345A",
+                LocalDate.of(2030, 1, 2),
+                "123456789",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "condominio","details")),
+                new BankAccountRequest("123","1255", "4547-7")
+
+        );
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson", deliveryPersonRequest, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        System.out.println(response.getBody());
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+
+
+        List<String> cnhNumber = documentContext.read("$.errors.cnhNumber");
+        assertThat(cnhNumber)
+                .containsExactlyInAnyOrder(
+                        "O número da CNH deve conter exatamente 9 dígitos numéricos"
+                );
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("should return all validation errors in the CNHN Validity fields")
+    public void shouldReturnAllValidationErrorsInTheCNHNValidityFields() {
+        DeliveryPersonRequest deliveryPersonRequest = new DeliveryPersonRequest(
+                "Nome entregador",
+                "033.197.356-16",
+                "email@email.com",
+                "@Senha1",
+                "@Senha1",
+                LocalDate.of(1999, 1, 2).toString(),
+                "Carro",
+                "DIT-4987",
+                "(11) 95455-4565",
+                "123456789",
+                LocalDate.of(2024, 1, 2),
+                "123456789",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "condominio","details")),
+                new BankAccountRequest("123","1255", "4547-7")
+
+        );
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson", deliveryPersonRequest, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        System.out.println(response.getBody());
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+
+
+        List<String> cnhValidity = documentContext.read("$.errors.cnhValidity");
+        assertThat(cnhValidity )
+                .containsExactlyInAnyOrder(
+                        "CNH fora de validade"
+                );
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("should return all validation errors in the VehicleDocument field")
+    public void shouldReturnAllValidationErrorsInTheVehicleDocumentField() {
+        DeliveryPersonRequest deliveryPersonRequest = new DeliveryPersonRequest(
+                "Nome entregador",
+                "033.197.356-16",
+                "email@email.com",
+                "@Senha1",
+                "@Senha1",
+                LocalDate.of(1999, 1, 2).toString(),
+                "Carro",
+                "DIT-4987",
+                "(11) 95455-4565",
+                "123456789",
+                LocalDate.of(2030, 1, 2),
+                "111",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "condominio","details")),
+                new BankAccountRequest("123","1255", "4547-7")
+
+        );
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson", deliveryPersonRequest, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        System.out.println(response.getBody());
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+
+
+        List<String> vehicleDocument = documentContext.read("$.errors.vehicleDocument");
+        assertThat(vehicleDocument)
+                .containsExactlyInAnyOrder(
+                        "O RENAVAM deve conter entre 9 e 11 dígitos numéricos"
+                );
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("should detect a under age delivery person")
+    public void shouldDetectAUnderAgeDeliveryPerson() {
+        DeliveryPersonRequest deliveryPersonRequest = new DeliveryPersonRequest(
+                "Nome entregador",
+                "033.197.356-16",
+                "email@email.com",
+                "@Senha1",
+                "@Senha1",
+                LocalDate.of(2011, 1, 2).toString(),
+                "Carro",
+                "DIT-4987",
+                "(11) 95455-4565",
+                "123456789",
+                LocalDate.of(2030, 1, 2),
+                "111456789",
+                List.of(new AddressRequest(
+                        "35170-222",
+                        "casa 1",
+                        "neighborhood",
+                        "city",
+                        "state",
+                        "address",
+                        "complement",
+                        "12",
+                        "condominio",
+                        "details")),
+                new BankAccountRequest("123","1255", "4547-7")
+
+        );
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson", deliveryPersonRequest, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        System.out.println(response.getBody());
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+
+
+        List<String> dateOfBirth = documentContext.read("$.errors.dateOfBirth");
+        assertThat(dateOfBirth)
+                .containsExactlyInAnyOrder(
+                        "Para cadastro no sistema, é necessário ter pelo menos 18 anos de idade."
+                );
+    }
+
+
+
+
+
 }

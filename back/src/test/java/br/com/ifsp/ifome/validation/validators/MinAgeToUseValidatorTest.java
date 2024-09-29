@@ -40,7 +40,7 @@ public class MinAgeToUseValidatorTest {
 
         minAgeToUseValidator.initialize(minAgeToUse);
 
-        boolean isValidMinAge = minAgeToUseValidator.isValid(LocalDate.now().minusYears(14) ,constraintValidatorContext);
+        boolean isValidMinAge = minAgeToUseValidator.isValid(LocalDate.now().minusYears(14).toString(),constraintValidatorContext);
         assertThat(isValidMinAge).isTrue();
     }
 
@@ -58,13 +58,13 @@ public class MinAgeToUseValidatorTest {
         when(minAgeToUse.minAge()).thenReturn(14);
         minAgeToUseValidator.initialize(minAgeToUse);
         LocalDate anniversaryDateIsTommorow = LocalDate.now().minusYears(14).plusDays(1);
-        boolean isValidMinAge = minAgeToUseValidator.isValid(anniversaryDateIsTommorow, constraintValidatorContext);
+        boolean isValidMinAge = minAgeToUseValidator.isValid(anniversaryDateIsTommorow.toString(), constraintValidatorContext);
         assertThat(isValidMinAge).isFalse();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"2011-01-01", "2012-01-01", "2013-01-01", "2024-01-01", "2011-08-14"})
-    public void shouldReturnFalseWhenItIsNotOfMinimumAge(LocalDate dateOfBirth) {
+    public void shouldReturnFalseWhenItIsNotOfMinimumAge(String dateOfBirth) {
         when(minAgeToUse.minAge()).thenReturn(14);
         minAgeToUseValidator.initialize(minAgeToUse);
         boolean isValidMinAge = minAgeToUseValidator.isValid(dateOfBirth, constraintValidatorContext);
@@ -73,7 +73,7 @@ public class MinAgeToUseValidatorTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"2010-01-01", "2003-01-01", "1999-02-01", "1990-01-01"})
-    public void shouldReturnTrueeWhenItIsMinimumAge(LocalDate dateOfBirth) {
+    public void shouldReturnTrueeWhenItIsMinimumAge(String dateOfBirth) {
         when(minAgeToUse.minAge()).thenReturn(14);
         minAgeToUseValidator.initialize(minAgeToUse);
         boolean isValidMinAge = minAgeToUseValidator.isValid(dateOfBirth, constraintValidatorContext);
