@@ -40,7 +40,7 @@ public class DeliveryPerson  implements PasswordPolicy {
 
     public DeliveryPerson(DeliveryPersonRequest deliveryPersonRequest, PasswordEncoder passwordEncoder) {
         this.name = deliveryPersonRequest.name();
-        this.cpf = deliveryPersonRequest.cpf();
+        this.cpf = deliveryPersonRequest.cpf().replaceAll("[^\\d]", "");
         this.email = deliveryPersonRequest.email();
         this.password = passwordEncoder.encode(deliveryPersonRequest.password());
         this.dateOfBirth =deliveryPersonRequest.convertDateOfBirth();
@@ -67,7 +67,7 @@ public class DeliveryPerson  implements PasswordPolicy {
     public DeliveryPerson(Long id, String name, String cpf, String email, String password, LocalDate dateOfBirth, String typeOfVehicle, String plate,String telephone, String cnhNumber, LocalDate cnhValidity, String vehicleDocument, List<Address> address, BankAccount bankAccount, PasswordEncoder passwordEncoder) {
         this.id = id;
         this.name = name;
-        this.cpf = cpf;
+        this.cpf = cpf.replaceAll("[^\\d]", "");
         this.email = email;
         this.password = passwordEncoder.encode(password);
         this.dateOfBirth = dateOfBirth;
@@ -102,7 +102,7 @@ public class DeliveryPerson  implements PasswordPolicy {
     }
 
     public void setCpf(String cpf) {
-        this.cpf = cpf;
+        this.cpf = cpf.replaceAll("[^\\d]", "");
     }
 
     public String getEmail() {

@@ -96,7 +96,7 @@ public class DeliveryPersonControllerIT {
 
         Number id = document.read("$.id");
         String name = document.read("$.name");
-        String cnpj = document.read("$.cpf");
+        String cpf = document.read("$.cpf");
         String email = document.read("$.email");
         String dateOfBirth = document.read("$.dateOfBirth");
         String typeOfVehicle = document.read("$.typeOfVehicle");
@@ -110,10 +110,11 @@ public class DeliveryPersonControllerIT {
 
         assertThat(id).isNotNull();
         assertThat(email).isEqualTo(deliveryPersonRequest.email());
+        //assertThat(cpf).isEqualTo(deliveryPersonRequest.cpf());
 
         assertThat(addressJson).isNotNull();
         assertThat(addressJson).isNotNull();
-
+        assertThat(cpf).isEqualTo("03319735616");
         assertThat(addressJson.getCep()).isEqualTo("35170-222");
         assertThat(addressJson.getNeighborhood()).isEqualTo("neighborhood");
         assertThat(addressJson.getCity()).isEqualTo("city");
