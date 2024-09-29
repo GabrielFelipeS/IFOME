@@ -1,7 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { MaskInput } from 'vue-3-mask';
-import Alert from '../Page/Alert.vue';
 import axios from 'axios';
 
 const emit = defineEmits(['submit', 'responseApi']);
@@ -14,20 +13,6 @@ const errors = ref({
     name: [],
     email: [],
     phone: []
-});
-
-const errosApi = ref([]);
-
-function showAlerts(response) {
-    errosApi.value = response;
-}
-
-watch(() => errosApi.value, (newValue) => {
-    if (newValue.length) {
-        setTimeout(() => {
-            errosApi.value = [];
-        }, 5000);
-    }
 });
 
 // Função de validação
@@ -65,7 +50,7 @@ function validateForm() {
 
 async function submitForm() {
 
-    let response = axios.post('http://146.235.31.246/api/auth/validation/delivery/email', {
+    let response = axios.post('http://146.235.31.246/api/auth/validation/restaurant/email', {
         email: email.value
     }).then(response => {
         if(response.status === 200) {
@@ -85,7 +70,7 @@ async function submitForm() {
 
 <template>
     <form class="form" @submit.prevent="submitForm" @responseApi="showAlerts">
-        <h2>Junte-se a nós</h2>
+        <h2>Cadastre seu negócio</h2>
 
         <div class="form-group">
             <label for="name">Nome Completo</label>
@@ -120,46 +105,46 @@ async function submitForm() {
 
 <style lang="scss" scoped>
 .form {
-	@apply w-full max-w-[800px] bg-white rounded-lg shadow-lg mb-[50px] flex flex-col justify-around p-5;
+    @apply w-full max-w-[800px] bg-white rounded-lg shadow-lg mb-[50px] flex flex-col justify-around p-5;
 
-	h2 {
-		@apply text-4xl font-semibold text-gray-800 mb-5;
-	}
+    h2 {
+        @apply text-4xl font-semibold text-gray-800 mb-5;
+    }
 
-	.form-group {
-		@apply mb-5 w-[95%] m-auto;
+    .form-group {
+        @apply mb-5 w-[95%] m-auto;
 
-		label {
-			@apply text-lg font-semibold text-gray-800;
-		}
+        label {
+            @apply text-lg font-semibold text-gray-800;
+        }
 
-		input {
-			@apply w-full h-[50px] border border-gray-300 rounded-lg px-3;
-		}
+        input {
+            @apply w-full h-[50px] border border-gray-300 rounded-lg px-3;
+        }
 
-		p {
-			@apply text-red-500 text-sm mt-1;
-		}
-	}
+        p {
+            @apply text-red-500 text-sm mt-1;
+        }
+    }
 
-	button {
-		@apply w-[95%] h-[50px] m-auto bg-primary text-white font-semibold rounded-lg;
-	}
+    button {
+        @apply w-[95%] h-[50px] m-auto bg-primary text-white font-semibold rounded-lg;
+    }
 
-	p {
-		@apply text-sm text-gray-500;
+    p {
+        @apply text-sm text-gray-500;
 
-		a {
-			text-decoration: underline;
-		}
-	}
+        a {
+            text-decoration: underline;
+        }
+    }
 
-	@media (max-width: 768px) {
-		@apply mr-0 mt-36 mb-8;
-	}
+    @media (max-width: 768px) {
+        @apply mr-0 mt-36 mb-8;
+    }
 
-	@media (min-width: 768px) {
-		@apply w-full mr-[4.2%] max-w-[600px] mt-24;
-	}
+    @media (min-width: 768px) {
+        @apply w-full mr-[4.2%] max-w-[600px] mt-24;
+    }
 }
 </style>

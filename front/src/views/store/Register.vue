@@ -1,7 +1,7 @@
 <script setup>
-import FormHome from '@/components/store/FormHome.vue';
+import FormHome from '@/components/store/register/FormHome.vue';
 import Header from '@/components/store/Header.vue';
-import StepsFormHome from '@/components/store/StepsFormHome.vue';
+import StepsFormHome from '@/components/store/register/StepsFormHome.vue';
 import { ref } from 'vue';
 import { useToast } from 'vue-toast-notification';
 
@@ -30,7 +30,7 @@ const showToast = (response) => {
 <template>
     <div class="content">
         <Header />
-        <FormHome @submit="submitForm" />
+        <FormHome @submit="submitForm" @responseApi="showToast"/>
         <StepsFormHome :data="data" @responseApi="showToast" />
     </div>
 </template>
