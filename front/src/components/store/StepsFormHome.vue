@@ -209,8 +209,8 @@ watch([name, cpf], () => {
     }
 });
 
-watch([cep, state, city, address, number], () => {
-    if (cep.value && state.value && city.value && address.value && number.value) {
+watch([cep, state, city, address, number, complement], () => {
+    if (cep.value && state.value && city.value && address.value && number.value && complement.value) {
         stepCompleted.value = true;
     } else {
         stepCompleted.value = false;
@@ -446,36 +446,36 @@ const returnSteps = () => {
             <h2>Endereço da loja</h2>
             <p>Preencha as informações de endereço da sua loja.</p>
             <div class="form-group">
-                <label for="cep">CEP</label>
+                <label for="cep">CEP *</label>
                 <MaskInput type="text" id="cep" name="cep" v-model="cep" :value="cep" placeholder="CEP" mask="#####-###"
                     required />
             </div>
             <div class="mid">
                 <div class="form-group">
-                    <label for="state">Estado</label>
+                    <label for="state">Estado *</label>
                     <input type="text" id="state" name="state" v-model="state" placeholder="Estado" required disabled />
                 </div>
                 <div class="form-group">
-                    <label for="city">Cidade</label>
+                    <label for="city">Cidade *</label>
                     <input type="text" id="city" name="city" v-model="city" placeholder="Cidade" required disabled />
                 </div>
             </div>
             <div class="form-group">
-                <label for="neighborhood">Bairro</label>
+                <label for="neighborhood">Bairro *</label>
                 <input type="text" id="neighborhood" name="neighborhood" v-model="neighborhood" placeholder="Bairro"
                     required />
             </div>
             <div class="form-group">
-                <label for="address">Endereço</label>
+                <label for="address">Endereço *</label>
                 <input type="text" id="address" name="address" v-model="address" placeholder="Endereço" required />
             </div>
             <div class="form-group">
-                <label for="number">Número</label>
+                <label for="number">Número *</label>
                 <MaskInput type="text" id="number" name="number" v-model="number" :value="number" placeholder="Número"
                     mask="######" required />
             </div>
             <div class="form-group">
-                <label for="complement">Complemento</label>
+                <label for="complement">Complemento *</label>
                 <input type="text" id="complement" name="complement" v-model="complement" placeholder="Complemento" />
             </div>
             <div class="form-group">
