@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -47,7 +48,7 @@ public record RestaurantRequest(
         String paymentMethods,
 
         @NotEmpty(message = "Horário de funcionamento é obrigatório")
-        List<OpeningHoursRequest> openingHours,
+        List<@Valid OpeningHoursRequest> openingHours,
 
         String personResponsible,
 
@@ -55,7 +56,6 @@ public record RestaurantRequest(
         @NotBlank(message = "CPF é obrigatório")
         String personResponsibleCPF,
 
-        String restaurantImage,
         @Valid
         BankAccountRequest bankAccount
 ) { }

@@ -44,6 +44,10 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Dish> dishes;
+
+
     public Restaurant() {}
 
     public Restaurant(RestaurantRequest restaurantRequest, BCryptPasswordEncoder bCryptPasswordEncoder){
