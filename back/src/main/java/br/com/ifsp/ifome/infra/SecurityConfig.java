@@ -42,9 +42,10 @@ public class SecurityConfig {
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/static/**").permitAll()
-                    .requestMatchers("/dish/**").permitAll()
+                    .requestMatchers("/api/restaurant/**").permitAll()
 
-                        .anyRequest().authenticated())
+                    .requestMatchers("/dish/**").permitAll()
+                    .anyRequest().authenticated())
             .csrf(AbstractHttpConfigurer::disable)
             .oauth2ResourceServer(auth02 -> auth02.jwt(Customizer.withDefaults()))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

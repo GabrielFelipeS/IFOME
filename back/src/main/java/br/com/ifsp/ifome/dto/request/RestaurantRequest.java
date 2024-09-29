@@ -48,7 +48,7 @@ public record RestaurantRequest(
         String paymentMethods,
 
         @NotEmpty(message = "Horário de funcionamento é obrigatório")
-        List<OpeningHoursRequest> openingHours,
+        List<@Valid OpeningHoursRequest> openingHours,
 
         String personResponsible,
 

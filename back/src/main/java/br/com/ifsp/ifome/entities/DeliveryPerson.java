@@ -3,10 +3,13 @@ package br.com.ifsp.ifome.entities;
 import br.com.ifsp.ifome.dto.request.DeliveryPersonRequest;
 import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,7 +17,7 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "delivery_person")
 // TODO esta faltando a parte de user details junto com roles
-public class DeliveryPerson  implements PasswordPolicy {
+public class DeliveryPerson  implements PasswordPolicy, UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,6 +39,9 @@ public class DeliveryPerson  implements PasswordPolicy {
     @Embedded
     private BankAccount bankAccount;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     public DeliveryPerson(){}
 
     public DeliveryPerson(DeliveryPersonRequest deliveryPersonRequest, PasswordEncoder passwordEncoder) {
@@ -56,6 +62,7 @@ public class DeliveryPerson  implements PasswordPolicy {
             return address;
         }).collect(Collectors.toList());
         this.bankAccount = new BankAccount(deliveryPersonRequest.bankAccount());
+
     }
 
 
@@ -79,6 +86,7 @@ public class DeliveryPerson  implements PasswordPolicy {
         this.vehicleDocument = vehicleDocument;
         this.address = address;
         this.bankAccount = bankAccount;
+        this.role = Role.DELIVERY;
     }
 
     public Long getId() {
@@ -113,8 +121,38 @@ public class DeliveryPerson  implements PasswordPolicy {
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.role.getAuthorities();
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return "";
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
     }
 
     public void setPassword(String password) {

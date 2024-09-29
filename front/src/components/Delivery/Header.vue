@@ -6,7 +6,7 @@ import Button from '@/components/Button.vue';
     <header class="header">
         <img src="../../assets/img/logo_header.png" class="img">
         <div class="buttons">
-            <Button href="/#" class="button1">Entrar No Portal</Button>
+            <Button href="/#" class="button1">Portal do Entregador</Button>
             <Button href="/#" class="button2" inversed>Cadastrar</Button>
         </div>
     </header>
@@ -24,7 +24,7 @@ import Button from '@/components/Button.vue';
             @apply justify-end;
 
             .button1 {
-                @apply text-primary border border-primary p-2 rounded-md w-[150px];
+                @apply text-primary border border-primary p-2 rounded-md w-auto;
             }
 
             .button2 {
