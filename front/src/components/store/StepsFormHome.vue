@@ -3,9 +3,11 @@ import { computed, ref, watch } from 'vue';
 import HeaderSteps from './HeaderSteps.vue';
 import { MaskInput } from 'vue-3-mask';
 import { fetchViaCep } from '@/services/viaCep';
-import api from '@/services/api';
+import axios from 'axios';
 
 const currentStep = ref(1);
+
+const emit = defineEmits(['responseApi']);
 
 const stepsActive = ref(false);
 
@@ -64,6 +66,37 @@ const digit = ref('');
 const password = ref('');
 const confirmPassword = ref('');
 const details = ref('');
+
+
+//mockar dados
+
+// email.value = 'teste@teste.com';
+// cep.value = '01310-100';
+// state.value = 'SP';
+// city.value = 'São Paulo';
+// address.value = 'Avenida Paulista';
+// number.value = '1000';
+// complement.value = 'Apto 100';
+// name.value = 'João da Silva';
+// cpf.value = '123.456.789-00';
+// cnpj.value = '12.345.678/0001-00';
+// nameStore.value = 'Restaurante do João';
+// phone.value = '(11) 99999-9999';
+// neighborhood.value = 'Bela Vista';
+// specialty.value = 'Pizza';
+// opening.value = '08:00';
+// closing.value = '18:00';
+// daysSelected.value = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+// paymentMethods.value = ['dinner', 'credit', 'pix'];
+// bank.value = '001';
+// agency.value = '1234';
+// account.value = '12345';
+// digit.value = '1';
+// password.value = 'Teste@123';
+// confirmPassword.value = 'Teste@123';
+// details.value = 'Detalhes do restaurante';
+// stepsActive.value = true;
+
 
 watch(specialty, (value) => {
     if (value === 'Outro') {
@@ -184,7 +217,6 @@ watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other]
         }
     }
 
-
     if (daysSelected.value.length === 0) {
         step3Erros.value.daysSelected = true;
     } else {
@@ -240,7 +272,8 @@ const selectedFiles = ref([]);
 
 function handleFileChange(event) {
     const files = Array.from(event.target.files);
-    selectedFiles.value = [...selectedFiles.value, ...files];
+    // Permitindo apenas uma imagem
+    selectedFiles.value = [files[0]];
 }
 
 function dragOver(event) {
@@ -255,11 +288,12 @@ function dragLeave(event) {
 function drop(event) {
     event.currentTarget.classList.remove('bg-gray-100');
     const files = Array.from(event.dataTransfer.files);
-    selectedFiles.value = [...selectedFiles.value, ...files];
+    // Permitindo apenas uma imagem
+    selectedFiles.value = [files[0]];
 }
 
-function removeFile(index) {
-    selectedFiles.value = selectedFiles.value.filter((_, i) => i !== index);
+function removeFile() {
+    selectedFiles.value = [];
 }
 
 const step4Erros = ref({
@@ -367,7 +401,6 @@ async function submitForm() {
         };
     });
 
-
     formData.append('nameRestaurant', nameStore.value);
     formData.append('email', email.value);
     formData.append('password', password.value);
@@ -383,22 +416,21 @@ async function submitForm() {
     formData.append('restaurantImages', selectedFiles.value[0]);
     formData.append('bankAccount', JSON.stringify(bankAccount));
 
-    selectedFiles.value.forEach((file, index) => {
-        formData.append(`restaurantImages_${index}`, file);
+    await axios.post('http://127.0.0.1:8000/api/store/create', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    }).then((response) => {
+        if (response.status === 201) {
+            emit('responseApi', response.data);
+            nextStep();
+        } else {
+            emit('responseApi', response.data);
+        }
+    }).catch((error) => {
+        emit('responseApi', error.response.data);
     });
-
-    $response  = await api.post('/restaurant', formData);
-
-    if ($response.status === 201) {
-        emit('responseApi', [type => "success", message => $response.message]);
-        nextStep();
-    }
-
-    if($response.status === 400) {
-        emit('responseApi', [type => "error", message => $response.message , errors => $response.errors]);
-    }
 }
-
 
 const returnSteps = () => {
     prevStep();
@@ -408,7 +440,6 @@ const returnSteps = () => {
 
 <template>
     <div class="steps py-[100px]" v-if="stepsActive">
-        <!-- Passar a etapa atual para o componente filho -->
         <HeaderSteps :currentStep="currentStep" @returnBack="returnSteps" />
 
         <div class="step" v-if="currentStep === 1">
@@ -570,7 +601,8 @@ const returnSteps = () => {
                 <div v-for="(file, index) in selectedFiles" :key="index"
                     class="flex items-center justify-between border-gray-300 border-dashed border-2 rounded-3xl font-thin pl-5">
                     <span class="truncate">{{ file.name }}</span>
-                    <button class="bg-red-500 text-white w-[30%] md:w-[10%] h-[50px] py-2 rounded-r-3xl" @click="removeFile(index)">
+                    <button class="bg-red-500 text-white w-[30%] md:w-[10%] h-[50px] py-2 rounded-r-3xl"
+                        @click="removeFile">
                         X
                     </button>
                 </div>
@@ -604,7 +636,6 @@ const returnSteps = () => {
             <h3>Recebimentos de fundos</h3>
             <div class="form-group">
                 <label for="bank">Banco</label>
-                <!-- fazer select com nomes de bancos brasileiros e seus codigos como values -->
                 <select name="bank" id="bank" v-model="bank" required>
                     <option value="">Selecione o banco</option>
                     <option value="001">Banco do Brasil</option>
@@ -647,7 +678,6 @@ const returnSteps = () => {
         </div>
         <div class="step" v-if="currentStep === 6">
             <h2>Informações de Login</h2>
-            <!-- confirmar senha -->
             <div class="form-group">
                 <label for="password">Senha</label>
                 <input type="password" id="password" name="password" placeholder="Senha" v-model="password" required />
@@ -709,7 +739,7 @@ const returnSteps = () => {
         }
 
         p {
-            @apply text-lg text-gray-500 mb-5 font-bold;
+            @apply text-lg text-gray-500 mb-5 font-semibold;
         }
 
         .checkform-payment {

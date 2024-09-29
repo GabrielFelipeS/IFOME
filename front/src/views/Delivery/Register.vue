@@ -1,7 +1,7 @@
 <script setup>
-import FormHome from '@/components/store/FormHome.vue';
-import Header from '@/components/store/Header.vue';
-import StepsFormHome from '@/components/store/StepsFormHome.vue';
+import FormHome from '@/components/Delivery/FormHome.vue';
+import Header from '@/components/Delivery/Header.vue';
+import StepsFormHome from '@/components/Delivery/StepsFormHome.vue';
 import { ref } from 'vue';
 import { useToast } from 'vue-toast-notification';
 
@@ -13,11 +13,18 @@ const submitForm = (formData) => {
     data.value = formData;
 };
 
+
 const showToast = (response) => {
     if (response.errors) {
         Object.keys(response.errors).forEach(key => {
             response.errors[key].forEach(errorMessage => {
-                toast.error(`${errorMessage}`).duration = 5000;
+                if (Array.isArray(errorMessage)) {
+                    errorMessage.forEach(error => {
+                        toast.error(error);
+                    });
+                } else {
+                    toast.error(errorMessage);
+                }
             });
         });
     } else {
@@ -30,7 +37,7 @@ const showToast = (response) => {
 <template>
     <div class="content">
         <Header />
-        <FormHome @submit="submitForm" />
+        <FormHome @submit="submitForm" @responseApi="showToast"/>
         <StepsFormHome :data="data" @responseApi="showToast" />
     </div>
 </template>
@@ -38,13 +45,13 @@ const showToast = (response) => {
 <style lang="scss" scoped>
 .content {
     @apply w-full h-screen flex flex-col justify-end items-center;
-    background-image: url('../../assets/img/store/background_register_store_mob.jpg');
+    background-image: url('../../assets/img/delivery/delivery_man_mob.jpg');
     background-position: top;
     background-size: cover;
     background-repeat: no-repeat;
 
     @media (min-width: 768px) {
-        background-image: url('../../assets/img/store/background_register_store.webp');
+        background-image: url('../../assets/img/delivery/delivery_man.jpg');
         @apply flex-row justify-end items-end;
     }
 }
