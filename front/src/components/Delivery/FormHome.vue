@@ -120,46 +120,46 @@ async function submitForm() {
 
 <style lang="scss" scoped>
 .form {
-    @apply w-[95%] h-[60%] bg-white rounded-lg shadow-lg mb-[50px] flex flex-col justify-around p-5;
+	@apply w-full max-w-[800px] bg-white rounded-lg shadow-lg mb-[50px] flex flex-col justify-around p-5;
 
-    h2 {
-        @apply text-4xl font-semibold text-gray-800 mb-5;
-    }
+	h2 {
+		@apply text-4xl font-semibold text-gray-800 mb-5;
+	}
 
-    .form-group {
-        @apply mb-5 w-[95%] m-auto;
+	.form-group {
+		@apply mb-5 w-[95%] m-auto;
 
-        label {
-            @apply text-lg font-semibold text-gray-800;
-        }
+		label {
+			@apply text-lg font-semibold text-gray-800;
+		}
 
-        input {
-            @apply w-full h-[50px] border border-gray-300 rounded-lg px-3;
-        }
+		input {
+			@apply w-full h-[50px] border border-gray-300 rounded-lg px-3;
+		}
 
-        p {
-            @apply text-red-500 text-sm mt-1;
-        }
-    }
+		p {
+			@apply text-red-500 text-sm mt-1;
+		}
+	}
 
-    button {
-        @apply w-[95%] h-[50px] m-auto bg-primary text-white font-semibold rounded-lg;
-    }
+	button {
+		@apply w-[95%] h-[50px] m-auto bg-primary text-white font-semibold rounded-lg;
+	}
 
-    p {
-        @apply text-sm text-gray-500;
+	p {
+		@apply text-sm text-gray-500;
 
-        a {
-            text-decoration: underline;
-        }
-    }
+		a {
+			text-decoration: underline;
+		}
+	}
 
-    @media (max-width: 768px) {
-        @apply mr-0;
-    }
+	@media (max-width: 768px) {
+		@apply mr-0 mt-36 mb-8;
+	}
 
-    @media (min-width: 768px) {
-        @apply w-[500px] mb-[100px] mr-[200px] min-w-[500px];
-    }
+	@media (min-width: 768px) {
+		@apply w-full mr-[4.2%] max-w-[600px] mt-24;
+	}
 }
 </style>

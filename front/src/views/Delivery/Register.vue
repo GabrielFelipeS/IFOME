@@ -44,7 +44,7 @@ const showToast = (response) => {
 
 <style lang="scss" scoped>
 .content {
-    @apply w-full h-screen flex flex-col justify-end items-center;
+	@apply w-full h-screen flex flex-col justify-center items-center px-2.5;
     background-image: url('../../assets/img/delivery/delivery_man_mob.jpg');
     background-position: top;
     background-size: cover;
@@ -52,7 +52,7 @@ const showToast = (response) => {
 
     @media (min-width: 768px) {
         background-image: url('../../assets/img/delivery/delivery_man.jpg');
-        @apply flex-row justify-end items-end;
+		@apply flex-row justify-end items-center;
     }
 }
 </style>
