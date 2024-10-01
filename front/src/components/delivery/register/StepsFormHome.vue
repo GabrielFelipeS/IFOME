@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import HeaderSteps from './HeaderSteps.vue';
 import { MaskInput } from 'vue-3-mask';
-import { fetchViaCep } from '@/services/viaCep';
+import { fetchViaCep } from '@/services/viaCep.js';
 import axios from 'axios';
 
 const currentStep = ref(1);
