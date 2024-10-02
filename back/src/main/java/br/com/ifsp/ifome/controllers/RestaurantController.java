@@ -1,44 +1,29 @@
 package br.com.ifsp.ifome.controllers;
 
-import br.com.ifsp.ifome.docs.DocsCreateRestaurant;
-import br.com.ifsp.ifome.docs.DocsClientLogin;
-import br.com.ifsp.ifome.docs.DocsRestaurantLogin;
-import br.com.ifsp.ifome.dto.ApiResponse;
-import br.com.ifsp.ifome.dto.request.LoginRequest;
-import br.com.ifsp.ifome.dto.request.RestaurantRequest;
-import br.com.ifsp.ifome.dto.response.RestaurantLoginResponse;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
-import br.com.ifsp.ifome.services.FileStorageService;
-import br.com.ifsp.ifome.services.RestaurantService;
+import br.com.ifsp.ifome.repositories.RestaurantRepository;
 import jakarta.servlet.annotation.MultipartConfig;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.net.URI;
+import java.util.List;
 
 @RestController
 
 @MultipartConfig
 @RequestMapping("/api/restaurant/")
 public class RestaurantController {
-    private final RestaurantService restaurantService;
+    private final RestaurantRepository restaurantRepository;
 
-    public RestaurantController(RestaurantService restaurantService, FileStorageService fileStorageService){
-        this.restaurantService = restaurantService;
+    public RestaurantController(RestaurantRepository restaurantRepository){
+        this.restaurantRepository = restaurantRepository;
     }
 
     @GetMapping
-    public void getAllRestaurant() {
-
+    public ResponseEntity<List<RestaurantResponse>> getAllRestaurant() {
+        return ResponseEntity.ok(restaurantRepository.getAllRestaurants());
     }
 
 }
