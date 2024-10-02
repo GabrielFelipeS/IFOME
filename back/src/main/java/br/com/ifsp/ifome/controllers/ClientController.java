@@ -50,7 +50,7 @@ public class ClientController {
     @DocsClientLogin
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest clientLogin) {
         LoginResponse loginResponse = clientService.login(clientLogin);
-        ApiResponse apiResponse = new ApiResponse("sucess", loginResponse, "Cliente logado com sucesso");
+        ApiResponse apiResponse = new ApiResponse("success", loginResponse, "Cliente logado com sucesso");
         return ResponseEntity.ok(apiResponse);
     }
 

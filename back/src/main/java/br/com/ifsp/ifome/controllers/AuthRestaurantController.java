@@ -56,7 +56,7 @@ public class AuthRestaurantController {
             .path("restaurant/{id}")
             .buildAndExpand(restaurantResponse.id())
             .toUri();
-        ApiResponse apiResponse = new ApiResponse("sucess", restaurantResponse, "Restaurante cadastrado com sucesso");
+        ApiResponse apiResponse = new ApiResponse("success", restaurantResponse, "Restaurante cadastrado com sucesso");
         return ResponseEntity.created(locationOfNewRestaurant).body(apiResponse);
     }
 
@@ -64,7 +64,7 @@ public class AuthRestaurantController {
     @DocsRestaurantLogin
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest restaurantLogin) {
         RestaurantLoginResponse restaurantLoginResponse = restaurantService.login(restaurantLogin);
-        ApiResponse apiResponse = new ApiResponse("sucess", restaurantLoginResponse, "Restaurante logado com sucesso");
+        ApiResponse apiResponse = new ApiResponse("success", restaurantLoginResponse, "Restaurante logado com sucesso");
         return ResponseEntity.ok(apiResponse);
     }
 
