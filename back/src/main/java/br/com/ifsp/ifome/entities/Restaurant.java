@@ -29,8 +29,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
 
     private String telephone;
     // TODO arrumar relacionamento
-    @OneToMany
-    @JoinColumn(name = "opening_hours", referencedColumnName = "cnpj")
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OpeningHours> openingHours;
     private String personResponsible;
     private String personResponsibleCPF;
@@ -60,7 +59,11 @@ public class Restaurant implements PasswordPolicy, UserDetails {
             return address;
         }).collect(Collectors.toList());
         this.telephone = restaurantRequest.telephone();
-        this.openingHours = restaurantRequest.openingHours().stream().map(OpeningHours::new).collect(Collectors.toList());
+        this.openingHours = restaurantRequest.openingHours().stream().map(openingHoursRequest -> {
+            OpeningHours openingHours1 = new OpeningHours(openingHoursRequest);
+            openingHours1.setRestaurant(this);
+            return openingHours1;
+        }).collect(Collectors.toList());
         this.personResponsible = restaurantRequest.personResponsible();
         this.personResponsibleCPF = restaurantRequest.personResponsibleCPF();
         this.email = restaurantRequest.email();
@@ -162,6 +165,14 @@ public class Restaurant implements PasswordPolicy, UserDetails {
 
     public void setPersonResponsibleCPF(String personResponsibleCPF) {
         this.personResponsibleCPF = personResponsibleCPF;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getEmail() {
