@@ -197,6 +197,14 @@ public class Restaurant implements PasswordPolicy {
         this.bankAccount = bankAccount;
     }
 
+    public List<Dish> getDishes() {
+        return dishes;
+    }
+
+    public void setDishes(List<Dish> dishes) {
+        this.dishes = dishes;
+    }
+
     @Override
     public boolean isLoginCorrect(String rawPassword, PasswordEncoder passwordEncoder) {
         System.out.println(rawPassword);
