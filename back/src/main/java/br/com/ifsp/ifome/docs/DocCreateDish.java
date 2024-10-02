@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
                                     "description" : "Massa fresca e molho bolonhesa",
                                     "price" : "45.0",
                                     "dishCategory": "Massa",
-                                    "dishImage" : "image.jpg"
+                                    "dishImage" : "image.jpg",
                                     "availability" : "Disponível"
                                 }
                                 """
@@ -53,11 +53,11 @@ import java.lang.annotation.Target;
                                         """,
                                 value = """
                                         {
-                                        "name" : [],
-                                        "price" : "-450"
-                                        "description" = [],
-                                        "dishCategory" = [],
-                                        "availability" = []
+                                        "name" : "",
+                                        "price" : -450,
+                                        "description" = "",
+                                        "dishCategory" = "",
+                                        "availability" = ""
                                         }
                                         """
                         )
