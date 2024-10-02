@@ -24,9 +24,9 @@ INSERT INTO restaurants (
     bank_account,
     role
 ) VALUES (
-    'Nome Restaurante',
+    'Açai do monge',
     '58.911.612/0001-16',
-    'Pizzaria',
+    'Sorveteria',
     '07070-000',
     'Endereço completo',
     '(11) 1234-5678',
@@ -35,7 +35,7 @@ INSERT INTO restaurants (
     'email1@email.com',
     '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
     'Dinheiro, Cartão',
-    'imagem_restaurante.jpg',
+    'image.jpg',
     'Banco XYZ, Agência 123, Conta 456789',
     'RESTAURANT'
 );
