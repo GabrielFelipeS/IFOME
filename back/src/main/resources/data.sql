@@ -15,7 +15,6 @@ INSERT INTO restaurants (
     cep,
     address,
     telephone,
-    opening_hours,
     person_responsible,
     person_responsible_CPF,
     email,
