@@ -4,8 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -18,9 +22,9 @@ public class RestaurantControllerIT {
     @Test
     @DirtiesContext
     public void shouldBeAbleReturnAllRestaurant() {
-//        ResponseEntity<Iterable<RestaurantResponse>> response = testRestTemplate.getForEntity("/api/restaurant/", Iterable<RestaurantResponse>.class);
-//
-//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        ResponseEntity<String> response = testRestTemplate.getForEntity("/api/restaurant/", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
 
