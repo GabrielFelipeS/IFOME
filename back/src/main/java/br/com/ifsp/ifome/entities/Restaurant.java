@@ -26,6 +26,7 @@ public class Restaurant implements PasswordPolicy {
     private List<Address> address;
 
     private String telephone;
+
     // TODO arrumar relacionamento
     @OneToMany(mappedBy = "restaurant")
     private List<OpeningHours> openingHours;

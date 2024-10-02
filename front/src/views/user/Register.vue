@@ -8,7 +8,6 @@ import FormPersonalData from "@/components/user/register/FormPersonalData.vue";
 import FormAddress from "@/components/user/register/FormAddress.vue";
 import api from "@/services/api.js";
 import FormSuccess from "@/components/user/register/FormSuccess.vue";
-import axios from "axios";
 import Alert from "@/components/Page/Alert.vue";
 import {useToast} from "vue-toast-notification";
 
@@ -31,7 +30,7 @@ const formData = ref({
 	houseNumber: '',
 	complement: '',
 	details: '',
-	typeResidence: '',
+	typeResidence: 'casa',
 });
 
 const currentStep = ref(0);
@@ -80,7 +79,7 @@ const sendForm = async () => {
 		]
 	}
 
-	await axios.post(import.meta.env.VITE_API_URL + 'auth/client', JSON.stringify(data), {
+	await api.post('auth/client', JSON.stringify(data), {
 		headers: {
 			"Content-Type": "application/json",
 		}
@@ -93,9 +92,17 @@ const sendForm = async () => {
 		}
 	})
 	.catch(error => {
-		const errorMessage = JSON.stringify(error.response?.data) || 'Erro ao enviar os dados.';
+		let errorMessage = error.response?.data?.message;
 		$toast.error(errorMessage, {duration: 10000});
-		console.error('Error:', error);
+		if (error.response?.data?.errors) {
+			let errors = error.response?.data?.errors;
+			errors = new Map(Object.entries(errors));
+			errors.forEach((messageArray) => {
+				messageArray.forEach((message) => {
+					$toast.error(message, {duration: 10000});
+				})
+			})
+		}
 	});
 };
 
@@ -111,12 +118,12 @@ const $toast = useToast();
 	<div class="content"
 		 v-bind:class="[currentStep === 0 ? 'bg-image' : '']">
 		<div class="header">
-			<Header v-if="currentStep === 0" />
-			<Header logo v-if="currentStep > 0" />
+			<Header :logo="currentStep !== 0" @go-back="previousStep"
+					:home-page="'user-login'" :back-button="(currentStep !== 0)" />
 		</div>
 		<div class="main">
 			<KeepAlive>
-				<component
+				<component class="component"
 					:is="loadComponent"
 					v-model:formData="formData"
 					@next-step="nextStep"
@@ -146,6 +153,10 @@ const $toast = useToast();
 
 	.main {
 		@apply flex flex-row flex-grow h-full w-full justify-center items-center;
+	}
+
+	.component {
+		@apply max-w-[600px];
 	}
 
 </style>

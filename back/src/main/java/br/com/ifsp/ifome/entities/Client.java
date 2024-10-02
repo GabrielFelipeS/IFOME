@@ -40,7 +40,7 @@ public class Client implements PasswordPolicy, UserDetails  {
         this.email = clientRequest.email();
         this.password = bCryptPasswordEncoder.encode(clientRequest.password());
         this.dateOfBirth = clientRequest.convertDateOfBirth();
-        this.cpf = clientRequest.cpf();
+        this.cpf = clientRequest.cpf().replaceAll("[^\\d]", "");
         this.address = clientRequest.address().stream().map(addressRequest -> {
             Address address = new Address(addressRequest);
             address.setClient(this);
@@ -55,7 +55,7 @@ public class Client implements PasswordPolicy, UserDetails  {
         this.email = email;
         this.password = bCryptPasswordEncoder.encode(password);
         this.dateOfBirth = dateOfBirth;
-        this.cpf = cpf;
+        this.cpf = cpf.replaceAll("[^\\d]", "");
         this.address = address;
         this.role = Role.CLIENT;
     }
@@ -147,7 +147,7 @@ public class Client implements PasswordPolicy, UserDetails  {
     }
 
     public void setCpf(String cpf) {
-        this.cpf = cpf;
+        this.cpf = cpf.replaceAll("[^\\d]", "");
     }
 
     public List<Address> getAddress() {
