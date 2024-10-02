@@ -15,6 +15,7 @@ INSERT INTO restaurants (
     cep,
     address,
     telephone,
+    opening_hours,
     person_responsible,
     person_responsible_CPF,
     email,
@@ -62,7 +63,7 @@ VALUES (
    'carro',
    'ABC-1234',
    '(11) 98765-4321',
-   '123456789',
+   '12345678910',
    '2026-12-31',
    '987654321'
 );

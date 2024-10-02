@@ -37,12 +37,27 @@ import java.lang.annotation.Target;
                         ),
                         @ExampleObject(
                                 name = "Prato inválido",
+
+
                                 description = """
-                                        price: Insira um valor de preço válido
+                                        name: "O nome do prato é obrigatório,
+                                        price: [
+                                            Insira um valor de preço válido,
+                                            O preço é obrigatório,
+                                            Insira um valor de preço válido
+                                            ],
+                                        description = A descrição do prato é obrigatória,
+                                        dishCategory = A categoria do prato é obrigatória,
+                                        availability = A disponibilidade é obrigatória
+                                        
                                         """,
                                 value = """
                                         {
+                                        "name" : [],
                                         "price" : "-450"
+                                        "description" = [],
+                                        "dishCategory" = [],
+                                        "availability" = []
                                         }
                                         """
                         )
