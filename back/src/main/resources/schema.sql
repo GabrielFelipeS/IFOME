@@ -49,7 +49,6 @@ CREATE TABLE delivery_person (
 
 CREATE TABLE opening_hours(
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
-    cnpj        VARCHAR(14) NOT NULL REFERENCES restaurants(cnpj),
     day_of_the_week    VARCHAR(16) NOT NULL,
     opening     VARCHAR(16) NOT NULL,
     closing     VARCHAR(16) NOT NULL
