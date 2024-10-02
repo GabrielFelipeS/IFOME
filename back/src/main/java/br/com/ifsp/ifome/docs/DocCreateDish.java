@@ -30,19 +30,34 @@ import java.lang.annotation.Target;
                                     "description" : "Massa fresca e molho bolonhesa",
                                     "price" : "45.0",
                                     "dishCategory": "Massa",
-                                    "dishImage" : "image.jpg"
+                                    "dishImage" : "image.jpg",
                                     "availability" : "Disponível"
                                 }
                                 """
                         ),
                         @ExampleObject(
                                 name = "Prato inválido",
+
+
                                 description = """
-                                        price: Insira um valor de preço válido
+                                        name: "O nome do prato é obrigatório,
+                                        price: [
+                                            Insira um valor de preço válido,
+                                            O preço é obrigatório,
+                                            Insira um valor de preço válido
+                                            ],
+                                        description = A descrição do prato é obrigatória,
+                                        dishCategory = A categoria do prato é obrigatória,
+                                        availability = A disponibilidade é obrigatória
+                                        
                                         """,
                                 value = """
                                         {
-                                        "price" : "-450"
+                                        "name" : "",
+                                        "price" : -450,
+                                        "description" = "",
+                                        "dishCategory" = "",
+                                        "availability" = ""
                                         }
                                         """
                         )
