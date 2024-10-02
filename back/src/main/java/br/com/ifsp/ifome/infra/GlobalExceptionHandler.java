@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.*;
@@ -93,5 +95,19 @@ public class GlobalExceptionHandler {
         response.put("message",  ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public  ResponseEntity<Map<String, Object>>  handleMaxUploadSizeExceededPart(
+        MaxUploadSizeExceededException ex) {
+        logger.warn(ex.getMessage());
+        System.out.println("AQUI");
+        Map<String, Object> response = new HashMap<>();
+        response.put("message",  ex.getMessage());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Access-Control-Allow-Origin", "*");
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(headers).body(response);
     }
 }
