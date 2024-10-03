@@ -20,11 +20,24 @@ public class RestaurantControllerIT {
 
 
     @Test
-    @DirtiesContext
     public void shouldBeAbleReturnAllRestaurant() {
         ResponseEntity<String> response = testRestTemplate.getForEntity("/api/restaurant/", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void shouldBeReturnRestaurant() {
+        ResponseEntity<String> response = testRestTemplate.getForEntity("/api/restaurant/1", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void shouldNotBeReturnRestaurant() {
+        ResponseEntity<String> response = testRestTemplate.getForEntity("/api/restaurant/999", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
 
