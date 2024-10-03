@@ -21,7 +21,7 @@ public class TokenService {
 
     @Autowired
     public TokenService(JwtEncoder jwtEncoder, @Qualifier("jwtDecoder") JwtDecoder jwtDecoder) {
-        this(jwtEncoder, jwtDecoder, Instant.now(), 300L);
+        this(jwtEncoder, jwtDecoder, Instant.now(), 3600L);
     }
 
     public TokenService(JwtEncoder jwtEncoder, JwtDecoder jwtDecoder, Instant now, Long expiresIn) {
@@ -36,7 +36,7 @@ public class TokenService {
             .issuer("api_ifome")
             .subject(subject)
             .issuedAt(now)
-            .expiresAt(now.plusSeconds(expiresIn))
+            .expiresAt(now.plusSeconds(2629800)) // PARA FRONT TESTAR, 1 mes para expirar
             .build()
             ;
 
