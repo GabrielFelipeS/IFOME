@@ -1,5 +1,5 @@
 <script setup>
-import Modal from "@/components/user/register/Modal.vue";
+import Modal from "@/components/user/Modal.vue";
 import Button from "@/components/Button.vue";
 import {ref, watch} from "vue";
 import { MaskInput } from "vue-3-mask";
@@ -122,6 +122,21 @@ const validateForm = () => {
 		erros.value.complement = '';
 	}
 
+	let checkboxOk = false;
+	let checkboxes = [
+		document.getElementById('checkbox-casa'),
+		document.getElementById('checkbox-apartamento'),
+		document.getElementById('checkbox-condominio'),
+	];
+	checkboxes.forEach((checkbox) => {
+		if (checkbox.checked) {
+			checkboxOk = true
+		}
+	});
+	if (checkboxOk === false) {
+		valid = false;
+	}
+
 	return valid;
 };
 
@@ -186,7 +201,7 @@ const sendSubmit = () => {
 				<div class="checkbox-div">
 					<div class="checkbox-row">
 						<input type="radio" placeholder="Exemplo: Em frente a padaria do seu zé" class="form-checkbox" id="checkbox-casa"
-							   v-model="formData.typeResidence" value="casa">
+							   v-model="formData.typeResidence" value="casa" checked>
 						<label for="checkbox-casa" class="form-label">Casa</label>
 					</div>
 					<div class="checkbox-row">
@@ -203,11 +218,8 @@ const sendSubmit = () => {
 				<p v-if="erros.details !== ''" class="invalid-input-text">{{ erros.details }}</p>
 			</div>
 			<div class="btn-container">
-				<Button href="#" @click="$emit('previous-step')" inversed
-						class="button text-primary-subtle border border-primary mr-[15%] hover:text-white
-						 hover:bg-primary active:bg-primary-dark hover:border-white">Voltar</Button>
 				<Button href="#" @click="sendSubmit"
-						class="button bg-primary text-white hover:bg-primary-dark active:bg-primary-darker">Continuar</Button>
+						class="button bg-primary text-white hover:bg-primary-dark active:bg-primary-darker">Finalizar cadastro</Button>
 			</div>
 		</div>
 	</Modal>

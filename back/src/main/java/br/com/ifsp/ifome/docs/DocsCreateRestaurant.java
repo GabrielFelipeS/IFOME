@@ -27,46 +27,44 @@ import java.lang.annotation.Target;
                     name = "Restaurante válido",
                     description = "Inserindo restaurante válido",
                     value = """
-                        {
-                            "nameRestaurant": "Nome Restaurante",
-                            "email": "email@email.com",
-                            "password": "@Senha1",
-                            "confirmationPassword": "@Senha1",
-                            "cnpj": "10.882.594/0001-65",
-                            "address": [
-                              {
-                                "nameAddress": "casa principal",
-                                "cep": "35170-222",
-                                "neighborhood": "neighborhood",
-                                "city": "Coronel Fabriciano",
-                                "state": "Minas Gerais",
-                                "address": "address",
-                                "complement": "complement",
-                                "number": "12",
-                                "details": "details"
-                              }
-                            ],
-                            "telephone": "(11) 1234-5678",
-                            "foodCategory": "Pizzaria",
-                            "paymentMethods": "Dinheiro, Cartão",
-                            "openingHours" : [
+                         {
+                              "nameRestaurant": "Nome Restaurante",
+                              "email": "email@email.com",
+                              "password": "@Senha1",
+                              "confirmationPassword": "@Senha1",
+                              "cnpj": "10.882.594/0001-65",
+                              "address": [
                                 {
-                                "dayOfTheWeek:": "Segunda",
-                                "opening" : "11:00",
-                                "closing": "23:00"
+                                  "nameAddress": "casa principal",
+                                  "typeResidence": "casa",
+                                  "cep": "35170-222",
+                                  "neighborhood": "neighborhood",
+                                  "city": "Coronel Fabriciano",
+                                  "state": "Minas Gerais",
+                                  "address": "address",
+                                  "complement": "complement",
+                                  "number": "12",
+                                  "details": "details"
                                 }
-                            ]
-                            "personResponsible": "responsavel",
-                            "personResponsibleCPF": "033.197.356-16",
-                            "restaurantImage": "imagem.jpeg",
-                            "bankAccount": [
-                                {
-                                    "bank" : "123",
-                                    "agency" : "1255",
-                                    "account" : "4547-7"
-                                 }
-                            ]
-                        }
+                              ],
+                              "telephone": "(11) 1234-5678",
+                              "foodCategory": "Pizzaria",
+                              "paymentMethods": "Dinheiro, Cartão",
+                              "openingHours" : [
+                                  {
+                                  "dayOfTheWeek": "Segunda-feira",
+                                  "opening" : "11:00",
+                                  "closing": "23:00"
+                                  }
+                              ],
+                              "personResponsible": "responsavel",
+                              "personResponsibleCPF": "033.197.356-16",
+                              "bankAccount": {
+                                      "bank" : "123",
+                                      "agency" : "1255",
+                                      "account" : "4547-7"
+                                   }
+                          }
                         """
                         ),
                         @ExampleObject(

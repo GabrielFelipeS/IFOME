@@ -1,5 +1,5 @@
 <script setup>
-import Modal from "@/components/user/register/Modal.vue";
+import Modal from "@/components/user/Modal.vue";
 import Button from "@/components/Button.vue";
 import { MaskInput } from "vue-3-mask";
 import {ref, watch} from "vue";
@@ -39,8 +39,23 @@ const validateForm = () => {
 		errors.value.phone = '';
 	}
 
+	let [day, month, year] = props.formData.dateOfBirth.split('/').map(String);
+	let today = new Date();
+	let minDate = new Date();
+	minDate.setFullYear(today.getFullYear() - 13);
+	let maxDate = new Date();
+	maxDate.setFullYear(today.getFullYear() - 90);
 	if (props.formData.dateOfBirth.length < 10) {
 		errors.value.dateOfBirth = 'Preencha o campo de data de nascimento.';
+		valid = false;
+	} else if ((parseInt(month) === 2 && day > 29) || (day > 31) || (year > today.getFullYear())) {
+		errors.value.dateOfBirth = 'Digite uma data válida';
+		valid = false;
+	} else if (year > minDate.getFullYear()) {
+		errors.value.dateOfBirth = 'Para cadastro no sistema, é necessário ter pelo menos 13 anos de idade';
+		valid = false;
+	} else if (year < maxDate.getFullYear()) {
+		errors.value.dateOfBirth = 'Para cadastro no sistema, é necessário ter no máximo 90 anos de idade';
 		valid = false;
 	} else {
 		errors.value.dateOfBirth = '';
@@ -71,7 +86,7 @@ const validateForm = () => {
 	} else {
 		errors.value.password[2] = ''; // Limpa o erro se a condição for satisfeita
 	}
-	if (!/[@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(props.formData.password)) {
+	if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(props.formData.password)) {
 		errors.value.password[3] = 'A senha deve conter pelo menos um caractere especial.';
 		valid = false;
 	} else {
@@ -165,9 +180,6 @@ watch(props.formData, () => {
 				<p class="invalid-input-text" v-if="errors.passwordConfirmation !== ''">{{ errors.passwordConfirmation }}</p>
 			</div>
 			<div class="btn-container">
-				<Button href="#" @click="$emit('previous-step')" inversed
-						class="button text-primary-subtle border border-primary mr-[15%] hover:text-white
-						 hover:bg-primary active:bg-primary-dark hover:border-white">Voltar</Button>
 				<Button href="#" @click="nextStep"
 						class="button bg-primary text-white hover:bg-primary-dark active:bg-primary-darker">Continuar</Button>
 			</div>
