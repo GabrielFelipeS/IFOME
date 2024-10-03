@@ -1,6 +1,5 @@
-package br.com.ifsp.ifome.infra;
+package br.com.ifsp.ifome.exceptions;
 
-import br.com.ifsp.ifome.exceptions.InvalidTokenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;

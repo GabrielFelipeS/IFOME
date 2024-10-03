@@ -9,9 +9,6 @@ import br.com.ifsp.ifome.dto.response.RestaurantLoginResponse;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
 import br.com.ifsp.ifome.services.FileStorageService;
 import br.com.ifsp.ifome.services.RestaurantService;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -28,7 +25,6 @@ import java.io.IOException;
 import java.net.URI;
 
 @RestController
-
 @MultipartConfig
 @RequestMapping("/api/auth/restaurant")
 public class AuthRestaurantController {
@@ -42,14 +38,13 @@ public class AuthRestaurantController {
 
     @Transactional
     @DocsCreateRestaurant
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ApiResponse> create(
-        @RequestPart("file")  MultipartFile multipartFile,
-        @Parameter(description = "Metadados em formato JSON", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RestaurantRequest.class)))
+        @RequestParam("file")  MultipartFile multipartFile,
         @Valid @RequestPart("restaurant") RestaurantRequest restaurantRequest,
         UriComponentsBuilder ucb)
         throws IOException, MethodArgumentNotValidException {
-
+        System.err.println("TESTE");
         RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest, multipartFile);
 
         URI locationOfNewRestaurant = ucb
