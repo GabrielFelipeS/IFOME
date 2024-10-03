@@ -26,7 +26,8 @@ CREATE TABLE restaurants (
     payment_methods TEXT,
     restaurant_image TEXT,
     bank_account VARCHAR(255),
-    role VARCHAR(255)
+    role VARCHAR(255),
+    is_open boolean
 );
 
 CREATE TABLE delivery_person (

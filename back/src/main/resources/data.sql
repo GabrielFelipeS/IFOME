@@ -22,7 +22,8 @@ INSERT INTO restaurants (
     payment_methods,
     restaurant_image,
     bank_account,
-    role
+    role,
+    is_open
 ) VALUES (
     'Açai do monge',
     '58.911.612/0001-16',
@@ -37,7 +38,8 @@ INSERT INTO restaurants (
     'Dinheiro, Cartão',
     'image.jpg',
     'Banco XYZ, Agência 123, Conta 456789',
-    'RESTAURANT'
+    'RESTAURANT',
+    false
 );
 
 INSERT INTO delivery_person (
