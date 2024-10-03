@@ -46,6 +46,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Dish> dishes;
 
+    private Boolean isOpen;
 
     public Restaurant() {}
 
@@ -71,13 +72,14 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.paymentMethods = restaurantRequest.paymentMethods();
         this.restaurantImage = restaurantImage;
         this.bankAccount = new BankAccount(restaurantRequest.bankAccount());
+        this.isOpen = false;
     }
 
     public Restaurant(Long id, String nameRestaurant, String cnpj,
                       String foodCategory, List<Address> address, String telephone,
                       List<OpeningHours> openingHours, String personResponsible,
                       String personResponsibleCPF, String email, String password, String paymentMethods,
-                      String restaurantImage, BankAccount bankAccount,  BCryptPasswordEncoder bCryptPasswordEncoder) {
+                      String restaurantImage, BankAccount bankAccount, boolean isOpen,  BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.id = id;
         this.nameRestaurant = nameRestaurant;
         this.cnpj = cnpj;
@@ -93,6 +95,15 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.restaurantImage = restaurantImage;
         this.bankAccount = bankAccount;
         this.role = Role.RESTAURANT;
+        this.isOpen = isOpen;
+    }
+
+    public Boolean isOpen() {
+        return isOpen;
+    }
+
+    public void setOpen(Boolean open) {
+        isOpen = open;
     }
 
     public Long getId() {

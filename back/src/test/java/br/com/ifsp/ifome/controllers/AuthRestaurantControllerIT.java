@@ -129,11 +129,13 @@ public class AuthRestaurantControllerIT {
         OpeningHours openingHoursJson = document.read("$.data.openingHours", OpeningHours.class);
         String personResponsibleCPF = document.read("$.data.personResponsibleCPF");
         String restaurantImages = document.read("$.data.restaurantImage");
+        Boolean isOpen = document.read("$.data.isOpen");
 
 
         assertThat(id).isNotNull();
         assertThat(email).isEqualTo(restaurant.email());
         assertThat(cnpj).isEqualTo(restaurant.cnpj());
+        assertThat(isOpen).isEqualTo(false);
 
         assertThat(addressJson).isNotNull();
         assertThat(addressJson).isNotNull();

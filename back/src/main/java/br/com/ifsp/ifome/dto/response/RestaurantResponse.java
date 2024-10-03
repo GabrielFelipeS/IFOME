@@ -22,7 +22,8 @@ public record RestaurantResponse(
         String email,
         String paymentMethods,
         String restaurantImage,
-        BankAccount bankAccount
+        BankAccount bankAccount,
+        boolean isOpen
 
 ) {
     public static RestaurantResponse from(Restaurant restaurant) {
@@ -40,6 +41,7 @@ public record RestaurantResponse(
                 restaurant.getEmail(),
                 restaurant.getPaymentMethods(),
                 restaurant.getRestaurantImage(),
-                restaurant.getBankAccount());
+                restaurant.getBankAccount(),
+                restaurant.isOpen());
     }
 }
