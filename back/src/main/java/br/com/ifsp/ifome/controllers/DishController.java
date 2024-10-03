@@ -20,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
+import java.security.Principal;
 
 @MultipartConfig
 @RestController
@@ -52,6 +53,21 @@ public class DishController {
                 .path("dish/{id}")
                 .buildAndExpand(dishResponse.id())
                 .toUri();
+
+        return ResponseEntity.created(locationOfNewDish).body(dishResponse);
+    }
+
+    public ResponseEntity<DishResponse> createWithPrincipal(
+        @RequestPart("file") MultipartFile multipartFile,
+        @Valid @RequestPart("dish")DishRequest dishRequest,
+        Principal principal, UriComponentsBuilder ucb)
+        throws IOException, MethodArgumentNotValidException{
+        DishResponse dishResponse = dishService.create(dishRequest, multipartFile, principal);
+
+        URI locationOfNewDish = ucb
+            .path("dish/{id}")
+            .buildAndExpand(dishResponse.id())
+            .toUri();
 
         return ResponseEntity.created(locationOfNewDish).body(dishResponse);
     }
