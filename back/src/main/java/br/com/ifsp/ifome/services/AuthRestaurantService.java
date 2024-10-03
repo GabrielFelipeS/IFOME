@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class RestaurantService {
+public class AuthRestaurantService {
     private final TokenService tokenService;
     private final LoginService loginService;
     private final RestaurantRepository restaurantRepository;
@@ -26,8 +26,8 @@ public class RestaurantService {
     private final ValidatorService<RestaurantRequest> validatorService;
     private final FileStorageService fileStorageService;
 
-    public RestaurantService(TokenService tokenService, RestaurantRepository restaurantRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-                             List<Validator<RestaurantRequest>> validators, LoginService loginService, FileStorageService fileStorageService) {
+    public AuthRestaurantService(TokenService tokenService, RestaurantRepository restaurantRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
+                                 List<Validator<RestaurantRequest>> validators, LoginService loginService, FileStorageService fileStorageService) {
         this.tokenService = tokenService;
         this.restaurantRepository = restaurantRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;

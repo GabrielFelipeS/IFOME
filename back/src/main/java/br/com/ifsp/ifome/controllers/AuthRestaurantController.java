@@ -7,8 +7,8 @@ import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
 import br.com.ifsp.ifome.dto.response.RestaurantLoginResponse;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
+import br.com.ifsp.ifome.services.AuthRestaurantService;
 import br.com.ifsp.ifome.services.FileStorageService;
-import br.com.ifsp.ifome.services.RestaurantService;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -28,11 +28,11 @@ import java.net.URI;
 @MultipartConfig
 @RequestMapping("/api/auth/restaurant")
 public class AuthRestaurantController {
-    private final RestaurantService restaurantService;
+    private final AuthRestaurantService authRestaurantService;
     private final FileStorageService fileStorageService;
 
-    public AuthRestaurantController(RestaurantService restaurantService, FileStorageService fileStorageService){
-        this.restaurantService = restaurantService;
+    public AuthRestaurantController(AuthRestaurantService authRestaurantService, FileStorageService fileStorageService){
+        this.authRestaurantService = authRestaurantService;
         this.fileStorageService = fileStorageService;
     }
 
@@ -45,7 +45,7 @@ public class AuthRestaurantController {
         UriComponentsBuilder ucb)
         throws IOException, MethodArgumentNotValidException {
         System.err.println("TESTE");
-        RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest, multipartFile);
+        RestaurantResponse restaurantResponse = authRestaurantService.create(restaurantRequest, multipartFile);
 
         URI locationOfNewRestaurant = ucb
             .path("restaurant/{id}")
@@ -58,7 +58,7 @@ public class AuthRestaurantController {
     @PostMapping("/login")
     @DocsRestaurantLogin
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest restaurantLogin) {
-        RestaurantLoginResponse restaurantLoginResponse = restaurantService.login(restaurantLogin);
+        RestaurantLoginResponse restaurantLoginResponse = authRestaurantService.login(restaurantLogin);
         ApiResponse apiResponse = new ApiResponse("success", restaurantLoginResponse, "Restaurante logado com sucesso");
         return ResponseEntity.ok(apiResponse);
     }
@@ -66,7 +66,7 @@ public class AuthRestaurantController {
     @PostMapping("forgot-password")
     public void forgotPassword(HttpServletRequest request, @RequestBody @Valid @Email String email) throws Exception{
         System.err.println(request.getServerName());
-        restaurantService.forgotPassword(request, email);
+        authRestaurantService.forgotPassword(request, email);
     }
 
     @PostMapping("/change-password")
