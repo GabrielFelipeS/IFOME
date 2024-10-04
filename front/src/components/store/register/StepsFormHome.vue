@@ -92,7 +92,6 @@ const step5Completed = ref(false);
 const step6Completed = ref(false);
 
 const step3Erros = ref({
-    cpf: [],
     cnpj: [],
     nameStore: [],
     phone: [],
@@ -239,14 +238,15 @@ const errorPhotos = ref(false);
 
 function handleFileChange(event) {
     const files = Array.from(event.target.files);
-    const file = files.value[0];
-
-    if (file.size > 2 * 1024 * 1024) {
-        errorPhotos.value = ['O arquivo deve ter no máximo 2MB'];
-        selectedFiles.value = []; // Garantir que nenhum arquivo seja selecionado se o tamanho for maior que 2MB
-    } else {
-        errorPhotos.value = false;
-        selectedFiles.value = [file]; // Aqui, garantimos que estamos modificando a variável 'selectedFiles' corretamente
+    if (files.length > 0) {
+        const file = files[0]; // Pega o primeiro arquivo
+        if (file.size > 2 * 1024 * 1024) {
+            errorPhotos.value = ['O arquivo deve ter no máximo 2MB'];
+            selectedFiles.value = [];
+        } else {
+            errorPhotos.value = false;
+            selectedFiles.value = [file]; // Salva o arquivo corretamente
+        }
     }
 }
 
@@ -262,7 +262,16 @@ function dragLeave(event) {
 function drop(event) {
     event.currentTarget.classList.remove('bg-gray-100');
     const files = Array.from(event.dataTransfer.files);
-    selectedFiles.value = [files.value[0]];
+    if (files.length > 0) {
+        const file = files[0]; // Pega o primeiro arquivo
+        if (file.size > 2 * 1024 * 1024) {
+            errorPhotos.value = ['O arquivo deve ter no máximo 2MB'];
+            selectedFiles.value = [];
+        } else {
+            errorPhotos.value = false;
+            selectedFiles.value = [file]; // Salva o arquivo corretamente
+        }
+    }
 }
 
 function removeFile() {
@@ -395,7 +404,7 @@ async function submitForm() {
         };
 
         if (selectedFiles.value.length > 0) {
-            formData.append('file', selectedFiles.value.value[0]);
+            formData.append('file', selectedFiles.value[0]);
         } else {
             throw new Error("Nenhum arquivo selecionado.");
         }
@@ -633,17 +642,17 @@ const returnSteps = () => {
                 <div class="checkform-payment">
                     <input type="checkbox" id="money" name="money" value="dinner" v-model="paymentMethods" checked />
                     <label for="money">Dinheiro</label>
-                    <img src="../../assets/img/store/money_icon.png" />
+                    <img src="../../../assets/img/store/money_icon.png" />
                 </div>
                 <div class="checkform-payment">
                     <input type="checkbox" id="credit" name="credit" value="credit" v-model="paymentMethods" />
                     <label for="credit">Debito/Crédito</label>
-                    <img src="../../assets/img/store/credit_card.png" />
+                    <img src="../../../assets/img/store/credit_card.png" />
                 </div>
                 <div class="checkform-payment">
                     <input type="checkbox" id="debit" name="debit" value="pix" v-model="paymentMethods" />
                     <label for="debit">Pix</label>
-                    <img src="../../assets/img/store/pix_icon.png" />
+                    <img src="../../../assets/img/store/pix_icon.png" />
                 </div>
             </div>
             <h3>Recebimentos de fundos</h3>

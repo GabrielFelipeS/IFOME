@@ -8,7 +8,7 @@ import FormPersonalData from "@/components/user/register/FormPersonalData.vue";
 import FormAddress from "@/components/user/register/FormAddress.vue";
 import api from "@/services/api.js";
 import FormSuccess from "@/components/user/register/FormSuccess.vue";
-import Alert from "@/components/Page/Alert.vue";
+
 import {useToast} from "vue-toast-notification";
 
 document.querySelector('#app').setAttribute('style', 'overflow-x: hidden');
