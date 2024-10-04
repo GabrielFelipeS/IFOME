@@ -98,7 +98,7 @@ const submitLogin = () => {
 }
 
 .invalid-input-text {
-	@apply font-light text-sm text-red-500 px-2;
+	@apply font-normal text-sm text-primary-dark px-2;
 }
 .hiper-link {
 	@apply underline mt-3 text-primary;
