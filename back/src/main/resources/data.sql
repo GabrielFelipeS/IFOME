@@ -24,6 +24,7 @@ INSERT INTO restaurants (
     restaurant_image,
     bank_account
 ) VALUES (
+    'id'
     'Nome Restaurante',
     '58.911.612/0001-16',
     'Pizzaria',
