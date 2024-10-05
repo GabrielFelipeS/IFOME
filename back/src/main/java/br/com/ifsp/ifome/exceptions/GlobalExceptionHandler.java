@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -99,7 +100,6 @@ public class GlobalExceptionHandler {
     public  ResponseEntity<Map<String, Object>>  handleMaxUploadSizeExceededPart(
         MaxUploadSizeExceededException ex) {
         logger.warn(ex.getMessage());
-        System.out.println("AQUI");
         Map<String, Object> response = new HashMap<>();
         response.put("message",  ex.getMessage());
 
@@ -107,5 +107,14 @@ public class GlobalExceptionHandler {
         headers.add("Access-Control-Allow-Origin", "*");
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(headers).body(response);
+    }
+
+    @ExceptionHandler(PropertyReferenceException.class)
+    public  ResponseEntity<Map<String, Object>>  handleMaxUploadSizeExceededPart(
+        PropertyReferenceException ex) {
+        logger.warn(ex.getMessage());
+        Map<String, Object> response = new HashMap<>();
+        response.put("message",  ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }
