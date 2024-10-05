@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.docs.DocsGetRestaurantById;
 import br.com.ifsp.ifome.docs.DocsOpenCloseRestaurant;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
@@ -46,7 +47,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Pegar restaurante por id", security = @SecurityRequirement(name = "Bearer Token"))
+    @DocsGetRestaurantById
     public ResponseEntity<ApiResponse> getRestaurantById(@PathVariable Long id) {
         Restaurant restaurant = restaurantService.findById(id);
         var restaurantResponse = RestaurantResponse.from(restaurant);
