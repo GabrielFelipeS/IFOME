@@ -26,9 +26,8 @@ import java.util.*;
 public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public  Map<String, Object> handleValidationExceptions(
+    public  ResponseEntity<Map<String, Object>> handleValidationExceptions(
         MethodArgumentNotValidException ex) {
         Map<String, List<String>> errorsMap = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
@@ -40,7 +39,7 @@ public class GlobalExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Erro ao realizar operação");
         response.put("errors", errorsMap);
-        return response;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     private String getNameWithError(ObjectError error) {
