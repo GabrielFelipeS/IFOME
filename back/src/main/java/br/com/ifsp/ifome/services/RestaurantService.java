@@ -1,9 +1,18 @@
 package br.com.ifsp.ifome.services;
 
+import br.com.ifsp.ifome.dto.response.RestaurantResponse;
+import br.com.ifsp.ifome.entities.Restaurant;
+import br.com.ifsp.ifome.exceptions.RestaurantNotFoundException;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RestaurantService {
@@ -21,5 +30,22 @@ public class RestaurantService {
 
         String message = String.format("Restaurante %s com sucesso!", reverseOpen? "aberto" : "fechado");
         return message;
+    }
+
+    public List<RestaurantResponse> getAllRestaurants() {
+        return restaurantRepository.findAll(Sort.by(Sort.Direction.ASC, "nameRestaurant")).stream().map(RestaurantResponse::from).collect(Collectors.toList());
+    }
+
+     public Page<RestaurantResponse> getAllRestaurants(Pageable pageable) {
+        return restaurantRepository.findAll(PageRequest.of(
+            pageable.getPageNumber(),
+            pageable.getPageSize(),
+            pageable.getSortOr(Sort.by(Sort.Direction.ASC,"nameRestaurant"))
+        )).map(RestaurantResponse::from);
+    }
+
+    public Restaurant findById(Long id) {
+        return restaurantRepository.findById(id)
+            .orElseThrow(RestaurantNotFoundException::new);
     }
 }

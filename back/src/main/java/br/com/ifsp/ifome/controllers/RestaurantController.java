@@ -1,51 +1,69 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.docs.DocsOpenCloseRestaurant;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
-import br.com.ifsp.ifome.exceptions.RestaurantNotFoundException;
-import br.com.ifsp.ifome.repositories.RestaurantRepository;
+import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.services.RestaurantService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.annotation.MultipartConfig;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 
 @RestController
 
 @MultipartConfig
 @RequestMapping("/api/restaurant/")
 public class RestaurantController {
-    private final RestaurantRepository restaurantRepository;
     private final RestaurantService restaurantService;
 
-    public RestaurantController(RestaurantRepository restaurantRepository, RestaurantService restaurantService){
-        this.restaurantRepository = restaurantRepository;
+    public RestaurantController(RestaurantService restaurantService){
         this.restaurantService = restaurantService;
     }
 
     @GetMapping
-    public ResponseEntity<List<RestaurantResponse>> getAllRestaurant() {
-        return ResponseEntity.ok(restaurantRepository.getAllRestaurants());
+    @Operation(summary = "Pegar todos os restaurantes de forma paginada", security = @SecurityRequirement(name = "Bearer Token"))
+    public ResponseEntity<ApiResponse> getAllRestaurant(
+        @PageableDefault(size = 15, page = 0) Pageable pageable) {
+        var restaurantResponses = restaurantService.getAllRestaurants(pageable);
+
+        ApiResponse apiResponse = new ApiResponse("success", restaurantResponses, "Busca com sucesso dos restaurantes");
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @GetMapping("/all")
+    @Operation(summary = "Pegar todos os restaurantes", security = @SecurityRequirement(name = "Bearer Token"))
+    public ResponseEntity<ApiResponse> getRestaurantsPagination() {
+        var restaurantResponses = restaurantService.getAllRestaurants();
+
+        ApiResponse apiResponse = new ApiResponse("success", restaurantResponses, "Busca com sucesso dos restaurantes");
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Pegar restaurante por id", security = @SecurityRequirement(name = "Bearer Token"))
     public ResponseEntity<ApiResponse> getRestaurantById(@PathVariable Long id) {
-        var restaurant = restaurantRepository.findById(id).orElseThrow(RestaurantNotFoundException::new);
+        Restaurant restaurant = restaurantService.findById(id);
         var restaurantResponse = RestaurantResponse.from(restaurant);
         ApiResponse apiResponse = new ApiResponse("success", restaurantResponse, "Restaurante encontrado com sucesso");
         return ResponseEntity.ok(apiResponse);
     }
 
     @PutMapping
-    public ResponseEntity<ApiResponse> putOpen(Principal principal) {
+    @DocsOpenCloseRestaurant
+     public ResponseEntity<ApiResponse> putOpen(Principal principal) {
         String message = restaurantService.changeStateOpen(principal);
         ApiResponse apiResponse = new ApiResponse("success", null, message);
         return ResponseEntity.ok(apiResponse);
     }
 
     @PatchMapping
+    @DocsOpenCloseRestaurant
     public ResponseEntity<ApiResponse> patchOpen(Principal principal) {
         String message = restaurantService.changeStateOpen(principal);
         ApiResponse apiResponse = new ApiResponse("success", null, message);
