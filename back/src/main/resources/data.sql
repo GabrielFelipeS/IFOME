@@ -26,7 +26,7 @@ INSERT INTO restaurants (
     is_open
 ) VALUES (
     'Açai do monge',
-    '58.911.612/0001-16',
+    '58911612000116',
     'Sorveteria',
     '07070-000',
     'Endereço completo',
