@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 
 @Service
 public class DishService {
@@ -32,6 +33,21 @@ public class DishService {
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new RuntimeException("Restaurante não encontrado"));
+
+
+        Dish dish = new Dish(dishRequest, imageUrl);
+        dish.setRestaurant(restaurant); // Associe o prato ao restaurante
+        dish = dishRepository.save(dish);
+        return new DishResponse(dish);
+    }
+
+    public DishResponse create(DishRequest dishRequest, MultipartFile multipartFile, Principal principal)
+        throws MethodArgumentNotValidException, IOException {
+
+        String imageUrl = fileStorageService.storeFile(dishRequest.name(), multipartFile);
+
+        Restaurant restaurant = restaurantRepository.findByEmail(principal.getName())
+            .orElseThrow(() -> new RuntimeException("Restaurante não encontrado"));
 
 
         Dish dish = new Dish(dishRequest, imageUrl);
