@@ -833,7 +833,7 @@ const returnSteps = () => {
             @apply text-lg text-gray-500 mb-5 font-semibold;
 
             &.alert {
-                @apply text-red-500;
+                @apply text-primary-dark;
             }
         }
 
