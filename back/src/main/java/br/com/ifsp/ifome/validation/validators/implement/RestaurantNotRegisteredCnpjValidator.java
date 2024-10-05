@@ -23,7 +23,7 @@ public class RestaurantNotRegisteredCnpjValidator implements RestaurantValidator
     @Override
     public Optional<Map.Entry<String, String>> isValid(RestaurantRequest request) {
 
-        boolean exists = restaurantRepository.existsByCnpj(request.cnpj());
+        boolean exists = restaurantRepository.existsByCnpj(request.cnpj().replaceAll("[^\\d]", ""));
         if(exists) {
             return Optional.of(new AbstractMap.SimpleEntry<>("cnpj", "Cnpj já cadastrado"));
         }

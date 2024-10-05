@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.List;
@@ -66,7 +67,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
             return openingHours1;
         }).collect(Collectors.toList());
         this.personResponsible = restaurantRequest.personResponsible();
-        this.personResponsibleCpf = restaurantRequest.personResponsibleCPF();
+        this.personResponsibleCpf = restaurantRequest.personResponsibleCPF().replaceAll("[^\\d]", "");
         this.email = restaurantRequest.email();
         this.password = bCryptPasswordEncoder.encode(restaurantRequest.password());
         this.paymentMethods = restaurantRequest.paymentMethods();
@@ -82,13 +83,13 @@ public class Restaurant implements PasswordPolicy, UserDetails {
                       String restaurantImage, BankAccount bankAccount, boolean isOpen,  BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.id = id;
         this.nameRestaurant = nameRestaurant;
-        this.cnpj = cnpj;
+        this.cnpj = cnpj.replaceAll("[^\\d]", "");
         this.foodCategory = foodCategory;
         this.address = address;
         this.telephone = telephone;
         this.openingHours = openingHours;
         this.personResponsible = personResponsible;
-        this.personResponsibleCpf = personResponsibleCPF;
+        this.personResponsibleCpf = personResponsibleCPF.replaceAll("[^\\d]", "");
         this.email = email;
         this.password = bCryptPasswordEncoder.encode(password);
         this.paymentMethods = paymentMethods;
@@ -127,7 +128,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     }
 
     public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
+        this.cnpj = cnpj.replaceAll("[^\\d]", "");
     }
 
     public String getFoodCategory() {
@@ -175,7 +176,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     }
 
     public void setPersonResponsibleCpf(String personResponsibleCPF) {
-        this.personResponsibleCpf = personResponsibleCPF;
+        this.personResponsibleCpf = personResponsibleCPF.replaceAll("[^\\d]", "");;
     }
 
     public Role getRole() {
@@ -254,6 +255,14 @@ public class Restaurant implements PasswordPolicy, UserDetails {
 
     public void setBankAccount(BankAccount bankAccount) {
         this.bankAccount = bankAccount;
+    }
+
+    public List<Dish> getDishes() {
+        return dishes;
+    }
+
+    public void setDishes(List<Dish> dishes) {
+        this.dishes = dishes;
     }
 
     @Override

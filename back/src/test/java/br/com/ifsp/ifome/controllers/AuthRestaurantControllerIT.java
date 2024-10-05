@@ -75,7 +75,7 @@ public class AuthRestaurantControllerIT {
             "email@email.com",
             "@Senha1",
             "@Senha1",
-            "10.882.594/0001-65",
+            "10882594000165",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
                 "12", "condominio","details")),
@@ -170,7 +170,7 @@ public class AuthRestaurantControllerIT {
             List.of(new OpeningHoursRequest("Segunda-feira","11:00", "23:00"),
                 new OpeningHoursRequest("Terça-feira","11:00", "23:00")),
             "responsavel",
-            "58911612000116",
+                "033.197.356-16",
             new BankAccountRequest("123","1255", "4547-7")
 
 
