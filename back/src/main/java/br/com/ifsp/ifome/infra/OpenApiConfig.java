@@ -19,7 +19,7 @@ public class OpenApiConfig {
             .bearerFormat("JWT");
 
         return new OpenAPI()
-            .info(new Info().title("API Title").version("1.0.0"))
+            .info(new Info().title("IFOME").version("1.0.28"))
             .components(new io.swagger.v3.oas.models.Components()
                 .addSecuritySchemes("Bearer Token", securityScheme))
         ;
