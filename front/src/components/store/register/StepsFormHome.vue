@@ -9,7 +9,7 @@ const currentStep = ref(1);
 
 const emit = defineEmits(['responseApi']);
 
-const stepsActive = ref(false);
+const stepsActive = ref(true);
 
 const props = defineProps({
     data: Object,
@@ -144,7 +144,7 @@ watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other]
 
     if (opening.value && opening.value.includes(':')) {
         let openingValue = opening.value.split(':');
-        if(isNaN(parseInt(openingValue[0], 10)) || isNaN(parseInt(openingValue[1], 10))) {
+        if (isNaN(parseInt(openingValue[0], 10)) || isNaN(parseInt(openingValue[1], 10))) {
             step3Erros.value.opening = ['** Digite um horario valido **'];
         } else {
             step3Erros.value.opening = false;
@@ -156,7 +156,7 @@ watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other]
     // Verificação de Fechamento
     if (closing.value && closing.value.includes(':')) {
         let closingValue = closing.value.split(':');
-        if(isNaN(parseInt(closingValue[0], 10)) || isNaN(parseInt(closingValue[1], 10))) {
+        if (isNaN(parseInt(closingValue[0], 10)) || isNaN(parseInt(closingValue[1], 10))) {
             step3Erros.value.closing = ['** Digite um horario valido **'];
         } else {
             step3Erros.value.closing = false;
@@ -204,11 +204,54 @@ watch([name, cpf], () => {
     }
 });
 
-watch([cep, state, city, address, number, complement], () => {
-    if (cep.value && state.value && city.value && address.value && number.value && complement.value) {
-        stepCompleted.value = true;
+let step1Erros = ref({
+    cep: false,
+    state: false,
+    city: false,
+    address: false,
+    number: false,
+    complement: false,
+    neighborhood: false,
+});
+
+watch([cep, state, city, address, number, complement, neighborhood], () => {
+    if (cep.value.length === 9) {
+        let cepValue = cep.value.replace('-', '');
+        if (cepValue.length !== 8) {
+            step1Erros.value.cep = ['** Digite um valor valido **'];
+        } else {
+            step1Erros.value.cep = false;
+        }
+    }
+
+    if(neighborhood.value) {
+        step1Erros.value.neighborhood = false;
     } else {
+        step1Erros.value.neighborhood = ['** O campo bairro é obrigatorio **'];
+    }
+
+    if(address.value) {
+        step1Erros.value.address = false;
+    } else {
+        step1Erros.value.address = ['** O campo endereço é obrigatorio **'];
+    }
+
+    if (number.value) {
+        step1Erros.value.number = false;
+    } else {
+        step1Erros.value.number = ['** Digite um valor valido **'];
+    }
+
+    if (complement.value) {
+        step1Erros.value.complement = false;
+    } else {
+        step1Erros.value.complement = ['** O campo complemento é obrigatorio **'];
+    }
+
+    if (Object.values(step1Erros.value).some((value) => value)) {
         stepCompleted.value = false;
+    } else {
+        stepCompleted.value = true;
     }
 });
 
@@ -216,6 +259,11 @@ watch(cep, async (value) => {
     if (value.length === 9) {
         let cep = value.replace('-', '');
         const data = await fetchViaCep(cep);
+        if (data.erro) {
+            step1Erros.value.cep = ['** CEP não encontrado **'];
+        } else {
+            step1Erros.value.cep = false;
+        }
         state.value = data.uf;
         city.value = data.localidade;
         address.value = data.logradouro;
@@ -454,34 +502,55 @@ const returnSteps = () => {
                 <label for="cep">CEP *</label>
                 <MaskInput type="text" id="cep" name="cep" v-model="cep" :value="cep" placeholder="CEP" mask="#####-###"
                     required />
+                <template v-if="step1Erros.cep">
+                    <p v-for="error in step1Erros.cep">{{ error }}</p>
+                </template>
             </div>
             <div class="mid">
                 <div class="form-group">
                     <label for="state">Estado *</label>
                     <input type="text" id="state" name="state" v-model="state" placeholder="Estado" required disabled />
+                    <template v-if="step1Erros.state">
+                        <p v-for="error in step1Erros.state">{{ error }}</p>
+                    </template>
                 </div>
                 <div class="form-group">
                     <label for="city">Cidade *</label>
                     <input type="text" id="city" name="city" v-model="city" placeholder="Cidade" required disabled />
+                    <template v-if="step1Erros.city">
+                        <p v-for="error in step1Erros.city">{{ error }}</p>
+                    </template>
                 </div>
             </div>
             <div class="form-group">
                 <label for="neighborhood">Bairro *</label>
                 <input type="text" id="neighborhood" name="neighborhood" v-model="neighborhood" placeholder="Bairro"
                     required />
+                <template v-if="step1Erros.neighborhood">
+                    <p v-for="error in step1Erros.neighborhood">{{ error }}</p>
+                </template>
             </div>
             <div class="form-group">
                 <label for="address">Endereço *</label>
                 <input type="text" id="address" name="address" v-model="address" placeholder="Endereço" required />
+                <template v-if="step1Erros.address">
+                    <p v-for="error in step1Erros.address">{{ error }}</p>
+                </template>
             </div>
             <div class="form-group">
                 <label for="number">Número *</label>
                 <MaskInput type="text" id="number" name="number" v-model="number" :value="number" placeholder="Número"
                     mask="######" required />
+                <template v-if="step1Erros.number">
+                    <p v-for="error in step1Erros.number">{{ error }}</p>
+                </template>
             </div>
             <div class="form-group">
                 <label for="complement">Complemento *</label>
                 <input type="text" id="complement" name="complement" v-model="complement" placeholder="Complemento" />
+                <template v-if="step1Erros.complement">
+                    <p v-for="error in step1Erros.complement">{{ error }}</p>
+                </template>
             </div>
             <div class="form-group">
                 <label for="details">Detalhes</label>
@@ -515,9 +584,9 @@ const returnSteps = () => {
                 <label for="cnpj">CNPJ</label>
                 <MaskInput type="text" id="cnpj" v-model="cnpj" name="cnpj" :value="cnpj" placeholder="CNPJ"
                     mask="##.###.###/####-##" required />
-                    <template v-if="step3Erros.cpf">
-                        <p v-for="error in step3Erros.cpf">{{ error }}</p>
-                    </template>
+                <template v-if="step3Erros.cpf">
+                    <p v-for="error in step3Erros.cpf">{{ error }}</p>
+                </template>
             </div>
             <div class="form-group">
                 <label for="nameStore">Nome do Restaurante (como aparecerá no app)</label>
@@ -725,7 +794,7 @@ const returnSteps = () => {
                 <img src="../../../assets/img/store/sushi.png" alt="Icone Sushi" class="baloon">
                 <img src="../../../assets/img/store/hamburguer-de-queijo.png" alt="Icone Hamburguer" class="baloon1">
                 <img src="../../../assets/img/store/plait.png" alt="Icone Prato" class="baloon2">
-                <router-link :to="{name: 'store-login'}" class="btn-text">Começar a Vender</router-link>
+                <router-link :to="{ name: 'store-login' }" class="btn-text">Começar a Vender</router-link>
             </div>
         </div>
     </div>
