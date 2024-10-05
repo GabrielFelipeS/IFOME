@@ -1,5 +1,5 @@
 <script setup>
-import Modal from "@/components/user/register/Modal.vue";
+import Modal from "@/components/user/Modal.vue";
 import Button from "@/components/Button.vue";
 import {onMounted, ref} from "vue";
 
@@ -47,9 +47,6 @@ onMounted(() => {
 				<p class="invalid-input-text" v-if="error">{{ error }}</p>
 			</div>
 			<div class="btn-container">
-				<Button href="#" @click="$emit('previous-step')" inversed
-						class="button text-primary-subtle border border-primary mr-[15%] hover:text-white
-						 hover:bg-primary active:bg-primary-dark hover:border-white">Voltar</Button>
 				<Button href="#" @click="nextStep"
 						class="button bg-primary text-white hover:bg-primary-dark active:bg-primary-darker">Continuar</Button>
 			</div>
@@ -80,7 +77,7 @@ onMounted(() => {
 }
 
 .invalid-input-text {
-	@apply font-light text-sm text-red-500 px-2;
+	@apply font-normal text-sm text-primary-dark px-2;
 }
 
 </style>

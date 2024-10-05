@@ -1,7 +1,7 @@
 <script setup>
-import FormHome from '@/components/store/FormHome.vue';
+import FormHome from '@/components/store/register/FormHome.vue';
 import Header from '@/components/store/Header.vue';
-import StepsFormHome from '@/components/store/StepsFormHome.vue';
+import StepsFormHome from '@/components/store/register/StepsFormHome.vue';
 import { ref } from 'vue';
 import { useToast } from 'vue-toast-notification';
 
@@ -30,14 +30,14 @@ const showToast = (response) => {
 <template>
     <div class="content">
         <Header />
-        <FormHome @submit="submitForm" />
+        <FormHome @submit="submitForm" @responseApi="showToast"/>
         <StepsFormHome :data="data" @responseApi="showToast" />
     </div>
 </template>
 
 <style lang="scss" scoped>
 .content {
-    @apply w-full h-screen flex flex-col justify-end items-center;
+    @apply w-full h-screen flex flex-col justify-center items-center px-2.5;
     background-image: url('../../assets/img/store/background_register_store_mob.jpg');
     background-position: top;
     background-size: cover;
@@ -45,7 +45,7 @@ const showToast = (response) => {
 
     @media (min-width: 768px) {
         background-image: url('../../assets/img/store/background_register_store.webp');
-        @apply flex-row justify-end items-end;
+        @apply flex-row justify-end items-center;
     }
 }
 </style>

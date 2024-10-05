@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import HeaderSteps from './HeaderSteps.vue';
 import { MaskInput } from 'vue-3-mask';
-import { fetchViaCep } from '@/services/viaCep';
+import { fetchViaCep } from '@/services/viaCep.js';
 import axios from 'axios';
 
 const currentStep = ref(1);
@@ -620,10 +620,10 @@ const returnSteps = () => {
 }
 
 .steps {
-    @apply fixed top-0 left-0 w-full h-full bg-white overflow-auto;
+	@apply fixed top-0 left-0 w-full h-full bg-white overflow-auto;
 
     .step {
-        @apply w-[90%] h-[calc(100vh-100px)] m-auto pt-10;
+		@apply w-[90%] max-w-[800px] h-[calc(100vh-100px)] m-auto pt-10;
 
         h2 {
             @apply text-4xl font-semibold text-gray-800 mb-5 text-center;
