@@ -40,7 +40,7 @@ public class ValidationController {
 
     @PostMapping("/client/cpf")
     public ResponseEntity<String> cpfClientAlreadyRegistred(@RequestBody @Valid CpfValidatorRequest cpfValidatorRequest) {
-        boolean alreadyRegistred = clientRepository.existsByCpf(cpfValidatorRequest.cpf());
+        boolean alreadyRegistred = clientRepository.existsByCpf(cpfValidatorRequest.cpf().replaceAll("[^0-9]", ""));
         if(alreadyRegistred) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já registrado");
         } else {
@@ -60,7 +60,7 @@ public class ValidationController {
 
     @PostMapping("/delivery/cpf")
     public ResponseEntity<String> cpfDeliveryAlreadyRegistred(@RequestBody @Valid CpfValidatorRequest cpfValidatorRequest) {
-        boolean alreadyRegistred = deliveryPersonRepository.existsByCpf(cpfValidatorRequest.cpf());
+        boolean alreadyRegistred = deliveryPersonRepository.existsByCpf(cpfValidatorRequest.cpf().replaceAll("[^0-9]", ""));
         if(alreadyRegistred) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já registrado");
         } else {
@@ -80,7 +80,7 @@ public class ValidationController {
 
     @PostMapping("/restaurant/cnpj")
     public ResponseEntity<String> cnpjRestaurantAlreadyRegistred(@RequestBody @Valid CnpjValidatorRequest cnpjValidatorRequest) {
-        boolean alreadyRegistred = restaurantRepository.existsByCnpj(cnpjValidatorRequest.cnpj());
+        boolean alreadyRegistred = restaurantRepository.existsByCnpj(cnpjValidatorRequest.cnpj().replaceAll("[^0-9]", ""));
         if(alreadyRegistred) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Cnpj já registrado");
         } else {
