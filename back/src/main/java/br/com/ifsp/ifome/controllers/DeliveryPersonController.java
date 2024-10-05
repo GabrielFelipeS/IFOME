@@ -30,13 +30,15 @@ public class DeliveryPersonController {
     }
     @DocsCreateDeliveryPerson
     @PostMapping
-    public ResponseEntity<DeliveryPersonResponse> create(@Valid @RequestBody DeliveryPersonRequest deliveryPersonRequest, UriComponentsBuilder ucb) throws MethodArgumentNotValidException {
+    public ResponseEntity<ApiResponse> create(@Valid @RequestBody DeliveryPersonRequest deliveryPersonRequest, UriComponentsBuilder ucb) throws MethodArgumentNotValidException {
         DeliveryPersonResponse deliveryPersonResponse = deliveryPersonService.create(deliveryPersonRequest);
         URI locationOfNewDeliveryPerson = ucb
                 .path("deliveryPerson/{id}")
                 .buildAndExpand(deliveryPersonResponse.id())
                 .toUri();
-        return ResponseEntity.created(locationOfNewDeliveryPerson).body(deliveryPersonResponse);
+
+        ApiResponse apiResponse = new ApiResponse("sucess", deliveryPersonResponse, "Entragador cadastrado com sucesso");
+        return ResponseEntity.created(locationOfNewDeliveryPerson).body(apiResponse);
     }
 
     @PostMapping("/login")

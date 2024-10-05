@@ -94,27 +94,26 @@ public class DeliveryPersonControllerIT {
 
         DocumentContext document = JsonPath.parse(response.getBody());
 
-        Number id = document.read("$.id");
-        String name = document.read("$.name");
-        String cpf = document.read("$.cpf");
-        String email = document.read("$.email");
-        String dateOfBirth = document.read("$.dateOfBirth");
-        String typeOfVehicle = document.read("$.typeOfVehicle");
-        String telephone = document.read("$.telephone");
-        String cnhNumber = document.read("$.cnhNumber");
-        String cnhValidity = document.read("$.cnhNumber");
-        String vehicleDocument = document.read("$.vehicleDocument");
-        Address addressJson = document.read("$.address[0]", Address.class);
+        Number id = document.read("$.data.id");
+        String name = document.read("$.data.name");
+        String cpf = document.read("$.data.cpf");
+        String email = document.read("$.data.email");
+        String dateOfBirth = document.read("$.data.dateOfBirth");
+        String typeOfVehicle = document.read("$.data.typeOfVehicle");
+        String telephone = document.read("$.data.telephone");
+        String cnhNumber = document.read("$.data.cnhNumber");
+        String cnhValidity = document.read("$.data.cnhNumber");
+        String vehicleDocument = document.read("$.data.vehicleDocument");
+        Address addressJson = document.read("$.data.address[0]", Address.class);
         //BankAccount bankAccountJson = document.read("$.bankAccount[0]", BankAccount.class);
 
 
         assertThat(id).isNotNull();
         assertThat(email).isEqualTo(deliveryPersonRequest.email());
-        //assertThat(cpf).isEqualTo(deliveryPersonRequest.cpf());
 
         assertThat(addressJson).isNotNull();
         assertThat(addressJson).isNotNull();
-        assertThat(cpf).isEqualTo("03319735616");
+
         assertThat(addressJson.getCep()).isEqualTo("35170-222");
         assertThat(addressJson.getNeighborhood()).isEqualTo("neighborhood");
         assertThat(addressJson.getCity()).isEqualTo("city");

@@ -3,9 +3,11 @@ import { computed, ref, watch } from 'vue';
 import HeaderSteps from './HeaderSteps.vue';
 import { MaskInput } from 'vue-3-mask';
 import { fetchViaCep } from '@/services/viaCep';
-import api from '@/services/api';
+import axios from 'axios';
 
 const currentStep = ref(1);
+
+const emit = defineEmits(['responseApi']);
 
 const stepsActive = ref(false);
 
@@ -65,6 +67,7 @@ const password = ref('');
 const confirmPassword = ref('');
 const details = ref('');
 
+
 watch(specialty, (value) => {
     if (value === 'Outro') {
         document.querySelector('#other').closest('.form-group').classList.remove('hidden');
@@ -89,14 +92,15 @@ const step5Completed = ref(false);
 const step6Completed = ref(false);
 
 const step3Erros = ref({
-    cnpj: false,
-    nameStore: false,
-    phone: false,
-    specialty: false,
-    opening: false,
-    closing: false,
-    daysSelected: false,
-    other: false,
+    cpf: [],
+    cnpj: [],
+    nameStore: [],
+    phone: [],
+    specialty: [],
+    opening: [],
+    closing: [],
+    daysSelected: [],
+    other: [],
 });
 
 watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other], () => {
@@ -104,7 +108,7 @@ watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other]
     if (cnpj.value) {
         let cnpjValue = cnpj.value.replace(/\D/g, '');
         if (cnpjValue.length !== 14) {
-            step3Erros.value.cnpj = true;
+            step3Erros.value.cnpj = ['** Digite um valor válido **'];
         } else {
             step3Erros.value.cnpj = false;
         }
@@ -112,7 +116,7 @@ watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other]
 
     if (nameStore.value) {
         if (nameStore.value.length < 3) {
-            step3Erros.value.nameStore = true;
+            step3Erros.value.nameStore = ['** Digite um nome valido, minimo de 3 letras **'];
         } else {
             step3Erros.value.nameStore = false;
         }
@@ -121,72 +125,64 @@ watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other]
     if (phone.value) {
         let phoneValue = phone.value.replace(/\D/g, '');
         if (phoneValue.length !== 10 && phoneValue.length !== 11) {
-            step3Erros.value.phone = true;
+            step3Erros.value.phone = ['** Digite um valor válido **'];
         } else {
             step3Erros.value.phone = false;
         }
     }
 
     if (specialty.value === 'Outro' && !other.value) {
-        step3Erros.value.other = true;
+        step3Erros.value.other = ['** Digite um valor valido **'];
     } else {
         step3Erros.value.other = false;
     }
 
     if (specialty.value === 'none') {
-        step3Erros.value.specialty = true;
+        step3Erros.value.specialty = ['** Selecione uma opção valida **'];
     } else {
         step3Erros.value.specialty = false;
     }
 
     if (opening.value && opening.value.includes(':')) {
         let openingValue = opening.value.split(':');
-        let hour = parseInt(openingValue[0], 10);
-        let minute = parseInt(openingValue[1], 10);
-
-        if (isNaN(hour) || isNaN(minute) || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-            step3Erros.value.opening = true;
+        if(isNaN(parseInt(openingValue[0], 10)) || isNaN(parseInt(openingValue[1], 10))) {
+            step3Erros.value.opening = ['** Digite um horario valido **'];
         } else {
             step3Erros.value.opening = false;
         }
     } else {
-        step3Erros.value.opening = true;
+        step3Erros.value.opening = ['** Digite um horario valido **'];
     }
 
     // Verificação de Fechamento
     if (closing.value && closing.value.includes(':')) {
         let closingValue = closing.value.split(':');
-        let hour = parseInt(closingValue[0], 10);
-        let minute = parseInt(closingValue[1], 10);
-
-        // Verificar se os valores são válidos
-        if (isNaN(hour) || isNaN(minute) || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-            step3Erros.value.closing = true;
+        if(isNaN(parseInt(closingValue[0], 10)) || isNaN(parseInt(closingValue[1], 10))) {
+            step3Erros.value.closing = ['** Digite um horario valido **'];
         } else {
             step3Erros.value.closing = false;
         }
     } else {
-        step3Erros.value.closing = true;
+        step3Erros.value.closing = ['** Digite um horario valido **'];
     }
 
     if (!step3Erros.value.opening && !step3Erros.value.closing) {
         let openingValue = opening.value.split(':');
         let closingValue = closing.value.split(':');
-        let openingHour = parseInt(openingValue[0], 10);
-        let openingMinute = parseInt(openingValue[1], 10);
-        let closingHour = parseInt(closingValue[0], 10);
-        let closingMinute = parseInt(closingValue[1], 10);
-
-        if (closingHour < openingHour || (closingHour === openingHour && closingMinute <= openingMinute)) {
-            step3Erros.value.closing = true;
+        if (parseInt(openingValue[0], 10) > parseInt(closingValue[0], 10)) {
+            step3Erros.value.opening = ['** O horario de abertura deve ser menor que o de fechamento **'];
+            step3Erros.value.closing = ['** O horario de fechamento deve ser maior que o de abertura **'];
+        } else if (parseInt(openingValue[0], 10) === parseInt(closingValue[0], 10) && parseInt(openingValue[1], 10) >= parseInt(closingValue[1], 10)) {
+            step3Erros.value.opening = ['** O horario de abertura deve ser menor que o de fechamento **'];
+            step3Erros.value.closing = ['** O horario de fechamento deve ser maior que o de abertura **'];
         } else {
+            step3Erros.value.opening = false;
             step3Erros.value.closing = false;
         }
     }
 
-
     if (daysSelected.value.length === 0) {
-        step3Erros.value.daysSelected = true;
+        step3Erros.value.daysSelected = ['** Selecione pelo menos um dia **'];
     } else {
         step3Erros.value.daysSelected = false;
     }
@@ -196,6 +192,8 @@ watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other]
     } else {
         step3Completed.value = true;
     }
+
+    console.log(step3Erros.value);
 });
 
 watch([name, cpf], () => {
@@ -207,8 +205,8 @@ watch([name, cpf], () => {
     }
 });
 
-watch([cep, state, city, address, number], () => {
-    if (cep.value && state.value && city.value && address.value && number.value) {
+watch([cep, state, city, address, number, complement], () => {
+    if (cep.value && state.value && city.value && address.value && number.value && complement.value) {
         stepCompleted.value = true;
     } else {
         stepCompleted.value = false;
@@ -227,20 +225,29 @@ watch(cep, async (value) => {
 });
 
 const days = [
-    { name: 'Domingo', value: 'sunday' },
-    { name: 'Segunda-feira', value: 'monday' },
-    { name: 'Terça-feira', value: 'tuesday' },
-    { name: 'Quarta-feira', value: 'wednesday' },
-    { name: 'Quinta-feira', value: 'thursday' },
-    { name: 'Sexta-feira', value: 'friday' },
-    { name: 'Sábado', value: 'saturday' },
+    { name: 'Domingo', value: 'Segunda-feira' },
+    { name: 'Segunda-feira', value: 'Terça-feira' },
+    { name: 'Terça-feira', value: 'Quarta-feira' },
+    { name: 'Quarta-feira', value: 'Quinta-feira' },
+    { name: 'Quinta-feira', value: 'Sexta-feira' },
+    { name: 'Sexta-feira', value: 'Sábado' },
+    { name: 'Sábado', value: 'Domingo' },
 ];
 
 const selectedFiles = ref([]);
+const errorPhotos = ref(false);
 
 function handleFileChange(event) {
     const files = Array.from(event.target.files);
-    selectedFiles.value = [...selectedFiles.value, ...files];
+    const file = files.value[0];
+
+    if (file.size > 2 * 1024 * 1024) {
+        errorPhotos.value = ['O arquivo deve ter no máximo 2MB'];
+        selectedFiles.value = []; // Garantir que nenhum arquivo seja selecionado se o tamanho for maior que 2MB
+    } else {
+        errorPhotos.value = false;
+        selectedFiles.value = [file]; // Aqui, garantimos que estamos modificando a variável 'selectedFiles' corretamente
+    }
 }
 
 function dragOver(event) {
@@ -255,11 +262,11 @@ function dragLeave(event) {
 function drop(event) {
     event.currentTarget.classList.remove('bg-gray-100');
     const files = Array.from(event.dataTransfer.files);
-    selectedFiles.value = [...selectedFiles.value, ...files];
+    selectedFiles.value = [files.value[0]];
 }
 
-function removeFile(index) {
-    selectedFiles.value = selectedFiles.value.filter((_, i) => i !== index);
+function removeFile() {
+    selectedFiles.value = [];
 }
 
 const step4Erros = ref({
@@ -339,66 +346,87 @@ function showConfirmation() {
 }
 
 async function submitForm() {
-    const formData = new FormData();
+    try {
+        const formData = new FormData();
 
-    let formatedAddress = [{
-        nameAddress: "casa principal",
-        cep: cep.value,
-        neighborhood: neighborhood.value,
-        city: city.value,
-        state: state.value,
-        address: address.value,
-        complement: complement.value,
-        number: number.value,
-        details: details.value
-    }];
-
-    const bankAccount = [{
-        bank: bank.value,
-        agency: agency.value,
-        account: `${account.value}-${digit.value}`
-    }];
-
-    const openingHours = daysSelected.value.map((day) => {
-        return {
-            dayOfTheWeek: day,
-            opening: opening.value,
-            closing: closing.value
+        const bankAccount = {
+            bank: bank.value,
+            agency: agency.value,
+            account: `${account.value}-${digit.value}`
         };
-    });
+
+        const openingHours = daysSelected.value.map((day) => {
+            return {
+                dayOfTheWeek: day,
+                opening: opening.value,
+                closing: closing.value
+            };
+        });
+
+        const restaurantData = {
+            nameRestaurant: nameStore.value,
+            email: email.value,
+            password: password.value,
+            confirmationPassword: confirmPassword.value,
+            cnpj: cnpj.value,
+            address: [
+                {
+                    nameAddress: "casa principal",
+                    cep: cep.value,
+                    typeResidence: "casa",
+                    neighborhood: neighborhood.value,
+                    city: city.value,
+                    state: state.value,
+                    address: address.value,
+                    complement: complement.value,
+                    number: number.value,
+                    details: details.value
+                }
+            ],
+            telephone: phone.value,
+            foodCategory: specialty.value === 'Outro' ? other.value : specialty.value,
+            paymentMethods: paymentMethods.value.toString(),
+            openingHoursStart: opening.value,
+            openingHoursEnd: closing.value,
+            openingHours: openingHours,
+            personResponsible: name.value,
+            personResponsibleCPF: cpf.value,
+            bankAccount: bankAccount
+        };
+
+        if (selectedFiles.value.length > 0) {
+            formData.append('file', selectedFiles.value.value[0]);
+        } else {
+            throw new Error("Nenhum arquivo selecionado.");
+        }
 
 
-    formData.append('nameRestaurant', nameStore.value);
-    formData.append('email', email.value);
-    formData.append('password', password.value);
-    formData.append('confirmationPassword', confirmPassword.value);
-    formData.append('cnpj', cnpj.value);
-    formData.append('address', JSON.stringify(formatedAddress));
-    formData.append('telephone', phone.value);
-    formData.append('foodCategory', specialty.value == 'Outro' ? other.value : specialty.value);
-    formData.append('paymentMethods', paymentMethods.value);
-    formData.append('openingHours', JSON.stringify(openingHours));
-    formData.append('personResponsible', name.value);
-    formData.append('personResponsibleCPF', cpf.value);
-    formData.append('restaurantImages', selectedFiles.value[0]);
-    formData.append('bankAccount', JSON.stringify(bankAccount));
+        formData.append('restaurant', new Blob([JSON.stringify(restaurantData)], {
+            type: 'application/json',
+        }));
 
-    selectedFiles.value.forEach((file, index) => {
-        formData.append(`restaurantImages_${index}`, file);
-    });
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}auth/restaurant`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        });
 
-    $response  = await api.post('/restaurant', formData);
+        if (response.status === 201) {
+            emit('responseApi', response.data);
+            nextStep();
+        } else {
+            emit('responseApi', response.data);
+        }
 
-    if ($response.status === 201) {
-        emit('responseApi', [type => "success", message => $response.message]);
-        nextStep();
-    }
-
-    if($response.status === 400) {
-        emit('responseApi', [type => "error", message => $response.message , errors => $response.errors]);
+    } catch (error) {
+        console.error(error);
+        if (error.response) {
+            emit('responseApi', error.response.data);
+        } else {
+            emit('responseApi', { message: error.message });
+        }
     }
 }
-
 
 const returnSteps = () => {
     prevStep();
@@ -407,44 +435,43 @@ const returnSteps = () => {
 </script>
 
 <template>
-    <div class="steps py-[100px]" v-if="stepsActive">
-        <!-- Passar a etapa atual para o componente filho -->
+    <div class="steps" v-if="stepsActive">
         <HeaderSteps :currentStep="currentStep" @returnBack="returnSteps" />
 
         <div class="step" v-if="currentStep === 1">
             <h2>Endereço da loja</h2>
             <p>Preencha as informações de endereço da sua loja.</p>
             <div class="form-group">
-                <label for="cep">CEP</label>
+                <label for="cep">CEP *</label>
                 <MaskInput type="text" id="cep" name="cep" v-model="cep" :value="cep" placeholder="CEP" mask="#####-###"
                     required />
             </div>
             <div class="mid">
                 <div class="form-group">
-                    <label for="state">Estado</label>
+                    <label for="state">Estado *</label>
                     <input type="text" id="state" name="state" v-model="state" placeholder="Estado" required disabled />
                 </div>
                 <div class="form-group">
-                    <label for="city">Cidade</label>
+                    <label for="city">Cidade *</label>
                     <input type="text" id="city" name="city" v-model="city" placeholder="Cidade" required disabled />
                 </div>
             </div>
             <div class="form-group">
-                <label for="neighborhood">Bairro</label>
+                <label for="neighborhood">Bairro *</label>
                 <input type="text" id="neighborhood" name="neighborhood" v-model="neighborhood" placeholder="Bairro"
                     required />
             </div>
             <div class="form-group">
-                <label for="address">Endereço</label>
+                <label for="address">Endereço *</label>
                 <input type="text" id="address" name="address" v-model="address" placeholder="Endereço" required />
             </div>
             <div class="form-group">
-                <label for="number">Número</label>
+                <label for="number">Número *</label>
                 <MaskInput type="text" id="number" name="number" v-model="number" :value="number" placeholder="Número"
                     mask="######" required />
             </div>
             <div class="form-group">
-                <label for="complement">Complemento</label>
+                <label for="complement">Complemento *</label>
                 <input type="text" id="complement" name="complement" v-model="complement" placeholder="Complemento" />
             </div>
             <div class="form-group">
@@ -479,19 +506,25 @@ const returnSteps = () => {
                 <label for="cnpj">CNPJ</label>
                 <MaskInput type="text" id="cnpj" v-model="cnpj" name="cnpj" :value="cnpj" placeholder="CNPJ"
                     mask="##.###.###/####-##" required />
-                <p v-if="step3Erros.cnpj">** Digite um valor válido **</p>
+                    <template v-if="step3Erros.cpf">
+                        <p v-for="error in step3Erros.cpf">{{ error }}</p>
+                    </template>
             </div>
             <div class="form-group">
                 <label for="nameStore">Nome do Restaurante (como aparecerá no app)</label>
                 <input type="text" id="nameStore" v-model="nameStore" name="nameStore" placeholder="Nome da loja"
                     required />
-                <p v-if="step3Erros.nameStore">** Digite um nome valido ( Minimo 3 letras ) **</p>
+                <template v-if="step3Erros.nameStore">
+                    <p v-for="error in step3Erros.nameStore">{{ error }}</p>
+                </template>
             </div>
             <div class="form-group">
                 <label for="phone">Telefone do Restaurante</label>
                 <MaskInput type="text" id="phone" v-model="phone" :value="phone" name="phone" placeholder="Telefone"
                     mask="(##) #####-####" required />
-                <p v-if="step3Erros.phone">** Digite um valor válido **</p>
+                <template v-if="step3Erros.phone">
+                    <p v-for="error in step3Erros.phone">{{ error }}</p>
+                </template>
             </div>
             <div class="mid">
                 <div class="form-group">
@@ -504,12 +537,16 @@ const returnSteps = () => {
                         <option value="Comida Saudável">Comida Saudável</option>
                         <option value="Outro">Outro</option>
                     </select>
-                    <p v-if="step3Erros.specialty">** Selecione uma opção valida **</p>
+                    <template v-if="step3Erros.specialty">
+                        <p v-for="error in step3Erros.specialty">{{ error }}</p>
+                    </template>
                 </div>
                 <div class="form-group" :class="specialty === 'Outro' ? '' : 'hidden'">
                     <label for="other">Outro</label>
                     <input type="text" id="other" v-model="other" name="other" placeholder="Outro" />
-                    <p v-if="step3Erros.other">** Digite um valor valido **</p>
+                    <template v-if="step3Erros.other">
+                        <p v-for="error in step3Erros.other">{{ error }}</p>
+                    </template>
                 </div>
             </div>
             <h3>Funcionamento</h3>
@@ -517,12 +554,16 @@ const returnSteps = () => {
                 <div class="form-group">
                     <label for="opening">Abertura</label>
                     <input type="time" id="opening" v-model="opening" name="opening" required />
-                    <p v-if="step3Erros.opening">** Digite um horario valido **</p>
+                    <template v-if="step3Erros.opening">
+                        <p v-for="error in step3Erros.opening">{{ error }}</p>
+                    </template>
                 </div>
                 <div class="form-group ">
                     <label for="closing">Fechamento</label>
                     <input type="time" id="closing" v-model="closing" name="closing" required />
-                    <p v-if="step3Erros.closing">** Digite um horario valido, e maior que a abertura**</p>
+                    <template v-if="step3Erros.closing">
+                        <p v-for="error in step3Erros.closing">{{ error }}</p>
+                    </template>
                 </div>
             </div>
             <div class="form-group">
@@ -534,7 +575,9 @@ const returnSteps = () => {
                         <label for="sunday">{{ day.name }}</label>
                     </div>
                 </div>
-                <p v-if="step3Erros.daysSelected">** Selecione pelo menos um dia **</p>
+                <template v-if="step3Erros.daysSelected">
+                    <p v-for="error in step3Erros.daysSelected">{{ error }}</p>
+                </template>
             </div>
 
             <button type="submit" class="btn-text" :class="step3Completed ? '' : 'disable'" :disabled="!step3Completed"
@@ -563,17 +606,19 @@ const returnSteps = () => {
                         selecione</span>
                 </label>
             </div>
-            <p v-if="step4Erros.photos">** Selecione pelo menos uma foto **</p>
+            <p v-if="errorPhotos" class="alert">{{ errorPhotos.value[0] }}</p>
 
             <!-- Lista de fotos selecionadas -->
             <div class="mt-4 w-full">
                 <div v-for="(file, index) in selectedFiles" :key="index"
                     class="flex items-center justify-between border-gray-300 border-dashed border-2 rounded-3xl font-thin pl-5">
                     <span class="truncate">{{ file.name }}</span>
-                    <button class="bg-red-500 text-white w-[30%] md:w-[10%] h-[50px] py-2 rounded-r-3xl" @click="removeFile(index)">
+                    <button class="bg-red-500 text-white w-[30%] md:w-[10%] h-[50px] py-2 rounded-r-3xl"
+                        @click="removeFile">
                         X
                     </button>
                 </div>
+
             </div>
 
             <button type="submit" class="btn-primary" :class="step4Completed ? '' : 'disable'"
@@ -604,7 +649,6 @@ const returnSteps = () => {
             <h3>Recebimentos de fundos</h3>
             <div class="form-group">
                 <label for="bank">Banco</label>
-                <!-- fazer select com nomes de bancos brasileiros e seus codigos como values -->
                 <select name="bank" id="bank" v-model="bank" required>
                     <option value="">Selecione o banco</option>
                     <option value="001">Banco do Brasil</option>
@@ -647,7 +691,6 @@ const returnSteps = () => {
         </div>
         <div class="step" v-if="currentStep === 6">
             <h2>Informações de Login</h2>
-            <!-- confirmar senha -->
             <div class="form-group">
                 <label for="password">Senha</label>
                 <input type="password" id="password" name="password" placeholder="Senha" v-model="password" required />
@@ -698,7 +741,7 @@ const returnSteps = () => {
     @apply fixed top-0 left-0 w-full h-full bg-white overflow-auto;
 
     .step {
-        @apply w-[90%] h-[calc(100vh-100px)] m-auto pt-10;
+        @apply w-[90%] max-w-[800px] h-[calc(100vh-100px)] m-auto pt-10;
 
         h2 {
             @apply text-4xl font-semibold text-gray-800 mb-5 text-center;
@@ -709,7 +752,11 @@ const returnSteps = () => {
         }
 
         p {
-            @apply text-lg text-gray-500 mb-5 font-bold;
+            @apply text-lg text-gray-500 mb-5 font-semibold;
+
+            &.alert {
+                @apply text-red-500;
+            }
         }
 
         .checkform-payment {
