@@ -37,7 +37,7 @@ public class DeliveryPersonController {
                 .buildAndExpand(deliveryPersonResponse.id())
                 .toUri();
 
-        ApiResponse apiResponse = new ApiResponse("sucess", deliveryPersonResponse, "Entragador cadastrado com sucesso");
+        ApiResponse apiResponse = new ApiResponse("success", deliveryPersonResponse, "Entragador cadastrado com sucesso");
         return ResponseEntity.created(locationOfNewDeliveryPerson).body(apiResponse);
     }
 
@@ -45,7 +45,7 @@ public class DeliveryPersonController {
     @DocsDeliveryLogin
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest clientLogin)   {
         LoginResponse loginResponse = deliveryPersonService.login(clientLogin);
-        ApiResponse apiResponse = new ApiResponse("sucess", loginResponse, "Cliente logado com sucesso");
+        ApiResponse apiResponse = new ApiResponse("success", loginResponse, "Cliente logado com sucesso");
         return ResponseEntity.ok(apiResponse);
     }
 

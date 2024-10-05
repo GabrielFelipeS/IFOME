@@ -129,11 +129,13 @@ public class AuthRestaurantControllerIT {
         OpeningHours openingHoursJson = document.read("$.data.openingHours", OpeningHours.class);
         String personResponsibleCPF = document.read("$.data.personResponsibleCPF");
         String restaurantImages = document.read("$.data.restaurantImage");
+        Boolean isOpen = document.read("$.data.isOpen");
 
 
         assertThat(id).isNotNull();
         assertThat(email).isEqualTo(restaurant.email());
         assertThat(cnpj).isEqualTo(restaurant.cnpj());
+        assertThat(isOpen).isEqualTo(false);
 
         assertThat(addressJson).isNotNull();
         assertThat(addressJson).isNotNull();
@@ -168,7 +170,7 @@ public class AuthRestaurantControllerIT {
             List.of(new OpeningHoursRequest("Segunda-feira","11:00", "23:00"),
                 new OpeningHoursRequest("Terça-feira","11:00", "23:00")),
             "responsavel",
-            "033.197.356-16",
+            "58911612000116",
             new BankAccountRequest("123","1255", "4547-7")
 
 

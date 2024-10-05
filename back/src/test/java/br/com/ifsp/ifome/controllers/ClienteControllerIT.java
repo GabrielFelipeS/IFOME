@@ -121,7 +121,7 @@ public class ClienteControllerIT {
     @DisplayName("should be return error with cpf already registred")
     public void shouldReturnErrorWithCpfAlreadyRegistred() throws JsonProcessingException {
         ClientRequest client = new ClientRequest("Nome completo", "teste@teste.com", "@Password1", "@Password1",
-            LocalDate.now().minusYears(18).toString(), "528.003.140-28", "(11) 99248-1491",
+            LocalDate.now().minusYears(18).toString(), "52800314028", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
                 "12", "casa","details")));

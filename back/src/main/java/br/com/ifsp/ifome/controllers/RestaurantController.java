@@ -1,29 +1,21 @@
 package br.com.ifsp.ifome.controllers;
 
-import br.com.ifsp.ifome.docs.DocsCreateRestaurant;
-import br.com.ifsp.ifome.docs.DocsClientLogin;
-import br.com.ifsp.ifome.docs.DocsRestaurantLogin;
+import br.com.ifsp.ifome.docs.DocsGetAll;
+import br.com.ifsp.ifome.docs.DocsGetPagination;
+import br.com.ifsp.ifome.docs.DocsGetRestaurantById;
+import br.com.ifsp.ifome.docs.DocsOpenCloseRestaurant;
 import br.com.ifsp.ifome.dto.ApiResponse;
-import br.com.ifsp.ifome.dto.request.LoginRequest;
-import br.com.ifsp.ifome.dto.request.RestaurantRequest;
-import br.com.ifsp.ifome.dto.response.RestaurantLoginResponse;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
-import br.com.ifsp.ifome.services.FileStorageService;
+import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.services.RestaurantService;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.annotation.MultipartConfig;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import org.springframework.http.MediaType;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
-import java.net.URI;
+import java.security.Principal;
 
 @RestController
 
@@ -32,13 +24,51 @@ import java.net.URI;
 public class RestaurantController {
     private final RestaurantService restaurantService;
 
-    public RestaurantController(RestaurantService restaurantService, FileStorageService fileStorageService){
+    public RestaurantController(RestaurantService restaurantService){
         this.restaurantService = restaurantService;
     }
 
     @GetMapping
-    public void getAllRestaurant() {
+    @DocsGetPagination
+    public ResponseEntity<ApiResponse> getAllRestaurant(
+        @Parameter(hidden = true) @PageableDefault(size = 15, page = 0) Pageable pageable) {
+        var restaurantResponses = restaurantService.getAllRestaurants(pageable);
 
+        ApiResponse apiResponse = new ApiResponse("success", restaurantResponses, "Sucesso na busca dos restaurantes");
+        return ResponseEntity.ok(apiResponse);
     }
 
+    @GetMapping("/all")
+    @DocsGetAll
+    public ResponseEntity<ApiResponse> getRestaurantsPagination() {
+        var restaurantResponses = restaurantService.getAllRestaurants();
+
+        ApiResponse apiResponse = new ApiResponse("success", restaurantResponses, "Sucesso na busca dos restaurantes");
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @GetMapping("/{id}")
+    @DocsGetRestaurantById
+    public ResponseEntity<ApiResponse> getRestaurantById(@PathVariable Long id) {
+        Restaurant restaurant = restaurantService.findById(id);
+        var restaurantResponse = RestaurantResponse.from(restaurant);
+        ApiResponse apiResponse = new ApiResponse("success", restaurantResponse, "Restaurante encontrado com sucesso");
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @PutMapping
+    @DocsOpenCloseRestaurant
+     public ResponseEntity<ApiResponse> putOpen(Principal principal) {
+        String message = restaurantService.changeStateOpen(principal);
+        ApiResponse apiResponse = new ApiResponse("success", null, message);
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @PatchMapping
+    @DocsOpenCloseRestaurant
+    public ResponseEntity<ApiResponse> patchOpen(Principal principal) {
+        String message = restaurantService.changeStateOpen(principal);
+        ApiResponse apiResponse = new ApiResponse("success", null, message);
+        return ResponseEntity.ok(apiResponse);
+    }
 }
