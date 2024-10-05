@@ -88,6 +88,20 @@ public class ValidationController {
         }
     }
 
+    @PostMapping("/restaurant/cpf")
+    public ResponseEntity<String> cpfRestaurantAlreadyRegistred(@RequestBody @Valid CpfValidatorRequest cpfValidatorRequest) {
+        System.err.println(cpfValidatorRequest.cpf().replaceAll("[^0-9]", ""));
+        boolean alreadyRegistred = restaurantRepository.existsByPersonResponsibleCpf(cpfValidatorRequest.cpf().replaceAll("[^0-9]", ""));
+        System.err.println(alreadyRegistred);
+        if(alreadyRegistred) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Cnpj já registrado");
+        } else {
+            return ResponseEntity.ok("Cnpj não registrado");
+        }
+    }
+
+
+
 
 
 }
