@@ -1,12 +1,12 @@
 -- $2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG  -> @Password1
 INSERT INTO clients (name, email, password, date_of_birth, cpf, type_residence, cep, address, payment_methods)
-VALUES ('Gabriel', 'user1@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '528.003.140-28', 'casa', 'cep', 'Av. Salgado Filho, 3501 - Centro, Guarulhos - SP', 'Cartão de Crédito');
+VALUES ('Gabriel', 'user1@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '52800314028', 'casa', 'cep', 'Av. Salgado Filho, 3501 - Centro, Guarulhos - SP', 'Cartão de Crédito');
 
 INSERT INTO clients (name, email, password, date_of_birth, cpf, type_residence, cep, address, payment_methods)
-VALUES ('Gabriel', 'email1@email.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '920.513.620-41', 'casa', 'cep', 'Av. Salgado Filho, 3501 - Centro, Guarulhos - SP', 'Cartão de Crédito');
+VALUES ('Gabriel', 'email1@email.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '92051362041', 'casa', 'cep', 'Av. Salgado Filho, 3501 - Centro, Guarulhos - SP', 'Cartão de Crédito');
 
 INSERT INTO clients (name, email, password, date_of_birth, cpf, type_residence, cep, address, payment_methods)
-VALUES ('Gabriel', 'noreply.ifome@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '770.256.810-08', 'casa', 'cep', 'Av. Salgado Filho, 3501 - Centro, Guarulhos - SP', 'Cartão de Crédito');
+VALUES ('Gabriel', 'noreply.ifome@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '77025681008', 'casa', 'cep', 'Av. Salgado Filho, 3501 - Centro, Guarulhos - SP', 'Cartão de Crédito');
 
 INSERT INTO restaurants (
     name_restaurant,
@@ -16,7 +16,7 @@ INSERT INTO restaurants (
     address,
     telephone,
     person_responsible,
-    person_responsible_CPF,
+    person_responsible_cpf,
     email,
     password,
     payment_methods,
@@ -32,7 +32,7 @@ INSERT INTO restaurants (
     'Endereço completo',
     '(11) 1234-5678',
     'Nome Responsável',
-    '13212312365',
+    '07635915053',
     'email1@email.com',
     '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
     'Dinheiro, Cartão',
@@ -58,7 +58,7 @@ INSERT INTO delivery_person (
 VALUES (
    'email1@email.com',
    '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
-   '528.003.140-28',
+   '52800314028',
    'João da Silva',
    '1985-06-15',
    'carro',

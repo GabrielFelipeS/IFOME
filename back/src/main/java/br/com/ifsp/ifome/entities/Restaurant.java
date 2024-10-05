@@ -32,7 +32,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OpeningHours> openingHours;
     private String personResponsible;
-    private String personResponsibleCPF;
+    private String personResponsibleCpf;
     private String email;
     private String password;
     private String paymentMethods;
@@ -66,7 +66,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
             return openingHours1;
         }).collect(Collectors.toList());
         this.personResponsible = restaurantRequest.personResponsible();
-        this.personResponsibleCPF = restaurantRequest.personResponsibleCPF();
+        this.personResponsibleCpf = restaurantRequest.personResponsibleCPF();
         this.email = restaurantRequest.email();
         this.password = bCryptPasswordEncoder.encode(restaurantRequest.password());
         this.paymentMethods = restaurantRequest.paymentMethods();
@@ -88,7 +88,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.telephone = telephone;
         this.openingHours = openingHours;
         this.personResponsible = personResponsible;
-        this.personResponsibleCPF = personResponsibleCPF;
+        this.personResponsibleCpf = personResponsibleCPF;
         this.email = email;
         this.password = bCryptPasswordEncoder.encode(password);
         this.paymentMethods = paymentMethods;
@@ -170,12 +170,12 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.personResponsible = personResponsible;
     }
 
-    public String getPersonResponsibleCPF() {
-        return personResponsibleCPF;
+    public String getPersonResponsibleCpf() {
+        return personResponsibleCpf;
     }
 
-    public void setPersonResponsibleCPF(String personResponsibleCPF) {
-        this.personResponsibleCPF = personResponsibleCPF;
+    public void setPersonResponsibleCpf(String personResponsibleCPF) {
+        this.personResponsibleCpf = personResponsibleCPF;
     }
 
     public Role getRole() {

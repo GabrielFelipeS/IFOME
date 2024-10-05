@@ -20,7 +20,7 @@ CREATE TABLE restaurants (
     telephone VARCHAR(15),
     opening_hours TEXT,
     person_responsible VARCHAR(255),
-    person_responsible_CPF VARCHAR(11),
+    person_responsible_cpf VARCHAR(11),
     email VARCHAR(255) UNIQUE,
     password VARCHAR(255) NOT NULL,
     payment_methods TEXT,
