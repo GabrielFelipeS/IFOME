@@ -725,7 +725,7 @@ const returnSteps = () => {
                 <img src="../../../assets/img/store/sushi.png" alt="Icone Sushi" class="baloon">
                 <img src="../../../assets/img/store/hamburguer-de-queijo.png" alt="Icone Hamburguer" class="baloon1">
                 <img src="../../../assets/img/store/plait.png" alt="Icone Prato" class="baloon2">
-                <button type="submit" class="btn-text">Começar a Vender</button>
+                <router-link :to="{name: 'store-login'}" class="btn-text">Começar a Vender</router-link>
             </div>
         </div>
     </div>
@@ -796,7 +796,7 @@ const returnSteps = () => {
             }
 
             .btn-text {
-                @apply relative w-[80%] md:w-[50%] h-[50px] bg-primary text-white font-semibold rounded-lg mb-3 text-center;
+                @apply relative w-[80%] md:w-[50%] h-[50px] bg-primary text-white font-semibold rounded-lg mb-3 text-center flex items-center justify-center;
             }
 
             .baloon {
