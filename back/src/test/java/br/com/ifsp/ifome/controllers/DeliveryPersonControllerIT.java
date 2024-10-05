@@ -96,7 +96,7 @@ public class DeliveryPersonControllerIT {
 
         Number id = document.read("$.data.id");
         String name = document.read("$.data.name");
-        String cnpj = document.read("$.data.cpf");
+        String cpf = document.read("$.data.cpf");
         String email = document.read("$.data.email");
         String dateOfBirth = document.read("$.data.dateOfBirth");
         String typeOfVehicle = document.read("$.data.typeOfVehicle");
