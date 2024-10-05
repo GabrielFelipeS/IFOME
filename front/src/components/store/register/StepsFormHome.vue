@@ -5,7 +5,7 @@ import { MaskInput } from 'vue-3-mask';
 import { fetchViaCep } from '@/services/viaCep';
 import axios from 'axios';
 
-const currentStep = ref(1);
+const currentStep = ref(3);
 
 const emit = defineEmits(['responseApi']);
 
@@ -102,16 +102,27 @@ const step3Erros = ref({
     other: [],
 });
 
-watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other], () => {
+watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other], async () => {
 
     if (cnpj.value) {
         let cnpjValue = cnpj.value.replace(/\D/g, '');
         if (cnpjValue.length !== 14) {
             step3Erros.value.cnpj = ['** Digite um valor válido **'];
         } else {
-            step3Erros.value.cnpj = false;
+            try {
+                const response = await axios.post(`${import.meta.env.VITE_API_URL}auth/validation/restaurant/cnpj`, {
+                    cnpj: cnpjValue,
+                });
+
+                if (response.status === 200) {
+                    step3Erros.value.cnpj = false;
+                }
+            } catch (error) {
+                step3Erros.value.cnpj = [`** ${error.response.data.errors.cnpj[0]} **`];
+            }
         }
     }
+
 
     if (nameStore.value) {
         if (nameStore.value.length < 3) {
@@ -191,8 +202,6 @@ watch([cnpj, nameStore, phone, specialty, opening, closing, daysSelected, other]
     } else {
         step3Completed.value = true;
     }
-
-    console.log(step3Erros.value);
 });
 
 watch([name, cpf], () => {
@@ -224,13 +233,13 @@ watch([cep, state, city, address, number, complement, neighborhood], () => {
         }
     }
 
-    if(neighborhood.value) {
+    if (neighborhood.value) {
         step1Erros.value.neighborhood = false;
     } else {
         step1Erros.value.neighborhood = ['** O campo bairro é obrigatorio **'];
     }
 
-    if(address.value) {
+    if (address.value) {
         step1Erros.value.address = false;
     } else {
         step1Erros.value.address = ['** O campo endereço é obrigatorio **'];
@@ -584,8 +593,8 @@ const returnSteps = () => {
                 <label for="cnpj">CNPJ</label>
                 <MaskInput type="text" id="cnpj" v-model="cnpj" name="cnpj" :value="cnpj" placeholder="CNPJ"
                     mask="##.###.###/####-##" required />
-                <template v-if="step3Erros.cpf">
-                    <p v-for="error in step3Erros.cpf">{{ error }}</p>
+                <template v-if="step3Erros.cnpj">
+                    <p v-for="error in step3Erros.cnpj">{{ error }}</p>
                 </template>
             </div>
             <div class="form-group">
