@@ -3,15 +3,11 @@ name: Java CI with Maven
 on:
   push:
     branches: [ "dev" ]
-    paths:
-      - 'back/**'
     paths-ignore:
       - 'front/**'  # Ignora mudanças na pasta front
 
   pull_request:
     branches: [ "dev" ]
-    paths:
-      - 'back/**'
     paths-ignore:
       - 'front/**'  # Ignora mudanças na pasta front
 
