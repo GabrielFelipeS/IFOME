@@ -1,13 +1,13 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.docs.DocsGetAll;
+import br.com.ifsp.ifome.docs.DocsGetPagination;
 import br.com.ifsp.ifome.docs.DocsGetRestaurantById;
 import br.com.ifsp.ifome.docs.DocsOpenCloseRestaurant;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
 import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.services.RestaurantService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.annotation.MultipartConfig;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -28,21 +28,21 @@ public class RestaurantController {
     }
 
     @GetMapping
-    @Operation(summary = "Pegar todos os restaurantes de forma paginada", security = @SecurityRequirement(name = "Bearer Token"))
+    @DocsGetPagination
     public ResponseEntity<ApiResponse> getAllRestaurant(
         @PageableDefault(size = 15, page = 0) Pageable pageable) {
         var restaurantResponses = restaurantService.getAllRestaurants(pageable);
 
-        ApiResponse apiResponse = new ApiResponse("success", restaurantResponses, "Busca com sucesso dos restaurantes");
+        ApiResponse apiResponse = new ApiResponse("success", restaurantResponses, "Sucesso na busca dos restaurantes");
         return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/all")
-    @Operation(summary = "Pegar todos os restaurantes", security = @SecurityRequirement(name = "Bearer Token"))
+    @DocsGetAll
     public ResponseEntity<ApiResponse> getRestaurantsPagination() {
         var restaurantResponses = restaurantService.getAllRestaurants();
 
-        ApiResponse apiResponse = new ApiResponse("success", restaurantResponses, "Busca com sucesso dos restaurantes");
+        ApiResponse apiResponse = new ApiResponse("success", restaurantResponses, "Sucesso na busca dos restaurantes");
         return ResponseEntity.ok(apiResponse);
     }
 

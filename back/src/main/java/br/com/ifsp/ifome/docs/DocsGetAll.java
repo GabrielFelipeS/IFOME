@@ -13,10 +13,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Operation(
-    summary = "Pegar restaurante por id",
+    summary = "Pegar restaurantes",
     security = @SecurityRequirement(name = "Bearer Token"),
     responses = {
-        @ApiResponse(responseCode = "200", description = "Restaurante encontrado com sucesso",
+        @ApiResponse(responseCode = "200", description = "Restaurantes encontrados",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = ApiResponse.class),
                 examples = @ExampleObject(value = """
@@ -38,16 +38,7 @@ import java.lang.annotation.Target;
                             "bankAccount": null,
                             "isOpen": false
                         },
-                        "message": "Restaurante encontrado com sucesso"
-                    }
-                """)
-            )
-        ),
-        @ApiResponse(responseCode = "404", description = "Restaurante não encontrado",
-            content = @Content(mediaType = "application/json",
-                examples = @ExampleObject(value = """
-                    {
-                        "message": "Restaurante não encontrado"
+                        "message": "Sucesso na busca dos restaurantes"
                     }
                 """)
             )
@@ -58,6 +49,6 @@ import java.lang.annotation.Target;
 )
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DocsGetRestaurantById {
+public @interface DocsGetAll {
 
 }
