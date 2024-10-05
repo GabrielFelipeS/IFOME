@@ -1,9 +1,11 @@
 package br.com.ifsp.ifome.entities;
 
 import br.com.ifsp.ifome.dto.request.OpeningHoursRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "opening_hours")
 public class OpeningHours {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,7 +15,8 @@ public class OpeningHours {
     private String closing;
 
     @ManyToOne
-    @JoinColumn(name = "opening_hours", referencedColumnName = "cnpj")
+    @JsonIgnore
+    @JoinColumn(name = "opening_hours")
     private Restaurant restaurant;
 
     public OpeningHours() {}

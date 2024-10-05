@@ -116,4 +116,22 @@ public class ValidationControllerIT {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
+
+    @Test
+    public void cpfExistsInRestaurant() {
+        CpfValidatorRequest cpfValidatorRequest = new CpfValidatorRequest("076.359.150-53");
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/validation/restaurant/cpf", cpfValidatorRequest, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+    }
+
+    @Test
+    public void cpfDoesNotExistsInRestaurant() {
+        CpfValidatorRequest cpfValidatorRequest = new CpfValidatorRequest("410.977.720-80");
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/validation/restaurant/cpf", cpfValidatorRequest, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+
 }

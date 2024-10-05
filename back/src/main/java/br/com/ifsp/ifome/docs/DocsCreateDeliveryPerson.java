@@ -142,7 +142,7 @@ import java.lang.annotation.Target;
            
             Validações:
            
-            Deve conter exatamente 9 dígitos numéricos.
+            O número da CNH deve conter entre 9 e 11 dígitos numéricos.
            
             Não aceita valores nulos ou vazios.
            
@@ -275,22 +275,37 @@ import java.lang.annotation.Target;
                                 description =
                                         """
                                             Inserindo entregador inválido
+                                            nome: esta vazio
+                                            dataOfBirth : esta vazio
+                                            typeOfVehicle : esta vazio
                                             cpf: fora do padrão
                                             email: não possui @
                                             password: não possui letra maiúscula, número e caractere especial
                                             address: esta vazio
+                                            telephone : telefone fora do padrão
                                             bankAccount: esta vazio
-                                            plate:  "Verique a placa"
+                                            plate:  Verique a placa
+                                            cnhNumber : O número da CNH deve conter entre 9 e 11 dígitos numéricos
+                                            cnhValidity": CNH com data inválida. Verifique a válidade
+                                            vehicleDocument : O renavam deve conter de 9 à 11 digitos numéricos
+                                     
                                         """,
                                 value = """
                     {
+                        "nome": [],
+                        "dateOfBirth" : [],
+                        "typeOfVehicle" : [],
                         "cpf": "4860867801",
                         "email" : "testeemail.com",
                         "password": "password",
                         "confirmationPassword": "password",
                         "bankAccount": [],
                         "address": []
+                        "telephone" : "12345678",
                         "plate": "DIT4987"
+                        "cnhNumber" : "AE54785",
+                        "cnhValidity": "2021-02-01",
+                        "vehicleDocument" : "1545A"
                     }
                     """
                         )

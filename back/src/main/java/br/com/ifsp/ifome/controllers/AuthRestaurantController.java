@@ -7,11 +7,8 @@ import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
 import br.com.ifsp.ifome.dto.response.RestaurantLoginResponse;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
+import br.com.ifsp.ifome.services.AuthRestaurantService;
 import br.com.ifsp.ifome.services.FileStorageService;
-import br.com.ifsp.ifome.services.RestaurantService;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -28,50 +25,48 @@ import java.io.IOException;
 import java.net.URI;
 
 @RestController
-
 @MultipartConfig
 @RequestMapping("/api/auth/restaurant")
 public class AuthRestaurantController {
-    private final RestaurantService restaurantService;
+    private final AuthRestaurantService authRestaurantService;
     private final FileStorageService fileStorageService;
 
-    public AuthRestaurantController(RestaurantService restaurantService, FileStorageService fileStorageService){
-        this.restaurantService = restaurantService;
+    public AuthRestaurantController(AuthRestaurantService authRestaurantService, FileStorageService fileStorageService){
+        this.authRestaurantService = authRestaurantService;
         this.fileStorageService = fileStorageService;
     }
 
     @Transactional
     @DocsCreateRestaurant
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ApiResponse> create(
-        @RequestPart("file")  MultipartFile multipartFile,
-        @Parameter(description = "Metadados em formato JSON", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RestaurantRequest.class)))
+        @RequestParam("file")  MultipartFile multipartFile,
         @Valid @RequestPart("restaurant") RestaurantRequest restaurantRequest,
         UriComponentsBuilder ucb)
         throws IOException, MethodArgumentNotValidException {
-
-        RestaurantResponse restaurantResponse = restaurantService.create(restaurantRequest, multipartFile);
+        System.err.println("TESTE");
+        RestaurantResponse restaurantResponse = authRestaurantService.create(restaurantRequest, multipartFile);
 
         URI locationOfNewRestaurant = ucb
             .path("restaurant/{id}")
             .buildAndExpand(restaurantResponse.id())
             .toUri();
-        ApiResponse apiResponse = new ApiResponse("sucess", restaurantResponse, "Restaurante cadastrado com sucesso");
+        ApiResponse apiResponse = new ApiResponse("success", restaurantResponse, "Restaurante cadastrado com sucesso");
         return ResponseEntity.created(locationOfNewRestaurant).body(apiResponse);
     }
 
     @PostMapping("/login")
     @DocsRestaurantLogin
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest restaurantLogin) {
-        RestaurantLoginResponse restaurantLoginResponse = restaurantService.login(restaurantLogin);
-        ApiResponse apiResponse = new ApiResponse("sucess", restaurantLoginResponse, "Restaurante logado com sucesso");
+        RestaurantLoginResponse restaurantLoginResponse = authRestaurantService.login(restaurantLogin);
+        ApiResponse apiResponse = new ApiResponse("success", restaurantLoginResponse, "Restaurante logado com sucesso");
         return ResponseEntity.ok(apiResponse);
     }
 
     @PostMapping("forgot-password")
     public void forgotPassword(HttpServletRequest request, @RequestBody @Valid @Email String email) throws Exception{
         System.err.println(request.getServerName());
-        restaurantService.forgotPassword(request, email);
+        authRestaurantService.forgotPassword(request, email);
     }
 
     @PostMapping("/change-password")

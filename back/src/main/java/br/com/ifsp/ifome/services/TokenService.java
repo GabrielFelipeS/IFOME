@@ -18,10 +18,12 @@ public class TokenService {
     private final JwtDecoder jwtDecoder;
     private final Long expiresIn;
     private final Instant now;
+    //private static final Long DEFAULT_EXPIRES_IN = 3600L;
+    private static final Long DEFAULT_EXPIRES_IN = 5259600L; // PARA FRONT TESTAR, 2 meses para expirar
 
     @Autowired
     public TokenService(JwtEncoder jwtEncoder, @Qualifier("jwtDecoder") JwtDecoder jwtDecoder) {
-        this(jwtEncoder, jwtDecoder, Instant.now(), 300L);
+        this(jwtEncoder, jwtDecoder, Instant.now(), DEFAULT_EXPIRES_IN);
     }
 
     public TokenService(JwtEncoder jwtEncoder, JwtDecoder jwtDecoder, Instant now, Long expiresIn) {

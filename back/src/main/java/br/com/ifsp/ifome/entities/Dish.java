@@ -23,12 +23,12 @@ public class Dish {
 
     public Dish() {}
 
-    public Dish(DishRequest dishRequest) {
+    public Dish(DishRequest dishRequest, String imageUrl) {
         this.name = dishRequest.name();
         this.description = dishRequest.description();
         this.price = dishRequest.price();
         this.dishCategory = dishRequest.dishCategory();
-        this.dishImage = dishRequest.dishImage();
+        this.dishImage = imageUrl;
         this.availability = dishRequest.availability();
     }
 
