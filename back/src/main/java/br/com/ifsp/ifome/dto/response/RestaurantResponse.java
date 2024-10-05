@@ -22,11 +22,12 @@ public record RestaurantResponse(
         String email,
         String paymentMethods,
         String restaurantImage,
-        BankAccount bankAccount
+        BankAccount bankAccount,
+        boolean isOpen
 
 ) {
-    public RestaurantResponse(Restaurant restaurant){
-        this( restaurant.getId(),
+    public static RestaurantResponse from(Restaurant restaurant) {
+            return new RestaurantResponse( restaurant.getId(),
                 restaurant.getNameRestaurant(),
                 restaurant.getCnpj(),
                 restaurant.getFoodCategory(),
@@ -36,10 +37,11 @@ public record RestaurantResponse(
                 restaurant.getOpeningHours(),
 
                 restaurant.getPersonResponsible(),
-                restaurant.getPersonResponsibleCPF(),
+                restaurant.getPersonResponsibleCpf(),
                 restaurant.getEmail(),
                 restaurant.getPaymentMethods(),
                 restaurant.getRestaurantImage(),
-                restaurant.getBankAccount());
+                restaurant.getBankAccount(),
+                restaurant.isOpen());
     }
 }
