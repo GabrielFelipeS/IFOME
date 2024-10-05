@@ -1,9 +1,11 @@
 package br.com.ifsp.ifome.docs;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
@@ -15,6 +17,12 @@ import java.lang.annotation.Target;
 @Operation(
     summary = "Pegar restaurantes com paginação",
     security = @SecurityRequirement(name = "Bearer Token"),
+    parameters = {
+        @Parameter(name = "page", description = "Número da página a ser retornada (0-indexed)", required = false, schema = @Schema(type = "integer", defaultValue = "0")),
+        @Parameter(name = "size", description = "Número de itens por página", required = false, schema = @Schema(type = "integer", defaultValue = "15")),
+        @Parameter(name = "sort", description = "Critério de ordenação, no formato 'propriedade,direção' (por exemplo, 'nameRestaurant,asc' ou 'nameRestaurant,desc')", required = false, schema = @Schema(type = "string", defaultValue = "nameRestaurant,asc"))
+    },
+    requestBody = @RequestBody(required = false),
     responses = {
         @ApiResponse(responseCode = "200", description = "Restaurantes encontrados",
             content = @Content(mediaType = "application/json",

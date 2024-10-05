@@ -8,6 +8,7 @@ import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
 import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.services.RestaurantService;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.annotation.MultipartConfig;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -30,7 +31,7 @@ public class RestaurantController {
     @GetMapping
     @DocsGetPagination
     public ResponseEntity<ApiResponse> getAllRestaurant(
-        @PageableDefault(size = 15, page = 0) Pageable pageable) {
+        @Parameter(hidden = true) @PageableDefault(size = 15, page = 0) Pageable pageable) {
         var restaurantResponses = restaurantService.getAllRestaurants(pageable);
 
         ApiResponse apiResponse = new ApiResponse("success", restaurantResponses, "Sucesso na busca dos restaurantes");
