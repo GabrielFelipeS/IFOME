@@ -37,7 +37,7 @@ public record RestaurantResponse(
                 restaurant.getOpeningHours(),
 
                 restaurant.getPersonResponsible(),
-                restaurant.getPersonResponsibleCPF(),
+                restaurant.getPersonResponsibleCpf(),
                 restaurant.getEmail(),
                 restaurant.getPaymentMethods(),
                 restaurant.getRestaurantImage(),
