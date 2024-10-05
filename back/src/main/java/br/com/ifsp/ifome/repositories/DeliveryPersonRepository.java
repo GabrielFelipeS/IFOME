@@ -8,5 +8,8 @@ import java.util.Optional;
 public interface DeliveryPersonRepository extends CrudRepository<DeliveryPerson, Long> {
     boolean existsByEmailIgnoreCase(String email);
     boolean existsByCpf(String cpf);
+    //boolean existsByCnh(String cnhNumber);
+
     Optional<DeliveryPerson> findByEmail(String email);
+    boolean existsByCnhNumber(String cnhNumber);
 }

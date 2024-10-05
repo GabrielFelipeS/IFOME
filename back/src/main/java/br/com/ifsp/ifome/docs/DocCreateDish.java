@@ -30,19 +30,34 @@ import java.lang.annotation.Target;
                                     "description" : "Massa fresca e molho bolonhesa",
                                     "price" : "45.0",
                                     "dishCategory": "Massa",
-                                    "dishImage" : "image.jpg"
+                                    "dishImage" : "image.jpg",
                                     "availability" : "Disponível"
                                 }
                                 """
                         ),
                         @ExampleObject(
                                 name = "Prato inválido",
+
+
                                 description = """
-                                        price: Insira um valor de preço válido
+                                        name: "O nome do prato é obrigatório,
+                                        price: [
+                                            Insira um valor de preço válido,
+                                            O preço é obrigatório,
+                                            Insira um valor de preço válido
+                                            ],
+                                        description = A descrição do prato é obrigatória,
+                                        dishCategory = A categoria do prato é obrigatória,
+                                        availability = A disponibilidade é obrigatória
+                                        
                                         """,
                                 value = """
                                         {
-                                        "price" : "-450"
+                                        "name" : "",
+                                        "price" : -450,
+                                        "description" = "",
+                                        "dishCategory" = "",
+                                        "availability" = ""
                                         }
                                         """
                         )
@@ -53,34 +68,52 @@ import java.lang.annotation.Target;
 
 @ApiResponses({
         @ApiResponse(responseCode =  "201", description = "Prato cadastrado com sucesso",
-        content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation =  br.com.ifsp.ifome.dto.ApiResponse.class),
-                examples =  @ExampleObject(value = """
+                content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation =  br.com.ifsp.ifome.dto.ApiResponse.class),
+                        examples =  @ExampleObject(
+                                value = """
                         {
-                            "status" : "sucess",
+                            "status" : "success",
                             "data": {
                                 "id": 2,
                                 "name" : "Lasanha",
                                 "description" : "Massa fresca e molho bolonhesa",
                                 "price" : "45.0",
                                 "dishCategory": "Massa",
-                                "dishImage" : "image.jpg"
+                                "dishImage" : "image.jpg",
                                 "availability" : "Disponível"
-                            }
+                            },
+                             "message": "Prato criado com sucesso"
   
                         }
                         """)
-        )),
+                )),
         @ApiResponse(responseCode = "400", description = "invalid request",
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = DishResponse.class),
-                    examples = @ExampleObject(
-                            value = """
+                content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = DishResponse.class),
+                        examples = @ExampleObject(
+                                value = """
                                     {
+                                        "name": [
+                                            "O nome do prato é obrigatório"
+                                        ],
+                                        "description": [
+                                            "A descrição do prato é obrigatória"
+                                        ],
                                         "price" : [
-                                        "O preço deve conter apenas valores númericos e positivos"]
+                                            "O preço deve conter apenas valores númericos e positivos",
+                                            "O preço é obrigatório"
+                                        ],
+                                        "dishCategory" : [
+                                            "A categoria do prato é obrigatória"
+                                        ],
+                                        "availability": [
+                                            "A disponibilidade é obrigatória
+                                         ]
                                     }
-        """)))
+                 """)
+                )
+        )
 })
 
 

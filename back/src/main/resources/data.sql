@@ -24,6 +24,7 @@ INSERT INTO restaurants (
     restaurant_image,
     bank_account
 ) VALUES (
+    'id'
     'Nome Restaurante',
     '58.911.612/0001-16',
     'Pizzaria',
@@ -62,7 +63,7 @@ VALUES (
    'carro',
    'ABC-1234',
    '(11) 98765-4321',
-   '123456789',
+   '12345678910',
    '2026-12-31',
    '987654321'
 );

@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
+import java.security.Principal;
 
 @MultipartConfig
 @RestController
@@ -41,14 +43,32 @@ public class DishController {
     @Transactional
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<DishResponse> create(
-            @Valid @RequestPart("dish")DishRequest dishRequest, UriComponentsBuilder ucb)
+            @RequestPart("file") MultipartFile multipartFile,
+            @Valid @RequestPart("dish")DishRequest dishRequest,
+            @RequestPart("restaurantId") Long restaurantId, UriComponentsBuilder ucb)
         throws IOException, MethodArgumentNotValidException{
-        DishResponse dishResponse = dishService.create(dishRequest);
+        DishResponse dishResponse = dishService.create(dishRequest, multipartFile, restaurantId);
 
         URI locationOfNewDish = ucb
                 .path("dish/{id}")
                 .buildAndExpand(dishResponse.id())
                 .toUri();
+
+        return ResponseEntity.created(locationOfNewDish).body(dishResponse);
+    }
+
+    public ResponseEntity<DishResponse> createWithPrincipal(
+        @RequestPart("file") MultipartFile multipartFile,
+        @Valid @RequestPart("dish")DishRequest dishRequest,
+        Principal principal, UriComponentsBuilder ucb)
+        throws IOException, MethodArgumentNotValidException{
+        DishResponse dishResponse = dishService.create(dishRequest, multipartFile, principal);
+
+        URI locationOfNewDish = ucb
+            .path("dish/{id}")
+            .buildAndExpand(dishResponse.id())
+            .toUri();
+
         return ResponseEntity.created(locationOfNewDish).body(dishResponse);
     }
 }
