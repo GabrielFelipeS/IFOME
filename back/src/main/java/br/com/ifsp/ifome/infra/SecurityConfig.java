@@ -43,7 +43,6 @@ public class SecurityConfig {
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/static/**").permitAll()
                     .requestMatchers("/h2-console/**").permitAll()
-                    .requestMatchers("/dish/**").permitAll()
                     .anyRequest().authenticated())
             .csrf(AbstractHttpConfigurer::disable)
             .oauth2ResourceServer(auth02 -> auth02.jwt(Customizer.withDefaults()))
