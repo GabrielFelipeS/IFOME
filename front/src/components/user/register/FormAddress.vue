@@ -21,7 +21,8 @@ const erros = ref({
 	address: '',
 	houseNumber: '',
 	complement: '',
-	details: ''
+	details: '',
+	typeResidence: '',
 });
 
 const emit = defineEmits(['submit-form', 'next-step']);
@@ -68,6 +69,16 @@ watch(props.formData, () => {
 	if (props.formData.complement.length === 0) {
 		erros.value.complement = '';
 	}
+	let checkboxes = [
+		document.getElementById('checkbox-casa'),
+		document.getElementById('checkbox-apartamento'),
+		document.getElementById('checkbox-condominio'),
+	];
+	checkboxes.forEach((checkbox) => {
+		if (checkbox.checked) {
+			erros.value.typeResidence = '';
+		}
+	});
 }, { deep:true })
 
 const validateForm = () => {
@@ -133,7 +144,8 @@ const validateForm = () => {
 			checkboxOk = true
 		}
 	});
-	if (checkboxOk === false) {
+	if (checkboxOk === false || props.formData.typeResidence === '') {
+		erros.value.typeResidence = 'Selecione o tipo de residência'
 		valid = false;
 	}
 
@@ -201,7 +213,7 @@ const sendSubmit = () => {
 				<div class="checkbox-div">
 					<div class="checkbox-row">
 						<input type="radio" placeholder="Exemplo: Em frente a padaria do seu zé" class="form-checkbox" id="checkbox-casa"
-							   v-model="formData.typeResidence" value="casa" checked>
+							   v-model="formData.typeResidence" value="casa">
 						<label for="checkbox-casa" class="form-label">Casa</label>
 					</div>
 					<div class="checkbox-row">
@@ -215,7 +227,7 @@ const sendSubmit = () => {
 						<label for="checkbox-condominio" class="form-label">Condomínio</label>
 					</div>
 				</div>
-				<p v-if="erros.details !== ''" class="invalid-input-text">{{ erros.details }}</p>
+				<p v-if="erros.typeResidence !== ''" class="invalid-input-text">{{ erros.typeResidence }}</p>
 			</div>
 			<div class="btn-container">
 				<Button href="#" @click="sendSubmit"

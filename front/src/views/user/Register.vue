@@ -8,7 +8,6 @@ import FormPersonalData from "@/components/user/register/FormPersonalData.vue";
 import FormAddress from "@/components/user/register/FormAddress.vue";
 import api from "@/services/api.js";
 import FormSuccess from "@/components/user/register/FormSuccess.vue";
-import Alert from "@/components/Page/Alert.vue";
 import {useToast} from "vue-toast-notification";
 
 document.querySelector('#app').setAttribute('style', 'overflow-x: hidden');
@@ -30,7 +29,7 @@ const formData = ref({
 	houseNumber: '',
 	complement: '',
 	details: '',
-	typeResidence: 'casa',
+	typeResidence: '',
 });
 
 const currentStep = ref(0);
@@ -87,6 +86,7 @@ const sendForm = async () => {
 	.then((response) => {
 		if (response.status === 200 || response.status === 201) {
 			nextStep();
+			$toast.success('Cadastro realizado com sucesso!');
 		} else {
 			$toast.error(response.data.message, {});
 		}
@@ -112,7 +112,6 @@ const $toast = useToast();
 <template>
 	<div class="fixed top-[120px] right-5 flex flex-col z-50">
 		<template>
-			<Alert id="1" type="error" message="erro" />
 		</template>
 	</div>
 	<div class="content"
