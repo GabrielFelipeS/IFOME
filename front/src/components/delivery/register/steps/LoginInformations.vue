@@ -15,7 +15,7 @@
             <span @click="showConfirmation" v-if="confirmPassword.length > 0">Mostrar Confirmação</span>
             <p v-if="passwordErrors.confirmPassword">** As senhas não conferem **</p>
         </div>
-        <button type="submit" class="btn-primary" :class="stepCompleted ? '' : 'disable'" :disabled="!stepCompleted"
+        <button type="submit" class="btn-text" :class="stepCompleted ? '' : 'disable'" :disabled="!stepCompleted"
             @click="submitForm">Concluir</button>
     </div>
 </template>

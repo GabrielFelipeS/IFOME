@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        <button type="submit" class="btn-primary" :class="stepCompleted ? '' : 'disable'" :disabled="!stepCompleted"
+        <button type="submit" class="btn-text" :class="stepCompleted ? '' : 'disable'" :disabled="!stepCompleted"
             @click="nextStep">Próximo</button>
     </div>
 </template>
