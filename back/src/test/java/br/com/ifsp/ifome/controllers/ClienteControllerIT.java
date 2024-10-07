@@ -80,7 +80,7 @@ public class ClienteControllerIT {
     @DisplayName("should be possible to create a new client")
     public void shouldBeAbleToCreateANewClient() throws JsonProcessingException {
         ClientRequest client = new ClientRequest("Nome completo", "teste@teste.com", "@Password1", "@Password1",
-            LocalDate.now().minusYears(18).toString(), "48608678071", "(11) 99248-1491",
+            LocalDate.now().minusYears(18).toString(), "486.086.780-71", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
                 "12", "casa","details")));
@@ -101,7 +101,7 @@ public class ClienteControllerIT {
         assertThat(name).isEqualTo(client.name());
         assertThat(email).isEqualTo(client.email());
         assertThat(dateOfBirth).isEqualTo(client.dateOfBirth().toString());
-        assertThat(cpf).isEqualTo(client.cpf());
+        assertThat(cpf).isEqualTo(client.cpf().replaceAll("[^\\d]", ""));
 
         assertThat(addressJson).isNotNull();
         assertThat(addressJson).isNotNull();
@@ -121,7 +121,7 @@ public class ClienteControllerIT {
     @DisplayName("should be return error with cpf already registred")
     public void shouldReturnErrorWithCpfAlreadyRegistred() throws JsonProcessingException {
         ClientRequest client = new ClientRequest("Nome completo", "teste@teste.com", "@Password1", "@Password1",
-            LocalDate.now().minusYears(18).toString(), "528.003.140-28", "(11) 99248-1491",
+            LocalDate.now().minusYears(18).toString(), "52800314028", "(11) 99248-1491",
             List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
                 "12", "casa","details")));

@@ -1,64 +1,51 @@
 package br.com.ifsp.ifome.services;
 
-import br.com.ifsp.ifome.dto.request.LoginRequest;
-import br.com.ifsp.ifome.dto.request.RestaurantRequest;
-import br.com.ifsp.ifome.dto.response.RestaurantLoginResponse;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
 import br.com.ifsp.ifome.entities.Restaurant;
+import br.com.ifsp.ifome.exceptions.RestaurantNotFoundException;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
-import br.com.ifsp.ifome.validation.interfaces.Validator;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RestaurantService {
-    private final TokenService tokenService;
-    private final LoginService loginService;
     private final RestaurantRepository restaurantRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final ValidatorService<RestaurantRequest> validatorService;
-    private final FileStorageService fileStorageService;
 
-    public RestaurantService(TokenService tokenService, RestaurantRepository restaurantRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-                             List<Validator<RestaurantRequest>> validators, LoginService loginService, FileStorageService fileStorageService) {
-        this.tokenService = tokenService;
+    public RestaurantService(RestaurantRepository restaurantRepository) {
         this.restaurantRepository = restaurantRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.validatorService = new ValidatorService<>(validators);
-        this.loginService = loginService;
-        this.fileStorageService = fileStorageService;
     }
 
-    public RestaurantResponse create(RestaurantRequest restaurantRequest, MultipartFile multipartFile) throws MethodArgumentNotValidException, IOException {
-        validatorService.isValid(restaurantRequest);
+    public String changeStateOpen(Principal principal) {
+        var restaurant = restaurantRepository.findByEmail(principal.getName()).get();
+        boolean reverseOpen = !restaurant.isOpen();
+        restaurant.setOpen(reverseOpen);
+        restaurantRepository.save(restaurant);
 
-        String imageUrl = fileStorageService.storeFile(restaurantRequest.cnpj(), multipartFile);
-
-        Restaurant restaurant = new Restaurant(restaurantRequest, bCryptPasswordEncoder, imageUrl);
-
-        restaurant = restaurantRepository.save(restaurant);
-        return new RestaurantResponse(restaurant);
+        String message = String.format("Restaurante %s com sucesso!", reverseOpen? "aberto" : "fechado");
+        return message;
     }
 
-    public RestaurantLoginResponse login(LoginRequest loginRequest) {
-        Optional<Restaurant> restaurant = restaurantRepository.findByEmail(loginRequest.email());
-
-        loginService.isLoginIncorrect(restaurant, loginRequest.password(), bCryptPasswordEncoder);
-
-        var jwtValue = tokenService.generateToken(restaurant.orElseThrow().getEmail());
-
-        RestaurantResponse restaurantResponse = new RestaurantResponse(restaurant.orElseThrow());
-
-        return new RestaurantLoginResponse(restaurantResponse, jwtValue);
+    public List<RestaurantResponse> getAllRestaurants() {
+        return restaurantRepository.findAll(Sort.by(Sort.Direction.ASC, "nameRestaurant")).stream().map(RestaurantResponse::from).collect(Collectors.toList());
     }
 
-    public void forgotPassword(HttpServletRequest request, String email) {
+     public Page<RestaurantResponse> getAllRestaurants(Pageable pageable) {
+        return restaurantRepository.findAll(PageRequest.of(
+            pageable.getPageNumber(),
+            pageable.getPageSize(),
+            pageable.getSortOr(Sort.by(Sort.Direction.ASC,"nameRestaurant"))
+        )).map(RestaurantResponse::from);
+    }
+
+    public Restaurant findById(Long id) {
+        return restaurantRepository.findById(id)
+            .orElseThrow(RestaurantNotFoundException::new);
     }
 }

@@ -96,7 +96,7 @@ public class DeliveryPersonControllerIT {
 
         Number id = document.read("$.data.id");
         String name = document.read("$.data.name");
-        String cnpj = document.read("$.data.cpf");
+        String cpf = document.read("$.data.cpf");
         String email = document.read("$.data.email");
         String dateOfBirth = document.read("$.data.dateOfBirth");
         String typeOfVehicle = document.read("$.data.typeOfVehicle");
@@ -188,7 +188,7 @@ public class DeliveryPersonControllerIT {
         assertThat(cnh)
                 .containsExactlyInAnyOrder(
                         "CNH obrigatória",
-                        "O número da CNH deve conter exatamente 9 dígitos numéricos",
+                        "O número da CNH deve conter entre 9 e 11 dígitos numéricos",
                     "Número do CNH é obrigatório"
                 );
     }
@@ -348,7 +348,7 @@ public class DeliveryPersonControllerIT {
         List<String> cnhNumber = documentContext.read("$.errors.cnhNumber");
         assertThat(cnhNumber)
                 .containsExactlyInAnyOrder(
-                        "O número da CNH deve conter exatamente 9 dígitos numéricos"
+                        "O número da CNH deve conter entre 9 e 11 dígitos numéricos"
                 );
     }
 
@@ -471,6 +471,46 @@ public class DeliveryPersonControllerIT {
         assertThat(dateOfBirth)
                 .containsExactlyInAnyOrder(
                         "Para cadastro no sistema, é necessário ter pelo menos 18 anos de idade."
+                );
+    }
+
+
+    @Test
+    @DirtiesContext
+    @DisplayName("should be return error with cnh already registred")
+    public void shouldReturnErrorWithCnhAlreadyRegistred() throws JsonProcessingException {
+        DeliveryPersonRequest deliveryPersonRequest = new DeliveryPersonRequest(
+                "Nome entregador",
+                "033.197.356-16",
+                "email@email.com",
+                "@Senha1",
+                "@Senha1",
+                LocalDate.of(1999, 1, 2).toString(),
+                "Carro",
+                "DIT-4987",
+                "(11) 95455-4565",
+                "12345678910",
+                LocalDate.of(2030, 1, 2),
+                "123456789",
+                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                        "address", "complement",
+                        "12", "condominio","details")),
+                new BankAccountRequest("123","1255", "4547-7")
+
+        );
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson", deliveryPersonRequest, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        System.out.println(response.getBody());
+        Number countOfInvalidFields = documentContext.read("$.errors.length()");
+        assertThat(countOfInvalidFields).isEqualTo(1);
+
+
+        List<String> cnhNumber = documentContext.read("$.errors.cnhNumber");
+        assertThat(cnhNumber)
+                .containsExactlyInAnyOrder(
+                        "CNH já registrada"
                 );
     }
 

@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.List;
@@ -29,11 +30,10 @@ public class Restaurant implements PasswordPolicy, UserDetails {
 
     private String telephone;
     // TODO arrumar relacionamento
-    @OneToMany
-    @JoinColumn(name = "opening_hours", referencedColumnName = "cnpj")
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OpeningHours> openingHours;
     private String personResponsible;
-    private String personResponsibleCPF;
+    private String personResponsibleCpf;
     private String email;
     private String password;
     private String paymentMethods;
@@ -47,6 +47,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Dish> dishes;
 
+    private Boolean isOpen;
 
     public Restaurant() {}
 
@@ -60,36 +61,50 @@ public class Restaurant implements PasswordPolicy, UserDetails {
             return address;
         }).collect(Collectors.toList());
         this.telephone = restaurantRequest.telephone();
-        this.openingHours = restaurantRequest.openingHours().stream().map(OpeningHours::new).collect(Collectors.toList());
+        this.openingHours = restaurantRequest.openingHours().stream().map(openingHoursRequest -> {
+            OpeningHours openingHours1 = new OpeningHours(openingHoursRequest);
+            openingHours1.setRestaurant(this);
+            return openingHours1;
+        }).collect(Collectors.toList());
         this.personResponsible = restaurantRequest.personResponsible();
-        this.personResponsibleCPF = restaurantRequest.personResponsibleCPF();
+        this.personResponsibleCpf = restaurantRequest.personResponsibleCPF().replaceAll("[^\\d]", "");
         this.email = restaurantRequest.email();
         this.password = bCryptPasswordEncoder.encode(restaurantRequest.password());
         this.paymentMethods = restaurantRequest.paymentMethods();
         this.restaurantImage = restaurantImage;
         this.bankAccount = new BankAccount(restaurantRequest.bankAccount());
+        this.isOpen = false;
     }
 
     public Restaurant(Long id, String nameRestaurant, String cnpj,
                       String foodCategory, List<Address> address, String telephone,
                       List<OpeningHours> openingHours, String personResponsible,
                       String personResponsibleCPF, String email, String password, String paymentMethods,
-                      String restaurantImage, BankAccount bankAccount,  BCryptPasswordEncoder bCryptPasswordEncoder) {
+                      String restaurantImage, BankAccount bankAccount, boolean isOpen,  BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.id = id;
         this.nameRestaurant = nameRestaurant;
-        this.cnpj = cnpj;
+        this.cnpj = cnpj.replaceAll("[^\\d]", "");
         this.foodCategory = foodCategory;
         this.address = address;
         this.telephone = telephone;
         this.openingHours = openingHours;
         this.personResponsible = personResponsible;
-        this.personResponsibleCPF = personResponsibleCPF;
+        this.personResponsibleCpf = personResponsibleCPF.replaceAll("[^\\d]", "");
         this.email = email;
         this.password = bCryptPasswordEncoder.encode(password);
         this.paymentMethods = paymentMethods;
         this.restaurantImage = restaurantImage;
         this.bankAccount = bankAccount;
         this.role = Role.RESTAURANT;
+        this.isOpen = isOpen;
+    }
+
+    public Boolean isOpen() {
+        return isOpen;
+    }
+
+    public void setOpen(Boolean open) {
+        isOpen = open;
     }
 
     public Long getId() {
@@ -113,7 +128,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     }
 
     public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
+        this.cnpj = cnpj.replaceAll("[^\\d]", "");
     }
 
     public String getFoodCategory() {
@@ -156,12 +171,20 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.personResponsible = personResponsible;
     }
 
-    public String getPersonResponsibleCPF() {
-        return personResponsibleCPF;
+    public String getPersonResponsibleCpf() {
+        return personResponsibleCpf;
     }
 
-    public void setPersonResponsibleCPF(String personResponsibleCPF) {
-        this.personResponsibleCPF = personResponsibleCPF;
+    public void setPersonResponsibleCpf(String personResponsibleCPF) {
+        this.personResponsibleCpf = personResponsibleCPF.replaceAll("[^\\d]", "");;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getEmail() {
@@ -232,6 +255,14 @@ public class Restaurant implements PasswordPolicy, UserDetails {
 
     public void setBankAccount(BankAccount bankAccount) {
         this.bankAccount = bankAccount;
+    }
+
+    public List<Dish> getDishes() {
+        return dishes;
+    }
+
+    public void setDishes(List<Dish> dishes) {
+        this.dishes = dishes;
     }
 
     @Override
