@@ -73,7 +73,7 @@ async function submitLogin(data) {
 	await api.post('auth/deliveryPerson/login', JSON.stringify(data))
 		.then((response) => {
 			if (response.status === 200 || response.status === 201) {
-				console.log(response);
+				$toast.success('Login realizado com sucesso!');
 			} else {
 				console.log(response)
 				$toast.error(response.data.message, {});
