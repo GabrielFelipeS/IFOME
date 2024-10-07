@@ -5,7 +5,8 @@
         <div class="mid">
             <div class="form-group">
                 <label for="cpf">CPF</label>
-                <MaskInput type="text" id="cpf" v-model="cpf" placeholder="CPF" :value="cpf" mask="###.###.###-##" required />
+                <MaskInput type="text" id="cpf" v-model="cpf" placeholder="CPF" :value="cpf" mask="###.###.###-##"
+                    required />
                 <template v-if="stepErros.cpf">
                     <p v-for="error in stepErros.cpf">{{ error }}</p>
                 </template>
@@ -21,7 +22,8 @@
         <div class="mid">
             <div class="form-group">
                 <label for="cnh">CNH</label>
-                <MaskInput type="text" id="cnh" v-model="cnh" :value="cnh" placeholder="CNH" mask="###########" required />
+                <MaskInput type="text" id="cnh" v-model="cnh" :value="cnh" placeholder="CNH" mask="###########"
+                    required />
                 <template v-if="stepErros.cnh">
                     <p v-for="error in stepErros.cnh">{{ error }}</p>
                 </template>
@@ -49,15 +51,16 @@
         <div class="mid">
             <div class="form-group">
                 <label for="plate">Placa</label>
-                <MaskInput type="text" id="plate" v-model="plate" :value="plate" placeholder="Placa" mask="AAA-#X##" required />
+                <MaskInput type="text" id="plate" v-model="plate" :value="plate" placeholder="Placa" mask="AAA-#X##"
+                    required />
                 <template v-if="stepErros.plate">
                     <p v-for="error in stepErros.plate">{{ error }}</p>
                 </template>
             </div>
             <div class="form-group">
                 <label for="renavam">Renavam</label>
-                <MaskInput type="text" id="renavam" v-model="renavam" :value="renavam" placeholder="Renavam" mask="###########"
-                    required />
+                <MaskInput type="text" id="renavam" v-model="renavam" :value="renavam" placeholder="Renavam"
+                    mask="###########" required />
                 <template v-if="stepErros.renavam">
                     <p v-for="error in stepErros.renavam">{{ error }}</p>
                 </template>
@@ -70,6 +73,7 @@
 </template>
 
 <script setup>
+import axios from 'axios';
 import { onMounted, ref, watch } from 'vue';
 import { MaskInput } from 'vue-3-mask';
 
@@ -107,15 +111,17 @@ if (props.currentData) {
     dateOfBirth.value = props.currentData.dateOfBirth || '';
 }
 
-onMounted(()=>{
-    if(!Object.values(stepErros.value).some((value) => value)){
-        stepCompleted.value = true;
+onMounted(() => {
+    if (!Object.values(stepErros.value).some((value) => value)) {
+        if (cpf.value && cnh.value && expirationDate.value && vehicle.value && plate.value && renavam.value && dateOfBirth.value) {
+            stepCompleted.value = true;
+        }
     } else {
         stepCompleted.value = false;
     }
 })
 
-watch([cpf, cnh, expirationDate, vehicle, plate, renavam, dateOfBirth], () => {
+watch([cpf, cnh, expirationDate, vehicle, plate, renavam, dateOfBirth], async () => {
     if (expirationDate.value.length === 10) {
         let expirationDateFormated = new Date(expirationDate.value);
         let today = new Date();
@@ -163,32 +169,28 @@ watch([cpf, cnh, expirationDate, vehicle, plate, renavam, dateOfBirth], () => {
         stepErros.value.cnh = ['** Insira um CNH válido (9 a 11 dígitos) **'];
     }
 
-    async function validateCPF(cpf) {
-        try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_API_URL}auth/validation/delivery/cpf`,
-                {
-                    cpf: String(cpf),
-                },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-            return true;
-        } catch (error) {
-            return false;
-        }
-    }
-
-    if (cpf.value.length === 14) {
+    if (cpf.value && cpf.value.length === 14) {
         stepErros.value.cpf = false;
-        if (!validateCPF(cpf.value)) {
-            stepErros.value.cpf = ['** CPF já cadastrado **'];
+        let cpfValue = cpf.value.replace(/\D/g, '');
+
+        if (cpfValue.length !== 11) {
+            stepErros.value.cpf = ['** Digite um CPF válido **'];
+        } else {
+            try {
+
+                const response = await axios.post(`${import.meta.env.VITE_API_URL}auth/validation/delivery/cpf`, {
+                    cpf: cpfValue,
+                });
+
+
+                if (response.status === 200) {
+                    stepErros.value.cpf = false
+                }
+            } catch (error) {
+                console.error(error);
+                stepErros.value.cpf = [`** ${error.response.data.errors.cpf[0]} **`];
+            }
         }
-    } else {
-        stepErros.value.cpf = ['** Insira um CPF válido **'];
     }
 
     if (plate.value.length === 8) {
@@ -209,16 +211,12 @@ watch([cpf, cnh, expirationDate, vehicle, plate, renavam, dateOfBirth], () => {
         stepErros.value.vehicle = false;
     }
 
-    if(!Object.values(stepErros.value).some((value) => value)){
+    if (!Object.values(stepErros.value).some((value) => value)) {
         stepCompleted.value = true;
     } else {
         stepCompleted.value = false;
     }
 });
-
-onMounted(() =>{
-    console.log(stepErros);
-})
 
 function nextStep() {
     emit('nextStep', {
