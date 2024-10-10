@@ -1,0 +1,64 @@
+name: VueJs Deploy
+
+on:
+  push:
+    branches: [ "dev" ]
+    paths-ignore:
+      - 'back/**'
+
+  pull_request:
+    branches: [ "dev" ]
+    paths-ignore:
+      - 'back/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: |
+        cd ./front/
+        npm install
+    
+    - name: Copy .env (if exists)
+      run: |
+        cd ./front/
+        if [ -f .env.example ]; then cp .env.example .env; fi
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+  
+    - name: Build Docker image
+      run: |
+        cd ./front/
+        docker compose build --no-cache
+
+  deploy:
+      runs-on: ubuntu-latest
+      if: github.event_name == 'pull_request' && github.event.action != 'closed'
+      needs: [build]
+      steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ${{ secrets.APP_PATH }}
+            git pull origin dev
+            cd ./front/
+            docker compose down
+            docker compose up -d --build
