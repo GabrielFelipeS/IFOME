@@ -62,3 +62,5 @@ jobs:
             cd ./front/
             docker compose down
             docker compose up -d --build
+            pwd
+            docker-compose logs -f
