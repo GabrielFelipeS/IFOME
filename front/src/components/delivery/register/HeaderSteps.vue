@@ -26,9 +26,9 @@ watch(() => props.currentStep, (newStep) => {
 <template>
     <header class="headerSteps" :class="props.currentStep > 1 &&  props.currentStep < 5? 'justify-center md:justify-between': 'justify-center md:justify-center'">
         <div class="arrow" @click="returnBack" v-if="props.currentStep > 1 &&  props.currentStep < 5">
-            <img src="../../assets/img/store/arrow.svg" class="img">
+            <img src="../../../assets/img/store/arrow.svg" class="img">
         </div>
-        <img src="../../assets/img/logo_header.png" class="img">
+        <img src="../../../assets/img/logo_header.png" class="img">
         <div></div>
         <div class="progressBar" :style="{ width: widthLine + '%' }"></div>
     </header>

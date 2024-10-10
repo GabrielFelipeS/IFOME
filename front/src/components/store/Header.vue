@@ -6,8 +6,7 @@ import Button from '@/components/Button.vue';
     <header class="header">
         <img src="../../assets/img/logo_header.png" class="img">
         <div class="buttons">
-            <Button href="/#" class="button1">Entrar No Portal</Button>
-            <Button href="/#" class="button2" inversed>Cadastrar</Button>
+            <router-link :to="{name: 'store-login'}" class="button1">Entrar No Portal</router-link>
         </div>
     </header>
 </template>
