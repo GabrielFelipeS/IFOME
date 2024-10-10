@@ -1,0 +1,20 @@
+services:
+  vue-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vue_app
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/app
+    depends_on:
+      - node-builder
+
+  node-builder:
+    image: node:18-alpine
+    container_name: node_builder
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: ["npm", "run", "build"]
