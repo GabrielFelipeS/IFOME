@@ -131,8 +131,7 @@ import java.lang.annotation.Target;
                           "password" : "@Senha1",
                           "confirmationPassword" : "@Senha1",
                           "cnpj" : "10.882.594/0001-65",
-                          "address": [
-                            {
+                          "address": {
                               "nameAddress": "casa principal",
                               "cep": "35170-222",
                               "neighborhood": "neighborhood",
@@ -142,8 +141,7 @@ import java.lang.annotation.Target;
                               "complement": "complement",
                               "number": "12",
                               "details": "details"
-                            }
-                           ],
+                            },
                           "telephone" : "(11) 1234-5678",
                           "foodCategory" : "Pizzaria",
                           "paymentMethods" : "Dinheiro, Cartão",
@@ -187,10 +185,10 @@ import java.lang.annotation.Target;
                                     "não deve estar em branco"
                                 ],
                                 "cnpj": [
-                                    "cnpj inválido"
+                                    "O campo "CNPJ" deve estar no formato XX.XXX.XXX/XXXX-XX"
                                 ],
                                 "email": [
-                                    "E-mail inválido"
+                                    "E-mail deve estar no formato: nome@dominio.co"
                                 ],
                                  "restaurantRequest": [
                                      "Senha e confirmar senha não são iguais"

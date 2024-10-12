@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -345,16 +346,16 @@ import java.lang.annotation.Target;
                     "Senha precisa conter pelo menos um caractere maiúsculo"
                 ],
                 "address": [
-                    "É necessário ter pelo menos um endereço"
+                    "É necessário ter um endereço"
                 ],
                 "phone": [
-                    "Telefone é obrigatório"
+                    "O campo \"Telefone\" é obrigatório"
                 ],
                 "cpf": [
-                    "CPF inválido"
+                   "O campo \\"CPF\\" deve estar no formato: XXX.XXX.XXX-XX}"
                 ],
                 "email": [
-                    "E-mail inválido"
+                    "E-mail deve estar no formato: nome@dominio.co"
                 ],
                  "clientRequest": [
                      "Senha e confirmar senha não são iguais"
