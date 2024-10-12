@@ -7,7 +7,6 @@ import br.com.ifsp.ifome.dto.response.LoginResponse;
 import br.com.ifsp.ifome.entities.DeliveryPerson;
 import br.com.ifsp.ifome.repositories.DeliveryPersonRepository;
 import br.com.ifsp.ifome.validation.interfaces.Validator;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -45,13 +44,14 @@ public class DeliveryPersonService {
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
-        Optional<DeliveryPerson> deliveryPerson = deliveryPersonRepository.findByEmail(loginRequest.email());
+        Optional<DeliveryPerson> deliveryPersonOptional = deliveryPersonRepository.findByEmail(loginRequest.email());
 
-        loginService.isLoginIncorrect(deliveryPerson, loginRequest.password(), bCryptPasswordEncoder);
+        loginService.isLoginIncorrect(deliveryPersonOptional, loginRequest.password(), bCryptPasswordEncoder);
+        DeliveryPerson deliveryPerson = deliveryPersonOptional.orElseThrow();
 
-        var jwtValue = tokenService.generateToken(deliveryPerson.orElseThrow().getEmail());
+        var jwtValue = tokenService.generateToken(deliveryPerson.getEmail(), deliveryPerson.getAuthorities());
 
-        DeliveryPersonResponse deliveryPersonResponse = new DeliveryPersonResponse(deliveryPerson.orElseThrow());
+        DeliveryPersonResponse deliveryPersonResponse = new DeliveryPersonResponse(deliveryPerson);
 
         return new LoginResponse(deliveryPersonResponse, jwtValue);
     }

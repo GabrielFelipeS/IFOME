@@ -46,13 +46,14 @@ public class ClientService {
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
-        Optional<Client> client = clientRepository.findByEmail(loginRequest.email());
+        Optional<Client> clientOptional = clientRepository.findByEmail(loginRequest.email());
 
-        loginService.isLoginIncorrect(client, loginRequest.password(), bCryptPasswordEncoder);
+        loginService.isLoginIncorrect(clientOptional, loginRequest.password(), bCryptPasswordEncoder);
 
-        var jwtValue = tokenService.generateToken(client.orElseThrow().getEmail());
+        var client = clientOptional.orElseThrow();
+        var jwtValue = tokenService.generateToken(client.getEmail(), client.getAuthorities());
 
-        ClientResponse clientResponse = new ClientResponse(client.orElseThrow());
+        ClientResponse clientResponse = new ClientResponse(client);
 
         return new LoginResponse(clientResponse, jwtValue);
     }
