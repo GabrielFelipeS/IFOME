@@ -1,16 +1,14 @@
 package br.com.ifsp.ifome.services;
 
 import br.com.ifsp.ifome.exceptions.InvalidTokenException;
-import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Optional;
+import java.util.Collection;
 
 @Service
 public class TokenService {
@@ -33,12 +31,14 @@ public class TokenService {
         this.now = now;
     }
 
-    public String generateToken(String subject) {
+    public String generateToken(String subject, Collection<? extends GrantedAuthority> grantedAuthorities) {
+        var authorities = grantedAuthorities.stream().map(GrantedAuthority::getAuthority).toList();
         var claims = JwtClaimsSet.builder()
             .issuer("api_ifome")
             .subject(subject)
             .issuedAt(now)
             .expiresAt(now.plusSeconds(expiresIn))
+            .claim("authorities", authorities)
             .build()
             ;
 
