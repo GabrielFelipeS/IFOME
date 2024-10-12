@@ -1,11 +1,11 @@
 <configuration>
 
     <!-- Appender para console com cores -->
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <!-- Definindo os padrões para o arquivo de log -->
+    <property name="LOG_FILE_PATH" value="logs" />
 
     <!-- Appender para logs de INFO -->
     <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
