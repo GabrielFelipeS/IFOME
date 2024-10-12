@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.LinkedMultiValueMap;
@@ -34,7 +35,7 @@ public class DishControllerIT {
 
     @BeforeEach
     public void setUp() {
-        this.token = tokenService.generateToken("email1@email.com");
+        this.token = tokenService.generateToken("email1@email.com", List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
     }
 
     @Test
