@@ -338,7 +338,7 @@ public class AuthRestaurantControllerIT {
         List<String> cnpj = documentContext.read("$.errors.cnpj");
         assertThat(cnpj)
             .containsExactlyInAnyOrder(
-                "CNPJ inválido"
+                "O campo \"CNPJ\" deve estar no formato XX.XXX.XXX/XXXX-XX"
             );
     }
 
@@ -385,7 +385,7 @@ public class AuthRestaurantControllerIT {
         List<String> personResponsibleCPF = documentContext.read("$.errors.personResponsibleCPF");
         assertThat(personResponsibleCPF)
             .containsExactlyInAnyOrder(
-                "CPF inválido"
+                "O campo \"CPF\" deve estar no formato: XXX.XXX.XXX-XX"
             );
     }
 

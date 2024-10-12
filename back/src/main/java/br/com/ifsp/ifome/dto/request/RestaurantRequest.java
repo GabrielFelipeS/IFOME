@@ -10,18 +10,17 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @ConfirmartionPasswordEqualsPassword(message = "As senhas não coincidem")
 public record RestaurantRequest(
-        @NotBlank(message = "Nome do restaurante é obrigatório")
+        @NotBlank(message = "O campo \"Nome do restaurante\" é obrigatório")
         String nameRestaurant,
 
-        @Email(message = "E-mail inválido")
-        @NotBlank(message = "E-mail é obrigatório")
         @NotRegisteredEmailRestaurant
+        @NotBlank(message = "O campo \"E-mail\" é obrigatório")
+        @Email(message = "E-mail deve estar no formato: nome@dominio.com")
         String email,
 
         @ValidPassword
@@ -30,7 +29,7 @@ public record RestaurantRequest(
         @NotBlank(message = "Confirmação de senha é obrigatório")
         String confirmationPassword,
 
-        @CNPJ(message = "CNPJ inválido")
+        @CNPJ(message = "O campo \"CNPJ\" deve estar no formato XX.XXX.XXX/XXXX-XX")
         @NotBlank(message = "CNPJ é obrigatório")
         String cnpj,
 
@@ -52,7 +51,7 @@ public record RestaurantRequest(
 
         String personResponsible,
 
-        @CPF(message = "CPF inválido")
+        @CPF(message = "O campo \"CPF\" deve estar no formato: XXX.XXX.XXX-XX")
         @NotBlank(message = "CPF é obrigatório")
         String personResponsibleCPF,
 
