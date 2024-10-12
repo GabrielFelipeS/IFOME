@@ -4,8 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CNPJ;
 
 public record CnpjValidatorRequest(
-    @CNPJ(message = "CNPJ inválido")
-    @NotBlank(message = "CNPJ é obrigatório")
+    @CNPJ(message = "O campo \"CNPJ\" deve estar no formato XX.XXX.XXX/XXXX-XX, valor atual: {validatedValue}")
+    @NotBlank(message = "O campo \"CNPJ\" é obrigatório")
     String cnpj
 ) {
 }
