@@ -8,7 +8,8 @@ CREATE TABLE clients (
        type_residence VARCHAR(255),
        cep VARCHAR(10),
        address TEXT,
-       payment_methods TEXT
+       payment_methods TEXT,
+    role VARCHAR(255)
 );
 CREATE TABLE restaurants (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -44,6 +45,7 @@ CREATE TABLE delivery_person (
     cnh_validity DATE NOT NULL, -- Validade da CNH deve ser uma data futura
     vehicle_document VARCHAR(11), -- RENAVAM deve conter entre 9 e 11 dígitos numéricos
     bank_account_id BIGINT, -- Referência para a tabela de contas bancárias (se aplicável)
+    role VARCHAR(255),
     CONSTRAINT unique_cpf UNIQUE (cpf), -- CPF deve ser único
     CONSTRAINT unique_email UNIQUE (email) -- Email deve ser único
 );
