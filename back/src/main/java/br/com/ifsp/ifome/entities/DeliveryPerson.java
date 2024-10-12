@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.entities;
 
+import br.com.ifsp.ifome.dto.request.AddressRequest;
 import br.com.ifsp.ifome.dto.request.DeliveryPersonRequest;
 import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
@@ -14,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Entity
@@ -59,13 +59,8 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
         this.cnhNumber = deliveryPersonRequest.cnhNumber();
         this.cnhValidity = deliveryPersonRequest.cnhValidity();
         this.vehicleDocument = deliveryPersonRequest.vehicleDocument();
-        this.address = deliveryPersonRequest.address().stream().map(addressRequest -> {
-            Address address = new Address(addressRequest);
-            address.setDelivery(this);
-            return address;
-        }).collect(Collectors.toList());
         this.bankAccount = new BankAccount(deliveryPersonRequest.bankAccount());
-
+        this.setAddress(deliveryPersonRequest.address());
     }
 
 
@@ -92,6 +87,11 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
         this.role = Role.DELIVERY;
     }
 
+    public void setAddress(AddressRequest addressRequest) {
+        Address address = new Address(addressRequest);
+        address.setDelivery(this);
+        this.address = List.of(address);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
