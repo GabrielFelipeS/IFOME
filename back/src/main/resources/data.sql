@@ -1,12 +1,12 @@
 -- $2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG  -> @Password1
-INSERT INTO clients (name, email, password, date_of_birth, cpf, type_residence, cep, address, payment_methods)
-VALUES ('Gabriel', 'user1@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '52800314028', 'casa', 'cep', 'Av. Salgado Filho, 3501 - Centro, Guarulhos - SP', 'Cartão de Crédito');
+INSERT INTO clients (name, email, password, date_of_birth, cpf, type_residence, cep, address, payment_methods, role)
+VALUES ('Gabriel', 'user1@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '52800314028', 'casa', 'cep', 'Av. Salgado Filho, 3501 - Centro, Guarulhos - SP', 'Cartão de Crédito', 'CLIENT');
 
-INSERT INTO clients (name, email, password, date_of_birth, cpf, type_residence, cep, address, payment_methods)
-VALUES ('Gabriel', 'email1@email.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '92051362041', 'casa', 'cep', 'Av. Salgado Filho, 3501 - Centro, Guarulhos - SP', 'Cartão de Crédito');
+INSERT INTO clients (name, email, password, date_of_birth, cpf, type_residence, cep, address, payment_methods, role)
+VALUES ('Gabriel', 'email1@email.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '92051362041', 'casa', 'cep', 'Av. Salgado Filho, 3501 - Centro, Guarulhos - SP', 'Cartão de Crédito', 'CLIENT');
 
-INSERT INTO clients (name, email, password, date_of_birth, cpf, type_residence, cep, address, payment_methods)
-VALUES ('Gabriel', 'noreply.ifome@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '77025681008', 'casa', 'cep', 'Av. Salgado Filho, 3501 - Centro, Guarulhos - SP', 'Cartão de Crédito');
+INSERT INTO clients (name, email, password, date_of_birth, cpf, type_residence, cep, address, payment_methods, role)
+VALUES ('Gabriel', 'noreply.ifome@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '77025681008', 'casa', 'cep', 'Av. Salgado Filho, 3501 - Centro, Guarulhos - SP', 'Cartão de Crédito', 'CLIENT');
 
 INSERT INTO restaurants (
     name_restaurant,
@@ -53,7 +53,8 @@ INSERT INTO delivery_person (
     telephone,
     cnh_number,
     cnh_validity,
-    vehicle_document
+    vehicle_document,
+    role
 )
 VALUES (
    'email1@email.com',
@@ -66,6 +67,7 @@ VALUES (
    '(11) 98765-4321',
    '12345678910',
    '2026-12-31',
-   '987654321'
+   '987654321',
+    'DELIVERY'
 );
 
