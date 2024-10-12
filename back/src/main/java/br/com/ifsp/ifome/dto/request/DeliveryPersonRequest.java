@@ -1,45 +1,45 @@
 package br.com.ifsp.ifome.dto.request;
 
-import br.com.ifsp.ifome.validation.anotations.*;
 import br.com.ifsp.ifome.validation.anotations.Past;
+import br.com.ifsp.ifome.validation.anotations.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @ConfirmartionPasswordEqualsPassword(message = "As senhas não coincidem")
 public record DeliveryPersonRequest(
-        @NotBlank(message = "Nome é obrigatório")
+        @NotBlank(message = "O campo \"Nome\" é obrigatório")
         String name,
 
-        @CPF(message = "CPF inválido")
-        @NotBlank(message = "CPF é obrigatório")
+        @CPF(message = "O campo \"CPF\" deve estar no formato: XXX.XXX.XXX-XX")
+        @NotBlank(message = "O campo \"CPF\"  é obrigatório")
         String cpf,
 
-        @Email(message = "E-mail inválido")
-        @NotBlank(message = "E-mail é obrigatório")
         @NotRegisteredEmailDeliveryPerson
+        @NotBlank(message = "O campo \"E-mail\" é obrigatório")
+        @Email(message = "O campo \"E-mail\" deve estar no formato: nome@dominio.com")
         String email,
 
         @ValidPassword
-        @NotBlank(message = "Senha é obrigatório")
+        @NotBlank(message = "O campo \"Senha\" é obrigatório")
         String password,
 
-        @NotBlank(message = "Confirmação de senha é obrigatório")
+        @NotBlank(message = "O campo \"Confirmação de senha\" é obrigatório")
         String confirmationPassword,
 
-        @Past(message = "Data de nascimento deve estar no passado")
         @MinAgeToUse
         @NotNull(message = "Data de nascimento é obrigatório")
+        @Past(message = "Data de nascimento deve estar no passado")
         @DateFormat(message = "Formato incorreto para data de nascimento")
+        @MaxAgeToUse(maxAge = 90, message = "Para cadastro no sistema, é necessário ter no máximo {maxAge} anos de idade.")
         String dateOfBirth,
 
-        @Pattern(regexp = "^([Cc]arro|[Mm]oto)$", message = "Tipo do veículo inválido")
+        @Pattern( message = "Tipo do veículo inválido, tipos de veiculos aceitos: carro e moto", regexp = "^([Cc]arro|[Mm]oto)$")
         String typeOfVehicle,
 
-        @NotBlank(message = "Verique a placa")
+        @NotBlank(message = "O campo \"Placa\" é obrigatório")
         @Pattern(regexp = "[A-Z]{3}-\\d{4}", message = "A placa deve estar no formato XXX-9999")
         String plate,
 
@@ -47,22 +47,23 @@ public record DeliveryPersonRequest(
         @Pattern(regexp = "\\(\\d{2}\\) \\d{4,5}-\\d{4}", message = "Telefone deve estar no formato (XX) XXXXX-XXXX")
         String telephone,
 
-        @NotBlank(message = "Número do CNH é obrigatório")
-        @NotBlank(message = "CNH obrigatória")
+        @UniqueCnhNumber
+        @NotBlank(message = "O campo \"Número do CNH\" é obrigatório")
         @Pattern(regexp = "\\d{9,11}", message = "O número da CNH deve conter entre 9 e 11 dígitos numéricos")
-        @UniqueCnhNumber(message = "CNH já registrada")
         String cnhNumber,
 
-        @Future(message = "CNH fora de validade")
-        @NotNull
+
+        @NotNull(message = "O campo \"validade\" é obrigatório")
+        @Future(message = "CNH fora da validade")
         LocalDate cnhValidity,
 
-        @NotBlank
+        @NotBlank(message = "O campo \"documento do veículo\" é obrigatório")
         @Pattern(regexp = "\\d{9,11}", message = "O RENAVAM deve conter entre 9 e 11 dígitos numéricos")
         String vehicleDocument,
 
-        @NotEmpty(message = "É necessário ter pelo menos um endereço")
-        List<@Valid AddressRequest> address,
+        @Valid
+        @NotNull(message = "É necessário ter um endereço")
+        AddressRequest address,
 
         @Valid
         @NotNull(message = "É necessário ter ao menos uma conta")

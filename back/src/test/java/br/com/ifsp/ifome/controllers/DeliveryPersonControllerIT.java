@@ -82,9 +82,9 @@ public class DeliveryPersonControllerIT {
                 "123456789",
                 LocalDate.of(2030, 1, 2),
                 "12345678910",
-                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "condominio","details")),
+                        "12", "condominio","details"),
                 new BankAccountRequest("123","1255", "4547-7")
 
         );
@@ -141,9 +141,9 @@ public class DeliveryPersonControllerIT {
             "dOCUMENTO DO VEICULO",
             LocalDate.of(2030, 1, 2),
             "123456789",
-            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                     "address", "complement",
-                    "12", "condominio","details")),
+                    "12", "condominio","details"),
             new BankAccountRequest("123","1255", "4547-7")
 
     );
@@ -169,9 +169,9 @@ public class DeliveryPersonControllerIT {
                 " ",
                 LocalDate.of(2030, 1, 2),
                 "123456789",
-                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "condominio","details")),
+                        "12", "condominio","details"),
                 new BankAccountRequest("123","1255", "4547-7")
 
         );
@@ -187,9 +187,8 @@ public class DeliveryPersonControllerIT {
         List<String> cnh = documentContext.read("$.errors.cnhNumber");
         assertThat(cnh)
                 .containsExactlyInAnyOrder(
-                        "CNH obrigatória",
-                        "O número da CNH deve conter entre 9 e 11 dígitos numéricos",
-                    "Número do CNH é obrigatório"
+                        "O campo \"Número do CNH\" é obrigatório",
+                        "O número da CNH deve conter entre 9 e 11 dígitos numéricos"
                 );
     }
 
@@ -211,9 +210,9 @@ public class DeliveryPersonControllerIT {
                 "123456789",
                 LocalDate.of(2030, 1, 2),
                 "123456789",
-                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "condominio","details")),
+                        "12", "condominio","details"),
                 new BankAccountRequest("123","1255", "4547-7")
 
         );
@@ -227,7 +226,7 @@ public class DeliveryPersonControllerIT {
         List<String> passwordErrors = documentContext.read("$.errors.password");
         assertThat(passwordErrors)
                 .containsExactlyInAnyOrder(
-                        "Senha é obrigatório",
+                        "O campo \"Senha\" é obrigatório",
                         "A senha precisa possui pelo menos 6 caracteres",
                         "Senha precisa conter pelo menos um número",
                         "Senha precisa conter pelo menos um caractere minúsculo",
@@ -253,9 +252,9 @@ public class DeliveryPersonControllerIT {
                 "123456789",
                 LocalDate.of(2030, 1, 2),
                 "123456789",
-                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "condominio","details")),
+                        "12", "condominio","details"),
                 new BankAccountRequest("123","1255", "4547-7")
 
         );
@@ -270,7 +269,7 @@ public class DeliveryPersonControllerIT {
         List<String> cpf = documentContext.read("$.errors.cpf");
         assertThat(cpf)
                 .containsExactlyInAnyOrder(
-                        "CPF inválido"
+                        "O campo \"CPF\" deve estar no formato: XXX.XXX.XXX-XX"
                 );
     }
 
@@ -291,9 +290,9 @@ public class DeliveryPersonControllerIT {
                 "123456789",
                 LocalDate.of(2030, 1, 2),
                 "123456789",
-                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "condominio","details")),
+                        "12", "condominio","details"),
                 new BankAccountRequest("123","1255", "4547-7")
 
         );
@@ -309,7 +308,7 @@ public class DeliveryPersonControllerIT {
         assertThat(plate)
                 .containsExactlyInAnyOrder(
                         "A placa deve estar no formato XXX-9999",
-                        "Verique a placa"
+                        "O campo \"Placa\" é obrigatório"
                 );
 
     }
@@ -331,9 +330,9 @@ public class DeliveryPersonControllerIT {
                 "12345A",
                 LocalDate.of(2030, 1, 2),
                 "123456789",
-                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "condominio","details")),
+                        "12", "condominio","details"),
                 new BankAccountRequest("123","1255", "4547-7")
 
         );
@@ -369,9 +368,9 @@ public class DeliveryPersonControllerIT {
                 "123456789",
                 LocalDate.of(2024, 1, 2),
                 "123456789",
-                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "condominio","details")),
+                        "12", "condominio","details"),
                 new BankAccountRequest("123","1255", "4547-7")
 
         );
@@ -386,7 +385,7 @@ public class DeliveryPersonControllerIT {
         List<String> cnhValidity = documentContext.read("$.errors.cnhValidity");
         assertThat(cnhValidity )
                 .containsExactlyInAnyOrder(
-                        "CNH fora de validade"
+                        "CNH fora da validade"
                 );
     }
 
@@ -407,9 +406,9 @@ public class DeliveryPersonControllerIT {
                 "123456789",
                 LocalDate.of(2030, 1, 2),
                 "111",
-                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "condominio","details")),
+                        "12", "condominio","details"),
                 new BankAccountRequest("123","1255", "4547-7")
 
         );
@@ -445,7 +444,7 @@ public class DeliveryPersonControllerIT {
                 "123456789",
                 LocalDate.of(2030, 1, 2),
                 "111456789",
-                List.of(new AddressRequest(
+                new AddressRequest(
                         "35170-222",
                         "casa 1",
                         "neighborhood",
@@ -455,7 +454,7 @@ public class DeliveryPersonControllerIT {
                         "complement",
                         "12",
                         "condominio",
-                        "details")),
+                        "details"),
                 new BankAccountRequest("123","1255", "4547-7")
 
         );
@@ -492,9 +491,9 @@ public class DeliveryPersonControllerIT {
                 "12345678910",
                 LocalDate.of(2030, 1, 2),
                 "123456789",
-                List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+                new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                         "address", "complement",
-                        "12", "condominio","details")),
+                        "12", "condominio","details"),
                 new BankAccountRequest("123","1255", "4547-7")
 
         );
