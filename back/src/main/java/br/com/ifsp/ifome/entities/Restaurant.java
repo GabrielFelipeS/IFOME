@@ -206,7 +206,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
 
     @Override
     public String getUsername() {
-        return "";
+        return email;
     }
 
     @Override
