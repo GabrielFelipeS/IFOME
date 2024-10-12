@@ -81,9 +81,9 @@ public class ClienteControllerIT {
     public void shouldBeAbleToCreateANewClient() throws JsonProcessingException {
         ClientRequest client = new ClientRequest("Nome completo", "teste@teste.com", "@Password1", "@Password1",
             LocalDate.now().minusYears(18).toString(), "486.086.780-71", "(11) 99248-1491",
-            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
-                "12", "casa","details")));
+                "12", "casa","details"));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -122,9 +122,9 @@ public class ClienteControllerIT {
     public void shouldReturnErrorWithCpfAlreadyRegistred() throws JsonProcessingException {
         ClientRequest client = new ClientRequest("Nome completo", "teste@teste.com", "@Password1", "@Password1",
             LocalDate.now().minusYears(18).toString(), "52800314028", "(11) 99248-1491",
-            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
-                "12", "casa","details")));
+                "12", "casa","details"));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -144,9 +144,9 @@ public class ClienteControllerIT {
     @DisplayName("should not be possible to create a new client with already registered email")
     public void shouldReturnErrorWhenCreatingClientWithAlreadyRegisteredEmail() {
         ClientRequest client = new ClientRequest("Nome completo","user1@gmail.com", "@Password1", "@Password1",
-            LocalDate.now().minusYears(14).toString(), "019.056.440-78", "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
+            LocalDate.now().minusYears(14).toString(), "019.056.440-78", "(11) 99248-1491",new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
             "address",  "complement",
-             "12", "condominio","details")));
+             "12", "condominio","details"));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -165,9 +165,9 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the password field")
     public void shouldReturnAllValidationErrorsInThePasswordField() {
         ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", " ", " ",
-            LocalDate.now().minusYears(18).toString(), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            LocalDate.now().minusYears(18).toString(), "019.056.440-78",  "(11) 99248-1491", new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address",  "complement",
-            "12", "condomínio","details")));
+            "12", "condomínio","details"));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -179,7 +179,7 @@ public class ClienteControllerIT {
         List<String> passwordErrors = documentContext.read("$.errors.password");
         assertThat(passwordErrors)
             .containsExactlyInAnyOrder(
-                "Senha é obrigatório",
+                "O campo \"Senha\" é obrigatório",
                 "A senha precisa possui pelo menos 6 caracteres",
                 "Senha precisa conter pelo menos um número",
                 "Senha precisa conter pelo menos um caractere minúsculo",
@@ -193,9 +193,9 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the dateOfBirth field")
     public void shouldReturnAllValidationErrorsInThDateOfBirthField() {
         ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", "@Teste123", "@Teste123",
-            LocalDate.now().plusDays(1).toString(), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            LocalDate.now().plusDays(1).toString(), "019.056.440-78",  "(11) 99248-1491", new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address",  "complement",
-             "12", "condominio","details")));
+             "12", "condominio","details"));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -217,9 +217,9 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the cpf field")
     public void shouldReturnAllValidationErrorsInTheCPFField() {
         ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", "@Teste123", "@Teste123",
-            LocalDate.now().minusYears(18).toString(), "cpf",  "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            LocalDate.now().minusYears(18).toString(), "cpf",  "(11) 99248-1491",new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address", "complement",
-            "12", "condominio","details")));
+            "12", "condominio","details"));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -241,9 +241,9 @@ public class ClienteControllerIT {
     public void shouldReturnErrorWhenCreatingClientWithdifferentPasswordAndPasswordConfirmation() throws JsonProcessingException {
         ClientRequest client = new ClientRequest("Nome completo","teste@teste.com", "@Password1", "@Password",
             LocalDate.now().minusYears(18).toString(), "48608678071", "(11) 99248-1491",
-            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address",  "complement",
-                 "12", "condominio","details")));
+                 "12", "condominio","details"));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);

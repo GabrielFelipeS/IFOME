@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.entities;
 
+import br.com.ifsp.ifome.dto.request.AddressRequest;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
 import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
@@ -15,7 +16,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -44,12 +44,7 @@ public class Client implements PasswordPolicy, UserDetails  {
         this.password = bCryptPasswordEncoder.encode(clientRequest.password());
         this.dateOfBirth = clientRequest.convertDateOfBirth();
         this.cpf = clientRequest.cpf().replaceAll("[^\\d]", "");
-        this.address = clientRequest.address().stream().map(addressRequest -> {
-            Address address = new Address(addressRequest);
-            address.setClient(this);
-            return address;
-        }).collect(Collectors.toList());
-
+        this.setAddress(clientRequest.address());
     }
 
     public Client(Long id, String name, String email, String password, LocalDate dateOfBirth, String cpf,  List<Address> address, String paymentMethods, BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -65,6 +60,12 @@ public class Client implements PasswordPolicy, UserDetails  {
 
     public Client(Long id, String fullName, String email, String password, LocalDate dateOfBirth, String cpf,  Address address, String paymentMethods, BCryptPasswordEncoder bCryptPasswordEncoder) {
       this(id, fullName, email, password, dateOfBirth, cpf, List.of(address), paymentMethods, bCryptPasswordEncoder);
+    }
+
+    public void setAddress(AddressRequest addressRequest) {
+        Address address = new Address(addressRequest);
+        address.setClient(this);
+        this.address = List.of(address);
     }
 
     @Override
