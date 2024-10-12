@@ -3,6 +3,9 @@ package br.com.ifsp.ifome.entities;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
 import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,8 +17,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "RESTAURANTS")
-// TODO esta faltando a parte de user details junto com roles
 public class Restaurant implements PasswordPolicy, UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +34,6 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     private List<Address> address;
 
     private String telephone;
-    // TODO arrumar relacionamento
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OpeningHours> openingHours;
     private String personResponsible;
@@ -48,8 +52,6 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     private List<Dish> dishes;
 
     private Boolean isOpen;
-
-    public Restaurant() {}
 
     public Restaurant(RestaurantRequest restaurantRequest, BCryptPasswordEncoder bCryptPasswordEncoder, String restaurantImage){
         this.nameRestaurant = restaurantRequest.nameRestaurant();
@@ -99,109 +101,17 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.isOpen = isOpen;
     }
 
-    public Boolean isOpen() {
-        return isOpen;
+    public boolean isOpen() {
+        return this.getIsOpen();
     }
 
-    public void setOpen(Boolean open) {
-        isOpen = open;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNameRestaurant() {
-        return nameRestaurant;
-    }
-
-    public void setNameRestaurant(String nameRestaurant) {
-        this.nameRestaurant = nameRestaurant;
-    }
-
-    public String getCnpj() {
-        return cnpj;
-    }
-
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj.replaceAll("[^\\d]", "");
-    }
-
-    public String getFoodCategory() {
-        return foodCategory;
-    }
-
-    public void setFoodCategory(String foodCategory) {
-        this.foodCategory = foodCategory;
-    }
-
-    public List<Address> getAddress() {
-        return address;
-    }
-
-    public void setAddress( List<Address> address) {
-        this.address = address;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-
-    public List<OpeningHours> getOpeningHours() {
-        return openingHours;
-    }
-
-    public void setOpeningHours(List<OpeningHours> openingHours) {
-        this.openingHours = openingHours;
-    }
-
-    public String getPersonResponsible() {
-        return personResponsible;
-    }
-
-    public void setPersonResponsible(String personResponsible) {
-        this.personResponsible = personResponsible;
-    }
-
-    public String getPersonResponsibleCpf() {
-        return personResponsibleCpf;
-    }
-
-    public void setPersonResponsibleCpf(String personResponsibleCPF) {
-        this.personResponsibleCpf = personResponsibleCPF.replaceAll("[^\\d]", "");;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void reverseStatusOpen() {
+        this.setIsOpen(!this.isOpen());
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.role.getAuthorities();
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     @Override
@@ -227,42 +137,6 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     @Override
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPaymentMethods() {
-        return paymentMethods;
-    }
-
-    public void setPaymentMethods(String paymentMethods) {
-        this.paymentMethods = paymentMethods;
-    }
-
-    public String getRestaurantImage() {
-        return restaurantImage;
-    }
-
-    public void setRestaurantImage(String restaurantImage) {
-        this.restaurantImage = restaurantImage;
-    }
-
-    public BankAccount getBankAccount() {
-        return bankAccount;
-    }
-
-    public void setBankAccount(BankAccount bankAccount) {
-        this.bankAccount = bankAccount;
-    }
-
-    public List<Dish> getDishes() {
-        return dishes;
-    }
-
-    public void setDishes(List<Dish> dishes) {
-        this.dishes = dishes;
     }
 
     @Override
