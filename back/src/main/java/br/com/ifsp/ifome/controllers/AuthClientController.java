@@ -23,11 +23,11 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/api/auth/client")
-public class ClientController {
+public class AuthClientController {
     private final ClientService clientService;
     private final ClientRepository clientRepository;
 
-    public ClientController(ClientService clientService, EmailService emailService, ClientRepository clientRepository) {
+    public AuthClientController(ClientService clientService, ClientRepository clientRepository) {
         this.clientService = clientService;
         this.clientRepository = clientRepository;
     }

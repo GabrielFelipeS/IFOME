@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @WithMockUser
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ClienteControllerIT {
+public class AuthClienteControllerIT {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -78,7 +78,7 @@ public class ClienteControllerIT {
     @Test
     @DirtiesContext
     @DisplayName("should be possible to create a new client")
-    public void shouldBeAbleToCreateANewClient() throws JsonProcessingException {
+    public void shouldBeAbleToCreateANewClient() {
         ClientRequest client = new ClientRequest("Nome completo", "teste@teste.com", "@Password1", "@Password1",
             LocalDate.now().minusYears(18).toString(), "486.086.780-71", "(11) 99248-1491",
             new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
@@ -100,7 +100,7 @@ public class ClienteControllerIT {
         assertThat(id).isNotNull();
         assertThat(name).isEqualTo(client.name());
         assertThat(email).isEqualTo(client.email());
-        assertThat(dateOfBirth).isEqualTo(client.dateOfBirth().toString());
+        assertThat(dateOfBirth).isEqualTo(client.dateOfBirth());
         assertThat(cpf).isEqualTo(client.cpf().replaceAll("[^\\d]", ""));
 
         assertThat(addressJson).isNotNull();
@@ -119,7 +119,7 @@ public class ClienteControllerIT {
     @Test
     @DirtiesContext
     @DisplayName("should be return error with cpf already registred")
-    public void shouldReturnErrorWithCpfAlreadyRegistred() throws JsonProcessingException {
+    public void shouldReturnErrorWithCpfAlreadyRegistred() {
         ClientRequest client = new ClientRequest("Nome completo", "teste@teste.com", "@Password1", "@Password1",
             LocalDate.now().minusYears(18).toString(), "52800314028", "(11) 99248-1491",
             new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
@@ -238,7 +238,7 @@ public class ClienteControllerIT {
     @Test
     @DirtiesContext
     @DisplayName("should return error when registering a client with different password and password confirmation")
-    public void shouldReturnErrorWhenCreatingClientWithdifferentPasswordAndPasswordConfirmation() throws JsonProcessingException {
+    public void shouldReturnErrorWhenCreatingClientWithdifferentPasswordAndPasswordConfirmation() {
         ClientRequest client = new ClientRequest("Nome completo","teste@teste.com", "@Password1", "@Password",
             LocalDate.now().minusYears(18).toString(), "48608678071", "(11) 99248-1491",
             new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
@@ -275,12 +275,10 @@ public class ClienteControllerIT {
 
         assertThat(message.getAllRecipients()[0].toString()).isEqualTo("user1@gmail.com");
         assertThat(message.getSubject()).isEqualTo("Redefinição de senha da conta do IFOME");
-
-        String text = message.getContent().toString();
     }
 
     @Test
-    public void shouldNotSendEmailResetPasswordWithUserNotExists() throws MessagingException {
+    public void shouldNotSendEmailResetPasswordWithUserNotExists() {
         GreenMail greenMail = new GreenMail(ServerSetupTest.SMTP);
         greenMail.setUser("teste.ifome@gmail.com", "teste");
         greenMail.setUser("test@example.com", "test@example.com");

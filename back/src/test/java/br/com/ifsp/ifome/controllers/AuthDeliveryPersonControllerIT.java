@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class DeliveryPersonControllerIT {
+public class AuthDeliveryPersonControllerIT {
     @Autowired
     private TestRestTemplate testRestTemplate;
 

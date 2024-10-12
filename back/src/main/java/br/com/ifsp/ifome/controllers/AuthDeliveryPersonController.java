@@ -22,10 +22,10 @@ import java.net.URI;
 @RestController
 
 @RequestMapping("/api/auth/deliveryPerson")
-public class DeliveryPersonController {
+public class AuthDeliveryPersonController {
     private final DeliveryPersonService deliveryPersonService;
 
-    public DeliveryPersonController(DeliveryPersonService deliveryPersonService){
+    public AuthDeliveryPersonController(DeliveryPersonService deliveryPersonService){
         this.deliveryPersonService = deliveryPersonService;
     }
     @DocsCreateDeliveryPerson
