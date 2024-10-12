@@ -228,7 +228,7 @@ public class DishControllerIT {
         List<String> nameErrors = documentContext.read("$.errors.name");
         assertThat(nameErrors)
                 .containsExactlyInAnyOrder(
-                        "O nome do prato é obrigatório"
+                        "O campo \"Nome do prato\" é obrigatório"
                 );
     }
 
@@ -275,7 +275,7 @@ public class DishControllerIT {
         List<String> dishCategoryErrors = documentContext.read("$.errors.dishCategory");
         assertThat(dishCategoryErrors)
                 .containsExactlyInAnyOrder(
-                        "A categoria do prato é obrigatória"
+                        "O campo \"Categoria\" é obrigatória"
                 );
     }
 
@@ -322,7 +322,7 @@ public class DishControllerIT {
         List<String> descriptionErrors = documentContext.read("$.errors.description");
         assertThat(descriptionErrors)
                 .containsExactlyInAnyOrder(
-                        "A descrição do prato é obrigatória"
+                        "O campo \"Descrição\" é obrigatória"
                 );
     }
 
