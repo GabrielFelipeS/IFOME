@@ -4,8 +4,8 @@ import br.com.ifsp.ifome.dto.request.DeliveryPersonRequest;
 import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
@@ -123,7 +123,7 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.role.getAuthorities();
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     public String getPassword() {
