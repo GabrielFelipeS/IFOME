@@ -9,41 +9,42 @@ import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
-import java.util.List;
 
-@ConfirmartionPasswordEqualsPassword(message = "As senhas não coincidem")
+@ConfirmartionPasswordEqualsPassword(message = "A senha e confirmação de senha não coincidem")
 public record ClientRequest (
-        @NotBlank(message = "Nome é obrigatório")
+        @NotBlank(message = "O campo \"Nome\" é obrigatório")
         String name,
 
-        @Email(message = "E-mail inválido")
-        @NotBlank(message = "E-mail é obrigatório")
         @NotRegisteredEmail
+        @NotBlank(message = "O campo \"E-mail\" é obrigatório")
+        @Email(message = "E-mail deve estar no formato: nome@dominio.com")
         String email,
 
         @ValidPassword
-        @NotBlank(message = "Senha é obrigatório")
+        @NotBlank(message = "O campo \"Senha\" é obrigatório")
         String password,
 
-        @NotBlank(message = "Confirmação da senha é obrigatório")
+        @NotBlank(message = "O campo \"Confirmação da senha\" é obrigatório")
         String confirmationPassword,
 
+        @NotNull(message = "O campo \"Data de nascimento\" é obrigatório")
         @Past(message = "Data de nascimento deve estar no passado")
-        @MinAgeToUse(minAge = 13, message = "Para cadastro no sistema, é necessário ter pelo menos 13 anos de idade.")
-        @NotNull(message = "Data de nascimento é obrigatório")
-        @DateFormat(message = "Formato incorreto para data de nascimento")
+        @MinAgeToUse(minAge = 13, message = "Para cadastro no sistema, é necessário ter pelo menos {minAge} anos de idade.")
+        @MaxAgeToUse(maxAge = 90, message = "Para cadastro no sistema, é necessário ter no máximo {maxAge} anos de idade.")
+        @DateFormat(message = "Data de nascimento deve estar no formato yyyy-mm-dd, atualmente está: {validatedValue}")
         String dateOfBirth,
 
         @CPF(message = "CPF inválido")
-        @NotBlank(message = "CPF é obrigatório")
+        @NotBlank(message = "O campo \"CPF\" é obrigatório")
         String cpf,
 
-        @NotBlank(message = "Telefone é obrigatório")
-        @Pattern(regexp = "\\(\\d{2}\\) \\d{4,5}-\\d{4}", message = "Telefone deve estar no formato (XX) XXXXX-XXXX")
+        @NotBlank(message = "O campo \"Telefone\" é obrigatório")
+        @Pattern(message = "Telefone deve estar no formato (XX) XXXXX-XXXX", regexp = "\\(\\d{2}\\) \\d{4,5}-\\d{4}")
         String phone,
 
-        @NotEmpty(message = "É necessário ter pelo menos um endereço")
-        List<@Valid AddressRequest> address
+        @Valid
+        @NotNull(message = "É necessário ter um endereço")
+        AddressRequest address
 ) {
         public LocalDate convertDateOfBirth() {
                 return LocalDate.parse(this.dateOfBirth);
