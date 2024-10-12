@@ -45,7 +45,7 @@ public class DeliveryPersonController {
     @DocsDeliveryLogin
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest clientLogin)   {
         LoginResponse loginResponse = deliveryPersonService.login(clientLogin);
-        ApiResponse apiResponse = new ApiResponse("success", loginResponse, "Cliente logado com sucesso");
+        ApiResponse apiResponse = new ApiResponse("success", loginResponse, "Entregador logado com sucesso");
         return ResponseEntity.ok(apiResponse);
     }
 
