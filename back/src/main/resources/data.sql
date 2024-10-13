@@ -52,26 +52,29 @@ INSERT INTO address (name_address, cep, neighborhood, city, state, address, numb
 VALUES
     ('Endereço Carlos', '03090-000', 'Mooca', 'São Paulo', 'SP', 'Rua da Mooca', '300', 'Apto 202', 'Perto do Parque da Mooca', 'Casa', 1);
 
-INSERT INTO opening_hours (id, day_of_the_week, opening, closing, restaurant_id) VALUES
-     (1, 'Segunda-feira', '08:00', '22:00', 1),
-     (2, 'Terça-feira', '08:00', '22:00', 1),
-     (3, 'Quarta-feira', '08:00', '22:00', 1),
-     (4, 'Quinta-feira', '08:00', '22:00', 1),
-     (5, 'Sexta-feira', '08:00', '23:00', 1),
-     (6, 'Sábado', '09:00', '23:00', 1),
-     (7, 'Domingo', '09:00', '22:00', 1);
+INSERT INTO opening_hours (day_of_the_week, opening, closing, restaurant_id) VALUES
+     ('Segunda-feira', '08:00', '22:00', 1),
+     ('Terça-feira', '08:00', '22:00', 1),
+     ('Quarta-feira', '08:00', '22:00', 1),
+     ('Quinta-feira', '08:00', '22:00', 1),
+     ('Sexta-feira', '08:00', '23:00', 1),
+     ('Sábado', '09:00', '23:00', 1),
+     ('Domingo', '09:00', '22:00', 1);
 
 INSERT INTO delivery_person (
     email, password,
     cpf, name, date_of_birth, type_of_vehicle,
     plate, telephone,  cnh_number,
+    bank, agency, account,
     cnh_validity, vehicle_document, role
 )
 VALUES (
     'email1@email.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
     '52800314028','João da Silva', '1985-06-15','carro',
     'ABC-1234','(11) 98765-4321','12345678910',
+    'Banco do Brasil','1234','00012345-6',
     '2026-12-31','987654321','DELIVERY'
+
 );
 
 INSERT INTO address (name_address, cep, neighborhood, city, state, address, number, complement, details, type_residence, delivery_id)
