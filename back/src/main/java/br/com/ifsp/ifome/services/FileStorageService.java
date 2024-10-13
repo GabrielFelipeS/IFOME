@@ -1,45 +1,51 @@
 package br.com.ifsp.ifome.services;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Random;
 
 @Service
 public class FileStorageService {
 
-    private final String PATH_TO_FOLDER_IMAGES =  "/src/main/resources/static/images/";
+    private final String PATH_TO_FOLDER_IMAGES = System.getProperty("user.dir") + "/src/main/resources/static/images/";
 
     public String storeFile(String cnpj, MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             throw new IOException("File is empty");
         }
 
-        File directory = new File(PATH_TO_FOLDER_IMAGES);
+        File directory = new File(PATH_TO_FOLDER_IMAGES + cnpj);
         if (!directory.exists()) {
             directory.mkdirs(); // Cria o diretório
         }
 
-        String extension = this.extension(file);
-        String newName = cnpj.replaceAll("[^0-9]", "") + extension;
-        System.err.println(newName);
-        File uploadedFile = new File(System.getProperty("user.dir") + PATH_TO_FOLDER_IMAGES + newName);
-        System.err.println(uploadedFile);
+        String newName = this.refactoreName(file.getOriginalFilename());
+        File uploadedFile = new File( PATH_TO_FOLDER_IMAGES + cnpj + "/" + newName);
 
         // Transferir o arquivo para o diretório especificado
         file.transferTo(uploadedFile);
-
-        return uploadedFile.getName(); // Retorna o caminho absoluto do arquivo salvo
+        System.err.println(uploadedFile.getName());
+        return cnpj + "/" + uploadedFile.getName(); // Retorna o caminho absoluto do arquivo salvo
     }
 
-    private String extension(MultipartFile file) {
-        String contentType = file.getContentType();
-        if(contentType.equals("image/jpeg")) {
-            return ".jpg";
-        } else {
-            return ".png";
+    private String refactoreName(String nameImage) {
+        if (nameImage == null) {
+            throw new RuntimeException("Nome do arquivo é nulo");
         }
+        String extension = nameImage.substring(nameImage.lastIndexOf('.'));
+
+        Random random = new Random();
+        int randomNumber1 = random.nextInt(1001);
+        int randomNumber2 = random.nextInt(1001);
+        char randomLetter = (char) ('A' + random.nextInt(26));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
+        String dateTimeNow = LocalDateTime.now().format(formatter);
+        return randomNumber1 + "-" + dateTimeNow + "-" + randomNumber2 + "-" + randomLetter + extension;
     }
+
 }
