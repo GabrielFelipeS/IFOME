@@ -29,7 +29,7 @@ public class OpeningHours {
     // TODO verificar se esta salvando corretamente
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "opening_hours")
+    @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
     public OpeningHours(OpeningHoursRequest openingHoursRequest) {
