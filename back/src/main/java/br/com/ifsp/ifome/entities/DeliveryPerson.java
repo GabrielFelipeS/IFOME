@@ -27,20 +27,42 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 100, nullable = false)
     private String name;
+
+    @Column(length = 14, nullable = false, unique = true)
     private String cpf;
+
+    @Column(length = 50, nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
     private String password;
+
+    @Column(name = "date_of_birth", nullable = false)
     private LocalDate dateOfBirth;
+
+    @Column(name = "type_of_vehicle", nullable = false)
     private String typeOfVehicle;
+
+    @Column(name = "plate", nullable = false)
     private String plate;
+
+    @Column(length = 15, nullable = false)
     private String telephone;
+
+    @Column(name = "cnh_number", length = 11, nullable = false)
     private String cnhNumber;
+
+    @Column(name = "cnh_validity", nullable = false)
     private LocalDate cnhValidity;
+
+    @Column(name = "vehicle_document", length = 15, nullable = false)
     private String vehicleDocument;
 
     @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Address> address;
+
     @Embedded
     private BankAccount bankAccount;
 

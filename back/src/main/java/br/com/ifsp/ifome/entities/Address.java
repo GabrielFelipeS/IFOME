@@ -15,14 +15,34 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(name = "name_address", length = 100, nullable = false)
     private String nameAddress;
+
+    @Column(length = 10, nullable = false)
     private String cep;
+
+    @Column(length = 150, nullable = false)
     private String neighborhood;
+
+    @Column(length = 150, nullable = false)
     private String city;
+
+    @Column(length = 150, nullable = false)
     private String state;
+
+    @Column(length = 150, nullable = false)
     private String address;
+
+    @Column(length = 150, nullable = false)
     private String number;
+
+    @Column(nullable = false)
     private String complement;
+
+    private String details;
+
+    @Column(length = 150, nullable = false)
     private String typeResidence;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -50,5 +70,6 @@ public class Address {
         this.complement = addressRequest.complement();
         this.number = addressRequest.number();
         this.typeResidence = addressRequest.typeResidence();
+        this.details = addressRequest.details();
     }
 }

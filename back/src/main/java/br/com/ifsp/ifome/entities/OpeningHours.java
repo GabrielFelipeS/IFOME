@@ -16,8 +16,14 @@ public class OpeningHours {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(name = "day_of_the_week", length = 16, nullable = false)
     private String dayOfTheWeek;
+
+    @Column(length = 16, nullable = false)
     private String opening;
+
+    @Column(length = 16, nullable = false)
     private String closing;
 
     // TODO verificar se esta salvando corretamente

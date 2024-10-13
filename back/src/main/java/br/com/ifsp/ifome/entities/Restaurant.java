@@ -26,22 +26,42 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name_restaurant",length = 150, nullable = false)
     private String nameRestaurant;
+
+    @Column(length = 30, nullable = false)
     private String cnpj;
+
+    @Column(name = "food_category",length = 150, nullable = false)
     private String foodCategory;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Address> address;
 
+    @Column(length = 15, nullable = false)
     private String telephone;
+
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OpeningHours> openingHours;
+
+    @Column(name = "person_responsible",length = 150, nullable = false)
     private String personResponsible;
+
+    @Column(name = "person_responsible_cpf",length = 150, nullable = false)
     private String personResponsibleCpf;
+
+    @Column(length = 50, nullable = false, unique = true)
     private String email;
+
+    @Column(length = 255, nullable = false)
     private String password;
+
+    @Column(name = "payment_methods", length = 50, nullable = false)
     private String paymentMethods;
+
+    @Column(name = "restaurant_image", length = 50, nullable = false)
     private String restaurantImage;
+
     @Embedded
     private BankAccount bankAccount;
 
@@ -51,6 +71,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Dish> dishes;
 
+    @Column(name = "is_open")
     private Boolean isOpen;
 
     public Restaurant(RestaurantRequest restaurantRequest, BCryptPasswordEncoder bCryptPasswordEncoder, String restaurantImage){
