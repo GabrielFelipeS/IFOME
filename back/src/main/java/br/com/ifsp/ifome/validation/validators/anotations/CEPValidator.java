@@ -8,6 +8,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -31,9 +32,9 @@ public class CEPValidator implements ConstraintValidator<CEP,String> {
             String url = String.format("https://viacep.com.br/ws/%s/json/", cep);
             String response = restTemplate.getForObject(url, String.class);
             JsonNode node = objectMapper.readTree(response);
-             return node.has("cep") && node.get("cep").asText().equals(cep);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            return node.has("cep") && node.get("cep").asText().equals(cep);
+        } catch (JsonProcessingException | HttpClientErrorException e) {
+           return false;
         }
     }
 }
