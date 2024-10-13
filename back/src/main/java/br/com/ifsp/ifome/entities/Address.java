@@ -37,7 +37,6 @@ public class Address {
     @Column(length = 150, nullable = false)
     private String number;
 
-    @Column(nullable = false)
     private String complement;
 
     private String details;
@@ -45,18 +44,18 @@ public class Address {
     @Column(length = 150, nullable = false)
     private String typeResidence;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "client_id")
     @JsonIgnore
+    @JoinColumn(name = "client_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Client client;
 
-    @JsonIgnore
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    @JsonIgnore
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "delivery_id")
     private DeliveryPerson delivery;
 
