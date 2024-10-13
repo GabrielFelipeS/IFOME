@@ -1,5 +1,7 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.aspect.Login;
+import br.com.ifsp.ifome.aspect.SensiveData;
 import br.com.ifsp.ifome.docs.DocsCreateRestaurant;
 import br.com.ifsp.ifome.docs.DocsRestaurantLogin;
 import br.com.ifsp.ifome.dto.ApiResponse;
@@ -36,6 +38,7 @@ public class AuthRestaurantController {
         this.fileStorageService = fileStorageService;
     }
 
+    @SensiveData
     @Transactional
     @DocsCreateRestaurant
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -55,10 +58,11 @@ public class AuthRestaurantController {
         return ResponseEntity.created(locationOfNewRestaurant).body(apiResponse);
     }
 
+    @SensiveData  @Login
     @PostMapping("/login")
     @DocsRestaurantLogin
-    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest restaurantLogin) {
-        RestaurantLoginResponse restaurantLoginResponse = authRestaurantService.login(restaurantLogin);
+    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+        RestaurantLoginResponse restaurantLoginResponse = authRestaurantService.login(loginRequest);
         ApiResponse apiResponse = new ApiResponse("success", restaurantLoginResponse, "Restaurante logado com sucesso");
         return ResponseEntity.ok(apiResponse);
     }

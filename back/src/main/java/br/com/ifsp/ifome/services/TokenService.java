@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.services;
 
+import br.com.ifsp.ifome.aspect.SensiveData;
 import br.com.ifsp.ifome.exceptions.InvalidTokenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,6 +32,7 @@ public class TokenService {
         this.now = now;
     }
 
+    @SensiveData
     public String generateToken(String subject, Collection<? extends GrantedAuthority> grantedAuthorities) {
         var authorities = grantedAuthorities.stream().map(GrantedAuthority::getAuthority).toList();
         var claims = JwtClaimsSet.builder()
@@ -45,6 +47,7 @@ public class TokenService {
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
+    @SensiveData
     public void validToken(String token) {
         try {
             Jwt jwt = jwtDecoder.decode(token);

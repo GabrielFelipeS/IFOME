@@ -1,5 +1,7 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.aspect.Login;
+import br.com.ifsp.ifome.aspect.SensiveData;
 import br.com.ifsp.ifome.docs.DocsCreateDeliveryPerson;
 import br.com.ifsp.ifome.docs.DocsDeliveryLogin;
 import br.com.ifsp.ifome.dto.ApiResponse;
@@ -28,6 +30,8 @@ public class AuthDeliveryPersonController {
     public AuthDeliveryPersonController(DeliveryPersonService deliveryPersonService){
         this.deliveryPersonService = deliveryPersonService;
     }
+
+    @SensiveData
     @DocsCreateDeliveryPerson
     @PostMapping
     public ResponseEntity<ApiResponse> create(@Valid @RequestBody DeliveryPersonRequest deliveryPersonRequest, UriComponentsBuilder ucb) throws MethodArgumentNotValidException {
@@ -41,10 +45,11 @@ public class AuthDeliveryPersonController {
         return ResponseEntity.created(locationOfNewDeliveryPerson).body(apiResponse);
     }
 
+    @SensiveData  @Login
     @PostMapping("/login")
     @DocsDeliveryLogin
-    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest clientLogin)   {
-        LoginResponse loginResponse = deliveryPersonService.login(clientLogin);
+    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest loginRequest)   {
+        LoginResponse loginResponse = deliveryPersonService.login(loginRequest);
         ApiResponse apiResponse = new ApiResponse("success", loginResponse, "Entregador logado com sucesso");
         return ResponseEntity.ok(apiResponse);
     }

@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.services;
 
+import br.com.ifsp.ifome.aspect.SensiveData;
 import br.com.ifsp.ifome.dto.request.DeliveryPersonRequest;
 import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.response.DeliveryPersonResponse;
@@ -36,6 +37,8 @@ public class DeliveryPersonService {
         this.emailService = emailService;
 
     }
+
+    @SensiveData
     public DeliveryPersonResponse create(DeliveryPersonRequest deliveryPersonRequest) throws MethodArgumentNotValidException {
         validatorService.isValid(deliveryPersonRequest);
         DeliveryPerson deliveryPerson = new DeliveryPerson(deliveryPersonRequest, bCryptPasswordEncoder);
@@ -43,6 +46,7 @@ public class DeliveryPersonService {
         return new DeliveryPersonResponse(deliveryPerson);
     }
 
+    @SensiveData
     public LoginResponse login(LoginRequest loginRequest) {
         Optional<DeliveryPerson> deliveryPersonOptional = deliveryPersonRepository.findByEmail(loginRequest.email());
 

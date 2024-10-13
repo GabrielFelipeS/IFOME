@@ -1,8 +1,10 @@
 package br.com.ifsp.ifome.controllers;
 
 
-import br.com.ifsp.ifome.docs.DocsCreateClient;
+import br.com.ifsp.ifome.aspect.Login;
+import br.com.ifsp.ifome.aspect.SensiveData;
 import br.com.ifsp.ifome.docs.DocsClientLogin;
+import br.com.ifsp.ifome.docs.DocsCreateClient;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
 import br.com.ifsp.ifome.dto.request.ForgotPasswordRequest;
@@ -11,7 +13,6 @@ import br.com.ifsp.ifome.dto.response.ClientResponse;
 import br.com.ifsp.ifome.dto.response.LoginResponse;
 import br.com.ifsp.ifome.repositories.ClientRepository;
 import br.com.ifsp.ifome.services.ClientService;
-import br.com.ifsp.ifome.services.EmailService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ public class AuthClientController {
         this.clientRepository = clientRepository;
     }
 
+    @SensiveData
     @PostMapping
     @DocsCreateClient
     public ResponseEntity<ApiResponse> create(@Valid @RequestBody ClientRequest clientRequest , UriComponentsBuilder ucb) throws MethodArgumentNotValidException {
@@ -46,10 +48,11 @@ public class AuthClientController {
         return ResponseEntity.created(locationOfNewClient).body(response);
     }
 
+    @SensiveData @Login
     @PostMapping("/login")
     @DocsClientLogin
-    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest clientLogin) {
-        LoginResponse loginResponse = clientService.login(clientLogin);
+    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+        LoginResponse loginResponse = clientService.login(loginRequest);
         ApiResponse apiResponse = new ApiResponse("success", loginResponse, "Cliente logado com sucesso");
         return ResponseEntity.ok(apiResponse);
     }
