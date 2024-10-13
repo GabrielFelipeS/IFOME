@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.LinkedMultiValueMap;
@@ -34,7 +35,7 @@ public class DishControllerIT {
 
     @BeforeEach
     public void setUp() {
-        this.token = tokenService.generateToken("email1@email.com");
+        this.token = tokenService.generateToken("email1@email.com", List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
     }
 
     @Test
@@ -227,7 +228,7 @@ public class DishControllerIT {
         List<String> nameErrors = documentContext.read("$.errors.name");
         assertThat(nameErrors)
                 .containsExactlyInAnyOrder(
-                        "O nome do prato é obrigatório"
+                        "O campo \"Nome do prato\" é obrigatório"
                 );
     }
 
@@ -274,7 +275,7 @@ public class DishControllerIT {
         List<String> dishCategoryErrors = documentContext.read("$.errors.dishCategory");
         assertThat(dishCategoryErrors)
                 .containsExactlyInAnyOrder(
-                        "A categoria do prato é obrigatória"
+                        "O campo \"Categoria\" é obrigatória"
                 );
     }
 
@@ -321,7 +322,7 @@ public class DishControllerIT {
         List<String> descriptionErrors = documentContext.read("$.errors.description");
         assertThat(descriptionErrors)
                 .containsExactlyInAnyOrder(
-                        "A descrição do prato é obrigatória"
+                        "O campo \"Descrição\" é obrigatória"
                 );
     }
 

@@ -1,6 +1,5 @@
 package br.com.ifsp.ifome.interfaces;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public interface PasswordPolicy {

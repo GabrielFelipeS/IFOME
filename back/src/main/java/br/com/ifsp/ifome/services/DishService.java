@@ -44,11 +44,10 @@ public class DishService {
     public DishResponse create(DishRequest dishRequest, MultipartFile multipartFile, Principal principal)
         throws MethodArgumentNotValidException, IOException {
 
-        String imageUrl = fileStorageService.storeFile(dishRequest.name(), multipartFile);
-
         Restaurant restaurant = restaurantRepository.findByEmail(principal.getName())
             .orElseThrow(() -> new RuntimeException("Restaurante não encontrado"));
 
+        String imageUrl = fileStorageService.storeFile(restaurant.getCnpj(), multipartFile);
 
         Dish dish = new Dish(dishRequest, imageUrl);
         dish.setRestaurant(restaurant); // Associe o prato ao restaurante

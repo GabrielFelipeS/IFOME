@@ -24,11 +24,10 @@ public class RestaurantService {
 
     public String changeStateOpen(Principal principal) {
         var restaurant = restaurantRepository.findByEmail(principal.getName()).get();
-        boolean reverseOpen = !restaurant.isOpen();
-        restaurant.setOpen(reverseOpen);
+        restaurant.reverseStatusOpen();
         restaurantRepository.save(restaurant);
 
-        String message = String.format("Restaurante %s com sucesso!", reverseOpen? "aberto" : "fechado");
+        String message = String.format("Restaurante %s com sucesso!", restaurant.isOpen()? "aberto" : "fechado");
         return message;
     }
 

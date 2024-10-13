@@ -82,21 +82,35 @@ import java.lang.annotation.Target;
     content = @Content(mediaType = "application/json",
         schema = @Schema(implementation = br.com.ifsp.ifome.dto.ApiResponse.class),
         examples =  @ExampleObject(value = """
-                {
-                    "status": "sucess",
-                    "data": {
-                        "user": {
-                            "id": 2,
-                            "name": "Gabriel",
-                            "email": "email1@email.com",
-                            "dateOfBirth": "2003-04-14",
-                            "cpf": "920.513.620-41",
-                            "address": []
-                        },
-                        "token": "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJhcGlfaWZvbWUiLCJzdWIiOiJlbWFpbDFAZ21haWwuY29tIiwiZXhwIjoxNzI3MTg3MDY2LCJpYXQiOjE3MjcxODY3NjZ9.mxpDmAveBrq6SGOELPfthhHobx9DIiHTWE7Yigv_yBNfei1atWXxsQnlhhTrpM3IzE8-hTrY_BtPTvAWHR3pgq0N_ZC2g8DnJz5LfE1rfsAqiWDur_xgHnApD6O08fN-8wvVo9kUvy-taEN5cvoV-s7TIeNTu-lvcR1St8MFwr9NeXtcFRy3O09FFRB2AgLcP52_-IjpK_2jhmi_10dBDGd6HAL3P_e6esG71Qn6fOHnDz2E7340T5JU3ngg3Iij176jR7EYg-yRw1wEf6Ijw1r04sOXkWhPjmSWtH18IVFS7Zx4o56ojjta5q5J5Se99DgPLXRKffnptkzJUchpOw"
-                    },
-                    "message": "Cliente logado com sucesso"
-                }
+            {
+              "status": "success",
+              "data": {
+                "user": {
+                  "id": 2,
+                  "name": "Gabriel",
+                  "email": "email1@email.com",
+                  "dateOfBirth": "2003-04-14",
+                  "cpf": "92051362041",
+                  "address": [
+                    {
+                      "id": 2,
+                      "nameAddress": "Endereço Maria",
+                      "cep": "01234-567",
+                      "neighborhood": "Centro",
+                      "city": "São Paulo",
+                      "state": "SP",
+                      "address": "Avenida São João",
+                      "number": "500",
+                      "complement": "Apto 101', 'Próximo ao Parque Villa-Lobos",
+                      "details": "Próximo à Praça da República",
+                      "typeResidence": "Apartamento"
+                    }
+                  ]
+                },
+                "token": "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJhcGlfaWZvbWUiLCJzdWIiOiJlbWFpbDFAZW1haWwuY29tIiwiZXhwIjoxNzM0MDk4Mjc3LCJpYXQiOjE3Mjg4Mzg2NzcsImF1dGhvcml0aWVzIjpbIkNMSUVOVF9SRUFEIiwiQ0xJRU5UX0NSRUFURSIsIkNMSUVOVF9VUERBVEUiLCJDTElFTlRfREVMRVRFIiwiUk9MRV9DTElFTlQiXX0.cwQU5IK1rva8gq_xRHdmU-Zq-4AijNdVsI8k6sNcWxgNuQFTPH3Yi4B9OsyCsVlG_YwI5APlmY0yGK3DfMf3kFLtk5sIYqfEtR1UBynS5LQvvfyTlvp96Ih2E-nikc6MZD9TmSq5DL8rzCQL47dauOeAlSdil1ghgYrKcWhrcb0HBZe-9YQSDp0ej0hGmsW5db4EuVglIPFINsa7lEVu7AgowEHBMPKPSRx91XVYyfwThJbocVUNS6oo7DJotlZBBIlzmFMNW84V1PUfZEe_fSLGzJ1JgzVsT26w_ehEdz6VCA3zb6nHzxKU_t-ikIobUuEOtXa9ZAne85kRwfDsCg"
+              },
+              "message": "Cliente logado com sucesso"
+            }
             """)
       )),
     @ApiResponse(responseCode = "403", description = "Email ou senha incorretos!",

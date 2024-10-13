@@ -6,4 +6,7 @@ services:
      - .env
     ports:
       - "80:8080"
+    volumes:
+      - "./src/main/resources/static/images:/app/src/main/resources/static/images"
+      - "/logs:/logs"
     restart: "always"

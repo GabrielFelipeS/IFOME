@@ -83,30 +83,44 @@ import java.lang.annotation.Target;
         schema = @Schema(implementation = br.com.ifsp.ifome.dto.ApiResponse.class),
         examples =  @ExampleObject(value = """
                 {
-                    "status": "sucess",
-                    "data": {
+                  "status": "success",
+                  "data": {
                     "user": {
                       "id": 1,
                       "name": "João da Silva",
-                      "cpf": "528.003.140-28",
+                      "cpf": "52800314028",
                       "email": "email1@email.com",
                       "dateOfBirth": "1985-06-15",
                       "typeOfVehicle": "carro",
                       "plate": "ABC-1234",
                       "telephone": "(11) 98765-4321",
-                      "cnhNumber": "123456789",
+                      "cnhNumber": "12345678910",
                       "cnhValidity": "2026-12-31",
                       "vehicleDocument": "987654321",
-                      "address": [],
-                     "bankAccount": {
-                        "bank": "123",
-                        "agency": "1255",
-                        "account": "4547-7"
+                      "address": [
+                        {
+                          "id": 5,
+                          "nameAddress": "Endereço Carlos",
+                          "cep": "03090-000",
+                          "neighborhood": "Mooca",
+                          "city": "São Paulo",
+                          "state": "SP",
+                          "address": "Rua da Mooca",
+                          "number": "300",
+                          "complement": "Apto 101",
+                          "details": "Próximo ao Parque Villa-Lobos",
+                          "typeResidence": "Casa"
+                        }
+                      ],
+                      "bankAccount": {
+                        "bank": "Banco do Brasil",
+                        "agency": "1234",
+                        "account": "00012345-6"
                       }
                     },
-                        "token": "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJhcGlfaWZvbWUiLCJzdWIiOiJlbWFpbDFAZ21haWwuY29tIiwiZXhwIjoxNzI3MTg3MDY2LCJpYXQiOjE3MjcxODY3NjZ9.mxpDmAveBrq6SGOELPfthhHobx9DIiHTWE7Yigv_yBNfei1atWXxsQnlhhTrpM3IzE8-hTrY_BtPTvAWHR3pgq0N_ZC2g8DnJz5LfE1rfsAqiWDur_xgHnApD6O08fN-8wvVo9kUvy-taEN5cvoV-s7TIeNTu-lvcR1St8MFwr9NeXtcFRy3O09FFRB2AgLcP52_-IjpK_2jhmi_10dBDGd6HAL3P_e6esG71Qn6fOHnDz2E7340T5JU3ngg3Iij176jR7EYg-yRw1wEf6Ijw1r04sOXkWhPjmSWtH18IVFS7Zx4o56ojjta5q5J5Se99DgPLXRKffnptkzJUchpOw"
-                    },
-                    "message": "Entregador logado com sucesso"
+                    "token": "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJhcGlfaWZvbWUiLCJzdWIiOiJlbWFpbDFAZW1haWwuY29tIiwiZXhwIjoxNzM0MDk4MjI1LCJpYXQiOjE3Mjg4Mzg2MjUsImF1dGhvcml0aWVzIjpbIkRFTElWRVJZIl19.fMK2SlON-Hr9vESt7HyQv87DT0Lvv7ts8qTMxfLsxy2XZN72twDoaU0zbY8W79dkD7qzdJ6pFgO-vEzHl1lYTJ6Lwy8aEX-xhBrEhc-BwFqtkFwhQF5u02syE7W-1lrk6DNq4LPFJ6iuxqBk4z8aWxkVXlbfjvqRKX9Jjxmh1vkxykotYaLaUyaWrfnl-S1uxuDIYccCzaS9ii8NPSTW8UISI9mbwqCrtYjMtTiq-cZV37wCxRpfylWSYRYqV944PwfCN78TmnkfJg7OBDyEFGVZAHPdA1Fv_vymCCEkPKXCHr72BWVdeDtauI-eLfqAZ1H1mQ7rmieKkjBPqTI69g"
+                  },
+                  "message": "Entregador logado com sucesso"
                 }
             """)
       )),

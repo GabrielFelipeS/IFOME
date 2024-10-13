@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.services;
 
+import br.com.ifsp.ifome.aspect.SensiveData;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
 import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.response.ClientResponse;
@@ -38,6 +39,7 @@ public class ClientService {
         this.emailService = emailService;
     }
 
+    @SensiveData
     public ClientResponse create(ClientRequest clientRequest) throws MethodArgumentNotValidException {
         validatorService.isValid(clientRequest);
         Client client = new Client(clientRequest, bCryptPasswordEncoder);
@@ -45,14 +47,16 @@ public class ClientService {
         return new ClientResponse(client);
     }
 
+    @SensiveData
     public LoginResponse login(LoginRequest loginRequest) {
-        Optional<Client> client = clientRepository.findByEmail(loginRequest.email());
+        Optional<Client> clientOptional = clientRepository.findByEmail(loginRequest.email());
 
-        loginService.isLoginIncorrect(client, loginRequest.password(), bCryptPasswordEncoder);
+        loginService.isLoginIncorrect(clientOptional, loginRequest.password(), bCryptPasswordEncoder);
 
-        var jwtValue = tokenService.generateToken(client.orElseThrow().getEmail());
+        var client = clientOptional.orElseThrow();
+        var jwtValue = tokenService.generateToken(client.getEmail(), client.getAuthorities());
 
-        ClientResponse clientResponse = new ClientResponse(client.orElseThrow());
+        ClientResponse clientResponse = new ClientResponse(client);
 
         return new LoginResponse(clientResponse, jwtValue);
     }

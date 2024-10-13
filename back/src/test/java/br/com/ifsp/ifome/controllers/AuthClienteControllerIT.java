@@ -34,13 +34,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @WithMockUser
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ClienteControllerIT {
+public class AuthClienteControllerIT {
 
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Test
     @DirtiesContext
+    @DisplayName("should be able login with valid user")
     public void shouldBeAbleLoginWithValidUser() {
         LoginRequest clientLogin = new LoginRequest("user1@gmail.com", "@Password1");
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/login", clientLogin, String.class);
@@ -60,6 +61,7 @@ public class ClienteControllerIT {
 
     @Test
     @DirtiesContext
+    @DisplayName("should return error when login with invalid email")
     public void shouldReturnErrorWhenLoginWithInvalidEmail() {
         LoginRequest clientLogin = new LoginRequest("invalid_email@gmail.com", "@Password1");
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/login", clientLogin, String.class);
@@ -68,6 +70,7 @@ public class ClienteControllerIT {
     }
 
     @Test
+    @DisplayName("should return error when login with invalid password")
     public void shouldReturnErrorWhenLoginWithInvalidPassword() {
         LoginRequest clientLogin = new LoginRequest("user1@gmail.com", "invalid_password");
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/login", clientLogin, String.class);
@@ -78,12 +81,12 @@ public class ClienteControllerIT {
     @Test
     @DirtiesContext
     @DisplayName("should be possible to create a new client")
-    public void shouldBeAbleToCreateANewClient() throws JsonProcessingException {
+    public void shouldBeAbleToCreateANewClient() {
         ClientRequest client = new ClientRequest("Nome completo", "teste@teste.com", "@Password1", "@Password1",
             LocalDate.now().minusYears(18).toString(), "486.086.780-71", "(11) 99248-1491",
-            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
-                "12", "casa","details")));
+                "12", "casa","details"));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -100,7 +103,7 @@ public class ClienteControllerIT {
         assertThat(id).isNotNull();
         assertThat(name).isEqualTo(client.name());
         assertThat(email).isEqualTo(client.email());
-        assertThat(dateOfBirth).isEqualTo(client.dateOfBirth().toString());
+        assertThat(dateOfBirth).isEqualTo(client.dateOfBirth());
         assertThat(cpf).isEqualTo(client.cpf().replaceAll("[^\\d]", ""));
 
         assertThat(addressJson).isNotNull();
@@ -119,12 +122,12 @@ public class ClienteControllerIT {
     @Test
     @DirtiesContext
     @DisplayName("should be return error with cpf already registred")
-    public void shouldReturnErrorWithCpfAlreadyRegistred() throws JsonProcessingException {
+    public void shouldReturnErrorWithCpfAlreadyRegistred() {
         ClientRequest client = new ClientRequest("Nome completo", "teste@teste.com", "@Password1", "@Password1",
             LocalDate.now().minusYears(18).toString(), "52800314028", "(11) 99248-1491",
-            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
-                "12", "casa","details")));
+                "12", "casa","details"));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -144,9 +147,9 @@ public class ClienteControllerIT {
     @DisplayName("should not be possible to create a new client with already registered email")
     public void shouldReturnErrorWhenCreatingClientWithAlreadyRegisteredEmail() {
         ClientRequest client = new ClientRequest("Nome completo","user1@gmail.com", "@Password1", "@Password1",
-            LocalDate.now().minusYears(14).toString(), "019.056.440-78", "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
+            LocalDate.now().minusYears(14).toString(), "019.056.440-78", "(11) 99248-1491",new AddressRequest("35170-222", "casa 1", "neighborhood", "city", "state",
             "address",  "complement",
-             "12", "condominio","details")));
+             "12", "condominio","details"));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -165,9 +168,9 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the password field")
     public void shouldReturnAllValidationErrorsInThePasswordField() {
         ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", " ", " ",
-            LocalDate.now().minusYears(18).toString(), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            LocalDate.now().minusYears(18).toString(), "019.056.440-78",  "(11) 99248-1491", new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address",  "complement",
-            "12", "condomínio","details")));
+            "12", "condomínio","details"));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -179,7 +182,7 @@ public class ClienteControllerIT {
         List<String> passwordErrors = documentContext.read("$.errors.password");
         assertThat(passwordErrors)
             .containsExactlyInAnyOrder(
-                "Senha é obrigatório",
+                "O campo \"Senha\" é obrigatório",
                 "A senha precisa possui pelo menos 6 caracteres",
                 "Senha precisa conter pelo menos um número",
                 "Senha precisa conter pelo menos um caractere minúsculo",
@@ -193,9 +196,9 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the dateOfBirth field")
     public void shouldReturnAllValidationErrorsInThDateOfBirthField() {
         ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", "@Teste123", "@Teste123",
-            LocalDate.now().plusDays(1).toString(), "019.056.440-78",  "(11) 99248-1491", List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            LocalDate.now().plusDays(1).toString(), "019.056.440-78",  "(11) 99248-1491", new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address",  "complement",
-             "12", "condominio","details")));
+             "12", "condominio","details"));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -217,9 +220,9 @@ public class ClienteControllerIT {
     @DisplayName("should return all validation errors in the cpf field")
     public void shouldReturnAllValidationErrorsInTheCPFField() {
         ClientRequest client = new ClientRequest("Nome completo","email@gmail.com", "@Teste123", "@Teste123",
-            LocalDate.now().minusYears(18).toString(), "cpf",  "(11) 99248-1491",List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            LocalDate.now().minusYears(18).toString(), "cpf",  "(11) 99248-1491",new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
             "address", "complement",
-            "12", "condominio","details")));
+            "12", "condominio","details"));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -238,12 +241,12 @@ public class ClienteControllerIT {
     @Test
     @DirtiesContext
     @DisplayName("should return error when registering a client with different password and password confirmation")
-    public void shouldReturnErrorWhenCreatingClientWithdifferentPasswordAndPasswordConfirmation() throws JsonProcessingException {
+    public void shouldReturnErrorWhenCreatingClientWithdifferentPasswordAndPasswordConfirmation() {
         ClientRequest client = new ClientRequest("Nome completo","teste@teste.com", "@Password1", "@Password",
             LocalDate.now().minusYears(18).toString(), "48608678071", "(11) 99248-1491",
-            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address",  "complement",
-                 "12", "condominio","details")));
+                 "12", "condominio","details"));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client", client, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -255,6 +258,7 @@ public class ClienteControllerIT {
     }
 
     @Test
+    @DisplayName("should send email reset password")
     public void shouldSendEmailResetPassword() throws MessagingException, IOException {
         GreenMail greenMail = new GreenMail(ServerSetupTest.SMTP);
         greenMail.setUser("teste.ifome@gmail.com", "teste");
@@ -275,12 +279,11 @@ public class ClienteControllerIT {
 
         assertThat(message.getAllRecipients()[0].toString()).isEqualTo("user1@gmail.com");
         assertThat(message.getSubject()).isEqualTo("Redefinição de senha da conta do IFOME");
-
-        String text = message.getContent().toString();
     }
 
     @Test
-    public void shouldNotSendEmailResetPasswordWithUserNotExists() throws MessagingException {
+    @DisplayName("should not send email reset password with user not exists")
+    public void shouldNotSendEmailResetPasswordWithUserNotExists() {
         GreenMail greenMail = new GreenMail(ServerSetupTest.SMTP);
         greenMail.setUser("teste.ifome@gmail.com", "teste");
         greenMail.setUser("test@example.com", "test@example.com");
@@ -299,6 +302,7 @@ public class ClienteControllerIT {
     }
 
     @Test
+    @DisplayName("should reset password")
     public void shouldResetPassword() {
         ResponseEntity<String> response = restTemplate.getForEntity("/api/auth/client/change_password?token=teste",  String.class);
 
