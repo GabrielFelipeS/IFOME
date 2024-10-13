@@ -13,7 +13,6 @@ import ToastPlugin from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-bootstrap.css';
 
 import Autocomplete from '@trevoreyre/autocomplete-vue';
-import '@trevoreyre/autocomplete-vue/dist/style.css'
 
 const Fa = Object.values({ ...FaIcons });
 addIcons(...Fa);
