@@ -1,19 +1,17 @@
 -- $2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG  -> @Password1
-INSERT INTO clients (name, email, password, date_of_birth, cpf, type_residence, cep, address, payment_methods, role)
-VALUES ('Gabriel', 'user1@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '52800314028', 'casa', 'cep', 'Av. Salgado Filho, 3501 - Centro, Guarulhos - SP', 'Cartão de Crédito', 'CLIENT');
+INSERT INTO clients (name, email, password, date_of_birth, cpf, role)
+VALUES ('Gabriel', 'user1@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '52800314028', 'CLIENT');
 
-INSERT INTO clients (name, email, password, date_of_birth, cpf, type_residence, cep, address, payment_methods, role)
-VALUES ('Gabriel', 'email1@email.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '92051362041', 'casa', 'cep', 'Av. Salgado Filho, 3501 - Centro, Guarulhos - SP', 'Cartão de Crédito', 'CLIENT');
+INSERT INTO clients (name, email, password, date_of_birth, cpf, role)
+VALUES ('Gabriel', 'email1@email.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '92051362041', 'CLIENT');
 
-INSERT INTO clients (name, email, password, date_of_birth, cpf, type_residence, cep, address, payment_methods, role)
-VALUES ('Gabriel', 'noreply.ifome@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '77025681008', 'casa', 'cep', 'Av. Salgado Filho, 3501 - Centro, Guarulhos - SP', 'Cartão de Crédito', 'CLIENT');
+INSERT INTO clients (name, email, password, date_of_birth, cpf, role)
+VALUES ('Gabriel', 'noreply.ifome@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '77025681008',  'CLIENT');
 
 INSERT INTO restaurants (
     name_restaurant,
     cnpj,
     food_category,
-    cep,
-    address,
     telephone,
     person_responsible,
     person_responsible_cpf,
@@ -21,15 +19,12 @@ INSERT INTO restaurants (
     password,
     payment_methods,
     restaurant_image,
-    bank_account,
     role,
     is_open
 ) VALUES (
     'Açai do monge',
-    '58911612000116',
     'Sorveteria',
     '07070-000',
-    'Endereço completo',
     '(11) 1234-5678',
     'Nome Responsável',
     '07635915053',
@@ -37,7 +32,6 @@ INSERT INTO restaurants (
     '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
     'Dinheiro, Cartão',
     'image.jpg',
-    'Banco XYZ, Agência 123, Conta 456789',
     'RESTAURANT',
     false
 );
