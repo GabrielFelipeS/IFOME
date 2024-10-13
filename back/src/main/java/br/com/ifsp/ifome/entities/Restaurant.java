@@ -76,7 +76,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
 
     public Restaurant(RestaurantRequest restaurantRequest, BCryptPasswordEncoder bCryptPasswordEncoder, String restaurantImage){
         this.nameRestaurant = restaurantRequest.nameRestaurant();
-        this.cnpj = restaurantRequest.cnpj();
+        this.cnpj = restaurantRequest.cnpj().replaceAll("[^\\d]", "");
         this.foodCategory = restaurantRequest.foodCategory();
         this.address = restaurantRequest.address().stream().map(addressRequest -> {
             Address address = new Address(addressRequest);

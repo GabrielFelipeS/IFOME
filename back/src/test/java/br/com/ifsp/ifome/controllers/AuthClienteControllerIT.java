@@ -41,6 +41,7 @@ public class AuthClienteControllerIT {
 
     @Test
     @DirtiesContext
+    @DisplayName("should be able login with valid user")
     public void shouldBeAbleLoginWithValidUser() {
         LoginRequest clientLogin = new LoginRequest("user1@gmail.com", "@Password1");
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/login", clientLogin, String.class);
@@ -60,6 +61,7 @@ public class AuthClienteControllerIT {
 
     @Test
     @DirtiesContext
+    @DisplayName("should return error when login with invalid email")
     public void shouldReturnErrorWhenLoginWithInvalidEmail() {
         LoginRequest clientLogin = new LoginRequest("invalid_email@gmail.com", "@Password1");
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/login", clientLogin, String.class);
@@ -68,6 +70,7 @@ public class AuthClienteControllerIT {
     }
 
     @Test
+    @DisplayName("should return error when login with invalid password")
     public void shouldReturnErrorWhenLoginWithInvalidPassword() {
         LoginRequest clientLogin = new LoginRequest("user1@gmail.com", "invalid_password");
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/client/login", clientLogin, String.class);
@@ -255,6 +258,7 @@ public class AuthClienteControllerIT {
     }
 
     @Test
+    @DisplayName("should send email reset password")
     public void shouldSendEmailResetPassword() throws MessagingException, IOException {
         GreenMail greenMail = new GreenMail(ServerSetupTest.SMTP);
         greenMail.setUser("teste.ifome@gmail.com", "teste");
@@ -278,6 +282,7 @@ public class AuthClienteControllerIT {
     }
 
     @Test
+    @DisplayName("should not send email reset password with user not exists")
     public void shouldNotSendEmailResetPasswordWithUserNotExists() {
         GreenMail greenMail = new GreenMail(ServerSetupTest.SMTP);
         greenMail.setUser("teste.ifome@gmail.com", "teste");
@@ -297,6 +302,7 @@ public class AuthClienteControllerIT {
     }
 
     @Test
+    @DisplayName("should reset password")
     public void shouldResetPassword() {
         ResponseEntity<String> response = restTemplate.getForEntity("/api/auth/client/change_password?token=teste",  String.class);
 

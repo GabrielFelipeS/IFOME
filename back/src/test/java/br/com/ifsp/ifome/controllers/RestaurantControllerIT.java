@@ -4,6 +4,7 @@ import br.com.ifsp.ifome.services.TokenService;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,6 +36,7 @@ public class RestaurantControllerIT {
     }
 
     @Test
+    @DisplayName("should return all restaurants")
     public void shouldBeAbleReturnAllRestaurant() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
@@ -52,6 +54,7 @@ public class RestaurantControllerIT {
     }
 
     @Test
+    @DisplayName("should be raturn restaurant by id")
     public void shouldBeReturnRestaurant() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
@@ -69,6 +72,7 @@ public class RestaurantControllerIT {
     }
 
     @Test
+    @DisplayName("should not be return restaurant by id does not exist")
     public void shouldNotBeReturnRestaurant() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
@@ -87,6 +91,7 @@ public class RestaurantControllerIT {
 
     @Test
     @DirtiesContext
+    @DisplayName("should be reverse open with put")
     public void shouldBeReverseOpenPut() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
@@ -108,6 +113,8 @@ public class RestaurantControllerIT {
     }
 
     @Test
+    @DirtiesContext
+    @DisplayName("should be return is open restaurant")
     public void shouldBeIsOpen() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
@@ -128,8 +135,6 @@ public class RestaurantControllerIT {
         Boolean isOpen = document.read("$.data.isOpen");
         assertThat(isOpen).isEqualTo(false);
     }
-
-
 }
 
 
