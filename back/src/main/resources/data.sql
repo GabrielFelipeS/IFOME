@@ -10,8 +10,8 @@ VALUES ('Gabriel', 'noreply.ifome@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpV
 
 INSERT INTO address (name_address, cep, neighborhood, city, state, address, number, complement, details, type_residence, client_id)
 VALUES
-    ('Endereço João', '05413-020', 'Pinheiros', 'São Paulo', 'SP', 'Rua dos Três Irmãos', '50', 'Apto 101', 'Próximo ao Parque Villa-Lobos', 'Casa', 1),
-    ('Endereço Maria', '01234-567', 'Centro', 'São Paulo', 'SP', 'Avenida São João', '500', NULL, 'Próximo à Praça da República', 'Apartamento', 2),
+    ('Endereço João', '05413-020', 'Pinheiros', 'São Paulo', 'SP', 'Rua dos Três Irmãos', '50', NULL, 'Próximo à Praça da República', 'Casa', 1),
+    ('Endereço Maria', '01234-567', 'Centro', 'São Paulo', 'SP', 'Avenida São João', '500','Apto 101', 'Próximo ao Parque Villa-Lobos' , 'Apartamento', 2),
     ('Endereço Carlos', '03090-000', 'Mooca', 'São Paulo', 'SP', 'Rua da Mooca', '300', 'Apto 202', 'Perto do Parque da Mooca', 'Casa', 3);
 
 INSERT INTO restaurants (

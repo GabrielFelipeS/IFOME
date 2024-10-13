@@ -101,7 +101,7 @@ import java.lang.annotation.Target;
                       "state": "SP",
                       "address": "Avenida São João",
                       "number": "500",
-                      "complement": null,
+                      "complement": "Apto 101', 'Próximo ao Parque Villa-Lobos",
                       "details": "Próximo à Praça da República",
                       "typeResidence": "Apartamento"
                     }

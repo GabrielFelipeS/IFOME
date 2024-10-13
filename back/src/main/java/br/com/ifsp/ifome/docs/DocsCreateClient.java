@@ -262,8 +262,7 @@ import java.lang.annotation.Target;
                       "dateOfBirth": "2000-01-01",
                       "cpf": "211.039.180-44",
                       "phone": "(11) 99248-1491",
-                      "address": [
-                        {
+                      "address": {
                           "nameAddress": "casa principal",
                           "cep": "35170-222",
                           "neighborhood": "neighborhood",
@@ -275,7 +274,6 @@ import java.lang.annotation.Target;
                           "details": "details",
                           "typeResidence": "casa"
                         }
-                      ]
                     }
                 """
         ),
@@ -319,8 +317,7 @@ import java.lang.annotation.Target;
                          "email": "novo@cliente.com",
                          "dateOfBirth": "2000-01-01",
                          "cpf": "211.039.180-44",
-                         "address": [
-                             {
+                         "address": {
                                  "cep": "35170-222",
                                  "neighborhood": "neighborhood",
                                  "city": "Coronel Fabriciano",
@@ -329,7 +326,6 @@ import java.lang.annotation.Target;
                                  "number": "12",
                                  "complement": "complement"
                              }
-                         ]
                     },
                     "message": "Cliente criado com sucesso"
                 }
@@ -349,7 +345,7 @@ import java.lang.annotation.Target;
                     "É necessário ter um endereço"
                 ],
                 "phone": [
-                    "O campo \"Telefone\" é obrigatório"
+                    "O campo \\"Telefone\\" é obrigatório"
                 ],
                 "cpf": [
                    "O campo \\"CPF\\" deve estar no formato: XXX.XXX.XXX-XX}"

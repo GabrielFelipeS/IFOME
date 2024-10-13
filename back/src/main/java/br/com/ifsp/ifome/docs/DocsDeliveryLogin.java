@@ -107,8 +107,8 @@ import java.lang.annotation.Target;
                           "state": "SP",
                           "address": "Rua da Mooca",
                           "number": "300",
-                          "complement": "Apto 202",
-                          "details": "Perto do Parque da Mooca",
+                          "complement": "Apto 101",
+                          "details": "Próximo ao Parque Villa-Lobos",
                           "typeResidence": "Casa"
                         }
                       ],
