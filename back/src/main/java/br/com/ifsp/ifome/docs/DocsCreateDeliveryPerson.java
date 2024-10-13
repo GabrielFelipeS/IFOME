@@ -2,7 +2,6 @@ package br.com.ifsp.ifome.docs;
 
 
 import br.com.ifsp.ifome.dto.request.DeliveryPersonRequest;
-import br.com.ifsp.ifome.dto.request.RestaurantRequest;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
