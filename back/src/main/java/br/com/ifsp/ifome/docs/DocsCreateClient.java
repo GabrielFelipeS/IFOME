@@ -297,7 +297,7 @@ import java.lang.annotation.Target;
                         "password": "password",
                         "confirmationPassword": "password",
                         "dateOfBirth": "2003-04-14",
-                        "address": []
+                        "address": {}
                     }
                     """
             )
@@ -317,7 +317,8 @@ import java.lang.annotation.Target;
                          "email": "novo@cliente.com",
                          "dateOfBirth": "2000-01-01",
                          "cpf": "211.039.180-44",
-                         "address": {
+                         "address": [
+                            {
                                  "cep": "35170-222",
                                  "neighborhood": "neighborhood",
                                  "city": "Coronel Fabriciano",
@@ -326,6 +327,7 @@ import java.lang.annotation.Target;
                                  "number": "12",
                                  "complement": "complement"
                              }
+                         ]
                     },
                     "message": "Cliente criado com sucesso"
                 }
