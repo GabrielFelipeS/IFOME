@@ -8,13 +8,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Operation(summary = "Cadastrar um novo prato")
+@Operation(summary = "Cadastrar um novo prato",  security = @SecurityRequirement(name = "Bearer Token"))
 @RequestBody(
         description = "Detalhes do prato cadastrado",
         required = true,
