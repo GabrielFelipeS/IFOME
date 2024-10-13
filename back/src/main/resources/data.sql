@@ -23,8 +23,8 @@ INSERT INTO restaurants (
     is_open
 ) VALUES (
     'Açai do monge',
+    '58911612000116',
     'Sorveteria',
-    '07070-000',
     '(11) 1234-5678',
     'Nome Responsável',
     '07635915053',
