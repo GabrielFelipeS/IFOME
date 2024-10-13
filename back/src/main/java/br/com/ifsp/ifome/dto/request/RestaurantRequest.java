@@ -4,10 +4,7 @@ import br.com.ifsp.ifome.validation.anotations.ConfirmartionPasswordEqualsPasswo
 import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmailRestaurant;
 import br.com.ifsp.ifome.validation.anotations.ValidPassword;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -33,8 +30,9 @@ public record RestaurantRequest(
         @NotBlank(message = "CNPJ é obrigatório")
         String cnpj,
 
-        @NotEmpty(message = "É necessário ter pelo menos um endereço")
-        List<@Valid AddressRequest> address,
+        @Valid
+        @NotNull(message = "É necessário ter um endereço")
+        AddressRequest address,
 
         @NotBlank(message = "Telefone é obrigatório")
         @Pattern(regexp = "\\(\\d{2}\\) \\d{4,5}-\\d{4}", message = "Telefone deve estar no formato (XX) XXXXX-XXXX")

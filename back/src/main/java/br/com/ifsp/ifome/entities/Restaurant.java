@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.entities;
 
+import br.com.ifsp.ifome.dto.request.AddressRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
 import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
@@ -78,11 +79,6 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.nameRestaurant = restaurantRequest.nameRestaurant();
         this.cnpj = restaurantRequest.cnpj().replaceAll("[^\\d]", "");
         this.foodCategory = restaurantRequest.foodCategory();
-        this.address = restaurantRequest.address().stream().map(addressRequest -> {
-            Address address = new Address(addressRequest);
-            address.setRestaurant(this);
-            return address;
-        }).collect(Collectors.toList());
         this.telephone = restaurantRequest.telephone();
         this.openingHours = restaurantRequest.openingHours().stream().map(openingHoursRequest -> {
             OpeningHours openingHours1 = new OpeningHours(openingHoursRequest);
@@ -97,6 +93,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.restaurantImage = restaurantImage;
         this.bankAccount = new BankAccount(restaurantRequest.bankAccount());
         this.isOpen = false;
+        this.setAddress(restaurantRequest.address());
     }
 
     public Restaurant(Long id, String nameRestaurant, String cnpj,
@@ -120,6 +117,12 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.bankAccount = bankAccount;
         this.role = Role.RESTAURANT;
         this.isOpen = isOpen;
+    }
+
+    public void setAddress(AddressRequest addressRequest) {
+        Address address = new Address(addressRequest);
+        address.setRestaurant(this);
+        this.address = List.of(address);
     }
 
     public boolean isOpen() {
