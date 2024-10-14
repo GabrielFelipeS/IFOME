@@ -1,6 +1,7 @@
 package br.com.ifsp.ifome.entities;
 
 
+import br.com.ifsp.ifome.dto.request.CartRequest;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,4 +26,13 @@ public class Cart {
     private Restaurant restaurant;
     private DeliveryPerson deliveryPerson;
     private List<Order> orders;
+    private Double deliveryFee;
+
+    public Cart(CartRequest cartRequest){
+        this.client = cartRequest.client();
+        this.restaurant = cartRequest.restaurant();
+        this.deliveryPerson = cartRequest.deliveryPerson();
+        this.orders = cartRequest.orders();
+        this.deliveryFee = cartRequest.deliveryFee();
+    }
 }
