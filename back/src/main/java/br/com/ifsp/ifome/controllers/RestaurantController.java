@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-
 @MultipartConfig
 @RequestMapping("/api/restaurant/")
 public class RestaurantController {
