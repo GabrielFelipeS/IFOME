@@ -6,8 +6,7 @@ import Button from '@/components/Button.vue';
     <header class="header">
         <img src="../../assets/img/logo_header.png" class="img">
         <div class="buttons">
-            <Button href="/#" class="button1">Portal do Entregador</Button>
-            <Button href="/#" class="button2" inversed>Cadastrar</Button>
+            <router-link :to="{name: 'delivery-login'}" class="button1">Portal do Entregador</router-link>
         </div>
     </header>
 </template>
