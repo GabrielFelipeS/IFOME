@@ -6,12 +6,17 @@ import br.com.ifsp.ifome.entities.Dish;
 import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.repositories.DishRepository;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 @Service
 public class DishService {
@@ -53,5 +58,34 @@ public class DishService {
         dish.setRestaurant(restaurant); // Associe o prato ao restaurante
         dish = dishRepository.save(dish);
         return new DishResponse(dish);
+    }
+
+    public List<DishResponse> getAllAvailable() {
+        return this.dishRepository
+            .findAllAvailable(Sort.by(Sort.Direction.ASC, "name"))
+            .stream()
+            .map(DishResponse::new)
+            .toList()
+            ;
+    }
+
+    public Page<DishResponse> getAllAvailable(Pageable pageable) {
+        return this.dishRepository
+            .findAllAvailable(PageRequest.of(
+                    pageable.getPageNumber(),
+                    pageable.getPageSize(),
+                    pageable.getSortOr(Sort.by(Sort.Direction.ASC,"name"))
+                ))
+            .map(DishResponse::new)
+            ;
+    }
+
+    public Object getAllAvailableById(Long id) {
+        return this.dishRepository
+            .findAllByRestaurantId(id)
+            .stream()
+            .map(DishResponse::new)
+            .toList()
+            ;
     }
 }
