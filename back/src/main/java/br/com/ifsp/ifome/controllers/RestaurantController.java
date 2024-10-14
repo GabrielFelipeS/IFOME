@@ -30,7 +30,7 @@ public class RestaurantController {
 
     @GetMapping
     @DocsGetPagination
-    public ResponseEntity<ApiResponse> getAllRestaurant(
+    public ResponseEntity<ApiResponse> getRestaurantsPagination(
         @Parameter(hidden = true) @PageableDefault(size = 15, page = 0) Pageable pageable) {
         var restaurantResponses = restaurantService.getAllRestaurants(pageable);
 
@@ -40,7 +40,7 @@ public class RestaurantController {
 
     @GetMapping("/all")
     @DocsGetAll
-    public ResponseEntity<ApiResponse> getRestaurantsPagination() {
+    public ResponseEntity<ApiResponse> getAllRestaurant() {
         var restaurantResponses = restaurantService.getAllRestaurants();
 
         ApiResponse apiResponse = new ApiResponse("success", restaurantResponses, "Sucesso na busca dos restaurantes");
