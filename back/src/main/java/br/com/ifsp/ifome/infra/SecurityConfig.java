@@ -48,6 +48,7 @@ public class SecurityConfig {
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                     .requestMatchers(HttpMethod.PUT, "/api/restaurant/").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.PATCH, "/api/restaurant/").hasRole("RESTAURANT")
+                    .requestMatchers(HttpMethod.POST, "/api/dish").hasRole("RESTAURANT")
                     .anyRequest().authenticated())
             .csrf(AbstractHttpConfigurer::disable)
             .oauth2ResourceServer(auth02 -> auth02.jwt(Customizer.withDefaults()))
