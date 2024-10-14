@@ -61,6 +61,22 @@ INSERT INTO opening_hours (day_of_the_week, opening, closing, restaurant_id) VAL
      ('Sábado', '09:00', '23:00', 1),
      ('Domingo', '09:00', '22:00', 1);
 
+INSERT INTO dish (
+    name,
+    description,
+    price,
+    dish_category,
+    dish_image,
+    availability,
+    restaurant_id
+) VALUES
+      ('Açai com Frutas', 'Açai com banana, morango e granola', 19.90, 'Sobremesa', 'acai_frutas.jpg', 'Indisponível', 1),
+      ('Pizza de Calabresa', 'Pizza com calabresa, cebola e azeitonas', 34.90, 'Prato Principal', 'pizza_calabresa.jpg', 'Indisponível', 1),
+      ('Hambúrguer Artesanal', 'Hambúrguer com queijo, alface e tomate', 29.90, 'Prato Principal', 'hamburguer.jpg', 'Disponível', 1),
+      ('Milkshake de Chocolate', 'Milkshake cremoso de chocolate', 14.90, 'Bebida', 'milkshake_chocolate.jpg', 'Disponível', 1),
+      ('Salada Tropical', 'Salada com frutas e molho de iogurte', 22.50, 'Entrada', 'salada_tropical.jpg', 'Disponível', 1);
+
+
 INSERT INTO delivery_person (
     email, password,
     cpf, name, date_of_birth, type_of_vehicle,
