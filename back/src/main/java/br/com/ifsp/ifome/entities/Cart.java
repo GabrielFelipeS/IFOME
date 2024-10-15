@@ -1,7 +1,7 @@
 package br.com.ifsp.ifome.entities;
 
 
-import br.com.ifsp.ifome.dto.request.CartRequest;
+import br.com.ifsp.ifome.exceptions.DishFromAnotherRestaurant;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +11,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -35,13 +36,31 @@ public class Cart {
     }
 
     public void add(OrderItem orderItemToAdd) {
+        if(this.cartNotEmpty() && orderItems.stream().noneMatch(orderItem ->
+            Objects.equals(orderItem.getRestaurantId(), orderItemToAdd.getRestaurantId()))) {
+            throw new DishFromAnotherRestaurant();
+        }
+
         if(this.orderItems.contains(orderItemToAdd)) {
            int index = this.orderItems.indexOf(orderItemToAdd);
            OrderItem orderItem = this.orderItems.get(index);
            orderItem.addQuantity(orderItemToAdd.getQuantity());
-        } else {
-            orderItems.add(orderItemToAdd);
+           return;
         }
+
+        orderItems.add(orderItemToAdd);
+    }
+
+    public Double totalPrice() {
+        return this.orderItems.stream().mapToDouble(OrderItem::getTotalPrice).sum();
+    }
+
+    public boolean cartEmpty() {
+        return this.orderItems.isEmpty();
+    }
+
+    public boolean cartNotEmpty() {
+        return !this.cartEmpty();
     }
 
     public List<OrderItem> getOrderItems() {
