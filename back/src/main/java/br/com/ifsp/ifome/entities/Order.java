@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -25,10 +28,13 @@ public class Order {
     private Integer quantity;
     private Double price;
 
+    @CreationTimestamp
+    private LocalDateTime orderDate;
+
     @ManyToOne(cascade = CascadeType.ALL)
     private Cart cart;
 
-    public Order(Dish dish, Integer quantity, Double price, Cart cart) {
-        this(null, dish, quantity, price, cart);
+    public Order(Dish dish, Integer quantity, Double price, LocalDateTime orderDate, Cart cart) {
+        this(null, dish, quantity, price, orderDate, cart);
     }
 }
