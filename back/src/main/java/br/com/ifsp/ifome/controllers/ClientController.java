@@ -5,6 +5,8 @@ import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.Client;
 import br.com.ifsp.ifome.entities.Dish;
 import br.com.ifsp.ifome.entities.OrderItem;
+import br.com.ifsp.ifome.exceptions.ClientNotFoundException;
+import br.com.ifsp.ifome.exceptions.DishNotFoundException;
 import br.com.ifsp.ifome.repositories.CartRepository;
 import br.com.ifsp.ifome.repositories.ClientRepository;
 import br.com.ifsp.ifome.repositories.DishRepository;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @RestController
@@ -29,17 +32,15 @@ public class ClientController {
         this.clientRepository = clientRepository;
     }
 
-
     @PostMapping
-    public Cart addDishInCart(@RequestBody OrderRequest orderRequest) {
+    public Cart addDishInCart(@RequestBody OrderRequest orderRequest, Principal principal) {
         Optional<Dish> optionalDish = dishRepository.findById(orderRequest.dishId());
-        Optional<Client> optionalClient = clientRepository.findByEmail("email1@email.com");
-        // TODO mudar exception
-        Dish dish = optionalDish.orElseThrow();
-        Client client = optionalClient.orElseThrow();
+        Optional<Client> optionalClient = clientRepository.findByEmail(principal.getName());
 
+        Dish dish = optionalDish.orElseThrow(DishNotFoundException::new);
+        Client client = optionalClient.orElseThrow(ClientNotFoundException::new);
 
-        Optional<Cart> optionalCart = this.cartRepository.findFirstByClientEmail("email1@email.com");
+        Optional<Cart> optionalCart = this.cartRepository.findFirstByClientEmail(principal.getName());
         Cart cart = optionalCart.orElseGet(() -> new Cart(client));
 
         OrderItem orderItem = new OrderItem(dish, orderRequest.quantity(), cart);
