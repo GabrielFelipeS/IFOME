@@ -90,4 +90,35 @@ public class ClientControllerIT {
         assertThat(orderItems).isNotNull().isNotEmpty();
         assertThat(orderItems.size()).isEqualTo(1);
     }
+
+    @Test
+    @DirtiesContext
+    public void addDishInCartWhenDishIdNotExists() {
+        OrderRequest orderRequest = new OrderRequest(999L,2);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<OrderRequest> requestEntity = new HttpEntity<>(orderRequest, headers);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity
+            ("/api/client",
+                requestEntity, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    @DirtiesContext
+    public void addDishInCartWhenClientNotExists() {
+        OrderRequest orderRequest = new OrderRequest(1L,2);
+        HttpHeaders headers = new HttpHeaders();
+        token = tokenService.generateToken("email_nao_existe@gmail.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<OrderRequest> requestEntity = new HttpEntity<>(orderRequest, headers);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity
+            ("/api/client",
+                requestEntity, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
 }
