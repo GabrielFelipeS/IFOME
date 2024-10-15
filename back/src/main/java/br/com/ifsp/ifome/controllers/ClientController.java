@@ -2,6 +2,7 @@ package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.OrderRequest;
+import br.com.ifsp.ifome.dto.response.CartResponse;
 import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.Client;
 import br.com.ifsp.ifome.entities.Dish;
@@ -37,8 +38,7 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity<ApiResponse> addDishInCart(@RequestBody OrderRequest orderRequest, Principal principal) {
-        // TODO quebrar em um service
-        Optional<Dish> optionalDish = dishRepository.findById(orderRequest.dishId());
+        Optional<Dish> optionalDish = dishRepository.findDishAvailableById(orderRequest.dishId());
         Optional<Client> optionalClient = clientRepository.findByEmail(principal.getName());
 
         Dish dish = optionalDish.orElseThrow(DishNotFoundException::new);
@@ -50,11 +50,10 @@ public class ClientController {
         OrderItem orderItem = new OrderItem(dish, orderRequest.quantity(), cart);
         cart.add(orderItem);
 
-        System.err.println(optionalCart.isPresent());
-        System.err.println(cart);
-
         cart = cartRepository.save(cart);
-        ApiResponse response = new ApiResponse("success", cart, String.format("%s adicionado no carrinho", dish.getName()));
+        CartResponse cartResponse = new CartResponse(cart);
+        ApiResponse response = new ApiResponse("success", cartResponse, String.format("%s adicionado no carrinho", dish.getName()));
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
