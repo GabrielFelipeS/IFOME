@@ -34,9 +34,14 @@ public class Cart {
         this.client = client;
     }
 
-    public void add(OrderItem orderItem) {
-        // TODO validação se já existe, caso exista aumenta a quantidade
-        orderItems.add(orderItem);
+    public void add(OrderItem orderItemToAdd) {
+        if(this.orderItems.contains(orderItemToAdd)) {
+           int index = this.orderItems.indexOf(orderItemToAdd);
+           OrderItem orderItem = this.orderItems.get(index);
+           orderItem.addQuantity(orderItemToAdd.getQuantity());
+        } else {
+            orderItems.add(orderItemToAdd);
+        }
     }
 
     public List<OrderItem> getOrderItems() {
