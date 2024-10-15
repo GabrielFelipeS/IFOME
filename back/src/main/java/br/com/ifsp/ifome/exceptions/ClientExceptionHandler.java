@@ -20,4 +20,13 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
         response.put("message",  ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
+
+    @ExceptionHandler(DishFromAnotherRestaurant.class)
+    public ResponseEntity<Map<String, Object>> handleDishFromAnotherRestaurant(
+        DishFromAnotherRestaurant ex) {
+        logger.warn(ex.getMessage());
+        Map<String, Object> response = new HashMap<>();
+        response.put("message",  ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
 }
