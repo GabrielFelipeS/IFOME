@@ -1,0 +1,46 @@
+package br.com.ifsp.ifome.services;
+
+import br.com.ifsp.ifome.dto.request.OrderRequest;
+import br.com.ifsp.ifome.dto.response.CartResponse;
+import br.com.ifsp.ifome.entities.Cart;
+import br.com.ifsp.ifome.entities.Client;
+import br.com.ifsp.ifome.entities.Dish;
+import br.com.ifsp.ifome.entities.OrderItem;
+import br.com.ifsp.ifome.exceptions.ClientNotFoundException;
+import br.com.ifsp.ifome.exceptions.DishNotFoundException;
+import br.com.ifsp.ifome.repositories.CartRepository;
+import br.com.ifsp.ifome.repositories.ClientRepository;
+import br.com.ifsp.ifome.repositories.DishRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class ClientService {
+    private final ClientRepository clientRepository;
+    private final DishRepository dishRepository;
+    private final CartRepository cartRepository;
+
+    public ClientService(ClientRepository clientRepository, DishRepository dishRepository, CartRepository cartRepository) {
+        this.clientRepository = clientRepository;
+        this.dishRepository = dishRepository;
+        this.cartRepository = cartRepository;
+    }
+
+    public CartResponse addDishCart(OrderRequest orderRequest, String email) {
+        Optional<Dish> optionalDish = dishRepository.findDishAvailableById(orderRequest.dishId());
+        Optional<Client> optionalClient = clientRepository.findByEmail(email);
+
+        Dish dish = optionalDish.orElseThrow(DishNotFoundException::new);
+        Client client = optionalClient.orElseThrow(ClientNotFoundException::new);
+
+        Optional<Cart> optionalCart = this.cartRepository.findFirstByClientEmail(email);
+        Cart cart = optionalCart.orElseGet(() -> new Cart(client));
+
+        OrderItem orderItem = new OrderItem(dish, orderRequest.quantity(), cart);
+        cart.add(orderItem);
+
+        cart = cartRepository.save(cart);
+        return new CartResponse(cart);
+    }
+}
