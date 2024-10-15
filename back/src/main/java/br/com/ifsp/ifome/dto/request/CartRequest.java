@@ -8,7 +8,7 @@ import br.com.ifsp.ifome.entities.Restaurant;
 import java.util.List;
 
 public record CartRequest(
-        Long id,
+        //Long id,
         Client client,
         Restaurant restaurant,
         DeliveryPerson deliveryPerson,
