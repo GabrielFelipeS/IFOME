@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 
 @Entity
 @Getter
@@ -31,5 +33,22 @@ public class OrderItem {
 
     public OrderItem(Dish dish, Integer quantity, Cart cart) {
         this(null, dish, quantity, dish.getPrice(), cart);
+    }
+
+    public void addQuantity(Integer quantity) {
+        this.quantity += quantity;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        OrderItem orderItem = (OrderItem) object;
+        return Objects.equals(dish, orderItem.dish) && Objects.equals(cart, orderItem.cart);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dish, cart);
     }
 }
