@@ -31,10 +31,12 @@ public class Order {
     @CreationTimestamp
     private LocalDateTime orderDate;
 
+    private String status;
+
     @ManyToOne(cascade = CascadeType.ALL)
     private Cart cart;
 
-    public Order(Dish dish, Integer quantity, Double price, LocalDateTime orderDate, Cart cart) {
-        this(null, dish, quantity, price, orderDate, cart);
+    public Order(Dish dish, Integer quantity, Double price, LocalDateTime orderDate, String status, Cart cart) {
+        this(null, dish, quantity, price, orderDate, status, cart);
     }
 }

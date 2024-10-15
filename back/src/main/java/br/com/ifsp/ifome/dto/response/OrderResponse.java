@@ -10,7 +10,8 @@ public record OrderResponse(
         Dish dish,
         Integer quantity,
         Double price,
-        LocalDateTime orderDate
+        LocalDateTime orderDate,
+        String status
 ) {
     public OrderResponse (Order order){
         this(
@@ -18,7 +19,8 @@ public record OrderResponse(
                 order.getDish(),
                 order.getQuantity(),
                 order.getPrice(),
-                order.getOrderDate()
+                order.getOrderDate(),
+                order.getStatus()
         );
     }
 }
