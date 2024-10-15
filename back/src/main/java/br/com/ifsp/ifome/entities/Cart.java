@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -24,26 +26,20 @@ public class Cart {
     @JoinColumn(name = "client_id")
     private Client client;
 
-    @ManyToOne
-    @JoinColumn(name = "restaurant_id")
-    private Restaurant restaurant;
-
-    @ManyToOne
-    @JoinColumn(name = "delivery_id")
-    private DeliveryPerson deliveryPerson;
-
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
-    private List<Order> orders;
+    private List<OrderItem> orderItems = new ArrayList<>();
 
-    private Double deliveryFee;
-    private String orderStats;
+    public Cart(Client client) {
+        this.client = client;
+    }
 
-    public Cart(CartRequest cartRequest){
-        this.client = cartRequest.client();
-        this.restaurant = cartRequest.restaurant();
-        this.deliveryPerson = cartRequest.deliveryPerson();
-        this.orders = cartRequest.orders();
-        this.deliveryFee = cartRequest.deliveryFee();
+    public void add(OrderItem orderItem) {
+        // TODO validação se já existe, caso exista aumenta a quantidade
+        orderItems.add(orderItem);
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return Collections.unmodifiableList(orderItems);
     }
 }

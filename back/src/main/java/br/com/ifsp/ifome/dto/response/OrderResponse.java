@@ -1,7 +1,7 @@
 package br.com.ifsp.ifome.dto.response;
 
 import br.com.ifsp.ifome.entities.Dish;
-import br.com.ifsp.ifome.entities.Order;
+import br.com.ifsp.ifome.entities.OrderItem;
 
 public record OrderResponse(
         Long id,
@@ -9,12 +9,12 @@ public record OrderResponse(
         Integer quantity,
         Double price
 ) {
-    public OrderResponse (Order order){
+    public OrderResponse (OrderItem orderItem){
         this(
-                order.getId(),
-                order.getDish(),
-                order.getQuantity(),
-                order.getPrice()
+                orderItem.getId(),
+                orderItem.getDish(),
+                orderItem.getQuantity(),
+                orderItem.getUnitPrice()
         );
     }
 }

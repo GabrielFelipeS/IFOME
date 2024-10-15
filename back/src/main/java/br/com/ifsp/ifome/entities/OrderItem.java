@@ -1,6 +1,6 @@
 package br.com.ifsp.ifome.entities;
 
-import br.com.ifsp.ifome.dto.request.OrderRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "orders")
-public class Order {
+public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,12 +23,13 @@ public class Order {
     private Dish dish;
 
     private Integer quantity;
-    private Double price;
+    private Double unitPrice;
 
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     private Cart cart;
 
-    public Order(Dish dish, Integer quantity, Double price, Cart cart) {
-        this(null, dish, quantity, price, cart);
+    public OrderItem(Dish dish, Integer quantity, Cart cart) {
+        this(null, dish, quantity, dish.getPrice(), cart);
     }
 }
