@@ -52,4 +52,8 @@ public class Dish {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+    public Long getRestaurantId() {
+        return this.getRestaurant().getId();
+    }
 }
