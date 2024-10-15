@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ClientService {
+public class AuthClientService {
     private final LoginService loginService;
     private final ClientRepository clientRepository;
     private final TokenService tokenService;
@@ -26,11 +26,11 @@ public class ClientService {
     private final EmailService emailService;
 
     // TODO refatorar, diminuir dependencias
-    public ClientService(TokenService tokenService,
-                         ClientRepository clientRepository,
-                         BCryptPasswordEncoder bCryptPasswordEncoder,
-                         List<Validator<ClientRequest>> validators,
-                         LoginService loginService, EmailService emailService) {
+    public AuthClientService(TokenService tokenService,
+                             ClientRepository clientRepository,
+                             BCryptPasswordEncoder bCryptPasswordEncoder,
+                             List<Validator<ClientRequest>> validators,
+                             LoginService loginService, EmailService emailService) {
         this.tokenService = tokenService;
         this.clientRepository = clientRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
