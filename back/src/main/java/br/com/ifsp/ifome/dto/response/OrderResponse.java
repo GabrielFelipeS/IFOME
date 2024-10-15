@@ -1,26 +1,20 @@
 package br.com.ifsp.ifome.dto.response;
 
 import br.com.ifsp.ifome.entities.Dish;
-import br.com.ifsp.ifome.entities.Order;
-
-import java.time.LocalDateTime;
+import br.com.ifsp.ifome.entities.OrderItem;
 
 public record OrderResponse(
         Long id,
         Dish dish,
         Integer quantity,
-        Double price,
-        LocalDateTime orderDate,
-        String status
+        Double price
 ) {
-    public OrderResponse (Order order){
+    public OrderResponse (OrderItem orderItem){
         this(
-                order.getId(),
-                order.getDish(),
-                order.getQuantity(),
-                order.getPrice(),
-                order.getOrderDate(),
-                order.getStatus()
+                orderItem.getId(),
+                orderItem.getDish(),
+                orderItem.getQuantity(),
+                orderItem.getUnitPrice()
         );
     }
 }
