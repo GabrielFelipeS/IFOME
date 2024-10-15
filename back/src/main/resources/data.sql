@@ -76,6 +76,54 @@ INSERT INTO dish (
       ('Milkshake de Chocolate', 'Milkshake cremoso de chocolate', 14.90, 'Bebida', 'milkshake_chocolate.jpg', 'Disponível', 1),
       ('Salada Tropical', 'Salada com frutas e molho de iogurte', 22.50, 'Entrada', 'salada_tropical.jpg', 'Disponível', 1);
 
+-- Inserindo novo restaurante
+INSERT INTO restaurants (
+    name_restaurant,cnpj, food_category,
+    telephone, person_responsible, person_responsible_cpf,
+    email, password, payment_methods,
+    restaurant_image, bank, agency,
+    account, is_open, role
+) VALUES (
+     'Pizzaria do Chef', '12345678000199', 'Pizzaria', '(21) 9876-5432',
+     'Chef Antônio', '12345678901','chefantonio@pizzas.com',
+     '$2a$10$dfFjxI3KHQwLTIWbF0X1XeX1MwVsL5kgVPoQOziXm4KDZjO5eVc0u',  'Dinheiro, Cartão, Pix',
+     'pizzaria_chef.jpg',  'Caixa Econômica',  '4321',
+     '00123456-7',  true, 'RESTAURANT'
+ );
+
+-- Inserindo endereço para o novo restaurante
+INSERT INTO address (
+    name_address, cep, neighborhood,
+    city, state, address,
+    number, complement, details,
+    type_residence, restaurant_id)
+VALUES
+    ('Endereço Chef', '22041-001', 'Copacabana',
+     'Rio de Janeiro', 'RJ', 'Avenida Atlântica',
+     '1000', 'Loja 3', 'Frente à praia', 'Comercial', 2);
+
+-- Inserindo horário de funcionamento para o novo restaurante
+INSERT INTO opening_hours (day_of_the_week, opening, closing, restaurant_id)
+VALUES
+     ('Segunda-feira', '18:00', '23:00', 2),
+     ('Terça-feira', '18:00', '23:00', 2),
+     ('Quarta-feira', '18:00', '23:00', 2),
+     ('Quinta-feira', '18:00', '23:00', 2),
+     ('Sexta-feira', '18:00', '00:00', 2),
+     ('Sábado', '18:00', '00:00', 2),
+     ('Domingo', '18:00', '22:00', 2);
+
+-- Inserindo pratos para o novo restaurante
+INSERT INTO dish (
+    name,description, price,
+    dish_category, dish_image,availability,
+    restaurant_id
+) VALUES
+      ('Pizza Margherita', 'Pizza tradicional com molho de tomate, mussarela e manjericão', 32.90, 'Prato Principal', 'pizza_margherita.jpg', 'Disponível', 2),
+      ('Pizza Quatro Queijos', 'Pizza com uma combinação de queijos: mussarela, gorgonzola, parmesão e provolone', 36.90, 'Prato Principal', 'pizza_quatro_queijos.jpg', 'Disponível', 2),
+      ('Bruschetta', 'Entrada com pão, tomate fresco e manjericão', 12.90, 'Entrada', 'bruschetta.jpg', 'Disponível', 2),
+      ('Tiramisu', 'Sobremesa italiana com café e mascarpone', 18.90, 'Sobremesa', 'tiramisu.jpg', 'Indisponível', 2),
+      ('Suco de Laranja', 'Suco natural de laranja', 8.90, 'Bebida', 'suco_laranja.jpg', 'Disponível', 2);
 
 INSERT INTO delivery_person (
     email, password,
@@ -90,9 +138,12 @@ VALUES (
     'ABC-1234','(11) 98765-4321','12345678910',
     'Banco do Brasil','1234','00012345-6',
     '2026-12-31','987654321','DELIVERY'
-
 );
 
-INSERT INTO address (name_address, cep, neighborhood, city, state, address, number, complement, details, type_residence, delivery_id)
+INSERT INTO address (
+    name_address, cep, neighborhood,
+    city, state, address,
+    number, complement, details,
+    type_residence, delivery_id)
 VALUES
     ('Endereço Carlos', '03090-000', 'Mooca', 'São Paulo', 'SP', 'Rua da Mooca', '300', 'Apto 202', 'Perto do Parque da Mooca', 'Casa', 1);
