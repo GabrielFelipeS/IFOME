@@ -48,14 +48,12 @@ public class ClientControllerIT {
             ("/api/client",
                 requestEntity, String.class);
 
-        System.out.println(response.getBody());
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Object object = documentContext.read("$.client");
-        List<OrderItem> orderItems = documentContext.read("$.orderItems");
+        Object object = documentContext.read("$.data.client");
+        List<OrderItem> orderItems = documentContext.read("$.data.orderItems");
 
-        System.err.println(object);
         assertThat(object).isNotNull();
         assertThat(orderItems).isNotNull().isNotEmpty();
     }
@@ -72,20 +70,19 @@ public class ClientControllerIT {
             ("/api/client",
                 requestEntity, String.class);
 
-        assertThat(responseFirst.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseFirst.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
             ("/api/client",
                 requestEntity, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Object object = documentContext.read("$.client");
-        List<OrderItem> orderItems = documentContext.read("$.orderItems");
-        System.err.println(object);
-        System.err.println(orderItems);
+        Object object = documentContext.read("$.data.client");
+        List<OrderItem> orderItems = documentContext.read("$.data.orderItems");
+
         assertThat(object).isNotNull();
         assertThat(orderItems).isNotNull().isNotEmpty();
         assertThat(orderItems.size()).isEqualTo(1);

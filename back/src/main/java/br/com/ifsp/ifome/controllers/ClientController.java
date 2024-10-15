@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.OrderRequest;
 import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.Client;
@@ -10,6 +11,8 @@ import br.com.ifsp.ifome.exceptions.DishNotFoundException;
 import br.com.ifsp.ifome.repositories.CartRepository;
 import br.com.ifsp.ifome.repositories.ClientRepository;
 import br.com.ifsp.ifome.repositories.DishRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +36,8 @@ public class ClientController {
     }
 
     @PostMapping
-    public Cart addDishInCart(@RequestBody OrderRequest orderRequest, Principal principal) {
+    public ResponseEntity<ApiResponse> addDishInCart(@RequestBody OrderRequest orderRequest, Principal principal) {
+        // TODO quebrar em um service
         Optional<Dish> optionalDish = dishRepository.findById(orderRequest.dishId());
         Optional<Client> optionalClient = clientRepository.findByEmail(principal.getName());
 
@@ -50,6 +54,7 @@ public class ClientController {
         System.err.println(cart);
 
         cart = cartRepository.save(cart);
-        return cart;
+        ApiResponse response = new ApiResponse("success", cart, String.format("%s adicionado no carrinho", dish.getName()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
