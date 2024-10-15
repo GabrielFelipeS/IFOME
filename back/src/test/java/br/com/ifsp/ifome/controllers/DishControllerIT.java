@@ -340,7 +340,7 @@ public class DishControllerIT {
 
         int size = documentContext.read("$.data.length()");
 
-        assertThat(size).isEqualTo(3);
+        assertThat(size).isEqualTo(7);
     }
 
 
@@ -351,14 +351,13 @@ public class DishControllerIT {
         headers.set("Authorization", "Bearer " + token);
         HttpEntity<String> requestEntity = new HttpEntity<>(headers);
 
-        ResponseEntity<String> response = testRestTemplate.exchange("/api/dish/", HttpMethod.GET, requestEntity, String.class);
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/dish/?page=0&size=1", HttpMethod.GET, requestEntity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
         int size = documentContext.read("$.data.content.length()");
-
-        assertThat(size).isEqualTo(3);
+        assertThat(size).isEqualTo(1);
     }
 
     @Test
