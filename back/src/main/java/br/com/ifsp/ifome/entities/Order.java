@@ -13,6 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,12 +21,14 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "dish_id")
     private Dish dish;
+
     private Integer quantity;
     private Double price;
 
-    public Order(OrderRequest orderRequest){
-        this.dish = orderRequest.dish();
-        this.quantity = orderRequest.quantity();
-        this.price = orderRequest.price();
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Cart cart;
+
+    public Order(Dish dish, Integer quantity, Double price, Cart cart) {
+        this(null, dish, quantity, price, cart);
     }
 }
