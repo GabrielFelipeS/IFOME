@@ -2,16 +2,14 @@ package br.com.ifsp.ifome.entities;
 
 
 import br.com.ifsp.ifome.exceptions.DishFromAnotherRestaurant;
+import br.com.ifsp.ifome.exceptions.DishNotFoundInCartException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Getter
@@ -27,7 +25,7 @@ public class Cart {
     @JoinColumn(name = "client_id")
     private Client client;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "order_id")
     private List<OrderItem> orderItems = new ArrayList<>();
 
@@ -65,5 +63,29 @@ public class Cart {
 
     public List<OrderItem> getOrderItems() {
         return Collections.unmodifiableList(orderItems);
+    }
+    public void updateDishInCart(Long dishId, Integer quantity) {
+        Optional<OrderItem> optionalOrderItem = this.orderItems.stream()
+                            .filter(orderItem -> Objects.equals(orderItem.getDishId(), dishId))
+                            .findFirst();
+
+        if(optionalOrderItem.isPresent()) {
+            OrderItem orderItem = optionalOrderItem.get();
+            orderItem.setQuantity(quantity);
+        }
+    }
+
+    public void removeDishBy(Long dishId) {
+        Optional<OrderItem> optionalOrderItem = this.orderItems.stream()
+            .filter(orderItem -> Objects.equals(orderItem.getDishId(), dishId))
+            .findFirst();
+
+        if(optionalOrderItem.isPresent()) {
+            System.err.println("AQUI");
+            OrderItem orderItem = optionalOrderItem.get();
+            this.orderItems.remove(orderItem);
+        } else {
+            throw new DishNotFoundInCartException();
+        }
     }
 }
