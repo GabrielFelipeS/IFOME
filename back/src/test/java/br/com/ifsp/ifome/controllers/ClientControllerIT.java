@@ -10,10 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -181,5 +178,186 @@ public class ClientControllerIT {
 
         String message = documentContext.read("$.message");
         assertThat(message).isEqualTo("Só pde ser incluido pratos do mesmo restaurante no pedido");
+    }
+
+    @Test
+    @DirtiesContext
+    public void updateDishQuantityInCart() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+
+        OrderRequest orderRequest = new OrderRequest(3L,2);
+        HttpEntity<OrderRequest> requestEntity = new HttpEntity<>(orderRequest, headers);
+
+        ResponseEntity<String> responseInsert = testRestTemplate.postForEntity
+            ("/api/client",
+                requestEntity, String.class);
+
+        assertThat(responseInsert.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        OrderRequest orderRequestUpdate = new OrderRequest(3L,10);
+        HttpEntity<OrderRequest> requestEntityUpdate = new HttpEntity<>(orderRequestUpdate, headers);
+
+        ResponseEntity<String> responseUpdate = testRestTemplate.exchange
+            ("/api/client", HttpMethod.PUT,
+                requestEntityUpdate, String.class);
+
+        assertThat(responseUpdate.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        HttpEntity<OrderRequest> requestHttpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/client",  HttpMethod.GET, requestHttpEntity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContextSecond = JsonPath.parse(response.getBody());
+        int size = documentContextSecond.read("$.data.orderItems.length()");
+        int quantity = documentContextSecond.read("$.data.orderItems[0].quantity");
+
+        assertThat(size).isEqualTo(1);
+        assertThat(quantity).isEqualTo(orderRequestUpdate.quantity());
+    }
+
+    @Test
+    public void getCartWhenNotExist() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<OrderRequest> requestEntityUpdate = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/client",  HttpMethod.GET, requestEntityUpdate, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContextSecond = JsonPath.parse(response.getBody());
+        int size = documentContextSecond.read("$.data.orderItems.length()");
+
+        assertThat(size).isEqualTo(0);
+    }
+
+
+    @Test
+    @DirtiesContext
+    public void getCart() {
+        OrderRequest orderRequest = new OrderRequest(3L,2);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<OrderRequest> requestEntityInsert = new HttpEntity<>(orderRequest, headers);
+
+        ResponseEntity<String> responseFirst = testRestTemplate.postForEntity
+            ("/api/client",
+                requestEntityInsert, String.class);
+
+        assertThat(responseFirst.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        HttpEntity<OrderRequest> requestHttpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/client",  HttpMethod.GET, requestHttpEntity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContextSecond = JsonPath.parse(response.getBody());
+        int size = documentContextSecond.read("$.data.orderItems.length()");
+
+        assertThat(size).isEqualTo(1);
+    }
+
+    @Test
+    @DirtiesContext
+    public void removeDishInCart() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+
+        OrderRequest orderRequest = new OrderRequest(3L,2);
+        HttpEntity<OrderRequest> requestEntity = new HttpEntity<>(orderRequest, headers);
+
+        ResponseEntity<String> responseInsert = testRestTemplate.postForEntity
+            ("/api/client",
+                requestEntity, String.class);
+
+        assertThat(responseInsert.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        OrderRequest orderRequestUpdate = new OrderRequest(3L,10);
+        HttpEntity<OrderRequest> requestHttpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> responseUpdate = testRestTemplate.exchange
+            ("/api/client/3", HttpMethod.DELETE,
+                requestHttpEntity, String.class);
+
+        assertThat(responseUpdate.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/client",  HttpMethod.GET, requestHttpEntity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContextSecond = JsonPath.parse(response.getBody());
+        int size = documentContextSecond.read("$.data.orderItems.length()");
+
+        assertThat(size).isEqualTo(0);
+    }
+
+    @Test
+    @DirtiesContext
+    public void removeDishWhenDoesNotExistInCart() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+
+        OrderRequest orderRequest = new OrderRequest(3L,2);
+        HttpEntity<OrderRequest> requestEntity = new HttpEntity<>(orderRequest, headers);
+
+        ResponseEntity<String> responseInsert = testRestTemplate.postForEntity
+            ("/api/client",
+                requestEntity, String.class);
+
+        assertThat(responseInsert.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        OrderRequest orderRequestUpdate = new OrderRequest(3L,10);
+        HttpEntity<OrderRequest> requestHttpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = testRestTemplate.exchange
+            ("/api/client/4", HttpMethod.DELETE,
+                requestHttpEntity, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    @DirtiesContext
+    public void removeDishWhenCartIsEmpty() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+
+        HttpEntity<OrderRequest> requestHttpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = testRestTemplate.exchange
+            ("/api/client/3", HttpMethod.DELETE,
+                requestHttpEntity, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    @DirtiesContext
+    public void removeDishWhenDishDoesNotAvailable() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+
+        HttpEntity<OrderRequest> requestHttpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = testRestTemplate.exchange
+            ("/api/client/1", HttpMethod.DELETE,
+                requestHttpEntity, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    @DirtiesContext
+    public void removeDishWhenDishDoesNotExist() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+
+        HttpEntity<OrderRequest> requestHttpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = testRestTemplate.exchange
+            ("/api/client/99", HttpMethod.DELETE,
+                requestHttpEntity, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

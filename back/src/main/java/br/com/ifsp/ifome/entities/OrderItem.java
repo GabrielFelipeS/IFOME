@@ -34,16 +34,20 @@ public class OrderItem {
         this(null, dish, quantity, dish.getPrice(), cart);
     }
 
-    public Long getRestaurantId() {
-        return this.dish.getRestaurantId();
-    }
-
     public double getTotalPrice() {
         return this.unitPrice * this.quantity;
     }
 
     public void addQuantity(Integer quantity) {
         this.quantity += quantity;
+    }
+
+    public Long getRestaurantId() {
+        return this.dish.getRestaurantId();
+    }
+
+    public Long getDishId() {
+        return this.dish.getId();
     }
 
     @Override
