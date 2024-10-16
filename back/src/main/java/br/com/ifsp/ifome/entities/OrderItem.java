@@ -47,6 +47,14 @@ public class OrderItem {
         this.quantity += quantity;
     }
 
+    public Long getRestaurantId() {
+        return this.dish.getRestaurantId();
+    }
+
+    public Long getDishId() {
+        return this.dish.getId();
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
