@@ -12,6 +12,7 @@ import br.com.ifsp.ifome.exceptions.DishNotFoundInCartException;
 import br.com.ifsp.ifome.repositories.CartRepository;
 import br.com.ifsp.ifome.repositories.ClientRepository;
 import br.com.ifsp.ifome.repositories.DishRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
