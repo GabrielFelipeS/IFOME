@@ -35,10 +35,6 @@ public class OrderItem {
         this(null, dish, quantity, dish.getPrice(), cart);
     }
 
-    public Long getRestaurantId() {
-        return this.dish.getRestaurantId();
-    }
-
     public double getTotalPrice() {
         return this.unitPrice * this.quantity;
     }
