@@ -1,7 +1,7 @@
 package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.dto.ApiResponse;
-import br.com.ifsp.ifome.dto.request.OrderRequest;
+import br.com.ifsp.ifome.dto.request.OrderItemRequest;
 import br.com.ifsp.ifome.dto.response.CartResponse;
 import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.Client;
@@ -37,8 +37,8 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> addDishInCart(@RequestBody OrderRequest orderRequest, Principal principal) {
-        Optional<Dish> optionalDish = dishRepository.findDishAvailableById(orderRequest.dishId());
+    public ResponseEntity<ApiResponse> addDishInCart(@RequestBody OrderItemRequest orderItemRequest, Principal principal) {
+        Optional<Dish> optionalDish = dishRepository.findDishAvailableById(orderItemRequest.dishId());
         Optional<Client> optionalClient = clientRepository.findByEmail(principal.getName());
 
         Dish dish = optionalDish.orElseThrow(DishNotFoundException::new);
@@ -47,7 +47,7 @@ public class ClientController {
         Optional<Cart> optionalCart = this.cartRepository.findFirstByClientEmail(principal.getName());
         Cart cart = optionalCart.orElseGet(() -> new Cart(client));
 
-        OrderItem orderItem = new OrderItem(dish, orderRequest.quantity(), cart);
+        OrderItem orderItem = new OrderItem(dish, orderItemRequest.quantity(), cart);
         cart.add(orderItem);
 
         cart = cartRepository.save(cart);

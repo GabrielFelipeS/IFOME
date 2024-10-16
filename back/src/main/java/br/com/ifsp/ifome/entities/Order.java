@@ -29,6 +29,19 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status = OrderStatus.NOVO; // Estado inicial é NOVO
 
+    private String paymentStatus;
+
+    public Order(List<OrderItem> orderItems, LocalDateTime orderDate, Double orderPrice, Restaurant restaurant, DeliveryPerson deliveryPerson, OrderStatus status, String paymentStatus)
+    {
+        this(null,
+                 orderItems,
+                 orderDate,
+                 orderPrice,
+                 restaurant,
+                 deliveryPerson,
+                 status,
+                paymentStatus);
+    }
 
     public void calculateTotalPrice() {
         this.orderPrice = orderItems.stream().mapToDouble(OrderItem::getTotalPrice).sum();

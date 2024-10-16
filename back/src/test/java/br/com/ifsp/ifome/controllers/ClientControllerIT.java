@@ -1,6 +1,6 @@
 package br.com.ifsp.ifome.controllers;
 
-import br.com.ifsp.ifome.dto.request.OrderRequest;
+import br.com.ifsp.ifome.dto.request.OrderItemRequest;
 import br.com.ifsp.ifome.entities.OrderItem;
 import br.com.ifsp.ifome.services.TokenService;
 import com.jayway.jsonpath.DocumentContext;
@@ -42,10 +42,10 @@ public class ClientControllerIT {
     @Test
     @DirtiesContext
     public void addDishInCart() {
-        OrderRequest orderRequest = new OrderRequest(3L,2);
+        OrderItemRequest orderItemRequest = new OrderItemRequest(3L,2);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
-        HttpEntity<OrderRequest> requestEntity = new HttpEntity<>(orderRequest, headers);
+        HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(orderItemRequest, headers);
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
             ("/api/client",
@@ -64,10 +64,10 @@ public class ClientControllerIT {
     @Test
     @DirtiesContext
     public void addDishInCartWhenDishIsNotAvailable() {
-        OrderRequest orderRequest = new OrderRequest(1L,2);
+        OrderItemRequest orderItemRequest = new OrderItemRequest(1L,2);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
-        HttpEntity<OrderRequest> requestEntity = new HttpEntity<>(orderRequest, headers);
+        HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(orderItemRequest, headers);
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
             ("/api/client",
@@ -79,10 +79,10 @@ public class ClientControllerIT {
     @Test
     @DirtiesContext
     public void addDishInCartWhenAlteadyExists() {
-        OrderRequest orderRequest = new OrderRequest(3L,2);
+        OrderItemRequest orderItemRequest = new OrderItemRequest(3L,2);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
-        HttpEntity<OrderRequest> requestEntity = new HttpEntity<>(orderRequest, headers);
+        HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(orderItemRequest, headers);
 
         ResponseEntity<String> responseFirst = testRestTemplate.postForEntity
             ("/api/client",
@@ -124,10 +124,10 @@ public class ClientControllerIT {
     @Test
     @DirtiesContext
     public void addDishInCartWhenDishIdNotExists() {
-        OrderRequest orderRequest = new OrderRequest(999L,2);
+        OrderItemRequest orderItemRequest = new OrderItemRequest(999L,2);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
-        HttpEntity<OrderRequest> requestEntity = new HttpEntity<>(orderRequest, headers);
+        HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(orderItemRequest, headers);
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
             ("/api/client",
@@ -139,11 +139,11 @@ public class ClientControllerIT {
     @Test
     @DirtiesContext
     public void addDishInCartWhenClientNotExists() {
-        OrderRequest orderRequest = new OrderRequest(1L,2);
+        OrderItemRequest orderItemRequest = new OrderItemRequest(1L,2);
         HttpHeaders headers = new HttpHeaders();
         token = tokenService.generateToken("email_nao_existe@gmail.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
         headers.set("Authorization", "Bearer " + token);
-        HttpEntity<OrderRequest> requestEntity = new HttpEntity<>(orderRequest, headers);
+        HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(orderItemRequest, headers);
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
             ("/api/client",
@@ -160,8 +160,8 @@ public class ClientControllerIT {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
 
-        OrderRequest orderRequest = new OrderRequest(3L,2);
-        HttpEntity<OrderRequest> requestEntity = new HttpEntity<>(orderRequest, headers);
+        OrderItemRequest orderItemRequest = new OrderItemRequest(3L,2);
+        HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(orderItemRequest, headers);
 
         ResponseEntity<String> responseFirst = testRestTemplate.postForEntity
             ("/api/client",
@@ -169,8 +169,8 @@ public class ClientControllerIT {
 
         assertThat(responseFirst.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        OrderRequest orderRequestAnotherRestaurant = new OrderRequest(8L,2);
-        HttpEntity<OrderRequest> requestEntityAnotherRestaurant  = new HttpEntity<>(orderRequestAnotherRestaurant, headers);
+        OrderItemRequest orderItemRequestAnotherRestaurant = new OrderItemRequest(8L,2);
+        HttpEntity<OrderItemRequest> requestEntityAnotherRestaurant  = new HttpEntity<>(orderItemRequestAnotherRestaurant, headers);
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
             ("/api/client",
