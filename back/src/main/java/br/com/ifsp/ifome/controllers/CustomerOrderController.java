@@ -5,14 +5,12 @@ import br.com.ifsp.ifome.dto.request.OrderRequest;
 import br.com.ifsp.ifome.services.CustomerOrderService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
 @RestController
+@RequestMapping("/api/order")
 public class CustomerOrderController {
 
     private final CustomerOrderService customerOrderService;
