@@ -61,29 +61,4 @@ public class RestaurantService {
             .orElseThrow(RestaurantNotFoundException::new);
     }
 
-    // Novo metodo para criar pedido
-    public String createOrder(Long restaurantId, OrderRequest orderRequest, Principal principal) {
-        // Validar se o restaurante existe
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Restaurante não encontrado"));
-
-        // Criar e salvar os itens do pedido
-        List<OrderItem> orderItems = new ArrayList<>();
-        for (OrderItemRequest itemRequest : orderRequest.items()) {
-            Dish dish = dishRepository.findById(itemRequest.dishId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Prato não encontrado"));
-            orderItems.add(new OrderItem(dish, itemRequest.quantity(), null)); // Assumindo OrderItem sem Cart aqui
-        }
-
-        // Criar o pedido
-        Order order = new Order();
-        order.setRestaurant(restaurant);
-        order.setOrderItems(orderItems);
-        order.calculateTotalPrice(); // Calcular o preço total do pedido
-
-        // Salvar o pedido
-        orderRepository.save(order);
-
-        return "Pedido criado com sucesso!";
-    }
 }
