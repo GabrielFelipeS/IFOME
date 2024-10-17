@@ -1,6 +1,6 @@
 package br.com.ifsp.ifome.services;
 
-import br.com.ifsp.ifome.dto.request.OrderRequest;
+import br.com.ifsp.ifome.dto.request.OrderItemRequest;
 import br.com.ifsp.ifome.dto.response.CartResponse;
 import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.Client;
@@ -12,7 +12,6 @@ import br.com.ifsp.ifome.exceptions.DishNotFoundInCartException;
 import br.com.ifsp.ifome.repositories.CartRepository;
 import br.com.ifsp.ifome.repositories.ClientRepository;
 import br.com.ifsp.ifome.repositories.DishRepository;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -36,25 +35,25 @@ public class ClientService {
         return new CartResponse(cart);
     }
 
-    public CartResponse addDishCart(OrderRequest orderRequest, String email) {
-        Dish dish = this.getDishOrElseThrow(orderRequest.dishId());
+    public CartResponse addDishCart(OrderItemRequest orderItemRequest, String email) {
+        Dish dish = this.getDishOrElseThrow(orderItemRequest.dishId());
         Client client = this.getClientOrElseThrow(email);
 
         Cart cart = this.getCartOrCreateNewCart(email, client);
-        OrderItem orderItem = new OrderItem(dish, orderRequest.quantity(), cart);
+        OrderItem orderItem = new OrderItem(dish, orderItemRequest.quantity(), cart);
         cart.add(orderItem);
 
         cart = cartRepository.save(cart);
         return new CartResponse(cart);
     }
 
-    public void updateQuantityOrderItemInCart(OrderRequest orderRequest, String email) {
+    public void updateQuantityOrderItemInCart(OrderItemRequest orderItemRequest, String email) {
         Client client = this.getClientOrElseThrow(email);
 
-        this.dishIdExistsOrElseThrow(orderRequest.dishId());
+        this.dishIdExistsOrElseThrow(orderItemRequest.dishId());
 
         Cart cart = this.getCartOrCreateNewCart(email, client);
-        cart.updateDishInCart(orderRequest.dishId(), orderRequest.quantity());
+        cart.updateDishInCart(orderItemRequest.dishId(), orderItemRequest.quantity());
         this.cartRepository.save(cart);
     }
 

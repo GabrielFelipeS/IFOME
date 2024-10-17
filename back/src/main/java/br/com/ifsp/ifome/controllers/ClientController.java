@@ -1,8 +1,7 @@
 package br.com.ifsp.ifome.controllers;
 
-import br.com.ifsp.ifome.docs.DocsOpenCloseRestaurant;
 import br.com.ifsp.ifome.dto.ApiResponse;
-import br.com.ifsp.ifome.dto.request.OrderRequest;
+import br.com.ifsp.ifome.dto.request.OrderItemRequest;
 import br.com.ifsp.ifome.dto.response.CartResponse;
 import br.com.ifsp.ifome.services.ClientService;
 import org.springframework.http.HttpStatus;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/client")
@@ -31,8 +29,8 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> addDishInCart(@RequestBody OrderRequest orderRequest, Principal principal) {
-        CartResponse cartResponse = clientService.addDishCart(orderRequest, principal.getName());
+    public ResponseEntity<ApiResponse> addDishInCart(@RequestBody OrderItemRequest orderItemRequest, Principal principal) {
+        CartResponse cartResponse = clientService.addDishCart(orderItemRequest, principal.getName());
 
         ApiResponse response = new ApiResponse("success", cartResponse, "Prado adicionado no carrinho");
 
@@ -40,8 +38,8 @@ public class ClientController {
     }
 
     @PutMapping
-    public ResponseEntity<ApiResponse> updateQuantityOrderItemInCart(@RequestBody OrderRequest orderRequest, Principal principal) {
-        clientService.updateQuantityOrderItemInCart(orderRequest, principal.getName());
+    public ResponseEntity<ApiResponse> updateQuantityOrderItemInCart(@RequestBody OrderItemRequest orderItemRequest, Principal principal) {
+        clientService.updateQuantityOrderItemInCart(orderItemRequest, principal.getName());
 
         ApiResponse apiResponse = new ApiResponse("success", null, "Quantidade do prato atualizado com sucesso!");
 
