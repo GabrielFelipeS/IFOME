@@ -49,6 +49,14 @@ public class Cart {
         orderItems.add(orderItemToAdd);
     }
 
+    public Long getIdRestaurant() {
+        if(orderItems.isEmpty()) {
+            return null;
+        }
+
+        return orderItems.get(0).getRestaurantId();
+    }
+
     public Double totalPrice() {
         return this.orderItems.stream().mapToDouble(OrderItem::getTotalPrice).sum();
     }
@@ -64,6 +72,7 @@ public class Cart {
     public List<OrderItem> getOrderItems() {
         return Collections.unmodifiableList(orderItems);
     }
+
     public void updateDishInCart(Long dishId, Integer quantity) {
         Optional<OrderItem> optionalOrderItem = this.orderItems.stream()
                             .filter(orderItem -> Objects.equals(orderItem.getDishId(), dishId))
