@@ -24,8 +24,15 @@ public class Order {
     @CreationTimestamp
     private LocalDateTime orderDate;
     private Double orderPrice;
+
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+
+    @ManyToOne
+    @JoinColumn(name = "delivery_id")
     private DeliveryPerson deliveryPerson;
+
     @Enumerated(EnumType.STRING)
     private OrderStatus status = OrderStatus.NOVO; // Estado inicial é NOVO
 
