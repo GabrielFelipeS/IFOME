@@ -5,11 +5,13 @@ import br.com.ifsp.ifome.docs.DocsGetPagination;
 import br.com.ifsp.ifome.docs.DocsGetRestaurantById;
 import br.com.ifsp.ifome.docs.DocsOpenCloseRestaurant;
 import br.com.ifsp.ifome.dto.ApiResponse;
+import br.com.ifsp.ifome.dto.request.OrderRequest;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
 import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.services.RestaurantService;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -70,4 +72,19 @@ public class RestaurantController {
         ApiResponse apiResponse = new ApiResponse("success", null, message);
         return ResponseEntity.ok(apiResponse);
     }
+
+
+    @PostMapping("/{id}/order")
+    public ResponseEntity<ApiResponse> createOrder(
+            @PathVariable Long id, // ID do restaurante onde o pedido será feito
+            @RequestBody @Valid OrderRequest orderRequest, // Dados do pedido
+            Principal principal) {
+
+        // Chamar o serviço de criação do pedido
+        String message = restaurantService.createOrder(id, orderRequest, principal);
+
+        ApiResponse apiResponse = new ApiResponse("success", null, message);
+        return ResponseEntity.ok(apiResponse);
+    }
+
 }

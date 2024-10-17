@@ -15,7 +15,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "orders")
+@Table(name = "order_item")
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,15 +23,14 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "dish_id")
     private Dish dish;
-
     private Integer quantity;
     private Double unitPrice;
-
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     private Cart cart;
 
     public OrderItem(Dish dish, Integer quantity, Cart cart) {
+
         this(null, dish, quantity, dish.getPrice(), cart);
     }
 
