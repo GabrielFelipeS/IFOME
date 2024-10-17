@@ -2,8 +2,8 @@ package br.com.ifsp.ifome.services;
 
 import br.com.ifsp.ifome.dto.request.OrderItemRequest;
 import br.com.ifsp.ifome.dto.request.OrderRequest;
+import br.com.ifsp.ifome.entities.CustomerOrder;
 import br.com.ifsp.ifome.entities.Dish;
-import br.com.ifsp.ifome.entities.Order;
 import br.com.ifsp.ifome.entities.OrderItem;
 import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.exceptions.ResourceNotFoundException;
@@ -17,12 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class OrderService {
+public class CustomerOrderService {
     private final RestaurantRepository restaurantRepository;
     private final DishRepository dishRepository;
     private final OrderRepository orderRepository;
 
-    public OrderService(RestaurantRepository restaurantRepository, DishRepository dishRepository, OrderRepository orderRepository) {
+    public CustomerOrderService(RestaurantRepository restaurantRepository, DishRepository dishRepository, OrderRepository orderRepository) {
         this.restaurantRepository = restaurantRepository;
         this.dishRepository = dishRepository;
         this.orderRepository = orderRepository;
@@ -43,13 +43,13 @@ public class OrderService {
         }
 
         // Criar o pedido
-        Order order = new Order();
-        order.setRestaurant(restaurant);
-        order.setOrderItems(orderItems);
-        order.calculateTotalPrice(); // Calcular o preço total do pedido
+        CustomerOrder customerOrder = new CustomerOrder();
+        customerOrder.setRestaurant(restaurant);
+        customerOrder.setOrderItems(orderItems);
+        customerOrder.calculateTotalPrice(); // Calcular o preço total do pedido
 
         // Salvar o pedido
-        orderRepository.save(order);
+        orderRepository.save(customerOrder);
 
         return "Pedido criado com sucesso!";
     }

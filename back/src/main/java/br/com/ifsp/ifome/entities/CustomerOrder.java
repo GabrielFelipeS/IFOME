@@ -15,14 +15,12 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Order {
+public class CustomerOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Long id;
-    @OneToMany(mappedBy = "order_id", cascade = CascadeType.ALL)
-    private List<OrderItem> orderItems;
-    @CreationTimestamp
-    private LocalDateTime orderDate;
+    private Long id;
+
+
     private Double orderPrice;
 
     @ManyToOne
@@ -38,16 +36,23 @@ public class Order {
 
     private String paymentStatus;
 
-    public Order(List<OrderItem> orderItems, LocalDateTime orderDate, Double orderPrice, Restaurant restaurant, DeliveryPerson deliveryPerson, OrderStatus status, String paymentStatus)
+    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems;
+
+    @CreationTimestamp
+    private LocalDateTime orderDate;
+
+    public CustomerOrder(List<OrderItem> orderItems, LocalDateTime orderDate, Double orderPrice, Restaurant restaurant, DeliveryPerson deliveryPerson, OrderStatus status, String paymentStatus)
     {
-        this(null,
-                 orderItems,
-                 orderDate,
-                 orderPrice,
-                 restaurant,
-                 deliveryPerson,
-                 status,
-                paymentStatus);
+        this(
+            null,
+            orderPrice,
+            restaurant,
+            deliveryPerson,
+            status,
+            paymentStatus,
+            orderItems,
+            orderDate);
     }
 
     public void calculateTotalPrice() {

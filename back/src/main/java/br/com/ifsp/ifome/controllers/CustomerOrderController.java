@@ -2,7 +2,7 @@ package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.OrderRequest;
-import br.com.ifsp.ifome.services.OrderService;
+import br.com.ifsp.ifome.services.CustomerOrderService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 
 @RestController
-public class OrderController {
+public class CustomerOrderController {
 
-    private final OrderService orderService;
+    private final CustomerOrderService customerOrderService;
 
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
+    public CustomerOrderController(CustomerOrderService customerOrderService) {
+        this.customerOrderService = customerOrderService;
     }
 
     @PostMapping("/{id}/order")
@@ -27,7 +27,7 @@ public class OrderController {
         @RequestBody @Valid OrderRequest orderRequest, // Dados do pedido
         Principal principal) {
         // Chamar o serviço de criação do pedido
-        String message = orderService.createOrder(id, orderRequest, principal);
+        String message = customerOrderService.createOrder(id, orderRequest, principal);
 
         ApiResponse apiResponse = new ApiResponse("success", null, message);
         return ResponseEntity.ok(apiResponse);
