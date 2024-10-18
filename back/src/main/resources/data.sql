@@ -147,3 +147,5 @@ INSERT INTO address (
     type_residence, delivery_id)
 VALUES
     ('Endereço Carlos', '03090-000', 'Mooca', 'São Paulo', 'SP', 'Rua da Mooca', '300', 'Apto 202', 'Perto do Parque da Mooca', 'Casa', 1);
+
+
