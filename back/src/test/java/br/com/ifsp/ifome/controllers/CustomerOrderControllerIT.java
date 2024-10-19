@@ -8,10 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -31,16 +28,33 @@ public class CustomerOrderControllerIT {
 
     private String token_cliente;
     private String token_restaurant;
+    private String token_cliente_with_customer_order;
 
     @BeforeEach
     public void setUp() {
-        this.token_cliente = tokenService.generateToken("user1@gmail.com",  List.of(new SimpleGrantedAuthority("ROLE_CLIENT")));
+        this.token_cliente_with_customer_order = tokenService.generateToken("user1@gmail.com",  List.of(new SimpleGrantedAuthority("ROLE_CLIENT")));
+        this.token_cliente = tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_CLIENT")));
         this.token_restaurant= tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
     }
 
+//    @Test
+//    @DirtiesContext
+//    public void shouldBeAbleGetAllCustomerOrdersByRestaurant() {
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.set("Authorization", "Bearer " + token_cliente);
+//        HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(headers);
+//
+//        ResponseEntity<String> response = testRestTemplate.postForEntity
+//            ("/api/order",
+//                requestEntity, String.class);
+//
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+//
+//    }
+
     @Test
     @DirtiesContext
-    public void shouldBeAbleGetAllCustomerOrdersByRestaurant() {
+    public void shouldNotBeAbleCreateCustomerOrderWithCartEmpty() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token_cliente);
         HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(headers);
@@ -49,9 +63,26 @@ public class CustomerOrderControllerIT {
             ("/api/order",
                 requestEntity, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
+
+    @Test
+    @DirtiesContext
+    public void shouldNotBeAbleCreateCustomerOrderWithCartNotExist() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token_cliente_with_customer_order);
+        HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity
+            ("/api/order",
+                requestEntity, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+    }
+
+
+
+
 
     private @NotNull HttpHeaders getHttpHeadersClient() {
         HttpHeaders headers = new HttpHeaders();

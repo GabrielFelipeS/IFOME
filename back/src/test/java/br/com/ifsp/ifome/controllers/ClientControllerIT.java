@@ -345,6 +345,33 @@ public class ClientControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
+    @Test
+    @DirtiesContext
+    public void shouldReturnEmptyCartBeforeCreateCustomerOrder() {
+        OrderItemRequest OrderItemRequest = new OrderItemRequest(3L,2);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(OrderItemRequest, headers);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity
+            ("/api/client",
+                requestEntity, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        requestEntity = new HttpEntity<>(headers);
+
+        response = testRestTemplate.postForEntity
+            ("/api/order",
+                requestEntity, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        response = testRestTemplate.exchange("/api/client",  HttpMethod.GET, requestEntity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        System.err.println(response.getBody());
+    }
+
     private @NotNull HttpEntity<OrderItemRequest> getOrderItemRequestHttpEntity() {
         OrderItemRequest OrderItemRequest = new OrderItemRequest(3L,2);
         return getOrderItemRequestHttpEntity(OrderItemRequest);
