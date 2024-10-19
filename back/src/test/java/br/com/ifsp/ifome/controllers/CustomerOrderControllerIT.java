@@ -149,6 +149,28 @@ public class CustomerOrderControllerIT {
 
     }
 
+    @Test
+    @DirtiesContext
+    public void shouldNotAllowClientToUpdateOrderStatus() {
+        // Criar um pedido no banco de dados
+        CustomerOrder order = new CustomerOrder();
+        order.setStatus(OrderStatus.NOVO);
+        // Defina outros atributos do pedido, como preço, cart, restaurant, etc.
+        customerOrderRepository.save(order); // Salve o pedido
+
+        Long orderId = order.getId(); // Obtenha o ID do pedido criado
+
+        UpdateOrderStatusRequest updateRequest = new UpdateOrderStatusRequest(orderId, OrderStatus.EM_PREPARO);
+        HttpHeaders headers = getHttpHeadersClient(); // Obtenha os cabeçalhos do cliente
+
+        ResponseEntity<ApiResponse> response = testRestTemplate.exchange(
+                "/api/order/updateStatus", HttpMethod.PUT, new HttpEntity<>(updateRequest, headers), ApiResponse.class
+        );
+
+        // Verifique se a resposta é FORBIDDEN
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        assertThat(response.getBody().message()).isEqualTo("Acesso negado! Você não pode alterar este pedido.");
+    }
 
 
 
