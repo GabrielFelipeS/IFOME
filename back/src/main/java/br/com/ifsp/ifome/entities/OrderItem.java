@@ -26,14 +26,12 @@ public class OrderItem {
     private Integer quantity;
     private Double unitPrice;
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "cart_id")
     private Cart cart;
-    @JsonIgnore
-    @ManyToOne
-    private CustomerOrder customerOrder;
 
     public OrderItem(Dish dish, Integer quantity, Cart cart) {
-        this(null, dish, quantity, dish.getPrice(), cart, null);
+        this(null, dish, quantity, dish.getPrice(), cart);
     }
 
     public double getTotalPrice() {
