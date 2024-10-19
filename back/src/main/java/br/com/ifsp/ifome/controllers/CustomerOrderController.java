@@ -27,13 +27,11 @@ public class CustomerOrderController {
 
     @PostMapping("/{id}/order")
     public ResponseEntity<ApiResponse> createOrder(
-        @PathVariable Long id, // ID do restaurante onde o pedido será feito
-        @RequestBody @Valid OrderRequest orderRequest, // Dados do pedido
         Principal principal) {
         String custumerEmail = principal.getName();
         Optional<Cart> cartCustumer =  cartRepository.findFirstByClientEmail(custumerEmail);
         // Chamar o serviço de criação do pedido
-        String message = customerOrderService.createOrder(id, orderRequest, principal);
+        String message = customerOrderService.createOrder(principal);
 
         ApiResponse apiResponse = new ApiResponse("success", null, message);
         return ResponseEntity.ok(apiResponse);

@@ -1,54 +1,42 @@
 package br.com.ifsp.ifome.services;
 
-import br.com.ifsp.ifome.dto.request.OrderItemRequest;
-import br.com.ifsp.ifome.dto.request.OrderRequest;
+import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.CustomerOrder;
-import br.com.ifsp.ifome.entities.Dish;
-import br.com.ifsp.ifome.entities.OrderItem;
 import br.com.ifsp.ifome.entities.Restaurant;
-import br.com.ifsp.ifome.exceptions.ResourceNotFoundException;
+import br.com.ifsp.ifome.exceptions.RestaurantNotFoundException;
+import br.com.ifsp.ifome.repositories.CartRepository;
 import br.com.ifsp.ifome.repositories.DishRepository;
 import br.com.ifsp.ifome.repositories.OrderRepository;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class CustomerOrderService {
     private final RestaurantRepository restaurantRepository;
     private final DishRepository dishRepository;
     private final OrderRepository orderRepository;
+    private final CartRepository cartRepository;
 
-    public CustomerOrderService(RestaurantRepository restaurantRepository, DishRepository dishRepository, OrderRepository orderRepository) {
+    public CustomerOrderService(RestaurantRepository restaurantRepository, DishRepository dishRepository, OrderRepository orderRepository, CartRepository cartRepository) {
         this.restaurantRepository = restaurantRepository;
         this.dishRepository = dishRepository;
         this.orderRepository = orderRepository;
+        this.cartRepository = cartRepository;
     }
 
-    // Novo metodo para criar pedido
-    public String createOrder(Long restaurantId, OrderRequest orderRequest, Principal principal) {
-        // Validar se o restaurante existe
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-            .orElseThrow(() -> new ResourceNotFoundException("Restaurante não encontrado"));
+    public String createOrder(Principal principal) {
+        Cart cart = cartRepository
+                        .findFirstByClientEmail(principal.getName())
+                        .orElseThrow();
 
-        // Criar e salvar os itens do pedido
-        List<OrderItem> orderItems = new ArrayList<>();
-        for (OrderItemRequest itemRequest : orderRequest.items()) {
-            Dish dish = dishRepository.findById(itemRequest.dishId())
-                .orElseThrow(() -> new ResourceNotFoundException("Prato não encontrado"));
-            orderItems.add(new OrderItem(dish, itemRequest.quantity(), null)); // Assumindo OrderItem sem Cart aqui
-        }
+       Restaurant restaurant = restaurantRepository
+                                .findById(cart.getIdRestaurant())
+                                .orElseThrow(RestaurantNotFoundException::new);
 
-        // Criar o pedido
-        CustomerOrder customerOrder = new CustomerOrder();
-        customerOrder.setRestaurant(restaurant);
-        customerOrder.setOrderItems(orderItems);
-        customerOrder.calculateTotalPrice(); // Calcular o preço total do pedido
+        CustomerOrder customerOrder = new CustomerOrder(cart, restaurant);
 
-        // Salvar o pedido
         orderRepository.save(customerOrder);
 
         return "Pedido criado com sucesso!";
