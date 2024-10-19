@@ -75,6 +75,31 @@ public class CustomerOrderControllerIT {
         assertThat(responseBody).contains("NOVO", "PENDENTE"); // Exemplo de verificações para status do pedido
     }
 
+
+    @Test
+    @DirtiesContext
+    public void shouldReturnAllRestaurantOrders() {
+        HttpHeaders headers = getHttpHeadersRestaurant(); // Método para obter o cabeçalho do restaurante
+        HttpEntity<OrderItemRequest> createOrderRequestEntity = new HttpEntity<>(new OrderItemRequest(3L, 2), headers);
+
+        ResponseEntity<String> createOrderResponse = testRestTemplate.postForEntity(
+                "/api/order/", createOrderRequestEntity, String.class
+        );
+
+        assertThat(createOrderResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+        ResponseEntity<String> response = testRestTemplate.exchange(
+                "/api/order/restaurantOrders", HttpMethod.GET, requestEntity, String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        String responseBody = response.getBody();
+        assertThat(responseBody).contains("NOVO", "PENDENTE"); // Exemplo de verificações para status do pedido
+    }
+
+
     private @NotNull HttpHeaders getHttpHeadersClient() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token_cliente);
