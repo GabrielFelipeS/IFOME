@@ -1,6 +1,7 @@
 package br.com.ifsp.ifome.entities;
 
 
+import br.com.ifsp.ifome.exceptions.CartCannotBeEmptyException;
 import br.com.ifsp.ifome.exceptions.DishFromAnotherRestaurant;
 import br.com.ifsp.ifome.exceptions.DishNotFoundInCartException;
 import jakarta.persistence.*;
@@ -65,7 +66,7 @@ public class Cart {
     }
 
     public boolean cartEmpty() {
-        return this.orderItems.isEmpty();
+        return  this.orderItems == null || this.orderItems.isEmpty();
     }
 
     public boolean cartNotEmpty() {
@@ -99,5 +100,12 @@ public class Cart {
         } else {
             throw new DishNotFoundInCartException();
         }
+    }
+
+    public Cart cartCannotBeEmpty() {
+        if(this.cartEmpty()) {
+            throw new CartCannotBeEmptyException();
+        }
+        return this;
     }
 }
