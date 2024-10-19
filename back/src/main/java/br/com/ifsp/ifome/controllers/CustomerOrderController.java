@@ -27,4 +27,10 @@ public class CustomerOrderController {
         ApiResponse apiResponse = new ApiResponse("success", customerOrderRequest, "Pedido enviado! Aguarde confimação!");
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
+
+    @GetMapping("/status")
+    public void getStatusCustomerOrder() {
+
+    }
+
 }
