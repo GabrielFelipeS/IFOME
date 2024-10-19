@@ -20,8 +20,16 @@ public class CustomerOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     private Double orderPrice;
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status = OrderStatus.NOVO;
+
+    private String paymentStatus;
+
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
@@ -31,32 +39,29 @@ public class CustomerOrder {
     @JoinColumn(name = "delivery_id")
     private DeliveryPerson deliveryPerson;
 
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status = OrderStatus.NOVO; // Estado inicial é NOVO
-
-    private String paymentStatus;
-
-    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL)
-    private List<OrderItem> orderItems;
-
     @CreationTimestamp
     private LocalDateTime orderDate;
 
-    public CustomerOrder(List<OrderItem> orderItems, LocalDateTime orderDate, Double orderPrice, Restaurant restaurant, DeliveryPerson deliveryPerson, OrderStatus status, String paymentStatus)
+    public CustomerOrder(Cart cart, LocalDateTime orderDate, Double orderPrice,
+                         Restaurant restaurant, DeliveryPerson deliveryPerson, OrderStatus status, String paymentStatus)
     {
+        this(null, orderPrice, OrderStatus.NOVO, paymentStatus, cart, restaurant, deliveryPerson, orderDate);
+    }
+
+    public CustomerOrder(Cart cart, Restaurant restaurant) {
         this(
             null,
-            orderPrice,
+            cart.totalPrice(),
+            OrderStatus.NOVO,
+            "PENDENTE",
+            cart,
             restaurant,
-            deliveryPerson,
-            status,
-            paymentStatus,
-            orderItems,
-            orderDate);
+            null,
+            LocalDateTime.now());
     }
 
     public void calculateTotalPrice() {
-        this.orderPrice = orderItems.stream().mapToDouble(OrderItem::getTotalPrice).sum();
+        this.orderPrice = cart.getOrderItems().stream().mapToDouble(OrderItem::getTotalPrice).sum();
     }
 
 }
