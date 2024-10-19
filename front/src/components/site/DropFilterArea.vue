@@ -1,6 +1,6 @@
 <template>
-    <div class="w-full h-[50px] grid grid-cols-3 gap-1 md:p-5 md:grid-cols-6 items-center px-3">
-        <div class="relative w-full mx-1">
+    <div class="w-full h-[50px] grid grid-cols-3 gap-1 md:grid-cols-6 items-center">
+        <div class="relative w-full">
             <select
                 class="filter-select">
                 <option value="1">Opção 1</option>
