@@ -1,6 +1,7 @@
 package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.dto.ApiResponse;
+import br.com.ifsp.ifome.dto.request.UpdateOrderStatusRequest;
 import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
 import br.com.ifsp.ifome.dto.response.OrderItemResponse;
 import br.com.ifsp.ifome.entities.Cart;
@@ -72,6 +73,12 @@ public class CustomerOrderController {
         }
 
         return ResponseEntity.ok(orders); // Retornar 200 OK com a lista de pedidos
+    }
+
+    @PutMapping("/updateStatus")
+    public ResponseEntity<ApiResponse> updateOrderStatus(@RequestBody UpdateOrderStatusRequest request) {
+        customerOrderService.updateOrderStatus(request.customerOrderId(), request.newStatus());
+        return ResponseEntity.ok(new ApiResponse("success", null, "Status do pedido atualizado com sucesso!"));
     }
 
 

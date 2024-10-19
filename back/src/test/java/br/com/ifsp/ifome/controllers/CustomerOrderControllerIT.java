@@ -1,7 +1,12 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.OrderItemRequest;
+import br.com.ifsp.ifome.dto.request.UpdateOrderStatusRequest;
 import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
+import br.com.ifsp.ifome.entities.CustomerOrder;
+import br.com.ifsp.ifome.entities.OrderStatus;
+import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.services.TokenService;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +30,8 @@ public class CustomerOrderControllerIT {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
+    @Autowired
+    private CustomerOrderRepository customerOrderRepository;
     @Autowired
     private TokenService tokenService;
 
@@ -107,6 +114,39 @@ public class CustomerOrderControllerIT {
                         order.status().equals("NOVO") && // status do pedido
                         order.paymentStatus().equals("PENDENTE") // status de pagamento
         );
+    }
+
+    @Test
+    @DirtiesContext
+    public void shouldUpdateOrderStatusAsRestaurant() {
+        // Primeiro, vamos criar um pedido no banco de dados
+        CustomerOrder order = new CustomerOrder();
+        order.setStatus(OrderStatus.NOVO);
+        // Defina outros atributos do pedido, como preço, cart, restaurant, etc.
+        customerOrderRepository.save(order); // Salve o pedido
+
+        Long orderId = order.getId(); // Obtenha o ID do pedido criado
+
+        CustomerOrder existingOrder = customerOrderRepository.findById(orderId).orElseThrow();
+        System.out.println("Status anterior: " + existingOrder.getStatus());
+
+        // Agora, vamos atualizar o status usando o token de restaurante
+        UpdateOrderStatusRequest updateRequest = new UpdateOrderStatusRequest(orderId, OrderStatus.EM_PREPARO);
+        HttpHeaders headers = getHttpHeadersRestaurant(); // Obtenha os cabeçalhos do restaurante
+        ResponseEntity<ApiResponse> response = testRestTemplate.exchange(
+                "/api/order/updateStatus", HttpMethod.PUT, new HttpEntity<>(updateRequest, headers), ApiResponse.class
+        );
+
+        // Verifique se a atualização foi bem-sucedida
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().message()).isEqualTo("Status do pedido atualizado com sucesso!");
+
+        // Verifique se o status foi realmente atualizado no banco de dados
+        CustomerOrder updatedOrder = customerOrderRepository.findById(orderId).orElseThrow();
+        assertThat(updatedOrder.getStatus()).isEqualTo(OrderStatus.EM_PREPARO);
+
+        System.out.println("Novo status do pedido: " + updatedOrder.getStatus());
+
     }
 
 

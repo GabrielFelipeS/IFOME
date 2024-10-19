@@ -3,6 +3,7 @@ package br.com.ifsp.ifome.services;
 import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
 import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.CustomerOrder;
+import br.com.ifsp.ifome.entities.OrderStatus;
 import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.exceptions.RestaurantNotFoundException;
 import br.com.ifsp.ifome.repositories.CartRepository;
@@ -72,6 +73,18 @@ public class CustomerOrderService {
                 .map(CustomerOrderResponse::new) // Assumindo que você tem um construtor adequado
                 .collect(Collectors.toList());
     }
+
+    public void updateOrderStatus(Long orderId, OrderStatus newStatus) {
+        CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
+
+        // Atualize o status do pedido
+        customerOrder.setStatus(newStatus);
+
+        // Salve as alterações
+        customerOrderRepository.save(customerOrder);
+    }
+
 
 
 }
