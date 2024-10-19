@@ -1,5 +1,5 @@
 <template>
-    <header class="w-full h-[75px] bg-white flex flex-row items-center justify-around relative">
+    <header class="w-full h-[75px] bg-white flex flex-row items-center justify-around relative md:shadow-xl shadow-black">
         <img src="../../assets/img/logo_header_clean.png" class="h-full hidden md:block">
         <nav class="hidden md:block">
             <ul class="flex flex-row text-tertiary-light gap-4">
