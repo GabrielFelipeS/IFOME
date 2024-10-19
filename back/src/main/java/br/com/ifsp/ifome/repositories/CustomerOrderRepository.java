@@ -9,4 +9,5 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Lo
 {
     List<CustomerOrder> findAllByCartClientEmail(String email);
 
+    List<CustomerOrder> findByRestaurantId(Long restaurantId);
 }

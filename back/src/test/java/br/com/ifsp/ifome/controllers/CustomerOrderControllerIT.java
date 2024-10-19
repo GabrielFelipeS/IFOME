@@ -1,6 +1,7 @@
 package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.dto.request.OrderItemRequest;
+import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
 import br.com.ifsp.ifome.services.TokenService;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.annotation.DirtiesContext;
@@ -58,46 +60,60 @@ public class CustomerOrderControllerIT {
         // Criar o pedido para o cliente
         HttpHeaders headers = getHttpHeadersClient();
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
         ResponseEntity<String> createOrderResponse = testRestTemplate.postForEntity(
                 "/api/order/", requestEntity, String.class
         );
 
         assertThat(createOrderResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        ResponseEntity<String> response = testRestTemplate.exchange(
-                "/api/order/customerOrders", HttpMethod.GET, requestEntity, String.class);
+        ResponseEntity<List<CustomerOrderResponse>> response = testRestTemplate.exchange(
+                "/api/order/customerOrders", HttpMethod.GET, requestEntity,
+                new ParameterizedTypeReference<List<CustomerOrderResponse>>() {}
+        );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        // Aqui você pode adicionar mais verificações para o conteúdo da resposta
-        // Exemplo: verificar se o corpo contém os dados corretos
-        String responseBody = response.getBody();
-        assertThat(responseBody).contains("NOVO", "PENDENTE"); // Exemplo de verificações para status do pedido
+        // Verifique se o corpo contém os dados corretos
+        List<CustomerOrderResponse> orders = response.getBody();
+        assertThat(orders).anyMatch(order -> order.status().equals("NOVO") && order.paymentStatus().equals("PENDENTE"));
     }
+
 
 
     @Test
     @DirtiesContext
-    public void shouldReturnAllRestaurantOrders() {
-        HttpHeaders headers = getHttpHeadersRestaurant(); // Método para obter o cabeçalho do restaurante
-        HttpEntity<OrderItemRequest> createOrderRequestEntity = new HttpEntity<>(new OrderItemRequest(3L, 2), headers);
+    public void shouldReturnOrdersMadeToRestaurant() {
+        // Obter os cabeçalhos para o restaurante
+        HttpHeaders headers = getHttpHeadersRestaurant();
 
-        ResponseEntity<String> createOrderResponse = testRestTemplate.postForEntity(
-                "/api/order/", createOrderRequestEntity, String.class
-        );
-
-        assertThat(createOrderResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
+        // Requisição GET para obter todos os pedidos do restaurante
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
-        ResponseEntity<String> response = testRestTemplate.exchange(
-                "/api/order/restaurantOrders", HttpMethod.GET, requestEntity, String.class
+        ResponseEntity<List<CustomerOrderResponse>> response = testRestTemplate.exchange(
+                "/api/order/restaurantOrders", HttpMethod.GET, requestEntity,
+                new ParameterizedTypeReference<List<CustomerOrderResponse>>() {}
         );
 
+        // Verifique se a resposta é OK e se os pedidos estão corretos
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotEmpty(); // Verifique se há pedidos
 
-        String responseBody = response.getBody();
-        assertThat(responseBody).contains("NOVO", "PENDENTE"); // Exemplo de verificações para status do pedido
+        // Verifique se pelo menos um pedido corresponde aos valores esperados
+        List<CustomerOrderResponse> orders = response.getBody();
+
+        // Assegure-se de que pelo menos um dos pedidos existentes atenda aos critérios esperados
+        assertThat(orders).anyMatch(order ->
+                order.orderPrice().equals(1015.0) && // preço do pedido
+                        order.status().equals("NOVO") && // status do pedido
+                        order.paymentStatus().equals("PENDENTE") // status de pagamento
+        );
     }
+
+
+
+
+
+
 
 
     private @NotNull HttpHeaders getHttpHeadersClient() {
@@ -111,4 +127,5 @@ public class CustomerOrderControllerIT {
         headers.set("Authorization", "Bearer " + token_restaurant);
         return headers;
     }
+
 }

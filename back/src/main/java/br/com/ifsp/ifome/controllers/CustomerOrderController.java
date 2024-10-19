@@ -27,15 +27,21 @@ public class CustomerOrderController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<ApiResponse> createOrder(
-        Principal principal) {
-        String custumerEmail = principal.getName();
-        Optional<Cart> cartCustumer =  cartRepository.findFirstByClientEmail(custumerEmail);
-        // Chamar o serviço de criação do pedido
-        String message = customerOrderService.createOrder(principal);
+    public ResponseEntity<ApiResponse> createOrder(Principal principal) {
+        String customerEmail = principal.getName();
+        Optional<Cart> cartCustomer = cartRepository.findFirstByClientEmail(customerEmail);
 
-        ApiResponse apiResponse = new ApiResponse("success", null, message);
-        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+        // Verifica se o carrinho do cliente existe
+        if (cartCustomer.isPresent()) {
+            // Chama o serviço de criação do pedido, passando o carrinho e o principal
+            String message = customerOrderService.createOrder(principal, cartCustomer.get());
+            ApiResponse apiResponse = new ApiResponse("success", null, message);
+            return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+        } else {
+            // Retorna um erro se o carrinho não for encontrado
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("error", "Carrinho não encontrado", null));
+        }
     }
 
     @GetMapping("/customerOrders")
@@ -54,4 +60,19 @@ public class CustomerOrderController {
 
         return ResponseEntity.ok(orders); // Return 200 OK with the list of orders
     }
+
+    @GetMapping("/restaurantOrders")
+    public ResponseEntity<List<CustomerOrderResponse>> getAllRestaurantOrders(Principal principal) {
+        String  restaurantEmail = principal.getName(); // Ou use outro método para identificar o restaurante
+
+        List<CustomerOrderResponse> orders = customerOrderService.getAllOrdersByRestaurant(restaurantEmail);
+
+        if (orders.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Retornar 204 No Content se não houver pedidos
+        }
+
+        return ResponseEntity.ok(orders); // Retornar 200 OK com a lista de pedidos
+    }
+
+
 }

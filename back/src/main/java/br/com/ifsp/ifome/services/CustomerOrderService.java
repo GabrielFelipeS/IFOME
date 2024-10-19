@@ -9,10 +9,12 @@ import br.com.ifsp.ifome.repositories.CartRepository;
 import br.com.ifsp.ifome.repositories.DishRepository;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,8 +31,8 @@ public class CustomerOrderService {
         this.cartRepository = cartRepository;
     }
 
-    public String createOrder(Principal principal) {
-        Cart cart = cartRepository
+    public String createOrder(Principal principal, Cart cart) {
+        Cart custumerCart = cartRepository
                         .findFirstByClientEmail(principal.getName())
                         .orElseThrow();
 
@@ -52,4 +54,24 @@ public class CustomerOrderService {
                 .map(CustomerOrderResponse::new)
                 .collect(Collectors.toList());
     }
+
+    public List<CustomerOrderResponse> getAllOrdersByRestaurant(String restaurantEmail) {
+        // Obtenha o restaurante correspondente ao email
+        Optional<Restaurant> restaurantOpt = restaurantRepository.findByEmail(restaurantEmail);
+
+        // Verifique se o restaurante foi encontrado
+        Restaurant restaurant = restaurantOpt.orElseThrow(() ->
+                new EntityNotFoundException("Restaurante não encontrado com o email: " + restaurantEmail)
+        );
+
+        // Busque todos os pedidos associados a este restaurante
+        List<CustomerOrder> orders = customerOrderRepository.findByRestaurantId(restaurant.getId());
+
+        // Converta as entidades CustomerOrder em CustomerOrderResponse
+        return orders.stream()
+                .map(CustomerOrderResponse::new) // Assumindo que você tem um construtor adequado
+                .collect(Collectors.toList());
+    }
+
+
 }
