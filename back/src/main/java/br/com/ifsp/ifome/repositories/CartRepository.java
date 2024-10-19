@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface CartRepository extends CrudRepository<Cart, Long> {
-    @Query("SELECT c FROM Cart c JOIN c.orderItems o WHERE c.client.email = :email AND c.customerOrder IS NULL")
+    @Query("SELECT c FROM Cart c WHERE c.client.email = :email AND c.customerOrder IS NULL")
     Optional<Cart> findFirstByClientEmail(@Param("email") String email);
 }
