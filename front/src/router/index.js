@@ -6,6 +6,17 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/',
+      name: 'home',
+      children:[
+        {
+          path: '/restaurants',
+          name: 'restaurants',
+          component: () => import('@/views/site/Restaurants.vue'),
+        }
+      ]
+    },
+    {
       path: '/store',
       children: [
         {
