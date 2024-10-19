@@ -1,8 +1,10 @@
 package br.com.ifsp.ifome.services;
 
+import br.com.ifsp.ifome.dto.response.CustomerOrderRequest;
 import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.CustomerOrder;
 import br.com.ifsp.ifome.entities.Restaurant;
+import br.com.ifsp.ifome.exceptions.CartCannotBeEmptyException;
 import br.com.ifsp.ifome.exceptions.RestaurantNotFoundException;
 import br.com.ifsp.ifome.repositories.CartRepository;
 import br.com.ifsp.ifome.repositories.DishRepository;
@@ -26,10 +28,11 @@ public class CustomerOrderService {
         this.cartRepository = cartRepository;
     }
 
-    public String createOrder(Principal principal) {
+    public CustomerOrderRequest createOrder(Principal principal) {
         Cart cart = cartRepository
                         .findFirstByClientEmail(principal.getName())
-                        .orElseThrow();
+                        .orElseThrow(CartCannotBeEmptyException::new)
+                        .cartCannotBeEmpty();
 
        Restaurant restaurant = restaurantRepository
                                 .findById(cart.getIdRestaurant())
@@ -39,6 +42,6 @@ public class CustomerOrderService {
 
         orderRepository.save(customerOrder);
 
-        return "Pedido criado com sucesso!";
+        return CustomerOrderRequest.from(customerOrder);
     }
 }
