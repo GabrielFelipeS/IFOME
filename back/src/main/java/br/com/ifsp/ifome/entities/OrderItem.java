@@ -28,7 +28,6 @@ public class OrderItem {
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     private Cart cart;
-
     @JsonIgnore
     @ManyToOne
     private CustomerOrder customerOrder;
