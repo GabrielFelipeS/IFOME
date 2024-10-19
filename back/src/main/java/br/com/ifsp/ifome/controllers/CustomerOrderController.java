@@ -1,16 +1,17 @@
 package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.dto.ApiResponse;
-import br.com.ifsp.ifome.dto.request.OrderRequest;
+import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
+import br.com.ifsp.ifome.dto.response.OrderItemResponse;
 import br.com.ifsp.ifome.entities.Cart;
-import br.com.ifsp.ifome.entities.Client;
 import br.com.ifsp.ifome.repositories.CartRepository;
 import br.com.ifsp.ifome.services.CustomerOrderService;
-import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -25,7 +26,7 @@ public class CustomerOrderController {
         this.cartRepository = cartRepository;
     }
 
-    @PostMapping("/{id}/order")
+    @PostMapping("/")
     public ResponseEntity<ApiResponse> createOrder(
         Principal principal) {
         String custumerEmail = principal.getName();
@@ -34,6 +35,23 @@ public class CustomerOrderController {
         String message = customerOrderService.createOrder(principal);
 
         ApiResponse apiResponse = new ApiResponse("success", null, message);
-        return ResponseEntity.ok(apiResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+    }
+
+    @GetMapping("/customerOrders")
+    public ResponseEntity<List<CustomerOrderResponse>> getAllCustomerOrders(Principal principal) {
+        // Check if the principal is present
+        //if (principal == null || principal.getName() == null) {
+          //  return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // Return 401 if user is not authenticated
+        //}
+
+        String customerEmail = principal.getName();
+        List<CustomerOrderResponse> orders = customerOrderService.getAllOrdersByCustomer(customerEmail);
+
+        if (orders.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Return 204 No Content if no orders found
+        }
+
+        return ResponseEntity.ok(orders); // Return 200 OK with the list of orders
     }
 }

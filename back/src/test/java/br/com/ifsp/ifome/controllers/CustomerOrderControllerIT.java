@@ -8,10 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -46,11 +43,36 @@ public class CustomerOrderControllerIT {
         HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
-            ("/api/order",
+            ("/api/order/",
                 requestEntity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
+    }
+
+
+
+    @Test
+    @DirtiesContext
+    public void shouldReturnAllCustomerOrders() {
+        // Criar o pedido para o cliente
+        HttpHeaders headers = getHttpHeadersClient();
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+        ResponseEntity<String> createOrderResponse = testRestTemplate.postForEntity(
+                "/api/order/", requestEntity, String.class
+        );
+
+        assertThat(createOrderResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        ResponseEntity<String> response = testRestTemplate.exchange(
+                "/api/order/customerOrders", HttpMethod.GET, requestEntity, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        // Aqui você pode adicionar mais verificações para o conteúdo da resposta
+        // Exemplo: verificar se o corpo contém os dados corretos
+        String responseBody = response.getBody();
+        assertThat(responseBody).contains("NOVO", "PENDENTE"); // Exemplo de verificações para status do pedido
     }
 
     private @NotNull HttpHeaders getHttpHeadersClient() {
@@ -64,5 +86,4 @@ public class CustomerOrderControllerIT {
         headers.set("Authorization", "Bearer " + token_restaurant);
         return headers;
     }
-
 }
