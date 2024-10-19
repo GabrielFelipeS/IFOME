@@ -58,6 +58,7 @@ public class CustomerOrder {
             restaurant,
             null,
             LocalDateTime.now());
+        cart.setCustomerOrder(this);
     }
 
     public void calculateTotalPrice() {
