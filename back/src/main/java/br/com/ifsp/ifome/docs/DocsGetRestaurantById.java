@@ -14,7 +14,6 @@ import java.lang.annotation.Target;
 
 @Operation(
     summary = "Pegar restaurante por id",
-    security = @SecurityRequirement(name = "Bearer Token"),
     responses = {
         @ApiResponse(responseCode = "200", description = "Restaurante encontrado com sucesso",
             content = @Content(mediaType = "application/json",
