@@ -170,6 +170,61 @@ public class CustomerOrderControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
+    @Test
+    @DirtiesContext
+    public void shouldFollowOrderStatusSequence() {
+        // Criar um pedido no banco de dados
+        CustomerOrder order = new CustomerOrder();
+        order.setStatus(OrderStatus.NOVO);
+        customerOrderRepository.save(order); // Salve o pedido
+
+        Long orderId = order.getId(); // Obtenha o ID do pedido criado
+
+        // Verificar a sequência de status
+        updateOrderStatusAndAssert(orderId, OrderStatus.ACEITO);
+        updateOrderStatusAndAssert(orderId, OrderStatus.EM_PREPARO);
+        updateOrderStatusAndAssert(orderId, OrderStatus.PRONTO_PARA_ENTREGA);
+        updateOrderStatusAndAssert(orderId, OrderStatus.SAIU_PARA_ENTREGA);
+        updateOrderStatusAndAssert(orderId, OrderStatus.CONCLUIDO);
+    }
+
+    private void updateOrderStatusAndAssert(Long orderId, OrderStatus expectedStatus) {
+        UpdateOrderStatusRequest updateRequest = new UpdateOrderStatusRequest(orderId, expectedStatus);
+        HttpHeaders headers = getHttpHeadersRestaurant(); // Obtenha os cabeçalhos do restaurante
+
+        ResponseEntity<ApiResponse> response = testRestTemplate.exchange(
+                "/api/order/updateStatus", HttpMethod.PUT, new HttpEntity<>(updateRequest, headers), ApiResponse.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().message()).isEqualTo("Status do pedido atualizado com sucesso!");
+
+        CustomerOrder updatedOrder = customerOrderRepository.findById(orderId).orElseThrow();
+        assertThat(updatedOrder.getStatus()).isEqualTo(expectedStatus);
+    }
+
+    @Test
+    @DirtiesContext
+    public void shouldNotAllowStatusUpdateOutOfOrder() {
+        CustomerOrder order = new CustomerOrder();
+        order.setStatus(OrderStatus.NOVO);
+        customerOrderRepository.save(order);
+
+        Long orderId = order.getId();
+
+        // Atualizar status para 'EM_PREPARO' sem passar por 'ACEITO'
+        UpdateOrderStatusRequest updateRequest = new UpdateOrderStatusRequest(orderId, OrderStatus.EM_PREPARO);
+        HttpHeaders headers = getHttpHeadersRestaurant();
+
+        ResponseEntity<ApiResponse> response = testRestTemplate.exchange(
+                "/api/order/updateStatus", HttpMethod.PUT, new HttpEntity<>(updateRequest, headers), ApiResponse.class
+        );
+
+        // Verifique se a resposta é a esperada (403 Forbidden ou uma mensagem de erro)
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().message()).isEqualTo("Transição de status inválida. O status deve ser atualizado em ordem.");
+    }
+
 
 
 
