@@ -2,6 +2,7 @@ package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.docs.DocsGetCart;
 import br.com.ifsp.ifome.docs.DocsInsertOrderItemInCart;
+import br.com.ifsp.ifome.docs.DocsUpdateItemInCart;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.OrderItemRequest;
 import br.com.ifsp.ifome.dto.response.CartResponse;
@@ -45,7 +46,7 @@ public class ClientController {
     }
 
     @PutMapping
-    @Operation(security = @SecurityRequirement(name = "Bearer Token"))
+    @DocsUpdateItemInCart
     public ResponseEntity<ApiResponse> updateQuantityOrderItemInCart(@RequestBody @Valid OrderItemRequest orderItemRequest, Principal principal) {
         clientService.updateQuantityOrderItemInCart(orderItemRequest, principal.getName());
 
