@@ -41,9 +41,7 @@ import java.lang.annotation.Target;
                     }
                 """)
             )
-        ),
-        @ApiResponse(responseCode = "401", description = "Não autenticado!",
-            content = @Content(mediaType = "application/json"))
+        )
     }
 )
 @Target(ElementType.METHOD)
