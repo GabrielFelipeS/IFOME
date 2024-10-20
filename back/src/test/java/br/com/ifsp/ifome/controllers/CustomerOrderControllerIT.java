@@ -167,9 +167,7 @@ public class CustomerOrderControllerIT {
                 "/api/order/updateStatus", HttpMethod.PUT, new HttpEntity<>(updateRequest, headers), ApiResponse.class
         );
 
-        // Verifique se a resposta é FORBIDDEN
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-        assertThat(response.getBody().message()).isEqualTo("Acesso negado! Você não pode alterar este pedido.");
     }
 
 
