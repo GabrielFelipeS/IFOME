@@ -27,10 +27,8 @@ public class FileStorageService {
         String newName = this.refactoreName(file.getOriginalFilename());
         File uploadedFile = new File( PATH_TO_FOLDER_IMAGES + cnpj + "/" + newName);
 
-        // Transferir o arquivo para o diretório especificado
         file.transferTo(uploadedFile);
-        System.err.println(uploadedFile.getName());
-        return cnpj + "/" + uploadedFile.getName(); // Retorna o caminho absoluto do arquivo salvo
+        return uploadedFile.getName(); // Retorna o caminho absoluto do arquivo salvo
     }
 
     private String refactoreName(String nameImage) {
