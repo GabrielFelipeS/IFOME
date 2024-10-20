@@ -49,6 +49,7 @@ public class SecurityConfig {
                     .permitAll()
                     .requestMatchers(HttpMethod.PUT, "/api/restaurant/").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.PATCH, "/api/restaurant/").hasRole("RESTAURANT")
+                    .requestMatchers(HttpMethod.POST, "/api/dish").hasRole("RESTAURANT")
                     .anyRequest().authenticated())
             .headers(headers -> headers
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
