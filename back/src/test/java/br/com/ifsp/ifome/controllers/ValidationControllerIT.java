@@ -102,7 +102,7 @@ public class ValidationControllerIT {
     }
 
     @Test
-    public void cnpjExistsInRestaurant() {
+    public void cnpjDoesNotExistInRestaurant() {
         CnpjValidatorRequest cpfValidatorRequest = new CnpjValidatorRequest("61.610.897/0001-60");
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/validation/restaurant/cnpj", cpfValidatorRequest, String.class);
 
@@ -110,7 +110,7 @@ public class ValidationControllerIT {
     }
 
     @Test
-    public void cnpjDoesNotExistsInRestaurant() {
+    public void cnpjExistsInRestaurant() {
         CnpjValidatorRequest cpfValidatorRequest = new CnpjValidatorRequest("58.911.612/0001-16");
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/validation/restaurant/cnpj", cpfValidatorRequest, String.class);
 

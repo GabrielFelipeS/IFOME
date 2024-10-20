@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -261,8 +262,7 @@ import java.lang.annotation.Target;
                       "dateOfBirth": "2000-01-01",
                       "cpf": "211.039.180-44",
                       "phone": "(11) 99248-1491",
-                      "address": [
-                        {
+                      "address": {
                           "nameAddress": "casa principal",
                           "cep": "35170-222",
                           "neighborhood": "neighborhood",
@@ -274,7 +274,6 @@ import java.lang.annotation.Target;
                           "details": "details",
                           "typeResidence": "casa"
                         }
-                      ]
                     }
                 """
         ),
@@ -298,7 +297,7 @@ import java.lang.annotation.Target;
                         "password": "password",
                         "confirmationPassword": "password",
                         "dateOfBirth": "2003-04-14",
-                        "address": []
+                        "address": {}
                     }
                     """
             )
@@ -319,7 +318,7 @@ import java.lang.annotation.Target;
                          "dateOfBirth": "2000-01-01",
                          "cpf": "211.039.180-44",
                          "address": [
-                             {
+                            {
                                  "cep": "35170-222",
                                  "neighborhood": "neighborhood",
                                  "city": "Coronel Fabriciano",
@@ -345,16 +344,16 @@ import java.lang.annotation.Target;
                     "Senha precisa conter pelo menos um caractere maiúsculo"
                 ],
                 "address": [
-                    "É necessário ter pelo menos um endereço"
+                    "É necessário ter um endereço"
                 ],
                 "phone": [
-                    "Telefone é obrigatório"
+                    "O campo \\"Telefone\\" é obrigatório"
                 ],
                 "cpf": [
-                    "CPF inválido"
+                   "O campo \\"CPF\\" deve estar no formato: XXX.XXX.XXX-XX}"
                 ],
                 "email": [
-                    "E-mail inválido"
+                    "E-mail deve estar no formato: nome@dominio.co"
                 ],
                  "clientRequest": [
                      "Senha e confirmar senha não são iguais"

@@ -5,11 +5,13 @@ import br.com.ifsp.ifome.docs.DocsGetPagination;
 import br.com.ifsp.ifome.docs.DocsGetRestaurantById;
 import br.com.ifsp.ifome.docs.DocsOpenCloseRestaurant;
 import br.com.ifsp.ifome.dto.ApiResponse;
+import br.com.ifsp.ifome.dto.request.OrderRequest;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
 import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.services.RestaurantService;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-
 @MultipartConfig
 @RequestMapping("/api/restaurant/")
 public class RestaurantController {
@@ -30,7 +31,7 @@ public class RestaurantController {
 
     @GetMapping
     @DocsGetPagination
-    public ResponseEntity<ApiResponse> getAllRestaurant(
+    public ResponseEntity<ApiResponse> getRestaurantsPagination(
         @Parameter(hidden = true) @PageableDefault(size = 15, page = 0) Pageable pageable) {
         var restaurantResponses = restaurantService.getAllRestaurants(pageable);
 
@@ -40,7 +41,7 @@ public class RestaurantController {
 
     @GetMapping("/all")
     @DocsGetAll
-    public ResponseEntity<ApiResponse> getRestaurantsPagination() {
+    public ResponseEntity<ApiResponse> getAllRestaurant() {
         var restaurantResponses = restaurantService.getAllRestaurants();
 
         ApiResponse apiResponse = new ApiResponse("success", restaurantResponses, "Sucesso na busca dos restaurantes");
@@ -71,4 +72,8 @@ public class RestaurantController {
         ApiResponse apiResponse = new ApiResponse("success", null, message);
         return ResponseEntity.ok(apiResponse);
     }
+
+
+
+
 }

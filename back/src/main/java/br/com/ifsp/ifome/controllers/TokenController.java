@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.aspect.SensiveData;
 import br.com.ifsp.ifome.services.TokenService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -18,7 +19,9 @@ public class TokenController {
         this.tokenService = tokenService;
     }
 
+
     @PostMapping
+    @SensiveData
     public ResponseEntity<String> validToken(@Valid @NotBlank @RequestBody String token) {
         tokenService.validToken(token);
         return ResponseEntity.ok("Token válido");
