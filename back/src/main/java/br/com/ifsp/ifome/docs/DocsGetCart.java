@@ -36,9 +36,6 @@ import java.lang.annotation.Target;
             content = @Content(mediaType = "application/json"))
     }
 )
-@RequestBody(description = """
-    É necessário enviar um token com a role client (possivel ao logarm em /api/auth/client)
-""")
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DocsGetCart {
