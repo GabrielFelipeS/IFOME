@@ -1,8 +1,8 @@
 <template>
     <router-link :to="`/restaurant/${props.restaurant.id}`"
         class="w-full flex flex-row md:flex-row items-center p-4 rounded-lg shadow-sm shadow-[#B3B3B3] bg-white mt-5 md:shadow-none md:hover:shadow-lg md:hover:scale-105 md:transition-all md:duration-150">
-        <img src="`../../assets/img/logo_header_clean.png`" alt="Logo do Restaurante"
-            class="w-20 h-20 object-cover rounded-full" />
+        <img :src="imageUrl  || '../../assets/img/logo_header_clean.png'"
+            alt="Logo do Restaurante" class="w-20 h-20 object-cover rounded-full" />
 
         <div class="ml-4 flex-1">
             <h3 class="text-lg font-semibold text-gray-800">
@@ -39,6 +39,8 @@ const props = defineProps({
 
 const currentDay = ref('');
 const currentTime = ref('');
+const imageUrl = `${import.meta.env.VITE_API_URL}image/${props.restaurant.restaurantImage}`;
+console.log(imageUrl);
 
 onMounted(() => {
     const now = new Date();
@@ -50,6 +52,8 @@ onMounted(() => {
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     currentTime.value = `${hours}:${minutes}`;
+
+    console.log(props.restaurant);
 });
 
 

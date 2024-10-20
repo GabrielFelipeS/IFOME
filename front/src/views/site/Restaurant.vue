@@ -16,11 +16,12 @@
 
             <div
                 class="w-full flex flex-row md:flex-row items-center p-4 rounded-t-lg bg-white mt-[-45px] md:mt-5 relative z-50">
-                <img src='../../assets/img/logo_header_clean.png' alt="Logo do Restaurante"
+                <img :src="imageUrl || '../../assets/img/logo_header_clean.png'" alt="Logo do Restaurante"
                     class="w-20 h-20 object-cover rounded-full" />
 
                 <div class="ml-4 flex-1">
-                    <h3 class="text-lg font-semibold text-gray-800">{{ restaurant.nameRestaurant }} <span v-if="restaurant.isOpen">( Fechado )</span></h3>
+                    <h3 class="text-lg font-semibold text-gray-800">{{ restaurant.nameRestaurant }} <span
+                            v-if="restaurant.isOpen">( Fechado )</span></h3>
                     <div class="flex items-center text-gray-600 text-sm mt-1">
                         <svg class="w-4 h-4 text-red-500 mr-1" fill="currentColor" viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
@@ -64,19 +65,23 @@ import axios from 'axios';
 
 const route = useRoute();
 const restaurantId = route.params.id;
+const imageUrl = ref('');
 
 const restaurant = ref(null);
 const error = ref(null);
 
 const headers = {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJhcGlfaWZvbWUiLCJzdWIiOiJlbWFpbDFAZW1haWwuY29tIiwiZXhwIjoxNzM0Njk4OTYyLCJpYXQiOjE3Mjk0MzkzNjIsImF1dGhvcml0aWVzIjpbIkNMSUVOVF9ERUxFVEUiLCJDTElFTlRfVVBEQVRFIiwiQ0xJRU5UX1JFQUQiLCJDTElFTlRfQ1JFQVRFIiwiUk9MRV9DTElFTlQiXX0.pYwaOGen8eFhZaNFAIbAz04UJAgziAh4Zf7CWD0gjTJ1Np1Agorv6jIUOY3IYIGUIE6VTDcs87Y1VGTQAaodNcLn10m6AffBXZAaDyHAEujIyn9PolIe4VlO9AMcctju_D3NRI437x-t_W4_tv3rjDhzb6EcoZQ0Fl6TpcYNKbX4f7qi0C5jlviFfOLHj3oh66f8sF1SGM65LgldN4-kHramMtLkXZB7xu_6yEkQi1JTvSr2nOjg2MS04JMKX5Jk9MKZBf6Y2_NV7T4hngj1A9bCeIolI4m4RP4BX17__C08WGLKuvUCNB2kKs8zyQ-ay1ZbiTp7y8flhJLV4SUXMg`
+    'Authorization': localStorage.getItem('token') || `Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJhcGlfaWZvbWUiLCJzdWIiOiJlbWFpbDFAZW1haWwuY29tIiwiZXhwIjoxNzM0Njk4OTYyLCJpYXQiOjE3Mjk0MzkzNjIsImF1dGhvcml0aWVzIjpbIkNMSUVOVF9ERUxFVEUiLCJDTElFTlRfVVBEQVRFIiwiQ0xJRU5UX1JFQUQiLCJDTElFTlRfQ1JFQVRFIiwiUk9MRV9DTElFTlQiXX0.pYwaOGen8eFhZaNFAIbAz04UJAgziAh4Zf7CWD0gjTJ1Np1Agorv6jIUOY3IYIGUIE6VTDcs87Y1VGTQAaodNcLn10m6AffBXZAaDyHAEujIyn9PolIe4VlO9AMcctju_D3NRI437x-t_W4_tv3rjDhzb6EcoZQ0Fl6TpcYNKbX4f7qi0C5jlviFfOLHj3oh66f8sF1SGM65LgldN4-kHramMtLkXZB7xu_6yEkQi1JTvSr2nOjg2MS04JMKX5Jk9MKZBf6Y2_NV7T4hngj1A9bCeIolI4m4RP4BX17__C08WGLKuvUCNB2kKs8zyQ-ay1ZbiTp7y8flhJLV4SUXMg`
 };
 
 const fetchRestaurantData = async () => {
     try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}restaurant/${restaurantId}`, { headers });
         restaurant.value = response.data.data;
+        console.log(restaurant.value);
+        imageUrl.value = `${import.meta.env.VITE_API_URL}image/${restaurant.value.restaurantImage}`;
+        console.log(imageUrl);
     } catch (err) {
         error.value = 'Erro ao buscar os dados do restaurante';
         console.error(err);
