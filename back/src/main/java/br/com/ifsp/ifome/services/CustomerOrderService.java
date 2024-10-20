@@ -42,6 +42,7 @@ public class CustomerOrderService {
                                 .orElseThrow(RestaurantNotFoundException::new);
 
         CustomerOrder customerOrder = new CustomerOrder(cart, restaurant);
+        customerOrder.setStatus(OrderStatus.NOVO);  // Define o status inicial como NOVO
 
         customerOrderRepository.save(customerOrder);
 
@@ -74,23 +75,20 @@ public class CustomerOrderService {
                 .collect(Collectors.toList());
     }
 
-    public void updateOrderStatus(Long orderId, OrderStatus newStatus) {
+    public void updateOrderStatus(Long orderId) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
 
 
-        if (!isValidStatusTransition(customerOrder.getStatus(), newStatus)) {
-            throw new IllegalStateException("Transição de status inválida. O status deve ser atualizado em ordem.");
-        }
+        OrderStatus currentStatus = customerOrder.getStatus();
+        OrderStatus nextStatus = getNextStatus(currentStatus);
 
-        // Atualize o status do pedido
-        customerOrder.setStatus(newStatus);
+        // Atualizar o status apenas se for o próximo na sequência
+        customerOrder.setStatus(nextStatus);
         customerOrderRepository.save(customerOrder);
     }
 
-
-    private boolean isValidStatusTransition(OrderStatus currentStatus, OrderStatus newStatus) {
-        // Define a ordem dos status
+    private OrderStatus getNextStatus(OrderStatus currentStatus) {
         List<OrderStatus> validSequence = List.of(
                 OrderStatus.NOVO,
                 OrderStatus.ACEITO,
@@ -101,10 +99,11 @@ public class CustomerOrderService {
         );
 
         int currentIndex = validSequence.indexOf(currentStatus);
-        int newIndex = validSequence.indexOf(newStatus);
+        if (currentIndex == -1 || currentIndex == validSequence.size() - 1) {
+            throw new IllegalStateException("O status atual não pode ser alterado.");
+        }
 
-        // Verifica se o novo status é o próximo na sequência
-        return newIndex == currentIndex + 1;
+        // Retorna o próximo status na sequência
+        return validSequence.get(currentIndex + 1);
     }
-
 }

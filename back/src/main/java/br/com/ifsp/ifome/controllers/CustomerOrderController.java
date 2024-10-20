@@ -79,7 +79,7 @@ public class CustomerOrderController {
     @PutMapping("/updateStatus")
     public ResponseEntity<ApiResponse> updateOrderStatus(@RequestBody UpdateOrderStatusRequest request) {
         try {
-            customerOrderService.updateOrderStatus(request.customerOrderId(), request.newStatus());
+            customerOrderService.updateOrderStatus(request.customerOrderId());
             return ResponseEntity.ok(new ApiResponse("success", null, "Status atualizado com sucesso!"));
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(new ApiResponse("error", null, e.getMessage()));
