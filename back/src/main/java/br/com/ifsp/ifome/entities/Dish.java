@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Setter
@@ -36,5 +38,22 @@ public class Dish {
         this.dishCategory = dishRequest.dishCategory();
         this.dishImage = imageUrl;
         this.availability = dishRequest.availability();
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Dish dish = (Dish) object;
+        return Objects.equals(id, dish.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    public Long getRestaurantId() {
+        return this.getRestaurant().getId();
     }
 }

@@ -2,6 +2,7 @@ package br.com.ifsp.ifome.controllers;
 
 
 import br.com.ifsp.ifome.dto.request.DishRequest;
+import br.com.ifsp.ifome.dto.response.DishResponse;
 import br.com.ifsp.ifome.services.TokenService;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -326,6 +327,54 @@ public class DishControllerIT {
                 );
     }
 
+    @Test
+    public void shouldBeReturnAllAvailableDish() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/dish/all", HttpMethod.GET, requestEntity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        int size = documentContext.read("$.data.length()");
+
+        assertThat(size).isEqualTo(7);
+    }
+
+
+
+    @Test
+    public void shouldBeReturnAllAvailableDishWithPagination() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/dish/?page=0&size=1", HttpMethod.GET, requestEntity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        int size = documentContext.read("$.data.content.length()");
+        assertThat(size).isEqualTo(1);
+    }
+
+    @Test
+    public void shouldBeReturnAllAvailableDishById1() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/dish/1", HttpMethod.GET, requestEntity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        int size = documentContext.read("$.data.length()");
+
+        assertThat(size).isEqualTo(3);
+    }
 
 }
 

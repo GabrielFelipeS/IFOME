@@ -47,4 +47,5 @@ public class RestaurantService {
         return restaurantRepository.findById(id)
             .orElseThrow(RestaurantNotFoundException::new);
     }
+
 }
