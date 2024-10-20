@@ -3,6 +3,7 @@ import Modal from "@/components/user/Modal.vue";
 import {onMounted, ref, watch} from "vue";
 import Autocomplete from "@trevoreyre/autocomplete-vue";
 import axios from "axios";
+import Form from "@/components/store/dish/new/Form.vue";
 
 const selectedFiles = ref([]);
 const errorPhotos = ref(false);
@@ -74,13 +75,21 @@ async function getCategories() {
 }
 getCategories();
 function search(input) {
-	console.log(categorias.value);
 	if (!input) {
 		return categorias.value;
 	}
 	return categorias.value.filter(category => {
 		return category.toLowerCase().includes(input.toLowerCase());
 	});
+}
+function updateCategory(result) {
+	if (result.explicitOriginalTarget) {
+		dishData.value.dishCategory = result.explicitOriginalTarget.value;
+	} else {
+		dishData.value.dishCategory = result;
+	}
+
+	console.log(dishData.value.dishCategory);
 }
 // END SELECT CATEGORIAS
 
@@ -156,15 +165,33 @@ function validateForm() {
 	return validated;
 }
 
-function saveDish() {
+async function saveDish() {
 	if (validateForm()) {
+		let formData = new FormData();
+		formData.append('file', selectedFiles.value[0]);
+		formData.append('dish', new Blob([JSON.stringify(dishData.value)], {
+			type: 'application/json',
+		}));
 
+		const response = await axios.post(`${import.meta.env.VITE_API_URL}dish`, formData, {
+			headers: {
+				'Content-Type': 'multipart/form-data',
+			}
+		});
+
+		if (response.status === 201) {
+			emit('responseApi', response.data);
+			console.log(response.data);
+		} else {
+			emit('responseApi', response.data);
+			console.log(response.data);
+		}
 	}
 }
 </script>
 
 <template>
-	<Modal class="overflow-x-hidden">
+	<Modal>
 		<header class="title">
 			Cadastro de pratos
 		</header>
@@ -186,6 +213,7 @@ function saveDish() {
 				<p class="invalid-input-text" v-for="error in errors.price">{{ error }}</p>
 				<label for="category">Categoria</label>
 				<autocomplete :search="search" placeholder="Selecione ou digite uma categoria"
+							  :submit-on-enter="true" @input="updateCategory" @submit="updateCategory"
 							  class="w-full" v-model="dishData.dishCategory" id="category">
 				</autocomplete>
 				<p class="invalid-input-text" v-for="error in errors.dishCategory">{{ error }}</p>
@@ -210,7 +238,7 @@ function saveDish() {
                     selecione</span>
 					</label>
 				</div>
-				<div class="mt-4 w-full">
+				<div class="mt-3 mb-5 w-full">
 					<div v-for="(file, index) in selectedFiles" :key="index"
 						 class="flex items-center justify-between border-gray-300 border-dashed border-2 rounded-3xl font-thin pl-5">
 						<span class="h-full">{{ file.name }}</span>
@@ -220,7 +248,7 @@ function saveDish() {
 						</button>
 					</div>
 				</div>
-				<p class="invalid-input-text" v-for="error in errors.file">{{ error }}</p>
+				<p class="invalid-input-text mb-3" v-for="error in errors.file">{{ error }}</p>
 				<label class="form-label">Disponibilidade</label>
 				<div class="checkbox-div">
 					<div class="checkbox-row">
@@ -234,6 +262,7 @@ function saveDish() {
 						<label for="checkbox-inativo" class="form-label">Indisponível</label>
 					</div>
 				</div>
+				<p class="invalid-input-text" v-for="error in errors.availability">{{ error }}</p>
 			</div>
 			<div class="btn-container">
 				<button type="button" class="button text-primary hover:text-white border border-primary
