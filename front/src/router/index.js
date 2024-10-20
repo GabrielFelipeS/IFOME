@@ -13,6 +13,11 @@ const router = createRouter({
           path: '/restaurants',
           name: 'restaurants',
           component: () => import('@/views/site/Restaurants.vue'),
+        },
+        {
+          path: '/restaurant/:id',
+          name: 'restaurant internal',
+          component: () => import('@/views/site/Restaurant.vue'),
         }
       ]
     },
