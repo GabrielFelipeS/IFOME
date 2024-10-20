@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.docs.DocsDeleteDishInCart;
 import br.com.ifsp.ifome.docs.DocsGetCart;
 import br.com.ifsp.ifome.docs.DocsInsertOrderItemInCart;
 import br.com.ifsp.ifome.docs.DocsUpdateItemInCart;
@@ -56,11 +57,9 @@ public class ClientController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(security = @SecurityRequirement(name = "Bearer Token"))
+    @DocsDeleteDishInCart
     public ResponseEntity<ApiResponse> deleteOrderItemInCart(@PathVariable Long id, Principal principal) {
         clientService.removeDishInCart(id, principal.getName());
-
-        ApiResponse apiResponse = new ApiResponse("success", null, "Quantidade do prato atualizado com sucesso!");
 
         return ResponseEntity.noContent().build();
     }
