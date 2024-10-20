@@ -53,18 +53,7 @@ onMounted(() => {
 });
 
 
-const isClosed = computed(() => {
-    const todayOpeningHours = props.restaurant.openingHours.find(
-        (day) => day.dayOfTheWeek === currentDay.value
-    );
-
-    if (!todayOpeningHours) {
-        return true;
-    }
-    return (
-        currentTime.value < todayOpeningHours.opening || currentTime.value > todayOpeningHours.closing
-    );
-});
+const isClosed = props.restaurant.isOpen
 
 console.log(props.restaurant);
 </script>
