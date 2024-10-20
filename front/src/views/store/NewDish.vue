@@ -2,6 +2,8 @@
 
 import Form from "@/components/store/dish/new/Form.vue";
 import Header from "@/components/user/Header.vue";
+
+document.querySelector('#app').setAttribute('style', 'overflow-x: hidden');
 </script>
 
 <template>

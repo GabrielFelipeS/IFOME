@@ -2,12 +2,22 @@
 import Modal from "@/components/user/Modal.vue";
 import {onMounted, ref, watch} from "vue";
 import Autocomplete from "@trevoreyre/autocomplete-vue";
-import {data} from "autoprefixer";
 import axios from "axios";
 
 const selectedFiles = ref([]);
 const errorPhotos = ref(false);
 
+// Data do cadastro do prato, a imagem fica em um Ref diferente
+const dishData = ref({
+	name: '',
+	description: '',
+	price: '',
+	dishCategory: '',
+	availability: '',
+});
+const preco = ref('');
+
+// DRAG DROP
 function handleFileChange(event) {
 	const files = Array.from(event.target.files);
 	if (files.length > 0) {
@@ -21,16 +31,13 @@ function handleFileChange(event) {
 		}
 	}
 }
-
 function dragOver(event) {
 	event.preventDefault();
 	event.currentTarget.classList.add('bg-gray-100');
 }
-
 function dragLeave(event) {
 	event.currentTarget.classList.remove('bg-gray-100');
 }
-
 function drop(event) {
 	event.currentTarget.classList.remove('bg-gray-100');
 	const files = Array.from(event.dataTransfer.files);
@@ -45,11 +52,19 @@ function drop(event) {
 		}
 	}
 }
-
 function removeFile() {
 	selectedFiles.value = [];
 }
+watch(selectedFiles, () => {
+	if (selectedFiles.value.length > 0) {
+		document.getElementById('drag-drop-photo').style.display = 'none';
+	} else {
+		document.getElementById('drag-drop-photo').style.removeProperty('display');
+	}
+});
+// End DRAG DROP
 
+// SELECT CATEGORIAS TODO: Era só um teste, alterar para uma lista estática.
 const categorias = ref([]);
 async function getCategories() {
 	const apiCategories = await axios.get('https://www.themealdb.com/api/json/v1/1/categories.php');
@@ -58,7 +73,6 @@ async function getCategories() {
 	});
 }
 getCategories();
-
 function search(input) {
 	console.log(categorias.value);
 	if (!input) {
@@ -68,18 +82,89 @@ function search(input) {
 		return category.toLowerCase().includes(input.toLowerCase());
 	});
 }
+// END SELECT CATEGORIAS
 
-watch(selectedFiles, () => {
-	if (selectedFiles.value.length > 0) {
-		document.getElementById('drag-drop-photo').style.display = 'none';
-	} else {
-		document.getElementById('drag-drop-photo').style.removeProperty('display');
+// Máscara para o input de preço para ele ficar com a vírgula do centavo
+watch(preco, () => {
+	let dinheiro = preco.value.replace(/\D/g, '');
+	if (dinheiro.length > 2) {
+		let parte1 = dinheiro.slice(0, -2);
+		let parte2 = dinheiro.slice(-2);
+		dinheiro = parte1 + ',' + parte2;
 	}
+	dishData.value.price = dinheiro.replace(',', '.');
+	preco.value = dinheiro;
 });
+
+const errors = ref({
+	name: [],
+	description: [],
+	price: [],
+	dishCategory: [],
+	availability: [],
+	file: [],
+});
+function validateForm() {
+	let validated = true;
+	errors.value = {
+		name: [],
+		description: [],
+		price: [],
+		dishCategory: [],
+		availability: [],
+		file: [],
+	}
+
+	console.log(dishData.value.price);
+	if (dishData.value.name.length === 0) {
+		errors.value.name.push('Preencha o campo Nome do prato.');
+		validated = false;
+	} else {
+		errors.value.name = [];
+	}
+	if (dishData.value.description.length === 0) {
+		errors.value.description.push('Preencha o campo Descrição.');
+		validated = false;
+	} else {
+		errors.value.description = [];
+	}
+	if (dishData.value.price.length === 0) {
+		errors.value.price.push('Preencha o campo Preço.');
+		validated = false;
+	} else {
+		errors.value.price = [];
+	}
+	if (dishData.value.dishCategory.length === 0) {
+		errors.value.dishCategory.push('Preencha o campo Categoria.');
+		validated = false;
+	} else {
+		errors.value.dishCategory = [];
+	}
+	if (dishData.value.availability.length === 0) {
+		errors.value.availability.push('Preencha o campo Disponibilidade.');
+		validated = false;
+	} else {
+		errors.value.availability = [];
+	}
+	if (selectedFiles.value.length === 0) {
+		errors.value.file.push('Insira uma foto.');
+		validated = false;
+	} else {
+		errors.value.file = [];
+	}
+
+	return validated;
+}
+
+function saveDish() {
+	if (validateForm()) {
+
+	}
+}
 </script>
 
 <template>
-	<Modal>
+	<Modal class="overflow-x-hidden">
 		<header class="title">
 			Cadastro de pratos
 		</header>
@@ -87,17 +172,23 @@ watch(selectedFiles, () => {
 			<div class="form-group">
 				<label for="dishName">Nome do prato</label>
 				<input type="text" placeholder="Digite o nome do prato" class="form-input"
-					   required id="dishName">
+					   required id="dishName" v-model="dishData.name">
+				<p class="invalid-input-text" v-for="error in errors.name">{{ error }}</p>
 				<label for="description">Descrição</label>
 				<input type="text" placeholder="Digite a descrição do prato" class="form-input"
-					   required id="description">
+					   required id="description" v-model="dishData.description">
+				<p class="invalid-input-text" v-for="error in errors.description">{{ error }}</p>
 				<label for="price">Valor</label>
-				<input type="text" placeholder="R$ 00,00" class="form-input"
-					   required id="price">
+				<div class="input-money">
+					<input type="text" placeholder="00,00" class="form-input input-money"
+						   required id="price" v-model="preco">
+				</div>
+				<p class="invalid-input-text" v-for="error in errors.price">{{ error }}</p>
 				<label for="category">Categoria</label>
 				<autocomplete :search="search" placeholder="Selecione ou digite uma categoria"
-							  class="w-full">
+							  class="w-full" v-model="dishData.dishCategory" id="category">
 				</autocomplete>
+				<p class="invalid-input-text" v-for="error in errors.dishCategory">{{ error }}</p>
 				<p class="text-center w-full mb-1 mt-3 font-semibold">Foto do prato</p>
 				<div
 					class="border-2 border-dashed border-gray-300 rounded-lg p-5 w-full text-center h-[20%] flex items-center justify-center"
@@ -129,6 +220,20 @@ watch(selectedFiles, () => {
 						</button>
 					</div>
 				</div>
+				<p class="invalid-input-text" v-for="error in errors.file">{{ error }}</p>
+				<label class="form-label">Disponibilidade</label>
+				<div class="checkbox-div">
+					<div class="checkbox-row">
+						<input type="radio" placeholder="Exemplo: Em frente a padaria do seu zé" class="form-checkbox" id="checkbox-ativo"
+							   v-model="dishData.availability" value="Disponível">
+						<label for="checkbox-ativo" class="form-label">Disponível</label>
+					</div>
+					<div class="checkbox-row">
+						<input type="radio" placeholder="Exemplo: Em frente a padaria do seu zé" class="form-checkbox" id="checkbox-inativo"
+							   v-model="dishData.availability" value="Indisponível">
+						<label for="checkbox-inativo" class="form-label">Indisponível</label>
+					</div>
+				</div>
 			</div>
 			<div class="btn-container">
 				<button type="button" class="button text-primary hover:text-white border border-primary
@@ -137,7 +242,7 @@ watch(selectedFiles, () => {
 					Cancelar
 				</button>
 				<button type="button" class="button bg-primary border border-primary
-				 	text-white hover:bg-primary-dark active:bg-primary-darker">
+				 	text-white hover:bg-primary-dark active:bg-primary-darker" @click="saveDish">
 					Salvar prato
 					<v-icon name="fa-save"/>
 				</button>
@@ -178,7 +283,31 @@ watch(selectedFiles, () => {
 	}
 }
 
+.input-money {
+	@apply flex flex-row w-full;
+	&::before {
+		@apply h-full flex align-middle justify-center items-center p-2;
+		@apply border border-r-0 border-tertiary-subtle rounded-md rounded-e-none;
+		content: 'R$';
+	}
+}
+.input-money .form-input {
+	@apply rounded-s-none;
+}
+
+.checkbox-div {
+	@apply flex flex-row justify-start mx-4 my-2.5 w-full gap-5 ;
+}
+.checkbox-row {
+	@apply flex flex-row justify-start gap-1.5;
+
+	.form-label {
+		@apply font-semibold;
+	}
+}
+
+
 .invalid-input-text {
-	@apply font-normal text-sm text-primary-dark px-2;
+	@apply font-normal text-sm text-primary-dark ;
 }
 </style>
