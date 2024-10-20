@@ -14,15 +14,17 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
-@SpringBootTest
-@AutoConfigureMockMvc
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CustomerOrderControllerTest {
 
     @Autowired
@@ -34,26 +36,28 @@ public class CustomerOrderControllerTest {
 
     private MockMvc mockMvc;
 
-    CustomerOrderService customerOrderService;
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
 
     @BeforeEach
     public void setUp() {
         this.token_cliente_with_customer_order = tokenService.generateToken("user1@gmail.com",  List.of(new SimpleGrantedAuthority("ROLE_CLIENT")));
         this.token_cliente = tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_CLIENT")));
 
-        customerOrderService = Mockito.spy(customerOrderService);
-
-        mockMvc = MockMvcBuilders
-            .standaloneSetup(new CustomerOrderController(customerOrderService))
-            .build();
+        mockMvc =MockMvcBuilders.webAppContextSetup(webApplicationContext) .defaultRequest(get("/")
+            .characterEncoding("UTF-8")).build();
     }
 
 
     @Test
     public void deveReceberSseEvent() throws Exception {
-        mockMvc.perform(get("/api/order/status/")
-            .header(HttpHeaders.AUTHORIZATION,  "Bearer " + token_cliente_with_customer_order))
-            .andExpect(status().isOk());
+        mockMvc.perform(get("/api/order/status")
+                .header(HttpHeaders.AUTHORIZATION,  "Bearer " + token_cliente_with_customer_order))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("text/event-stream"))
+            .andExpect(content().string(containsString("data:Status atual: Pedido recebido\n\n")))
+            ;
     }
 
     private @NotNull HttpHeaders getHttpHeadersClient() {
