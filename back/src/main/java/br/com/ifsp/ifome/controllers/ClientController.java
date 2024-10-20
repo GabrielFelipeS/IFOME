@@ -1,5 +1,9 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.docs.DocsDeleteDishInCart;
+import br.com.ifsp.ifome.docs.DocsGetCart;
+import br.com.ifsp.ifome.docs.DocsInsertOrderItemInCart;
+import br.com.ifsp.ifome.docs.DocsUpdateItemInCart;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.OrderItemRequest;
 import br.com.ifsp.ifome.dto.response.CartResponse;
@@ -24,16 +28,16 @@ public class ClientController {
     }
 
     @GetMapping
-    @Operation(security = @SecurityRequirement(name = "Bearer Token"))
+    @DocsGetCart
     public ResponseEntity<ApiResponse> getCart(Principal principal) {
         CartResponse cartResponse = clientService.getCart(principal.getName());
-        ApiResponse response = new ApiResponse("success", cartResponse, "Prado adicionado no carrinho");
+        ApiResponse response = new ApiResponse("success", cartResponse, "Carrinho encontrado!");
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping
-    @Operation(security = @SecurityRequirement(name = "Bearer Token"))
+    @DocsInsertOrderItemInCart
     public ResponseEntity<ApiResponse> addDishInCart(@RequestBody @Valid OrderItemRequest orderItemRequest, Principal principal) {
         CartResponse cartResponse = clientService.addDishCart(orderItemRequest, principal.getName());
         System.err.println(cartResponse);
@@ -43,7 +47,7 @@ public class ClientController {
     }
 
     @PutMapping
-    @Operation(security = @SecurityRequirement(name = "Bearer Token"))
+    @DocsUpdateItemInCart
     public ResponseEntity<ApiResponse> updateQuantityOrderItemInCart(@RequestBody @Valid OrderItemRequest orderItemRequest, Principal principal) {
         clientService.updateQuantityOrderItemInCart(orderItemRequest, principal.getName());
 
@@ -53,11 +57,9 @@ public class ClientController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(security = @SecurityRequirement(name = "Bearer Token"))
-    public ResponseEntity<ApiResponse> updateQuantityOrderItemInCart(@PathVariable Long id, Principal principal) {
+    @DocsDeleteDishInCart
+    public ResponseEntity<ApiResponse> deleteOrderItemInCart(@PathVariable Long id, Principal principal) {
         clientService.removeDishInCart(id, principal.getName());
-
-        ApiResponse apiResponse = new ApiResponse("success", null, "Quantidade do prato atualizado com sucesso!");
 
         return ResponseEntity.noContent().build();
     }

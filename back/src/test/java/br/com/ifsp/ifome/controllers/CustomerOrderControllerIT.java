@@ -8,7 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -79,10 +82,6 @@ public class CustomerOrderControllerIT {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
-
-
-
-
 
     private @NotNull HttpHeaders getHttpHeadersClient() {
         HttpHeaders headers = new HttpHeaders();
