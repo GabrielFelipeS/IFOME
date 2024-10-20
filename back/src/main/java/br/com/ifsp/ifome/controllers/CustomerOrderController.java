@@ -7,6 +7,8 @@ import br.com.ifsp.ifome.dto.response.CustomerOrderRequest;
 import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
 import br.com.ifsp.ifome.repositories.CartRepository;
 import br.com.ifsp.ifome.services.CustomerOrderService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -87,6 +89,10 @@ public class CustomerOrderController {
         return ResponseEntity.ok(orders); // Retornar 200 OK com a lista de pedidos
     }
 
+    @Operation(
+        summary = "FInalizar pedido com pratos do carrinho",
+        security = @SecurityRequirement(name = "Bearer Token")
+    )
     @PutMapping("/updateStatus")
     public ResponseEntity<ApiResponse> updateOrderStatus(@RequestBody UpdateOrderStatusRequest request) {
         try {
