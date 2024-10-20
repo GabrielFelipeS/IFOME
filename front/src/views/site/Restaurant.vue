@@ -9,7 +9,7 @@
                 <div class="md:hidden">
                     <v-icon name="fa-chevron-left" scale="1.8"
                         class="text-white absolute top-5 left-5 md:relative md:hidden shadow-black z-10 md:z-0"
-                        @click="window.history.back()" />
+                        @click="router.push('/restaurants')" />
                 </div>
                 <div class="absolute top-0 left-0 w-full h-full bg-black opacity-30"></div>
             </div>
