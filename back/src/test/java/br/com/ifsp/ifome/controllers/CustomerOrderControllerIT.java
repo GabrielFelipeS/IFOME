@@ -84,7 +84,7 @@ public class CustomerOrderControllerIT {
         HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
-            ("/api/order",
+            ("/api/order/",
                 requestEntity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
