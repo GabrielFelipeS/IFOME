@@ -42,20 +42,13 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.ignoringRequestMatchers("/swagger-ui/**", "/v3/api-docs/**"))
             .authorizeHttpRequests(request ->
                 request
-                    .requestMatchers("/actuator/**").permitAll()
-                    .requestMatchers("/api/auth/**").permitAll()
-                    .requestMatchers("/api/image/**").permitAll()
-                    .requestMatchers("/h2-console/**").permitAll()
+                    .requestMatchers("/actuator/**", "/api/auth/**", "/api/image/**", "/h2-console/**").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/restaurant/").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/restaurant/all").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/dish/").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/dish/all").permitAll()
+                    .requestMatchers(HttpMethod.GET,
+                        "/api/restaurant/", "/api/restaurant/{id}","/api/restaurant/all", "/api/dish/", "/api/dish/{id}","/api/dish/all")
+                    .permitAll()
                     .requestMatchers(HttpMethod.PUT, "/api/restaurant/").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.PATCH, "/api/restaurant/").hasRole("RESTAURANT")
-//                    .requestMatchers(HttpMethod.POST, "/api/dish").hasRole("RESTAURANT")
-                    .requestMatchers( "/api/dish").permitAll()
-                    .requestMatchers("/api/order/**").permitAll()
                     .anyRequest().authenticated())
             .headers(headers -> headers
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
