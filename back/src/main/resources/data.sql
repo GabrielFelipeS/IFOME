@@ -40,7 +40,7 @@ INSERT INTO restaurants (
     'email1@email.com',
     '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
     'Dinheiro, Cartão',
-    'monge.jpg',
+    'monge.jpeg',
     'Banco do Brasil',
     '1234',
     '00012345-6',
@@ -87,7 +87,7 @@ INSERT INTO restaurants (
      'Pizzaria do Chef', '12345678000199', 'Pizzaria', '(21) 9876-5432',
      'Chef Antônio', '12345678901','chefantonio@pizzas.com',
      '$2a$10$dfFjxI3KHQwLTIWbF0X1XeX1MwVsL5kgVPoQOziXm4KDZjO5eVc0u',  'Dinheiro, Cartão, Pix',
-     'pizzaria_chef.jpg',  'Caixa Econômica',  '4321',
+     'pizzaria_chef.jpeg',  'Caixa Econômica',  '4321',
      '00123456-7',  true, 'RESTAURANT'
  );
 
