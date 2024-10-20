@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.docs.DocsCreateCustomerOrder;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.response.CustomerOrderRequest;
 import br.com.ifsp.ifome.services.CustomerOrderService;
@@ -26,6 +27,7 @@ public class CustomerOrderController {
     }
 
     @PostMapping
+    @DocsCreateCustomerOrder
     public ResponseEntity<ApiResponse> createOrder(
         Principal principal) {
         CustomerOrderRequest customerOrderRequest = customerOrderService.createOrder(principal);
