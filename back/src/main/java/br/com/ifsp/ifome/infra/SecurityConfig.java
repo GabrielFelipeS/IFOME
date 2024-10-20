@@ -51,6 +51,8 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.PATCH, "/api/restaurant/").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.POST, "/api/dish").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.PUT, "/api/order/updateStatus").hasRole("RESTAURANT")
+                    .requestMatchers( "/api/order/restaurantOrders").hasRole("RESTAURANT")
+                    .requestMatchers( "/api/order/**").hasRole("CLIENT")
                     .anyRequest().authenticated())
             .headers(headers -> headers
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
