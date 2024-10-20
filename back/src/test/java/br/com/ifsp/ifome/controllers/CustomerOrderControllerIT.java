@@ -23,6 +23,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -131,7 +132,7 @@ public class CustomerOrderControllerIT {
         System.out.println("Status anterior: " + existingOrder.getStatus());
 
         // Agora, vamos atualizar o status usando o token de restaurante
-        UpdateOrderStatusRequest updateRequest = new UpdateOrderStatusRequest(orderId, OrderStatus.EM_PREPARO);
+        UpdateOrderStatusRequest updateRequest = new UpdateOrderStatusRequest(orderId, OrderStatus.ACEITO);
         HttpHeaders headers = getHttpHeadersRestaurant(); // Obtenha os cabeçalhos do restaurante
         ResponseEntity<ApiResponse> response = testRestTemplate.exchange(
                 "/api/order/updateStatus", HttpMethod.PUT, new HttpEntity<>(updateRequest, headers), ApiResponse.class
@@ -139,11 +140,11 @@ public class CustomerOrderControllerIT {
 
         // Verifique se a atualização foi bem-sucedida
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().message()).isEqualTo("Status do pedido atualizado com sucesso!");
+        assertThat(response.getBody().message()).isEqualTo("Status atualizado com sucesso!");
 
         // Verifique se o status foi realmente atualizado no banco de dados
         CustomerOrder updatedOrder = customerOrderRepository.findById(orderId).orElseThrow();
-        assertThat(updatedOrder.getStatus()).isEqualTo(OrderStatus.EM_PREPARO);
+        assertThat(updatedOrder.getStatus()).isEqualTo(OrderStatus.ACEITO);
 
         System.out.println("Novo status do pedido: " + updatedOrder.getStatus());
 
@@ -197,7 +198,7 @@ public class CustomerOrderControllerIT {
         );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().message()).isEqualTo("Status do pedido atualizado com sucesso!");
+        assertThat(response.getBody().message()).isEqualTo("Status atualizado com sucesso!");
 
         CustomerOrder updatedOrder = customerOrderRepository.findById(orderId).orElseThrow();
         assertThat(updatedOrder.getStatus()).isEqualTo(expectedStatus);
@@ -205,25 +206,34 @@ public class CustomerOrderControllerIT {
 
     @Test
     @DirtiesContext
-    public void shouldNotAllowStatusUpdateOutOfOrder() {
+    void shouldNotAllowStatusUpdateOutOfOrder() {
+        // Primeiro, vamos criar um pedido no banco de dados
         CustomerOrder order = new CustomerOrder();
         order.setStatus(OrderStatus.NOVO);
-        customerOrderRepository.save(order);
+        // Defina outros atributos do pedido, como preço, cart, restaurant, etc.
+        customerOrderRepository.save(order); // Salve o pedido
 
-        Long orderId = order.getId();
+        Long orderId = order.getId(); // Obtenha o ID do pedido criado
 
-        // Atualizar status para 'EM_PREPARO' sem passar por 'ACEITO'
-        UpdateOrderStatusRequest updateRequest = new UpdateOrderStatusRequest(orderId, OrderStatus.EM_PREPARO);
-        HttpHeaders headers = getHttpHeadersRestaurant();
+        CustomerOrder existingOrder = customerOrderRepository.findById(orderId).orElseThrow();
+        System.out.println("Status anterior: " + existingOrder.getStatus());
 
+        // Agora, vamos atualizar o status usando o token de restaurante
+        UpdateOrderStatusRequest updateRequest = new UpdateOrderStatusRequest(orderId, OrderStatus.SAIU_PARA_ENTREGA);
+        HttpHeaders headers = getHttpHeadersRestaurant(); // Obtenha os cabeçalhos do restaurante
         ResponseEntity<ApiResponse> response = testRestTemplate.exchange(
                 "/api/order/updateStatus", HttpMethod.PUT, new HttpEntity<>(updateRequest, headers), ApiResponse.class
         );
 
-        // Verifique se a resposta é a esperada (403 Forbidden ou uma mensagem de erro)
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getBody().message()).isEqualTo("Transição de status inválida. O status deve ser atualizado em ordem.");
+
+        // Verificar o resultado
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Transição de status inválida. O status deve ser atualizado em ordem.", response.getBody().message());
+        System.out.println(response.getStatusCode() + response.getBody().message());
     }
+
+
+
 
 
 

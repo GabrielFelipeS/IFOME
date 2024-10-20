@@ -78,13 +78,33 @@ public class CustomerOrderService {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
 
+
+        if (!isValidStatusTransition(customerOrder.getStatus(), newStatus)) {
+            throw new IllegalStateException("Transição de status inválida. O status deve ser atualizado em ordem.");
+        }
+
         // Atualize o status do pedido
         customerOrder.setStatus(newStatus);
-
-        // Salve as alterações
         customerOrderRepository.save(customerOrder);
     }
 
 
+    private boolean isValidStatusTransition(OrderStatus currentStatus, OrderStatus newStatus) {
+        // Define a ordem dos status
+        List<OrderStatus> validSequence = List.of(
+                OrderStatus.NOVO,
+                OrderStatus.ACEITO,
+                OrderStatus.EM_PREPARO,
+                OrderStatus.PRONTO_PARA_ENTREGA,
+                OrderStatus.SAIU_PARA_ENTREGA,
+                OrderStatus.CONCLUIDO
+        );
+
+        int currentIndex = validSequence.indexOf(currentStatus);
+        int newIndex = validSequence.indexOf(newStatus);
+
+        // Verifica se o novo status é o próximo na sequência
+        return newIndex == currentIndex + 1;
+    }
 
 }

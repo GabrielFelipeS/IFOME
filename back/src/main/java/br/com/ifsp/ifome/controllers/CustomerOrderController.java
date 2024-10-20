@@ -7,6 +7,7 @@ import br.com.ifsp.ifome.dto.response.OrderItemResponse;
 import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.repositories.CartRepository;
 import br.com.ifsp.ifome.services.CustomerOrderService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -77,9 +78,16 @@ public class CustomerOrderController {
 
     @PutMapping("/updateStatus")
     public ResponseEntity<ApiResponse> updateOrderStatus(@RequestBody UpdateOrderStatusRequest request) {
-        customerOrderService.updateOrderStatus(request.customerOrderId(), request.newStatus());
-        return ResponseEntity.ok(new ApiResponse("success", null, "Status do pedido atualizado com sucesso!"));
+        try {
+            customerOrderService.updateOrderStatus(request.customerOrderId(), request.newStatus());
+            return ResponseEntity.ok(new ApiResponse("success", null, "Status atualizado com sucesso!"));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(new ApiResponse("error", null, e.getMessage()));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("error", null, e.getMessage()));
+        } catch (Exception e) {
+            // Catch any other exceptions
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("error", null, "Erro inesperado: " + e.getMessage()));
+        }
     }
-
-
 }
