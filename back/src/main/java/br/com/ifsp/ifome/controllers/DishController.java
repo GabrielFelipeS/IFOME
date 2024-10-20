@@ -61,6 +61,14 @@ public class DishController {
     }
 
     @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse> getAllDishById(@PathVariable Long id) {
+        var dishResponses = this.dishService.getAvailableDishById(id);
+
+        ApiResponse apiResponse = new ApiResponse("success", dishResponses, "Busca por prato concluida");
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @GetMapping("/restaurant/{id}")
     public ResponseEntity<ApiResponse> getAllAvailableDishByIdRestaurant(@PathVariable Long id) {
         var dishResponses = this.dishService.getAllAvailableById(id);
 
