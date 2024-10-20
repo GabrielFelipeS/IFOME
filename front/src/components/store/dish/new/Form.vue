@@ -4,6 +4,7 @@ import {onMounted, ref, watch} from "vue";
 import Autocomplete from "@trevoreyre/autocomplete-vue";
 import axios from "axios";
 import Form from "@/components/store/dish/new/Form.vue";
+import {useToast} from "vue-toast-notification";
 
 const selectedFiles = ref([]);
 const errorPhotos = ref(false);
@@ -165,6 +166,8 @@ function validateForm() {
 	return validated;
 }
 
+const $toast = useToast();
+
 async function saveDish() {
 	if (validateForm()) {
 		let formData = new FormData();
@@ -176,14 +179,15 @@ async function saveDish() {
 		const response = await axios.post(`${import.meta.env.VITE_API_URL}dish`, formData, {
 			headers: {
 				'Content-Type': 'multipart/form-data',
+				'Authorization': `Bearer ${localStorage.getItem('token')}`,
 			}
 		});
 
 		if (response.status === 201) {
-			emit('responseApi', response.data);
+			$toast.success('Prato cadastrado com sucesso!');
 			console.log(response.data);
 		} else {
-			emit('responseApi', response.data);
+			$toast.error(response.data.message, {});
 			console.log(response.data);
 		}
 	}
