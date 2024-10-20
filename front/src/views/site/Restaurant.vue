@@ -62,6 +62,7 @@ import FooterMobile from '@/components/site/FooterMobile.vue';
 import { useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import router from '@/router';
 
 const route = useRoute();
 const restaurantId = route.params.id;
@@ -78,12 +79,14 @@ const headers = {
 const fetchRestaurantData = async () => {
     try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}restaurant/${restaurantId}`, { headers });
+        if (response.data.data === null) {
+            router.push({ name: 'NotFound' });
+            return;
+        }
         restaurant.value = response.data.data;
-        console.log(restaurant.value);
         imageUrl.value = `${import.meta.env.VITE_API_URL}image/${restaurant.value.restaurantImage}`;
-        console.log(imageUrl);
     } catch (err) {
-        error.value = 'Erro ao buscar os dados do restaurante';
+        router.push({ name: 'NotFound' });
         console.error(err);
     }
 };
