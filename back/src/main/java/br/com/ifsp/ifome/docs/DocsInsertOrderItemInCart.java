@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.lang.annotation.ElementType;
@@ -17,61 +18,17 @@ import java.lang.annotation.Target;
 
 @Operation(
     summary = "Inserir prato no carrinho",
-    security = @SecurityRequirement(name = "Bearer Token"),
-    responses = @ApiResponse(
+    security = @SecurityRequirement(name = "Bearer Token")
+)
+@ApiResponses({
+    @ApiResponse(
         responseCode = "201", description = "Insere um prato no carrinho",
         content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = ApiResponse.class),
-            examples = @ExampleObject(value = """
+            examples =  @ExampleObject(value = """
                 {
                   "status": "success",
                   "data": {
-                    "client": {
-                      "id": 2,
-                      "name": "Gabriel",
-                      "email": "email1@email.com",
-                      "password": "$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG",
-                      "dateOfBirth": "2003-04-14",
-                      "cpf": "92051362041",
-                      "address": [
-                        {
-                          "id": 2,
-                          "nameAddress": "Endereço Maria",
-                          "cep": "01234-567",
-                          "neighborhood": "Centro",
-                          "city": "São Paulo",
-                          "state": "SP",
-                          "address": "Avenida São João",
-                          "number": "500",
-                          "complement": "Apto 101",
-                          "details": "Próximo ao Parque Villa-Lobos",
-                          "typeResidence": "Apartamento"
-                        }
-                      ],
-                      "role": "CLIENT",
-                      "enabled": true,
-                      "username": "email1@email.com",
-                      "authorities": [
-                        {
-                          "authority": "CLIENT_DELETE"
-                        },
-                        {
-                          "authority": "CLIENT_CREATE"
-                        },
-                        {
-                          "authority": "CLIENT_READ"
-                        },
-                        {
-                          "authority": "CLIENT_UPDATE"
-                        },
-                        {
-                          "authority": "ROLE_CLIENT"
-                        }
-                      ],
-                      "accountNonLocked": true,
-                      "credentialsNonExpired": true,
-                      "accountNonExpired": true
-                    },
                     "orderItems": [
                       {
                         "id": 7,
@@ -97,8 +54,28 @@ import java.lang.annotation.Target;
                   "message": "Prado adicionado no carrinho"
                 }
             """)
+        )
+    ),
+    @ApiResponse(
+        responseCode = "401", description = "Precisa estar autenticado"
+    ),
+    @ApiResponse(
+        responseCode = "400", description = "Campo inválido",
+        content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = ApiResponse.class),
+            examples = @ExampleObject(value = """
+               {
+                 "message": "Erro ao realizar operação",
+                 "errors": {
+                   "quantity": [
+                     "O quantidade não pode ser 0 e deve conter apenas valores númericos e positivos"
+                   ]
+                 }
+               }
+            """)
+        )
     )
-))
+})
 @RequestBody(description = """
     É necessário enviar um token com a role client (possivel ao logarm em /api/auth/client)
     Validações dos campos:
