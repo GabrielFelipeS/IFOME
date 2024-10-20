@@ -1,10 +1,14 @@
 <template>
-    <div class="w-full flex flex-row md:flex-row items-center p-4 rounded-lg shadow-sm shadow-[#B3B3B3] bg-white mt-5 md:shadow-none md:hover:shadow-lg md:hover:scale-105 md:transition-all md:duration-150">
-        <img src="../../assets/img/logo_header_clean.png" alt="Logo do Restaurante"
+    <router-link :to="`/restaurant/${props.restaurant.id}`"
+        class="w-full flex flex-row md:flex-row items-center p-4 rounded-lg shadow-sm shadow-[#B3B3B3] bg-white mt-5 md:shadow-none md:hover:shadow-lg md:hover:scale-105 md:transition-all md:duration-150">
+        <img src="`../../assets/img/logo_header_clean.png`" alt="Logo do Restaurante"
             class="w-20 h-20 object-cover rounded-full" />
 
         <div class="ml-4 flex-1">
-            <h3 class="text-lg font-semibold text-gray-800">Antojitos</h3>
+            <h3 class="text-lg font-semibold text-gray-800">
+                {{ props.restaurant.nameRestaurant }}
+                <span v-if="isClosed">(Fechado)</span>
+            </h3>
             <div class="flex items-center text-gray-600 text-sm mt-1">
                 <svg class="w-4 h-4 text-red-500 mr-1" fill="currentColor" viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg">
@@ -13,7 +17,7 @@
                 </svg>
                 <span class="mr-2">4.5</span>
                 <span class="mx-2">·</span>
-                <span class="mr-2">Mexicana</span>
+                <span class="mr-2">{{ props.restaurant.foodCategory }}</span>
                 <span class="mx-2">·</span>
                 <span>1.5km</span>
             </div>
@@ -23,5 +27,44 @@
                 <span>R$ 10,00</span>
             </div>
         </div>
-    </div>
+    </router-link>
 </template>
+
+<script setup>
+import { ref, onMounted, computed } from 'vue';
+
+const props = defineProps({
+    restaurant: Object
+});
+
+const currentDay = ref('');
+const currentTime = ref('');
+
+onMounted(() => {
+    const now = new Date();
+    const daysOfWeek = [
+        'Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'
+    ];
+
+    currentDay.value = daysOfWeek[now.getDay()];
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    currentTime.value = `${hours}:${minutes}`;
+});
+
+
+const isClosed = computed(() => {
+    const todayOpeningHours = props.restaurant.openingHours.find(
+        (day) => day.dayOfTheWeek === currentDay.value
+    );
+
+    if (!todayOpeningHours) {
+        return true;
+    }
+    return (
+        currentTime.value < todayOpeningHours.opening || currentTime.value > todayOpeningHours.closing
+    );
+});
+
+console.log(props.restaurant);
+</script>
