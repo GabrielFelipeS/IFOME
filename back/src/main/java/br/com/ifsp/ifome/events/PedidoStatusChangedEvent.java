@@ -12,4 +12,17 @@ public class PedidoStatusChangedEvent {
     private Long pedidoId;
     private OrderStatus newStatus;
     private CustomerOrder customerOrder;
+
+
+    public String getClientName() {
+        return this.customerOrder.getClientName();
+    }
+
+    public String getEmailClient() {
+        return this.customerOrder.getEmailClient();
+    }
+
+    public String getRestaurantName() {
+        return this.customerOrder.getRestaurantName();
+    }
 }
