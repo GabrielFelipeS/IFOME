@@ -39,23 +39,17 @@ public class CustomerOrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
-    SseEmitter emitter;
-
-    @GetMapping("/status")
-    public SseEmitter getStatusCustomerOrder() throws IOException {
-        emitter = new SseEmitter(Long.MAX_VALUE);
-
-        Long clienteId = 1L;
-        System.err.println("AQUI");
-        emitter.send("Status atual: Pedido recebido");
-
-        emitter.onTimeout(() -> emitter.onTimeout(() -> System.out.println("Parou")));
-        emitter.onError((e) -> emitter.onError(System.err::println));
-        emitter.onCompletion(() -> emitter.complete());
-
-        return emitter;
+    @Operation(
+        security = @SecurityRequirement(name = "Bearer Token")
+    )
+    @GetMapping("/status/{id}")
+    public SseEmitter getStatusCustomerOrder(@PathVariable Long id) throws IOException {
+        return customerOrderService.getEmitter(id);
     }
 
+    @Operation(
+        security = @SecurityRequirement(name = "Bearer Token")
+    )
     @GetMapping("/customerOrders")
     public ResponseEntity<List<CustomerOrderResponse>> getAllCustomerOrders(Principal principal) {
         // Check if the principal is present
@@ -73,6 +67,9 @@ public class CustomerOrderController {
         return ResponseEntity.ok(orders); // Return 200 OK with the list of orders
     }
 
+    @Operation(
+        security = @SecurityRequirement(name = "Bearer Token")
+    )
     @GetMapping("/restaurantOrders")
     public ResponseEntity<List<CustomerOrderResponse>> getAllRestaurantOrders(Principal principal) {
         String  restaurantEmail = principal.getName(); // Ou use outro método para identificar o restaurante
@@ -87,7 +84,6 @@ public class CustomerOrderController {
     }
 
     @Operation(
-        summary = "FInalizar pedido com pratos do carrinho",
         security = @SecurityRequirement(name = "Bearer Token")
     )
     @PutMapping("/updateStatus")
@@ -104,11 +100,4 @@ public class CustomerOrderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("error", null, "Erro inesperado: " + e.getMessage()));
         }
     }
-
-    @GetMapping("/teste")
-    public void teste() throws IOException {
-        emitter.send("Teste " + LocalDateTime.now().getSecond());
-    }
-
-
 }
