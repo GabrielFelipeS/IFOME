@@ -366,7 +366,7 @@ public class DishControllerIT {
         headers.set("Authorization", "Bearer " + token);
         HttpEntity<String> requestEntity = new HttpEntity<>(headers);
 
-        ResponseEntity<String> response = testRestTemplate.exchange("/api/dish/1", HttpMethod.GET, requestEntity, String.class);
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/dish/restaurant/1", HttpMethod.GET, requestEntity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
