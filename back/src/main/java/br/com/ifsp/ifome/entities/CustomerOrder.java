@@ -65,4 +65,17 @@ public class CustomerOrder {
         this.orderPrice = cart.getOrderItems().stream().mapToDouble(OrderItem::getTotalPrice).sum();
     }
 
+    public String getEmailClient() {
+        return this.cart.getEmailClient();
+    }
+
+    public String getClientName() {
+        return this.cart.getClientName();
+    }
+
+    public String getRestaurantName() {
+        return this.restaurant.getNameRestaurant();
+    }
+
+
 }
