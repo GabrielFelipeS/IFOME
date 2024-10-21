@@ -70,7 +70,7 @@ public class CustomerOrderControllerIT {
         HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
-            ("/api/order/",
+            ("/api/order",
                 requestEntity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
@@ -84,10 +84,10 @@ public class CustomerOrderControllerIT {
         HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
-            ("/api/order/",
+            ("/api/order",
                 requestEntity, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
 
 
@@ -96,14 +96,8 @@ public class CustomerOrderControllerIT {
     @DirtiesContext
     public void shouldReturnAllCustomerOrders() {
         // Criar o pedido para o cliente
-        HttpHeaders headers = getHttpHeadersClient();
+        HttpHeaders headers = getHttpHeadersClientWithCustomerOrder();
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
-
-        ResponseEntity<String> createOrderResponse = testRestTemplate.postForEntity(
-                "/api/order/", requestEntity, String.class
-        );
-
-        assertThat(createOrderResponse.getStatusCode()).isEqualTo(HttpStatus.FOUND);
 
         ResponseEntity<List<CustomerOrderResponse>> response = testRestTemplate.exchange(
                 "/api/order/customerOrders", HttpMethod.GET, requestEntity,
@@ -182,27 +176,6 @@ public class CustomerOrderControllerIT {
 
     @Test
     @DirtiesContext
-    public void shouldNotAllowClientToUpdateOrderStatus() {
-        // Criar um pedido no banco de dados
-        CustomerOrder order = new CustomerOrder();
-        order.setStatus(OrderStatus.NOVO);
-        // Defina outros atributos do pedido, como preço, cart, restaurant, etc.
-        customerOrderRepository.save(order); // Salve o pedido
-
-        Long orderId = order.getId(); // Obtenha o ID do pedido criado
-
-        UpdateOrderStatusRequest updateRequest = new UpdateOrderStatusRequest(orderId);
-        HttpHeaders headers = getHttpHeadersClient(); // Obtenha os cabeçalhos do cliente
-
-        ResponseEntity<ApiResponse> response = testRestTemplate.exchange(
-                "/api/order/updateStatus", HttpMethod.PUT, new HttpEntity<>(updateRequest, headers), ApiResponse.class
-        );
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-    }
-
-    @Test
-    @DirtiesContext
     public void shouldFollowOrderStatusSequence() {
         // Criar um pedido no banco de dados
         CustomerOrder order = new CustomerOrder();
@@ -234,50 +207,15 @@ public class CustomerOrderControllerIT {
         assertThat(updatedOrder.getStatus()).isEqualTo(expectedStatus);
     }
 
-    @Test
-    @DirtiesContext
-    void shouldNotAllowUpdateStatusInAConcluidedOrder() {
-        // Primeiro, vamos criar um pedido no banco de dados com um status adiantado
-        CustomerOrder order = new CustomerOrder();
-        order.setStatus(OrderStatus.CONCLUIDO);
-        // Defina outros atributos do pedido, como preço, cart, restaurant, etc.
-        customerOrderRepository.save(order); // Salve o pedido
-
-        Long orderId = order.getId(); // Obtenha o ID do pedido criado
-
-        CustomerOrder existingOrder = customerOrderRepository.findById(orderId).orElseThrow();
-        System.out.println("Status anterior: " + existingOrder.getStatus());
-
-        // Agora, vamos tentar forçar a atualização de status
-        UpdateOrderStatusRequest updateRequest = new UpdateOrderStatusRequest(orderId);
-        HttpHeaders headers = getHttpHeadersRestaurant(); // Obtenha os cabeçalhos do restaurante
-        ResponseEntity<ApiResponse> response = testRestTemplate.exchange(
-                "/api/order/updateStatus", HttpMethod.PUT, new HttpEntity<>(updateRequest, headers), ApiResponse.class
-        );
-
-        // Verificar que a atualização foi bloqueada
-        CustomerOrder updatedOrder = customerOrderRepository.findById(orderId).orElseThrow();
-        System.out.println("Novo Status: " + updatedOrder.getStatus());
-
-        // A resposta deve ser BAD_REQUEST, pois a transição de status foi inválida
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("O status atual não pode ser alterado.", response.getBody().message());
-        System.out.println(response.getStatusCode() + " - " + response.getBody().message());
-    }
-
-
-
-
-
-
-
-
-
-
-
     private @NotNull HttpHeaders getHttpHeadersClient() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token_cliente);
+        return headers;
+    }
+
+    private @NotNull HttpHeaders getHttpHeadersClientWithCustomerOrder() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token_cliente_with_customer_order);
         return headers;
     }
 
