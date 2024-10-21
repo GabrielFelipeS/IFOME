@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 @Entity
 @Getter
@@ -77,5 +78,10 @@ public class CustomerOrder {
         return this.restaurant.getNameRestaurant();
     }
 
+    public String getStatusMessage() {
+        return status.toString()
+                .toLowerCase(Locale.ROOT)
+                .replaceAll("_", " ");
+    }
 
 }
