@@ -1,34 +1,41 @@
 package br.com.ifsp.ifome.services;
 
 import br.com.ifsp.ifome.dto.response.CustomerOrderRequest;
+import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
 import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.CustomerOrder;
 import br.com.ifsp.ifome.entities.OrderStatus;
 import br.com.ifsp.ifome.entities.Restaurant;
+import br.com.ifsp.ifome.events.PedidoStatusChangedEvent;
 import br.com.ifsp.ifome.exceptions.CartCannotBeEmptyException;
 import br.com.ifsp.ifome.exceptions.RestaurantNotFoundException;
 import br.com.ifsp.ifome.repositories.CartRepository;
 import br.com.ifsp.ifome.repositories.DishRepository;
-import br.com.ifsp.ifome.repositories.OrderRepository;
+import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerOrderService {
     private final RestaurantRepository restaurantRepository;
     private final DishRepository dishRepository;
-    private final OrderRepository orderRepository;
+    private final CustomerOrderRepository customerOrderRepository;
     private final CartRepository cartRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public CustomerOrderService(RestaurantRepository restaurantRepository, DishRepository dishRepository, OrderRepository orderRepository, CartRepository cartRepository) {
+    public CustomerOrderService(RestaurantRepository restaurantRepository, DishRepository dishRepository, CustomerOrderRepository customerOrderRepository, CartRepository cartRepository, ApplicationEventPublisher eventPublisher) {
         this.restaurantRepository = restaurantRepository;
         this.dishRepository = dishRepository;
-        this.orderRepository = orderRepository;
+        this.customerOrderRepository = customerOrderRepository;
         this.cartRepository = cartRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     public CustomerOrderRequest createOrder(Principal principal) {
@@ -43,7 +50,7 @@ public class CustomerOrderService {
 
         CustomerOrder customerOrder = new CustomerOrder(cart, restaurant);
 
-        orderRepository.save(customerOrder);
+        customerOrderRepository.save(customerOrder);
 
         return CustomerOrderRequest.from(customerOrder);
     }
@@ -82,9 +89,11 @@ public class CustomerOrderService {
         OrderStatus currentStatus = customerOrder.getStatus();
         OrderStatus nextStatus = getNextStatus(currentStatus);
 
-        // Atualizar o status apenas se for o próximo na sequência
+        // Atualize o status do pedido
         customerOrder.setStatus(nextStatus);
         customerOrderRepository.save(customerOrder);
+
+        eventPublisher.publishEvent(new PedidoStatusChangedEvent(orderId, nextStatus, customerOrder));
     }
 
     private OrderStatus getNextStatus(OrderStatus currentStatus) {
