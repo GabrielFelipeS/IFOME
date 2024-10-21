@@ -33,20 +33,26 @@ public class CustomerOrderService {
     }
 
     public String createOrder(Principal principal, Cart cart) {
-        Cart custumerCart = cartRepository
-                        .findFirstByClientEmail(principal.getName())
-                        .orElseThrow();
+        try {
+            Cart custumerCart = cartRepository
+                    .findFirstByClientEmail(principal.getName())
+                    .orElseThrow(() -> new EntityNotFoundException("Carrinho não encontrado"));
 
-       Restaurant restaurant = restaurantRepository
-                                .findById(cart.getIdRestaurant())
-                                .orElseThrow(RestaurantNotFoundException::new);
+            Restaurant restaurant = restaurantRepository
+                    .findById(cart.getIdRestaurant())
+                    .orElseThrow(RestaurantNotFoundException::new);
 
-        CustomerOrder customerOrder = new CustomerOrder(cart, restaurant);
-        customerOrder.setStatus(OrderStatus.NOVO);  // Define o status inicial como NOVO
+            CustomerOrder customerOrder = new CustomerOrder(cart, restaurant);
 
-        customerOrderRepository.save(customerOrder);
+            customerOrderRepository.save(customerOrder);
+            customerOrder.setStatus(OrderStatus.NOVO);  // Define o status inicial como NOVO
 
-        return "Pedido criado com sucesso!";
+            return "Pedido criado com sucesso!";
+        } catch (Exception e) {
+            throw new IllegalStateException("Erro ao criar o pedido", e);
+        }
+
+
     }
 
     public List<CustomerOrderResponse> getAllOrdersByCustomer(String customerEmail) {

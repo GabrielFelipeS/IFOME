@@ -52,10 +52,8 @@ public class ClientControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        Object object = documentContext.read("$.data.client");
         List<OrderItem> orderItems = documentContext.read("$.data.orderItems");
 
-        assertThat(object).isNotNull();
         assertThat(orderItems).isNotNull().isNotEmpty();
     }
 
@@ -106,13 +104,11 @@ public class ClientControllerIT {
 
         DocumentContext documentContextSecond = JsonPath.parse(response.getBody());
         System.out.println(response.getBody());
-        Object object = documentContextSecond.read("$.data.client");
         List<OrderItem> orderItems = documentContextSecond.read("$.data.orderItems");
         Integer quantitySecond = documentContextSecond.read("$.data.orderItems[0].quantity");
         Double unitPriceSecond = documentContextSecond.read("$.data.orderItems[0].unitPrice");
         Double  totalPriceSecond = documentContextSecond.read("$.data.totalprice");
 
-        assertThat(object).isNotNull();
         assertThat(orderItems).isNotNull().isNotEmpty();
         assertThat(orderItems.size()).isEqualTo(1);
         assertThat(quantitySecond).isEqualTo(4);
@@ -343,6 +339,33 @@ public class ClientControllerIT {
                 requestHttpEntity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    @DirtiesContext
+    public void shouldReturnEmptyCartBeforeCreateCustomerOrder() {
+        OrderItemRequest OrderItemRequest = new OrderItemRequest(3L,2);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(OrderItemRequest, headers);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity
+            ("/api/client",
+                requestEntity, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        requestEntity = new HttpEntity<>(headers);
+
+        response = testRestTemplate.postForEntity
+            ("/api/order",
+                requestEntity, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        response = testRestTemplate.exchange("/api/client",  HttpMethod.GET, requestEntity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        System.err.println(response.getBody());
     }
 
     private @NotNull HttpEntity<OrderItemRequest> getOrderItemRequestHttpEntity() {

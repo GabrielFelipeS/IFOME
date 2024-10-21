@@ -16,7 +16,6 @@ public record RestaurantResponse(
         String telephone,
 
         List<OpeningHours> openingHours,
-
         String personResponsible,
         String personResponsibleCPF,
         String email,
@@ -35,7 +34,6 @@ public record RestaurantResponse(
                 restaurant.getTelephone(),
 
                 restaurant.getOpeningHours(),
-
                 restaurant.getPersonResponsible(),
                 restaurant.getPersonResponsibleCpf(),
                 restaurant.getEmail(),

@@ -80,12 +80,21 @@ public class DishService {
             ;
     }
 
-    public Object getAllAvailableById(Long id) {
+    public List<DishResponse> getAllAvailableById(Long id) {
         return this.dishRepository
             .findAllByRestaurantId(id)
             .stream()
             .map(DishResponse::new)
             .toList()
             ;
+    }
+
+    public Object getAvailableDishById(Long id) {
+        var dishResponse = this.dishRepository
+            .findDishAvailableById(id)
+            .stream()
+            .map(DishResponse::new)
+            ;
+        return dishResponse;
     }
 }

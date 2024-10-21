@@ -1,11 +1,12 @@
 package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.docs.DocCreateDish;
+import br.com.ifsp.ifome.docs.DocsGetAllDish;
+import br.com.ifsp.ifome.docs.DocsGetPagination;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.DishRequest;
 import br.com.ifsp.ifome.dto.response.DishResponse;
 import br.com.ifsp.ifome.services.DishService;
-import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -20,7 +21,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
-import java.util.List;
 
 //@MultipartConfig
 @RestController
@@ -52,6 +52,7 @@ public class DishController {
     }
 
     @GetMapping(path = "/")
+    @DocsGetPagination
     public ResponseEntity<ApiResponse> getAllAvailableDishWithPagination(@PageableDefault(size = 15, page = 0) Pageable pageable) {
        var dishResponses = this.dishService.getAllAvailable(pageable);
 
@@ -60,6 +61,14 @@ public class DishController {
     }
 
     @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse> getAllDishById(@PathVariable Long id) {
+        var dishResponses = this.dishService.getAvailableDishById(id);
+
+        ApiResponse apiResponse = new ApiResponse("success", dishResponses, "Busca por prato concluida");
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @GetMapping("/restaurant/{id}")
     public ResponseEntity<ApiResponse> getAllAvailableDishByIdRestaurant(@PathVariable Long id) {
         var dishResponses = this.dishService.getAllAvailableById(id);
 
@@ -68,6 +77,7 @@ public class DishController {
     }
 
     @GetMapping(path = "/all")
+    @DocsGetAllDish
     public ResponseEntity<ApiResponse> getAllAvailableDish() {
         var dishResponses = this.dishService.getAllAvailable();
 

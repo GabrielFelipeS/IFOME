@@ -16,7 +16,6 @@ import java.lang.annotation.Target;
 
 @Operation(
     summary = "Pegar restaurantes com paginação",
-    security = @SecurityRequirement(name = "Bearer Token"),
     parameters = {
         @Parameter(name = "page", description = "Número da página a ser retornada (0-indexed)", required = false, schema = @Schema(type = "integer", defaultValue = "0")),
         @Parameter(name = "size", description = "Número de itens por página", required = false, schema = @Schema(type = "integer", defaultValue = "15")),
@@ -79,9 +78,7 @@ import java.lang.annotation.Target;
                          }
                 """)
             )
-        ),
-        @ApiResponse(responseCode = "401", description = "Não autenticado!",
-            content = @Content(mediaType = "application/json"))
+        )
     }
 )
 @Target(ElementType.METHOD)

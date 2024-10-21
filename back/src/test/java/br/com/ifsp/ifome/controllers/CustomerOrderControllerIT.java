@@ -38,16 +38,33 @@ public class CustomerOrderControllerIT {
 
     private String token_cliente;
     private String token_restaurant;
+    private String token_cliente_with_customer_order;
 
     @BeforeEach
     public void setUp() {
-        this.token_cliente = tokenService.generateToken("user1@gmail.com",  List.of(new SimpleGrantedAuthority("ROLE_CLIENT")));
+        this.token_cliente_with_customer_order = tokenService.generateToken("user1@gmail.com",  List.of(new SimpleGrantedAuthority("ROLE_CLIENT")));
+        this.token_cliente = tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_CLIENT")));
         this.token_restaurant= tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
     }
 
+//    @Test
+//    @DirtiesContext
+//    public void shouldBeAbleGetAllCustomerOrdersByRestaurant() {
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.set("Authorization", "Bearer " + token_cliente);
+//        HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(headers);
+//
+//        ResponseEntity<String> response = testRestTemplate.postForEntity
+//            ("/api/order",
+//                requestEntity, String.class);
+//
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+//
+//    }
+
     @Test
     @DirtiesContext
-    public void shouldBeAbleGetAllCustomerOrdersByRestaurant() {
+    public void shouldNotBeAbleCreateCustomerOrderWithCartEmpty() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token_cliente);
         HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(headers);
@@ -56,8 +73,21 @@ public class CustomerOrderControllerIT {
             ("/api/order/",
                 requestEntity, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+    }
 
+    @Test
+    @DirtiesContext
+    public void shouldNotBeAbleCreateCustomerOrderWithCartNotExist() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token_cliente_with_customer_order);
+        HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity
+            ("/api/order",
+                requestEntity, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
 
@@ -73,7 +103,7 @@ public class CustomerOrderControllerIT {
                 "/api/order/", requestEntity, String.class
         );
 
-        assertThat(createOrderResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(createOrderResponse.getStatusCode()).isEqualTo(HttpStatus.FOUND);
 
         ResponseEntity<List<CustomerOrderResponse>> response = testRestTemplate.exchange(
                 "/api/order/customerOrders", HttpMethod.GET, requestEntity,

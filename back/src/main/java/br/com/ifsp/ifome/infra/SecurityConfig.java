@@ -42,21 +42,18 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.ignoringRequestMatchers("/swagger-ui/**", "/v3/api-docs/**"))
             .authorizeHttpRequests(request ->
                 request
-                    .requestMatchers("/actuator/**").permitAll()
-                    .requestMatchers("/api/auth/**").permitAll()
-                    .requestMatchers("/api/image/**").permitAll()
-                    .requestMatchers("/h2-console/**").permitAll()
+                    .requestMatchers("/actuator/**", "/api/auth/**", "/api/image/**", "/h2-console/**").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                    .requestMatchers(HttpMethod.GET,
+                        "/api/restaurant/", "/api/restaurant/{id}","/api/restaurant/all", "/api/dish/", "/api/dish/{id}","/api/dish/all")
+                    .permitAll()
                     .requestMatchers(HttpMethod.PUT, "/api/restaurant/").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.PATCH, "/api/restaurant/").hasRole("RESTAURANT")
-                    .requestMatchers(HttpMethod.POST, "/api/dish").hasRole("RESTAURANT")
-                    .requestMatchers(HttpMethod.PUT, "/api/order/updateStatus").hasRole("RESTAURANT")
-                    .requestMatchers( "/api/order/restaurantOrders").hasRole("RESTAURANT")
-                    .requestMatchers( "/api/order/**").hasRole("CLIENT")
                     .anyRequest().authenticated())
             .headers(headers -> headers
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
             )
+            .cors(Customizer.withDefaults())
             .csrf(AbstractHttpConfigurer::disable)
             .oauth2ResourceServer(auth02 -> auth02.jwt(Customizer.withDefaults()))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
