@@ -1,7 +1,6 @@
 package br.com.ifsp.ifome.services;
 
 import br.com.ifsp.ifome.dto.response.CustomerOrderRequest;
-import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
 import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.CustomerOrder;
 import br.com.ifsp.ifome.entities.OrderStatus;
@@ -10,27 +9,25 @@ import br.com.ifsp.ifome.exceptions.CartCannotBeEmptyException;
 import br.com.ifsp.ifome.exceptions.RestaurantNotFoundException;
 import br.com.ifsp.ifome.repositories.CartRepository;
 import br.com.ifsp.ifome.repositories.DishRepository;
-import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
+import br.com.ifsp.ifome.repositories.OrderRepository;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CustomerOrderService {
     private final RestaurantRepository restaurantRepository;
     private final DishRepository dishRepository;
-    private final CustomerOrderRepository customerOrderRepository;
+    private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
 
-    public CustomerOrderService(RestaurantRepository restaurantRepository, DishRepository dishRepository, CustomerOrderRepository customerOrderRepository, CartRepository cartRepository) {
+    public CustomerOrderService(RestaurantRepository restaurantRepository, DishRepository dishRepository, OrderRepository orderRepository, CartRepository cartRepository) {
         this.restaurantRepository = restaurantRepository;
         this.dishRepository = dishRepository;
-        this.customerOrderRepository = customerOrderRepository;
+        this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
     }
 
@@ -46,7 +43,7 @@ public class CustomerOrderService {
 
         CustomerOrder customerOrder = new CustomerOrder(cart, restaurant);
 
-        customerOrderRepository.save(customerOrder);
+        orderRepository.save(customerOrder);
 
         return CustomerOrderRequest.from(customerOrder);
     }
@@ -77,37 +74,36 @@ public class CustomerOrderService {
                 .collect(Collectors.toList());
     }
 
-    public void updateOrderStatus(Long orderId, OrderStatus newStatus) {
+    public void updateOrderStatus(Long orderId) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
-                .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
+            .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
 
 
-        if (!isValidStatusTransition(customerOrder.getStatus(), newStatus)) {
-            throw new IllegalStateException("Transição de status inválida. O status deve ser atualizado em ordem.");
-        }
+        OrderStatus currentStatus = customerOrder.getStatus();
+        OrderStatus nextStatus = getNextStatus(currentStatus);
 
-        // Atualize o status do pedido
-        customerOrder.setStatus(newStatus);
+        // Atualizar o status apenas se for o próximo na sequência
+        customerOrder.setStatus(nextStatus);
         customerOrderRepository.save(customerOrder);
     }
 
-
-    private boolean isValidStatusTransition(OrderStatus currentStatus, OrderStatus newStatus) {
-        // Define a ordem dos status
+    private OrderStatus getNextStatus(OrderStatus currentStatus) {
         List<OrderStatus> validSequence = List.of(
-                OrderStatus.NOVO,
-                OrderStatus.ACEITO,
-                OrderStatus.EM_PREPARO,
-                OrderStatus.PRONTO_PARA_ENTREGA,
-                OrderStatus.SAIU_PARA_ENTREGA,
-                OrderStatus.CONCLUIDO
+            OrderStatus.NOVO,
+            OrderStatus.ACEITO,
+            OrderStatus.EM_PREPARO,
+            OrderStatus.PRONTO_PARA_ENTREGA,
+            OrderStatus.SAIU_PARA_ENTREGA,
+            OrderStatus.CONCLUIDO
         );
 
         int currentIndex = validSequence.indexOf(currentStatus);
-        int newIndex = validSequence.indexOf(newStatus);
+        if (currentIndex == -1 || currentIndex == validSequence.size() - 1) {
+            throw new IllegalStateException("O status atual não pode ser alterado.");
+        }
 
-        // Verifica se o novo status é o próximo na sequência
-        return newIndex == currentIndex + 1;
+        // Retorna o próximo status na sequência
+        return validSequence.get(currentIndex + 1);
     }
 
 }

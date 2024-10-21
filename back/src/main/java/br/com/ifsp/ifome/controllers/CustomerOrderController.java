@@ -2,34 +2,28 @@ package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.docs.DocsCreateCustomerOrder;
 import br.com.ifsp.ifome.dto.ApiResponse;
-import br.com.ifsp.ifome.dto.request.UpdateOrderStatusRequest;
 import br.com.ifsp.ifome.dto.response.CustomerOrderRequest;
-import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
-import br.com.ifsp.ifome.repositories.CartRepository;
 import br.com.ifsp.ifome.services.CustomerOrderService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/order")
 public class CustomerOrderController {
 
     private final CustomerOrderService customerOrderService;
-    private final CartRepository cartRepository;
 
-    public CustomerOrderController(CustomerOrderService customerOrderService, CartRepository cartRepository) {
+    public CustomerOrderController(CustomerOrderService customerOrderService) {
         this.customerOrderService = customerOrderService;
-        this.cartRepository = cartRepository;
     }
 
     @PostMapping
