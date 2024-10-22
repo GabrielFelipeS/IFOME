@@ -43,6 +43,7 @@ public class PedidoStatusChangedListener  {
         emailService.sendEmail(message);
     }
 
+    // TODO Deve ter um jeito mais bonito de fazer isso
     private EmailSentPedidoStatus getEvent(PedidoStatusChangedEvent event) {
         String nomeCliente = event.getClientName();
         String restaurantName = event.getRestaurantName();
@@ -82,6 +83,7 @@ public class PedidoStatusChangedListener  {
         };
     }
 
+    // TODO Arruma essa merda que se fez
     private String generateHtml(String body) {
         return
             " <html><body>" +
