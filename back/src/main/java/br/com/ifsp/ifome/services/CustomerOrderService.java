@@ -6,43 +6,34 @@ import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.CustomerOrder;
 import br.com.ifsp.ifome.entities.OrderStatus;
 import br.com.ifsp.ifome.entities.Restaurant;
-import br.com.ifsp.ifome.events.PedidoStatusChangedEvent;
 import br.com.ifsp.ifome.exceptions.CartCannotBeEmptyException;
 import br.com.ifsp.ifome.exceptions.RestaurantNotFoundException;
 import br.com.ifsp.ifome.repositories.CartRepository;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
-import br.com.ifsp.ifome.repositories.DishRepository;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import org.yaml.snakeyaml.emitter.EmitterException;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service
 public class CustomerOrderService {
     private final RestaurantRepository restaurantRepository;
-    private final DishRepository dishRepository;
     private final CustomerOrderRepository customerOrderRepository;
     private final CartRepository cartRepository;
-    private final ApplicationEventPublisher eventPublisher;
-    private final Map<Long, SseEmitter> sseEmitterHashMap;
+    private final EventStatusEmitterService eventStatusEmitterService;
 
-    public CustomerOrderService(RestaurantRepository restaurantRepository, DishRepository dishRepository, CustomerOrderRepository customerOrderRepository, CartRepository cartRepository, ApplicationEventPublisher eventPublisher) {
+    public CustomerOrderService(RestaurantRepository restaurantRepository, CustomerOrderRepository customerOrderRepository,
+                                CartRepository cartRepository,
+                                EventStatusEmitterService eventStatusEmitterService) {
         this.restaurantRepository = restaurantRepository;
-        this.dishRepository = dishRepository;
         this.customerOrderRepository = customerOrderRepository;
         this.cartRepository = cartRepository;
-        this.eventPublisher = eventPublisher;
-        this.sseEmitterHashMap = new ConcurrentHashMap<>();
+        this.eventStatusEmitterService = eventStatusEmitterService;
     }
 
     public CustomerOrderRequest createOrder(Principal principal) {
@@ -59,7 +50,7 @@ public class CustomerOrderService {
 
         customerOrderRepository.save(customerOrder);
 
-        this.addEmitter(customerOrder);
+        eventStatusEmitterService.addEmitter(customerOrder);
 
         return CustomerOrderRequest.from(customerOrder);
     }
@@ -101,8 +92,7 @@ public class CustomerOrderService {
         customerOrder.setStatus(nextStatus);
         customerOrderRepository.save(customerOrder);
 
-        this.updateStatusEmitter(customerOrder);
-        eventPublisher.publishEvent(new PedidoStatusChangedEvent(orderId, nextStatus, customerOrder));
+        eventStatusEmitterService.updateStatusEmitter(customerOrder);
     }
 
     private OrderStatus getNextStatus(OrderStatus currentStatus) {
@@ -127,54 +117,9 @@ public class CustomerOrderService {
     public SseEmitter getEmitter(Long id) {
         System.err.println(id);
         Optional<CustomerOrder> customerOrder = customerOrderRepository.findById(id);
-        SseEmitter emitter =  this.getEmitter(customerOrder.get());
+        SseEmitter emitter =  eventStatusEmitterService.getEmitter(customerOrder.get());
         System.err.println(emitter);
         return emitter;
-    }
-
-    public SseEmitter getEmitter(CustomerOrder customerOrder) {
-        if(sseEmitterHashMap.containsKey(customerOrder.getId())) {
-            return sseEmitterHashMap.get(customerOrder.getId());
-        }
-
-        return this.addEmitter(customerOrder);
-    }
-
-
-    private SseEmitter addEmitter(CustomerOrder customerOrder) {
-        System.err.println("CRIANDO EMITTER");
-        SseEmitter emitter = new SseEmitter(3_600_000L );
-
-        System.err.println("ONTIMEOUT EMITTER");
-        emitter.onTimeout(() -> sseEmitterHashMap.remove(customerOrder.getId()));
-
-        System.err.println("ONCOMPLETION EMITTER");
-        emitter.onCompletion(() -> {
-            sseEmitterHashMap.remove(customerOrder.getId());
-            System.err.println("EXECUTOU E NÂO DEVIA");
-            emitter.complete();
-        });
-
-        System.err.println("ONERROR EMITTER");
-        emitter.onError((e) -> System.err.println("Emmiter Erro: " + e.getMessage()));
-
-        System.err.println("ADICIONANDO EMITTER");
-        sseEmitterHashMap.put(customerOrder.getId(), emitter);
-        System.err.println(customerOrder.getId());
-        return emitter;
-    }
-
-    private void updateStatusEmitter(CustomerOrder customerOrder)  {
-        System.err.println("PEGANDO EMITTER");
-        SseEmitter emitter = this.getEmitter(customerOrder);
-        System.err.println(emitter);
-        try {
-            System.err.println("ANTES DE ENVIAR MENSAGEM EMITTER");
-            emitter.send(customerOrder.getStatusMessage());
-            System.err.println("DEPOIS DE ENVIAR MENSAGEM EMITTER");
-        } catch (IOException e) {
-            throw new EmitterException("Emmiter erro: " + e.getMessage());
-        }
     }
 
 }
