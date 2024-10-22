@@ -109,7 +109,7 @@ public class CustomerOrderService {
         if (currentIndex == -1 || currentIndex == validSequence.size() - 1) {
             throw new IllegalStateException("O status atual não pode ser alterado.");
         }
-
+        System.err.println("currentIndex: " + currentIndex);
         // Retorna o próximo status na sequência
         return validSequence.get(currentIndex + 1);
     }

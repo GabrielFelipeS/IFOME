@@ -6,11 +6,14 @@ import br.com.ifsp.ifome.dto.request.UpdateOrderStatusRequest;
 import br.com.ifsp.ifome.dto.response.CustomerOrderRequest;
 import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
 import br.com.ifsp.ifome.services.CustomerOrderService;
+import com.zaxxer.hikari.HikariDataSource;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -22,6 +25,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/order")
 public class CustomerOrderController {
+
+    @Autowired
+    private HikariDataSource dataSource;
 
     private final CustomerOrderService customerOrderService;
 
@@ -43,6 +49,7 @@ public class CustomerOrderController {
         security = @SecurityRequirement(name = "Bearer Token")
     )
     @GetMapping("/status/{id}")
+    @Transactional
     public SseEmitter getStatusCustomerOrder(@PathVariable Long id) throws IOException {
         return customerOrderService.getEmitter(id);
     }
@@ -99,5 +106,28 @@ public class CustomerOrderController {
             // Catch any other exceptions
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("error", null, "Erro inesperado: " + e.getMessage()));
         }
+    }
+
+    @PutMapping("/teste")
+    public ResponseEntity<ApiResponse> teste(@RequestBody UpdateOrderStatusRequest request) {
+
+        new Thread(() -> {
+            try {
+                System.err.println("Teste");
+                int totalConnections = dataSource.getHikariPoolMXBean().getTotalConnections();
+                int activeConnections = dataSource.getHikariPoolMXBean().getActiveConnections();
+                int idleConnections = dataSource.getHikariPoolMXBean().getIdleConnections();
+
+                System.out.println("Total Connections: " + totalConnections);
+                System.out.println("Active Connections: " + activeConnections);
+                System.out.println("Idle Connections: " + idleConnections);
+                List<CustomerOrderResponse> orders = customerOrderService.getAllOrdersByCustomer("email1@email.com");
+                Thread.sleep(30000);
+                System.err.println("Saiu um");
+            } catch (Exception e) {
+            }
+        }).start();
+
+      return ResponseEntity.ok(null);
     }
 }
