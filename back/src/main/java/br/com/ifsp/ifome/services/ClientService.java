@@ -1,6 +1,7 @@
 package br.com.ifsp.ifome.services;
 
 import br.com.ifsp.ifome.dto.request.OrderItemRequest;
+import br.com.ifsp.ifome.dto.request.OrderItemUpdateRequest;
 import br.com.ifsp.ifome.dto.response.CartResponse;
 import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.Client;
@@ -40,14 +41,14 @@ public class ClientService {
         Client client = this.getClientOrElseThrow(email);
 
         Cart cart = this.getCartOrCreateNewCart(email, client);
-        OrderItem orderItem = new OrderItem(dish, orderItemRequest.quantity(), cart);
+        OrderItem orderItem = new OrderItem(dish, orderItemRequest.quantity(), orderItemRequest.detail(), cart);
         cart.add(orderItem);
 
         cart = cartRepository.save(cart);
         return new CartResponse(cart);
     }
 
-    public void updateQuantityOrderItemInCart(OrderItemRequest orderItemRequest, String email) {
+    public void updateQuantityOrderItemInCart(OrderItemUpdateRequest orderItemRequest, String email) {
         Client client = this.getClientOrElseThrow(email);
 
         this.dishIdExistsOrElseThrow(orderItemRequest.dishId());
