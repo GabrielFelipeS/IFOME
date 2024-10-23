@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.docs.DocGetCustomerOrders;
 import br.com.ifsp.ifome.docs.DocsCreateCustomerOrder;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.UpdateOrderStatusRequest;
@@ -57,6 +58,9 @@ public class CustomerOrderController {
     @Operation(
         security = @SecurityRequirement(name = "Bearer Token")
     )
+
+
+    @DocGetCustomerOrders
     @GetMapping("/customerOrders")
     public ResponseEntity<List<CustomerOrderResponse>> getAllCustomerOrders(Principal principal) {
         // Check if the principal is present
@@ -77,6 +81,7 @@ public class CustomerOrderController {
     @Operation(
         security = @SecurityRequirement(name = "Bearer Token")
     )
+
     @GetMapping("/restaurantOrders")
     public ResponseEntity<List<CustomerOrderResponse>> getAllRestaurantOrders(Principal principal) {
         String  restaurantEmail = principal.getName(); // Ou use outro método para identificar o restaurante
