@@ -1,6 +1,7 @@
 package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.docs.DocGetCustomerOrders;
+import br.com.ifsp.ifome.docs.DocGetRestaurantOrders;
 import br.com.ifsp.ifome.docs.DocGetStatusCustomerOrder;
 import br.com.ifsp.ifome.docs.DocsCreateCustomerOrder;
 import br.com.ifsp.ifome.dto.ApiResponse;
@@ -84,6 +85,7 @@ public class CustomerOrderController {
         security = @SecurityRequirement(name = "Bearer Token")
     )
 
+    @DocGetRestaurantOrders
     @GetMapping("/restaurantOrders")
     public ResponseEntity<List<CustomerOrderResponse>> getAllRestaurantOrders(Principal principal) {
         String  restaurantEmail = principal.getName(); // Ou use outro método para identificar o restaurante
