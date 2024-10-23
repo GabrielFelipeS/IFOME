@@ -1,6 +1,7 @@
 package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.docs.DocGetCustomerOrders;
+import br.com.ifsp.ifome.docs.DocGetStatusCustomerOrder;
 import br.com.ifsp.ifome.docs.DocsCreateCustomerOrder;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.UpdateOrderStatusRequest;
@@ -49,6 +50,7 @@ public class CustomerOrderController {
     @Operation(
         security = @SecurityRequirement(name = "Bearer Token")
     )
+    @DocGetStatusCustomerOrder
     @GetMapping("/status/{id}")
     @Transactional
     public SseEmitter getStatusCustomerOrder(@PathVariable Long id) throws IOException {
