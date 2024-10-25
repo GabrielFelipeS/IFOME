@@ -1,6 +1,7 @@
 name: Java CI with Maven
 
 on:
+  workflow_dispatch: # Executar manualmente
   push:
     branches: [ "dev" ]
     paths-ignore:
@@ -42,7 +43,7 @@ jobs:
 
   deploy:
       runs-on: ubuntu-latest
-      if: github.event_name == 'pull_request' && github.event.action != 'closed'
+      if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
       needs: [build, test]
       steps:
       - name: Deploy via SSH
