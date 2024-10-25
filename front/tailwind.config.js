@@ -25,6 +25,7 @@ module.exports = {
         "tertiary-subtle": "#4b4b4b",
         "tertiary-light": "#8f8f8f",
         "soft-border": "#E1E1E1",
+        "background-inputs": "#F1F1F1",
       }
     },
   },
