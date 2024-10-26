@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -70,7 +71,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     private Role role;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Dish> dishes;
+    private List<Dish> dishes = new ArrayList<>();
 
     @Column(name = "is_open")
     private Boolean isOpen;
