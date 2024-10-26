@@ -52,7 +52,7 @@
                     placeholder="Busque nome" v-model="query" @keyup.enter="searchForm" />
             </div>
         </div>
-		<div class="px-5 md:grid grid-cols-3 gap-4">
+		<div class="px-5 lg:grid grid-cols-3 gap-4 gap-y-0.5 mb-[91px]">
 			<DishCard v-for="dish in dishes" :dish="dish"/>
 		</div>
     </main>
