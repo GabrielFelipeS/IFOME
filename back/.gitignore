@@ -6,6 +6,7 @@ target/
 logs/*
 !logs/.gitkeep
 src/main/resources/static/images/*
+src/main/resources/static/images/**/*
 !src/main/resources/static/images/.gitkeep
 
 ### STS ###

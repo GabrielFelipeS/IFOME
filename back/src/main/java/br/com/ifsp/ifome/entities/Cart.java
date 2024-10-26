@@ -77,6 +77,14 @@ public class Cart {
         return Collections.unmodifiableList(orderItems);
     }
 
+    public String getClientName() {
+        return this.client.getName();
+    }
+
+    public String getEmailClient() {
+        return this.client.getEmail();
+    }
+
     public void updateDishInCart(Long dishId, Integer quantity) {
         Optional<OrderItem> optionalOrderItem = this.orderItems.stream()
                             .filter(orderItem -> Objects.equals(orderItem.getDishId(), dishId))
@@ -108,4 +116,7 @@ public class Cart {
         }
         return this;
     }
+
+
+
 }

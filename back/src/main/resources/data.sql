@@ -6,13 +6,17 @@ INSERT INTO clients (name, email, password, date_of_birth, cpf, role)
 VALUES ('Gabriel', 'email1@email.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '92051362041', 'CLIENT');
 
 INSERT INTO clients (name, email, password, date_of_birth, cpf, role)
+VALUES ('Telha Rina', 'telha_rina@email.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '20000596000', 'CLIENT');
+
+INSERT INTO clients (name, email, password, date_of_birth, cpf, role)
 VALUES ('Gabriel', 'noreply.ifome@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '77025681008',  'CLIENT');
 
 INSERT INTO address (name_address, cep, neighborhood, city, state, address, number, complement, details, type_residence, client_id)
 VALUES
     ('Endereço João', '05413-020', 'Pinheiros', 'São Paulo', 'SP', 'Rua dos Três Irmãos', '50', NULL, 'Próximo à Praça da República', 'Casa', 1),
     ('Endereço Maria', '01234-567', 'Centro', 'São Paulo', 'SP', 'Avenida São João', '500','Apto 101', 'Próximo ao Parque Villa-Lobos' , 'Apartamento', 2),
-    ('Endereço Carlos', '03090-000', 'Mooca', 'São Paulo', 'SP', 'Rua da Mooca', '300', 'Apto 202', 'Perto do Parque da Mooca', 'Casa', 3);
+    ('Endereço Carlos', '03090-000', 'Mooca', 'São Paulo', 'SP', 'Rua da Mooca', '300', 'Apto 202', 'Perto do Parque da Mooca', 'Casa', 3),
+    ('Endereço Carlos', '03090-000', 'Mooca', 'São Paulo', 'SP', 'Rua da Mooca', '300', 'Apto 202', 'Perto do Parque da Mooca', 'Casa', 4);
 
 INSERT INTO restaurants (
     name_restaurant,
@@ -163,3 +167,12 @@ INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status,
 UPDATE cart SET customer_order_id = 1 WHERE client_id = 1 LIMIT 1;
 
 INSERT INTO cart (client_id) VALUES (2);
+
+INSERT INTO cart (client_id) VALUES (3);
+
+INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 3, 29.00, 5);
+INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 4, 29.00, 5);
+INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 3, 29.00, 5);
+INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 3, 29.00, 5);
+INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 4, 29.00, 5);
+INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 3, 29.00, 5);

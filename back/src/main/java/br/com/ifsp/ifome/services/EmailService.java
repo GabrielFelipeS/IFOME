@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.services;
 
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -21,6 +22,10 @@ public class EmailService {
         message.setText(body);
         message.setFrom(from);
 
+        mailSender.send(message);
+    }
+
+    public void sendEmail(MimeMessage message) {
         mailSender.send(message);
     }
 }
