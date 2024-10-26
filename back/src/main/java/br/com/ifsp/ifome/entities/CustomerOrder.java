@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 @Entity
 @Getter
@@ -63,6 +64,24 @@ public class CustomerOrder {
 
     public void calculateTotalPrice() {
         this.orderPrice = cart.getOrderItems().stream().mapToDouble(OrderItem::getTotalPrice).sum();
+    }
+
+    public String getEmailClient() {
+        return this.cart.getEmailClient();
+    }
+
+    public String getClientName() {
+        return this.cart.getClientName();
+    }
+
+    public String getRestaurantName() {
+        return this.restaurant.getNameRestaurant();
+    }
+
+    public String getStatusMessage() {
+        return status.toString()
+                .toLowerCase(Locale.ROOT)
+                .replaceAll("_", " ");
     }
 
 }
