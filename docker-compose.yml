@@ -1,7 +1,7 @@
 services:
   api:
     container_name: api_spring
-    build: ./back/
+    image: ifome/ifome:latest
     env_file:
      - ./back/.env
     ports:
