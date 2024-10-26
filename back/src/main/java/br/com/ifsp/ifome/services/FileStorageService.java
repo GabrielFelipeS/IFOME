@@ -19,13 +19,13 @@ public class FileStorageService {
             throw new IOException("File is empty");
         }
 
-        File directory = new File(PATH_TO_FOLDER_IMAGES + cnpj);
+        File directory = new File(PATH_TO_FOLDER_IMAGES);
         if (!directory.exists()) {
             directory.mkdirs(); // Cria o diretório
         }
 
         String newName = this.refactoreName(file.getOriginalFilename());
-        File uploadedFile = new File( PATH_TO_FOLDER_IMAGES + cnpj + "/" + newName);
+        File uploadedFile = new File( PATH_TO_FOLDER_IMAGES  + "/" + newName);
 
         file.transferTo(uploadedFile);
         return uploadedFile.getName(); // Retorna o caminho absoluto do arquivo salvo

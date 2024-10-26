@@ -40,7 +40,7 @@ public class ClientControllerIT {
     @Test
     @DirtiesContext
     public void addDishInCart() {
-        OrderItemRequest OrderItemRequest = new OrderItemRequest(3L,2);
+        OrderItemRequest OrderItemRequest = new OrderItemRequest(3L,2, null);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(OrderItemRequest, headers);
@@ -60,7 +60,7 @@ public class ClientControllerIT {
     @Test
     @DirtiesContext
     public void addDishInCartWhenDishIsNotAvailable() {
-        OrderItemRequest OrderItemRequest = new OrderItemRequest(1L,2);
+        OrderItemRequest OrderItemRequest = new OrderItemRequest(1L,2, null);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(OrderItemRequest, headers);
@@ -75,7 +75,7 @@ public class ClientControllerIT {
     @Test
     @DirtiesContext
     public void addDishInCartWhenAlteadyExists() {
-        OrderItemRequest OrderItemRequest = new OrderItemRequest(3L,2);
+        OrderItemRequest OrderItemRequest = new OrderItemRequest(3L,2, null);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(OrderItemRequest, headers);
@@ -118,7 +118,7 @@ public class ClientControllerIT {
     @Test
     @DirtiesContext
     public void addDishInCartWhenDishIdNotExists() {
-        OrderItemRequest OrderItemRequest = new OrderItemRequest(999L,2);
+        OrderItemRequest OrderItemRequest = new OrderItemRequest(999L,2, null);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(OrderItemRequest, headers);
@@ -133,7 +133,7 @@ public class ClientControllerIT {
     @Test
     @DirtiesContext
     public void addDishInCartWhenClientNotExists() {
-        OrderItemRequest OrderItemRequest = new OrderItemRequest(1L,2);
+        OrderItemRequest OrderItemRequest = new OrderItemRequest(1L,2, null);
         HttpHeaders headers = new HttpHeaders();
         token = tokenService.generateToken("email_nao_existe@gmail.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
         headers.set("Authorization", "Bearer " + token);
@@ -153,7 +153,7 @@ public class ClientControllerIT {
 
         HttpHeaders headers = getHttpHeaders();
 
-        OrderItemRequest OrderItemRequest = new OrderItemRequest(3L,2);
+        OrderItemRequest OrderItemRequest = new OrderItemRequest(3L,2, null);
         HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(OrderItemRequest, headers);
 
         ResponseEntity<String> responseFirst = testRestTemplate.postForEntity
@@ -162,7 +162,7 @@ public class ClientControllerIT {
 
         assertThat(responseFirst.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        OrderItemRequest OrderItemRequestAnotherRestaurant = new OrderItemRequest(8L,2);
+        OrderItemRequest OrderItemRequestAnotherRestaurant = new OrderItemRequest(8L,2, null);
         HttpEntity<OrderItemRequest> requestEntityAnotherRestaurant  = new HttpEntity<>(OrderItemRequestAnotherRestaurant, headers);
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
@@ -187,7 +187,7 @@ public class ClientControllerIT {
 
         assertThat(responseInsert.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        OrderItemRequest OrderItemRequestUpdate = new OrderItemRequest(3L,10);
+        OrderItemRequest OrderItemRequestUpdate = new OrderItemRequest(3L,10, null);
         HttpEntity<OrderItemRequest> requestEntityUpdate = getOrderItemRequestHttpEntity(OrderItemRequestUpdate);
 
         ResponseEntity<String> responseUpdate = testRestTemplate.exchange
@@ -258,7 +258,6 @@ public class ClientControllerIT {
 
         assertThat(responseInsert.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        OrderItemRequest OrderItemRequestUpdate = new OrderItemRequest(3L,10);
         HttpEntity<OrderItemRequest> requestHttpEntity = getRequestHttpEntity();
 
         ResponseEntity<String> responseUpdate = testRestTemplate.exchange
@@ -287,7 +286,7 @@ public class ClientControllerIT {
 
         assertThat(responseInsert.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        OrderItemRequest OrderItemRequestUpdate = new OrderItemRequest(3L,10);
+        OrderItemRequest OrderItemRequestUpdate = new OrderItemRequest(3L,10, null);
         HttpEntity<OrderItemRequest> requestHttpEntity = getRequestHttpEntity();
 
         ResponseEntity<String> response = testRestTemplate.exchange
@@ -344,7 +343,7 @@ public class ClientControllerIT {
     @Test
     @DirtiesContext
     public void shouldReturnEmptyCartBeforeCreateCustomerOrder() {
-        OrderItemRequest OrderItemRequest = new OrderItemRequest(3L,2);
+        OrderItemRequest OrderItemRequest = new OrderItemRequest(3L,2, null);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(OrderItemRequest, headers);
@@ -369,7 +368,7 @@ public class ClientControllerIT {
     }
 
     private @NotNull HttpEntity<OrderItemRequest> getOrderItemRequestHttpEntity() {
-        OrderItemRequest OrderItemRequest = new OrderItemRequest(3L,2);
+        OrderItemRequest OrderItemRequest = new OrderItemRequest(3L,2, null);
         return getOrderItemRequestHttpEntity(OrderItemRequest);
     }
 

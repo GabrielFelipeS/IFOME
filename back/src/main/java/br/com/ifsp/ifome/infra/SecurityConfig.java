@@ -45,7 +45,7 @@ public class SecurityConfig {
                     .requestMatchers("/actuator/**", "/api/auth/**", "/api/image/**", "/h2-console/**").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                     .requestMatchers(HttpMethod.GET,
-                        "/api/restaurant/", "/api/restaurant/{id}","/api/restaurant/all", "/api/dish/", "/api/dish/{id}","/api/dish/all")
+                        "/api/restaurant/", "/api/restaurant/{id}","/api/restaurant/all", "/api/dish/", "/api/dish/{id}", "/api/dish/restaurant/{id}","/api/dish/all")
                     .permitAll()
 
 //                    .requestMatchers(HttpMethod.GET,"/api/order/status/{id}").permitAll()

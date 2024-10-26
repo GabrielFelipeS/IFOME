@@ -111,7 +111,8 @@ import java.lang.annotation.Target;
                 value = """
                   {
                    "dishId": 3,
-                   "quantity": 1
+                   "quantity": 1,
+                   "detail": "Sem alface"
                  }
                 """
             ),
@@ -132,12 +133,13 @@ import java.lang.annotation.Target;
                 name = "Inserir item do pedido com quantitdade inválida",
                 description =
                     """
-                        Inserir item do pedido que esta com quantidae inválida
+                        Inserir item do pedido que esta com quantidade inválida
                         """,
                 value = """
                     {
                        "dishId": 3,
-                       "quantity": -1
+                       "quantity": -1,
+                       "detail": ""
                     }
                     """
             )
