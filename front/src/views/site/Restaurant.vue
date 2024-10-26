@@ -43,12 +43,12 @@
             </div>
         </div>
 
-        <div class="ml-4">
-            <h2 class="text-2xl font-normal text-tertiary-light">Pratos</h2>
+        <div class="mx-5 flex flex-col items-center">
+            <h2 class="text-2xl w-full text-start font-normal text-tertiary-light">Pratos</h2>
             <div
-                class="w-[95%] h-[40px] md:full bg-background-inputs rounded-lg flex flex-row justify-between items-center mt-3">
+                class="w-full h-[40px] md:full bg-background-inputs rounded-lg flex flex-row justify-between items-center mt-3">
                 <v-icon name="fa-search" scale="1" class="text-primary mx-4 cursor-pointer" @click="searchForm" />
-                <input type="text" class="w-[90%] h-full bg-transparent text-tertiary text-lg  outline-none"
+                <input type="text" class="w-full h-full bg-transparent text-tertiary text-lg  outline-none"
                     placeholder="Busque nome" v-model="query" @keyup.enter="searchForm" />
             </div>
         </div>
