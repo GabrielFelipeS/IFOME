@@ -6,6 +6,7 @@ import br.com.ifsp.ifome.docs.DocsInsertOrderItemInCart;
 import br.com.ifsp.ifome.docs.DocsUpdateItemInCart;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.OrderItemRequest;
+import br.com.ifsp.ifome.dto.request.OrderItemUpdateRequest;
 import br.com.ifsp.ifome.dto.response.CartResponse;
 import br.com.ifsp.ifome.services.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,7 +49,7 @@ public class ClientController {
 
     @PutMapping
     @DocsUpdateItemInCart
-    public ResponseEntity<ApiResponse> updateQuantityOrderItemInCart(@RequestBody @Valid OrderItemRequest orderItemRequest, Principal principal) {
+    public ResponseEntity<ApiResponse> updateQuantityOrderItemInCart(@RequestBody @Valid OrderItemUpdateRequest orderItemRequest, Principal principal) {
         clientService.updateQuantityOrderItemInCart(orderItemRequest, principal.getName());
 
         ApiResponse apiResponse = new ApiResponse("success", null, "Quantidade do prato atualizado com sucesso!");

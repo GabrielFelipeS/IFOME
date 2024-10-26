@@ -14,7 +14,7 @@ public record RestaurantResponse(
         String foodCategory,
         List<Address> address,
         String telephone,
-
+        List<DishResponse> dish,
         List<OpeningHours> openingHours,
         String personResponsible,
         String personResponsibleCPF,
@@ -32,7 +32,9 @@ public record RestaurantResponse(
                 restaurant.getFoodCategory(),
                 restaurant.getAddress(),
                 restaurant.getTelephone(),
-
+                restaurant.getDishes().stream()
+                    .map(DishResponse::new)
+                    .toList(),
                 restaurant.getOpeningHours(),
                 restaurant.getPersonResponsible(),
                 restaurant.getPersonResponsibleCpf(),
