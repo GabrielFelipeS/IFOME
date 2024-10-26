@@ -1,6 +1,6 @@
 package br.com.ifsp.ifome.controllers;
 
-import br.com.ifsp.ifome.docs.DocsCreateCustomerOrder;
+import br.com.ifsp.ifome.docs.*;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.UpdateOrderStatusRequest;
 import br.com.ifsp.ifome.dto.response.CustomerOrderRequest;
@@ -48,7 +48,9 @@ public class CustomerOrderController {
     @Operation(
         security = @SecurityRequirement(name = "Bearer Token")
     )
+
     @GetMapping("/status/{id}")
+    @DocGetStatusCustomerOrder
     @Transactional
     public SseEmitter getStatusCustomerOrder(@PathVariable Long id) throws IOException {
         return customerOrderService.getEmitter(id);
@@ -57,7 +59,11 @@ public class CustomerOrderController {
     @Operation(
         security = @SecurityRequirement(name = "Bearer Token")
     )
+
+
+
     @GetMapping("/customerOrders")
+    @DocGetCustomerOrders
     public ResponseEntity<List<CustomerOrderResponse>> getAllCustomerOrders(Principal principal) {
         // Check if the principal is present
         //if (principal == null || principal.getName() == null) {
@@ -77,6 +83,8 @@ public class CustomerOrderController {
     @Operation(
         security = @SecurityRequirement(name = "Bearer Token")
     )
+
+    @DocGetRestaurantOrders
     @GetMapping("/restaurantOrders")
     public ResponseEntity<List<CustomerOrderResponse>> getAllRestaurantOrders(Principal principal) {
         String  restaurantEmail = principal.getName(); // Ou use outro método para identificar o restaurante
@@ -93,7 +101,9 @@ public class CustomerOrderController {
     @Operation(
         security = @SecurityRequirement(name = "Bearer Token")
     )
+
     @PutMapping("/updateStatus")
+    @DocUpdateCustomerOrderStatus
     public ResponseEntity<ApiResponse> updateOrderStatus(@RequestBody UpdateOrderStatusRequest request) {
         try {
             customerOrderService.updateOrderStatus(request.customerOrderId());
