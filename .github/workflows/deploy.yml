@@ -38,7 +38,7 @@ jobs:
   
     - name: Build Docker image
       run: |
-        cd ./back/
+        cd ${{ github.workspace }}/back/
         docker compose build
 
   deploy:
@@ -58,7 +58,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./back/
+          context:  ${{ github.workspace }}/back
           push: true
           tags: ifome/ifome:latest
           
