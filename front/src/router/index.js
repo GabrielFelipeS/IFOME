@@ -34,6 +34,11 @@ const router = createRouter({
           name: 'store-login',
           component: () => import('@/views/store/Login.vue'),
         },
+        {
+          path: 'new-dish',
+          name: 'store-new-dish',
+          component: () => import('@/views/store/NewDish.vue'),
+        },
       ],
     },
     {
