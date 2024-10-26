@@ -4,24 +4,20 @@ import br.com.ifsp.ifome.validation.anotations.ConfirmartionPasswordEqualsPasswo
 import br.com.ifsp.ifome.validation.anotations.NotRegisteredEmailRestaurant;
 import br.com.ifsp.ifome.validation.anotations.ValidPassword;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @ConfirmartionPasswordEqualsPassword(message = "As senhas não coincidem")
 public record RestaurantRequest(
-        @NotBlank(message = "Nome do restaurante é obrigatório")
+        @NotBlank(message = "O campo \"Nome do restaurante\" é obrigatório")
         String nameRestaurant,
 
-        @Email(message = "E-mail inválido")
-        @NotBlank(message = "E-mail é obrigatório")
         @NotRegisteredEmailRestaurant
+        @NotBlank(message = "O campo \"E-mail\" é obrigatório")
+        @Email(message = "E-mail deve estar no formato: nome@dominio.com")
         String email,
 
         @ValidPassword
@@ -30,12 +26,13 @@ public record RestaurantRequest(
         @NotBlank(message = "Confirmação de senha é obrigatório")
         String confirmationPassword,
 
-        @CNPJ(message = "CNPJ inválido")
+        @CNPJ(message = "O campo \"CNPJ\" deve estar no formato XX.XXX.XXX/XXXX-XX")
         @NotBlank(message = "CNPJ é obrigatório")
         String cnpj,
 
-        @NotEmpty(message = "É necessário ter pelo menos um endereço")
-        List<@Valid AddressRequest> address,
+        @Valid
+        @NotNull(message = "É necessário ter um endereço")
+        AddressRequest address,
 
         @NotBlank(message = "Telefone é obrigatório")
         @Pattern(regexp = "\\(\\d{2}\\) \\d{4,5}-\\d{4}", message = "Telefone deve estar no formato (XX) XXXXX-XXXX")
@@ -52,7 +49,7 @@ public record RestaurantRequest(
 
         String personResponsible,
 
-        @CPF(message = "CPF inválido")
+        @CPF(message = "O campo \"CPF\" deve estar no formato: XXX.XXX.XXX-XX")
         @NotBlank(message = "CPF é obrigatório")
         String personResponsibleCPF,
 

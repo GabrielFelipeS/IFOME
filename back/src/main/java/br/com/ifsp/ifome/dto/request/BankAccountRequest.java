@@ -3,13 +3,13 @@ package br.com.ifsp.ifome.dto.request;
 import jakarta.validation.constraints.NotBlank;
 
 public record BankAccountRequest(
-        @NotBlank(message = "Banco é obrigatório")
+        @NotBlank(message = "O campo \"Banco\" é obrigatório")
         String bank,
 
-        @NotBlank(message = "Agência é obrigatório")
+        @NotBlank(message = "O campo \"Agência\" é obrigatório")
         String agency,
 
-        @NotBlank(message = "Conta é obrigatório")
+        @NotBlank(message = "O campo \"Conta\" é obrigatório")
         String account
 )  {
 }

@@ -7,33 +7,33 @@ import jakarta.validation.constraints.Pattern;
 public record AddressRequest(
 
     @CEP
-    @NotBlank(message = "Cep é obrigatório")
+    @NotBlank(message = "O campo \"Cep\" é obrigatório")
     String cep,
 
     @NotBlank(message = "Nome do endereço é obrigatório")
     String nameAddress,
 
-    @NotBlank(message = "Bairro é obrigatório")
+    @NotBlank(message = "O campo \"Bairro\" é obrigatório")
     String neighborhood,
 
-    @NotBlank(message = "Cidade é obrigatório")
+    @NotBlank(message = "O campo \"Cidade\" é obrigatório")
     String city,
 
-    @NotBlank(message = "Estado é obrigatório")
+    @NotBlank(message = "O campo \"Estado\" é obrigatório")
     String state,
 
-    @NotBlank(message = "Address é obrigatório")
+    @NotBlank(message = "O campo \"Address\" é obrigatório")
     String address,
 
-    @NotBlank(message = "Complemento é obrigatório")
+    @NotBlank(message = "O campo \"Complemento\" é obrigatório")
     String complement,
 
-    @NotBlank(message = "Número é obrigatório")
-    @Pattern(regexp = "\\d{1,}")
+    @NotBlank(message = "O campo \"Número\" é obrigatório")
+    @Pattern(message = "O número da residência deve conter apenas dígitos numéricos e incluir pelo menos um algarismo",regexp = "\\d{1,}")
     String number,
 
-    @NotBlank(message = "Tipo de residência é obrigatório")
-    @Pattern(regexp = "(casa|apartamento|condom[ií]nio)")
+    @NotBlank(message = "O campo \"Tipo de residência\" é obrigatório")
+    @Pattern(message = "Os tipos de residência permitido são: casa, apartamento e condominío", regexp = "(casa|apartamento|condom[ií]nio)")
     String typeResidence,
 
     String details

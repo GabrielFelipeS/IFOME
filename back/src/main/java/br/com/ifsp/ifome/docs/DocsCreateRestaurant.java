@@ -1,7 +1,6 @@
 package br.com.ifsp.ifome.docs;
 
 
-import br.com.ifsp.ifome.dto.request.RestaurantRequest;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,8 +32,7 @@ import java.lang.annotation.Target;
                               "password": "@Senha1",
                               "confirmationPassword": "@Senha1",
                               "cnpj": "10.882.594/0001-65",
-                              "address": [
-                                {
+                              "address": {
                                   "nameAddress": "casa principal",
                                   "typeResidence": "casa",
                                   "cep": "35170-222",
@@ -46,7 +44,7 @@ import java.lang.annotation.Target;
                                   "number": "12",
                                   "details": "details"
                                 }
-                              ],
+                              ,
                               "telephone": "(11) 1234-5678",
                               "foodCategory": "Pizzaria",
                               "paymentMethods": "Dinheiro, Cartão",
@@ -132,7 +130,7 @@ import java.lang.annotation.Target;
                           "confirmationPassword" : "@Senha1",
                           "cnpj" : "10.882.594/0001-65",
                           "address": [
-                            {
+                          {
                               "nameAddress": "casa principal",
                               "cep": "35170-222",
                               "neighborhood": "neighborhood",
@@ -143,7 +141,7 @@ import java.lang.annotation.Target;
                               "number": "12",
                               "details": "details"
                             }
-                           ],
+                          ],
                           "telephone" : "(11) 1234-5678",
                           "foodCategory" : "Pizzaria",
                           "paymentMethods" : "Dinheiro, Cartão",
@@ -187,10 +185,10 @@ import java.lang.annotation.Target;
                                     "não deve estar em branco"
                                 ],
                                 "cnpj": [
-                                    "cnpj inválido"
+                                    "O campo "CNPJ" deve estar no formato XX.XXX.XXX/XXXX-XX"
                                 ],
                                 "email": [
-                                    "E-mail inválido"
+                                    "E-mail deve estar no formato: nome@dominio.co"
                                 ],
                                  "restaurantRequest": [
                                      "Senha e confirmar senha não são iguais"

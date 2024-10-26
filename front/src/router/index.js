@@ -6,6 +6,22 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/',
+      name: 'home',
+      children:[
+        {
+          path: '/restaurants',
+          name: 'restaurants',
+          component: () => import('@/views/site/Restaurants.vue'),
+        },
+        {
+          path: '/restaurant/:id',
+          name: 'restaurant internal',
+          component: () => import('@/views/site/Restaurant.vue'),
+        }
+      ]
+    },
+    {
       path: '/store',
       children: [
         {
@@ -55,6 +71,11 @@ const router = createRouter({
         },
       ],
     },
+    {
+      path: '/NotFound',
+      name: 'NotFound',
+      component: () => import('@/views/site/NotFound.vue'),
+    }
   ],
 });
 

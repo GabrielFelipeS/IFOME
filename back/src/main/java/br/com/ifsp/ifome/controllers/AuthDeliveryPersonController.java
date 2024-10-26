@@ -1,5 +1,7 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.aspect.Login;
+import br.com.ifsp.ifome.aspect.SensiveData;
 import br.com.ifsp.ifome.docs.DocsCreateDeliveryPerson;
 import br.com.ifsp.ifome.docs.DocsDeliveryLogin;
 import br.com.ifsp.ifome.dto.ApiResponse;
@@ -22,12 +24,14 @@ import java.net.URI;
 @RestController
 
 @RequestMapping("/api/auth/deliveryPerson")
-public class DeliveryPersonController {
+public class AuthDeliveryPersonController {
     private final DeliveryPersonService deliveryPersonService;
 
-    public DeliveryPersonController(DeliveryPersonService deliveryPersonService){
+    public AuthDeliveryPersonController(DeliveryPersonService deliveryPersonService){
         this.deliveryPersonService = deliveryPersonService;
     }
+
+    @SensiveData
     @DocsCreateDeliveryPerson
     @PostMapping
     public ResponseEntity<ApiResponse> create(@Valid @RequestBody DeliveryPersonRequest deliveryPersonRequest, UriComponentsBuilder ucb) throws MethodArgumentNotValidException {
@@ -41,11 +45,12 @@ public class DeliveryPersonController {
         return ResponseEntity.created(locationOfNewDeliveryPerson).body(apiResponse);
     }
 
+    @SensiveData  @Login
     @PostMapping("/login")
     @DocsDeliveryLogin
-    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest clientLogin)   {
-        LoginResponse loginResponse = deliveryPersonService.login(clientLogin);
-        ApiResponse apiResponse = new ApiResponse("success", loginResponse, "Cliente logado com sucesso");
+    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest loginRequest)   {
+        LoginResponse loginResponse = deliveryPersonService.login(loginRequest);
+        ApiResponse apiResponse = new ApiResponse("success", loginResponse, "Entregador logado com sucesso");
         return ResponseEntity.ok(apiResponse);
     }
 

@@ -4,8 +4,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 public record EmailValidatorRequest(
-    @Email(message = "E-mail inválido")
-    @NotBlank(message = "E-mail é obrigatório")
+    @NotBlank(message = "O campo \"E-mail\" é obrigatório")
+    @Email(message = "E-mail deve estar no formato: nome@dominio.com")
     String email
 ) {
 }

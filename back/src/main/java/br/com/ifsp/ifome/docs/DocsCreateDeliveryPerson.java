@@ -2,12 +2,14 @@ package br.com.ifsp.ifome.docs;
 
 
 import br.com.ifsp.ifome.dto.request.DeliveryPersonRequest;
-import br.com.ifsp.ifome.dto.request.RestaurantRequest;
+import br.com.ifsp.ifome.dto.response.RestaurantResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -248,8 +250,7 @@ import java.lang.annotation.Target;
                       "cnhNumber" : "999999999",
                       "cnhValidity": "2028-01-02",
                       "vehicleDocument" : "111456789",
-                      "address": [
-                        {
+                      "address": {
                           "nameAddress": "casa principal",
                           "cep": "35170-222",
                           "neighborhood": "neighborhood",
@@ -260,8 +261,7 @@ import java.lang.annotation.Target;
                           "number": "12",
                           "typeResidence" : "casa",
                           "details": "details"
-                        }
-                      ],
+                        },
                       "bankAccount" : {
                               "bank" : "123",
                               "agency" : "1255",
@@ -292,17 +292,17 @@ import java.lang.annotation.Target;
                                         """,
                                 value = """
                     {
-                        "nome": [],
-                        "dateOfBirth" : [],
-                        "typeOfVehicle" : [],
+                        "nome": "",
+                        "dateOfBirth" : "",
+                        "typeOfVehicle" : "",
                         "cpf": "4860867801",
                         "email" : "testeemail.com",
                         "password": "password",
                         "confirmationPassword": "password",
-                        "bankAccount": [],
-                        "address": []
+                        "bankAccount": {},
+                        "address": {},
                         "telephone" : "12345678",
-                        "plate": "DIT4987"
+                        "plate": "DIT4987",
                         "cnhNumber" : "AE54785",
                         "cnhValidity": "2021-02-01",
                         "vehicleDocument" : "1545A"
@@ -313,6 +313,137 @@ import java.lang.annotation.Target;
                 }
         )
 )
+@ApiResponses({
+    @ApiResponse(responseCode = "201", description = "Entregador criado com sucesso",
+        content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = br.com.ifsp.ifome.dto.ApiResponse.class),
+            examples =  @ExampleObject(value = """
+               {
+                     "status": "success",
+                     "data": {
+                       "id": 2,
+                       "name": "Nome entregador",
+                       "cpf": "03319735616",
+                       "email": "email@email.com",
+                       "dateOfBirth": "1999-02-01",
+                       "typeOfVehicle": "111456789",
+                       "plate": "DIT-4987",
+                       "telephone": "(11) 1234-5678",
+                       "cnhNumber": "999999999",
+                       "cnhValidity": "2028-01-02",
+                       "vehicleDocument": "111456789",
+                       "address": [
+                         {
+                           "id": 6,
+                           "nameAddress": "casa principal",
+                           "cep": "35170-222",
+                           "neighborhood": "neighborhood",
+                           "city": "Coronel Fabriciano",
+                           "state": "Minas Gerais",
+                           "address": "address",
+                           "number": "12",
+                           "complement": "complement",
+                           "details": "details",
+                           "typeResidence": "casa"
+                         }
+                       ],
+                       "bankAccount": {
+                         "bank": "123",
+                         "agency": "1255",
+                         "account": "4547-7"
+                       }
+                     },
+                     "message": "Entragador cadastrado com sucesso"
+                   }
+            """)
+        )),
+    @ApiResponse(responseCode = "400", description = "Invalid request",
+        content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = RestaurantResponse.class),
+            examples = @ExampleObject(
+                value = """
+                    {
+                       "message": "Erro ao realizar operação",
+                       "errors": {
+                         "address.typeResidence": [
+                           "O campo \\"Tipo de residência\\" é obrigatório"
+                         ],
+                         "address.cep": [
+                           "CEP inválido",
+                           "O campo \\"Cep\\" é obrigatório"
+                         ],
+                         "address.city": [
+                           "O campo \\"Cidade\\" é obrigatório"
+                         ],
+                         "address.state": [
+                           "O campo \\"Estado\\" é obrigatório"
+                         ],
+                         "address.number": [
+                           "O campo \\"Número\\" é obrigatório"
+                         ],
+                         "address.neighborhood": [
+                           "O campo \\"Bairro\\" é obrigatório"
+                         ],
+                         "dateOfBirth": [
+                           "Formato incorreto para data de nascimento",
+                           "Para cadastro no sistema, é necessário ter pelo menos 18 anos de idade.",
+                           "Para cadastro no sistema, é necessário ter no máximo 90 anos de idade.",
+                           "Data de nascimento deve estar no passado"
+                         ],
+                         "telephone": [
+                           "Telefone deve estar no formato (XX) XXXXX-XXXX"
+                         ],
+                         "plate": [
+                           "A placa deve estar no formato XXX-9999"
+                         ],
+                         "typeOfVehicle": [
+                           "Tipo do veículo inválido, tipos de veiculos aceitos: carro e moto"
+                         ],
+                         "address.complement": [
+                           "O campo \\"Complemento\\" é obrigatório"
+                         ],
+                         "address.address": [
+                           "O campo \\"Address\\" é obrigatório"
+                         ],
+                         "bankAccount.bank": [
+                           "O campo \\"Banco\\" é obrigatório"
+                         ],
+                         "password": [
+                           "Senha precisa conter pelo menos um número",
+                           "Senha precisa conter pelo menos um caractere maiúsculo",
+                           "Senha precisa conter pelo menos um caractere especial"
+                         ],
+                         "bankAccount.account": [
+                           "O campo \\"Conta\\" é obrigatório"
+                         ],
+                         "bankAccount.agency": [
+                           "O campo \\"Agência\\" é obrigatório"
+                         ],
+                         "name": [
+                           "O campo \\"Nome\\" é obrigatório"
+                         ],
+                         "address.nameAddress": [
+                           "Nome do endereço é obrigatório"
+                         ],
+                         "cnhNumber": [
+                           "O número da CNH deve conter entre 9 e 11 dígitos numéricos"
+                         ],
+                         "cpf": [
+                           "O campo \\"CPF\\" deve estar no formato: XXX.XXX.XXX-XX"
+                         ],
+                         "vehicleDocument": [
+                           "O RENAVAM deve conter entre 9 e 11 dígitos numéricos"
+                         ],
+                         "email": [
+                           "O campo \\"E-mail\\" deve estar no formato: nome@dominio.com"
+                         ],
+                         "cnhValidity": [
+                           "CNH fora da validade"
+                         ]
+                       }
+                     }
+            """)))
+})
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

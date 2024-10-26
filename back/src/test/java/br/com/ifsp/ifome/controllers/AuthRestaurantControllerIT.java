@@ -76,9 +76,9 @@ public class AuthRestaurantControllerIT {
             "@Senha1",
             "@Senha1",
             "10882594000165",
-            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
-                "12", "condominio","details")),
+                "12", "condominio","details"),
             "(11) 1234-5678",
             "Pizzaria",
             "Dinheiro, Cartão",
@@ -161,9 +161,9 @@ public class AuthRestaurantControllerIT {
             "@Senha1",
             "@Senha1",
             "58.911.612/0001-16",
-            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
-                "12", "condominio","details")),
+                "12", "condominio","details"),
             "(11) 1234-5678",
             "Pizzaria",
             "Dinheiro, Cartão",
@@ -210,9 +210,9 @@ public class AuthRestaurantControllerIT {
             "@Senha1",
             "@Senha1",
             "10.882.594/0001-65",
-            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
-                "12", "condominio","details")),
+                "12", "condominio","details"),
             "(11) 1234-5678",
             "Pizzaria",
             "Dinheiro, Cartão",
@@ -254,9 +254,9 @@ public class AuthRestaurantControllerIT {
             " ",
             " ",
             "10.882.594/0001-65",
-            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
-                "12", "condominio","details")),
+                "12", "condominio","details"),
             "(11) 1234-5678",
             "Pizzaria",
             "Dinheiro, Cartão",
@@ -306,9 +306,9 @@ public class AuthRestaurantControllerIT {
             "@Senha1",
             "@Senha1",
             "10.882.594000165",
-            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
-                "12", "condominio","details")),
+                "12", "condominio","details"),
             "(11) 1234-5678",
             "Pizzaria",
             "Dinheiro, Cartão",
@@ -338,7 +338,7 @@ public class AuthRestaurantControllerIT {
         List<String> cnpj = documentContext.read("$.errors.cnpj");
         assertThat(cnpj)
             .containsExactlyInAnyOrder(
-                "CNPJ inválido"
+                "O campo \"CNPJ\" deve estar no formato XX.XXX.XXX/XXXX-XX"
             );
     }
 
@@ -352,9 +352,9 @@ public class AuthRestaurantControllerIT {
             "@Senha1",
             "@Senha1",
             "10.882.594/0001-65",
-            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
-                "12", "condominio","details")),
+                "12", "condominio","details"),
             "(11) 1234-5678",
             "Pizzaria",
             "Dinheiro, Cartão",
@@ -385,7 +385,7 @@ public class AuthRestaurantControllerIT {
         List<String> personResponsibleCPF = documentContext.read("$.errors.personResponsibleCPF");
         assertThat(personResponsibleCPF)
             .containsExactlyInAnyOrder(
-                "CPF inválido"
+                "O campo \"CPF\" deve estar no formato: XXX.XXX.XXX-XX"
             );
     }
 
@@ -399,9 +399,9 @@ public class AuthRestaurantControllerIT {
             "@Senha1",
             "@senha",
             "10.882.594/0001-65",
-            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
-                "12", "condominio","details")),
+                "12", "condominio","details"),
             "(11) 1234-5678",
             "Pizzaria",
             "Dinheiro, Cartão",
@@ -440,9 +440,9 @@ public class AuthRestaurantControllerIT {
             "@Senha1",
             "@Senha1",
             "10.882.594/0001-65",
-            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
-                "12", "condominio","details")),
+                "12", "condominio","details"),
             "(11) 1234-5678",
             "Pizzaria",
             "Dinheiro, Cartão",
@@ -481,9 +481,9 @@ public class AuthRestaurantControllerIT {
             "@Senha1",
             "@Senha1",
             "10.882.594/0001-65",
-            List.of(new AddressRequest("35170-222", "casa 1"," ", "city", "state",
+            new AddressRequest("35170-222", "casa 1"," ", "city", "state",
                 "address", "complement",
-                "12", "condominio","details")),
+                "12", "condominio","details"),
             "(11) 1234-5678",
             "Pizzaria",
             "Dinheiro, Cartão",
@@ -521,9 +521,9 @@ public class AuthRestaurantControllerIT {
             "@Senha1",
             "@Senha1",
             "10.882.594/0001-65",
-            List.of(new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
+            new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
                 "address", "complement",
-                "12", "condominio","details")),
+                "12", "condominio","details"),
             "(11) 1234-5678",
             "Pizzaria",
             "Dinheiro, Cartão",

@@ -1,17 +1,17 @@
 <configuration>
 
     <!-- Appender para console com cores -->
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <!-- Definindo os padrões para o arquivo de log -->
+    <property name="LOG_FILE_PATH" value="logs" />
 
     <!-- Appender para logs de INFO -->
     <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/info.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/info.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>logs/%d{yyyy-MM-dd}/info.log</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -29,7 +29,7 @@
     <appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/warn.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/warn.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>logs/%d{yyyy-MM-dd}/warn.log</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -47,7 +47,7 @@
     <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/error.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>logs/%d{yyyy-MM-dd}/erro.log</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -61,12 +61,33 @@
         </filter>
     </appender>
 
+    <appender name="LOGGING_ASPECT_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/logging-aspect.log</file> <!-- Arquivo específico para INFO do LoggingAspect -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Nome do arquivo de log com a data -->
+            <fileNamePattern>logs/%d{yyyy-MM-dd}/logging-aspect.log</fileNamePattern>
+            <!-- Manter os últimos 30 dias de arquivos de log -->
+            <maxHistory>30</maxHistory>
+            <!-- O tamanho máximo do arquivo antes de fazer a rotação (opcional) -->
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Configurar o logger específico para br.com.ifsp.ifome.aspect.LoggingAspect -->
+    <logger name="br.com.ifsp.ifome.aspect.LoggingAspect" level="INFO">
+        <appender-ref ref="LOGGING_ASPECT_FILE" />
+    </logger>
+
     <!-- Root logger -->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="INFO_FILE"/>
         <appender-ref ref="WARN_FILE"/>
         <appender-ref ref="ERROR_FILE"/>
+        <appender-ref ref="LOGGING_ASPECT_FILE"/>
     </root>
 
 </configuration>

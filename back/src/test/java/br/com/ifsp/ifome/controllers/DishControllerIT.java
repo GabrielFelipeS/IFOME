@@ -2,14 +2,18 @@ package br.com.ifsp.ifome.controllers;
 
 
 import br.com.ifsp.ifome.dto.request.DishRequest;
+import br.com.ifsp.ifome.dto.response.DishResponse;
+import br.com.ifsp.ifome.services.TokenService;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.LinkedMultiValueMap;
@@ -24,6 +28,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DishControllerIT {
     @Autowired
     private TestRestTemplate testRestTemplate;
+
+    @Autowired
+    private TokenService tokenService;
+
+    private String token;
+
+    @BeforeEach
+    public void setUp() {
+        this.token = tokenService.generateToken("email1@email.com", List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
+    }
 
     @Test
     @DirtiesContext
@@ -50,26 +64,26 @@ public class DishControllerIT {
         // Definir os headers da requisição
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
+        headers.set("Authorization", "Bearer " + token);
         // Criar a entidade Http com o body e os headers
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
-                ("/api/auth/dish",
+                ("/api/dish",
                         requestEntity, String.class);
         System.out.println(response.getBody());
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         DocumentContext document = JsonPath.parse(response.getBody());
 
-        Number id = document.read("$.id");
-        String name = document.read("$.name");
-        String description = document.read("$.description");
-        Number price = document.read("$.price");
-        String dishCategory = document.read("$.dishCategory");
-        String dishImage = document.read("$.dishImage");
-        String availability = document.read("$.availability");
+        Number id = document.read("$.data.id");
+        String name = document.read("$.data.name");
+        String description = document.read("$.data.description");
+        Number price = document.read("$.data.price");
+        String dishCategory = document.read("$.data.dishCategory");
+        String dishImage = document.read("$.data.dishImage");
+        String availability = document.read("$.data.availability");
 
 
         assertThat(id).isNotNull();
@@ -103,13 +117,13 @@ public class DishControllerIT {
         // Definir os headers da requisição
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
+        headers.set("Authorization", "Bearer " + token);
         // Criar a entidade Http com o body e os headers
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
-                ("/api/auth/dish",
+                ("/api/dish",
                         requestEntity, String.class);
         System.out.println(response.getBody());
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -150,13 +164,13 @@ public class DishControllerIT {
         // Definir os headers da requisição
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
+        headers.set("Authorization", "Bearer " + token);
         // Criar a entidade Http com o body e os headers
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
-                ("/api/auth/dish",
+                ("/api/dish",
                         requestEntity, String.class);
         System.out.println(response.getBody());
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -197,13 +211,13 @@ public class DishControllerIT {
         // Definir os headers da requisição
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
+        headers.set("Authorization", "Bearer " + token);
         // Criar a entidade Http com o body e os headers
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
-                ("/api/auth/dish",
+                ("/api/dish",
                         requestEntity, String.class);
         System.out.println(response.getBody());
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -215,7 +229,7 @@ public class DishControllerIT {
         List<String> nameErrors = documentContext.read("$.errors.name");
         assertThat(nameErrors)
                 .containsExactlyInAnyOrder(
-                        "O nome do prato é obrigatório"
+                        "O campo \"Nome do prato\" é obrigatório"
                 );
     }
 
@@ -244,13 +258,13 @@ public class DishControllerIT {
         // Definir os headers da requisição
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
+        headers.set("Authorization", "Bearer " + token);
         // Criar a entidade Http com o body e os headers
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
-                ("/api/auth/dish",
+                ("/api/dish",
                         requestEntity, String.class);
         System.out.println(response.getBody());
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -262,7 +276,7 @@ public class DishControllerIT {
         List<String> dishCategoryErrors = documentContext.read("$.errors.dishCategory");
         assertThat(dishCategoryErrors)
                 .containsExactlyInAnyOrder(
-                        "A categoria do prato é obrigatória"
+                        "O campo \"Categoria\" é obrigatória"
                 );
     }
 
@@ -291,13 +305,13 @@ public class DishControllerIT {
         // Definir os headers da requisição
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
+        headers.set("Authorization", "Bearer " + token);
         // Criar a entidade Http com o body e os headers
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
-                ("/api/auth/dish",
+                ("/api/dish",
                         requestEntity, String.class);
         System.out.println(response.getBody());
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -309,10 +323,58 @@ public class DishControllerIT {
         List<String> descriptionErrors = documentContext.read("$.errors.description");
         assertThat(descriptionErrors)
                 .containsExactlyInAnyOrder(
-                        "A descrição do prato é obrigatória"
+                        "O campo \"Descrição\" é obrigatória"
                 );
     }
 
+    @Test
+    public void shouldBeReturnAllAvailableDish() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/dish/all", HttpMethod.GET, requestEntity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        int size = documentContext.read("$.data.length()");
+
+        assertThat(size).isEqualTo(7);
+    }
+
+
+
+    @Test
+    public void shouldBeReturnAllAvailableDishWithPagination() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/dish/?page=0&size=1", HttpMethod.GET, requestEntity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        int size = documentContext.read("$.data.content.length()");
+        assertThat(size).isEqualTo(1);
+    }
+
+    @Test
+    public void shouldBeReturnAllAvailableDishById1() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/dish/1", HttpMethod.GET, requestEntity, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        int size = documentContext.read("$.data.length()");
+
+        assertThat(size).isEqualTo(3);
+    }
 
 }
 
