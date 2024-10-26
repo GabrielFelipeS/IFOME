@@ -52,6 +52,9 @@
                     placeholder="Busque nome" v-model="query" @keyup.enter="searchForm" />
             </div>
         </div>
+		<div class="px-5 md:grid grid-cols-3 gap-4">
+			<DishCard v-for="dish in dishes" :dish="dish"/>
+		</div>
     </main>
     <FooterMobile />
 </template>
@@ -59,6 +62,7 @@
 <script setup>
 import Header from '@/components/site/Header.vue';
 import FooterMobile from '@/components/site/FooterMobile.vue';
+import DishCard from "@/components/store/dish/DishCard.vue";
 import { useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
@@ -71,9 +75,11 @@ const imageUrl = ref('');
 const restaurant = ref(null);
 const error = ref(null);
 
+const dishes = ref(null);
+
 const headers = {
     'Content-Type': 'application/json',
-    'Authorization': localStorage.getItem('token') || `Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJhcGlfaWZvbWUiLCJzdWIiOiJlbWFpbDFAZW1haWwuY29tIiwiZXhwIjoxNzM0Njk4OTYyLCJpYXQiOjE3Mjk0MzkzNjIsImF1dGhvcml0aWVzIjpbIkNMSUVOVF9ERUxFVEUiLCJDTElFTlRfVVBEQVRFIiwiQ0xJRU5UX1JFQUQiLCJDTElFTlRfQ1JFQVRFIiwiUk9MRV9DTElFTlQiXX0.pYwaOGen8eFhZaNFAIbAz04UJAgziAh4Zf7CWD0gjTJ1Np1Agorv6jIUOY3IYIGUIE6VTDcs87Y1VGTQAaodNcLn10m6AffBXZAaDyHAEujIyn9PolIe4VlO9AMcctju_D3NRI437x-t_W4_tv3rjDhzb6EcoZQ0Fl6TpcYNKbX4f7qi0C5jlviFfOLHj3oh66f8sF1SGM65LgldN4-kHramMtLkXZB7xu_6yEkQi1JTvSr2nOjg2MS04JMKX5Jk9MKZBf6Y2_NV7T4hngj1A9bCeIolI4m4RP4BX17__C08WGLKuvUCNB2kKs8zyQ-ay1ZbiTp7y8flhJLV4SUXMg`
+    'Authorization': 'Bearer ' + localStorage.getItem('token'),
 };
 
 const fetchRestaurantData = async () => {
@@ -84,6 +90,7 @@ const fetchRestaurantData = async () => {
             return;
         }
         restaurant.value = response.data.data;
+		dishes.value = restaurant.value.dish;
         imageUrl.value = `${import.meta.env.VITE_API_URL}image/${restaurant.value.restaurantImage}`;
     } catch (err) {
         router.push({ name: 'NotFound' });
