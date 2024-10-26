@@ -2,6 +2,11 @@ services:
   api:
     container_name: api_spring
     build: ./back/
+    env_file:
+     - ./back/.env
     ports:
       - "80:8080"
+    volumes:
+      - "./back/src/main/resources/static/images:/app/src/main/resources/static/images"
+      - "./back/logs:/logs"
     restart: "always"
