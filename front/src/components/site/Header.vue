@@ -18,8 +18,8 @@
         <div class="flex-row hidden md:flex">
             <v-icon name="fa-shopping-bag" scale="1.5" class="text-primary cursor-pointer" />
             <div class="flex flex-col">
-                <p class="text-xs text-tertiary-light">R$ 00,00</p>
-                <p class="text-xs text-tertiary-light">0 Items</p>
+                <p class="text-xs text-tertiary-light">R$ {{ cart.totalPrice.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</p>
+                <p class="text-xs text-tertiary-light">{{ cart.totalItems }} Itens</p>
             </div>
         </div>
         <div class="hidden md:block">
@@ -30,6 +30,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useCart } from "@/stores/cart.js";
 
 const emit = defineEmits(['search'])
 
@@ -40,4 +41,6 @@ function searchForm() {
         emit('search', query.value)
     }
 }
+
+const cart = useCart();
 </script>

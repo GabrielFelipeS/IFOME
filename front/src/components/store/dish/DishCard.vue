@@ -30,7 +30,7 @@ const imgUrl = ref(`${import.meta.env.VITE_API_URL}image/${props.dish.dishImage}
 			</div>
 			<div class="footer">
 				<div class="inline-flex">
-					{{ footerLead }}{{ dish.price }}
+					{{ footerLead }}{{ dish.price.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}
 				</div>
 			</div>
 		</div>
