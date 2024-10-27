@@ -15,7 +15,7 @@
             </div>
 
             <div
-                class="w-full flex flex-row md:flex-row items-center p-4 rounded-t-lg bg-white mt-[-45px] md:mt-5 relative z-50">
+                class="w-full flex flex-row md:flex-row items-center p-4 rounded-t-lg bg-white mt-[-45px] md:mt-5 relative z-20">
                 <img :src="imageUrl || '../../assets/img/logo_header_clean.png'" alt="Logo do Restaurante"
                     class="w-20 h-20 object-cover rounded-full" />
 
@@ -56,6 +56,7 @@
 			<DishCard v-for="dish in dishes" :dish="dish"/>
 		</div>
     </main>
+	<DishModal />
     <FooterMobile />
 </template>
 
@@ -67,6 +68,7 @@ import { useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import router from '@/router';
+import DishModal from "@/components/store/dish/DishModal.vue";
 
 const route = useRoute();
 const restaurantId = route.params.id;
