@@ -25,7 +25,7 @@ public class CustomerOrder {
     private Double orderPrice;
 
     @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderInfo> orderInfo = new ArrayList<>();
+    private List<OrderInfo> orderInfo;
 
     private String paymentStatus;
 
@@ -47,7 +47,7 @@ public class CustomerOrder {
     public CustomerOrder(Cart cart, LocalDateTime orderDate, Double orderPrice,
                          Restaurant restaurant, DeliveryPerson deliveryPerson, OrderStatus status, String paymentStatus)
     {
-        this(null, orderPrice, List.of(), paymentStatus, cart, restaurant, deliveryPerson, orderDate);
+        this(null, orderPrice,  new ArrayList<>(), paymentStatus, cart, restaurant, deliveryPerson, orderDate);
         this.nextStatus();
     }
 
@@ -55,7 +55,7 @@ public class CustomerOrder {
         this(
             null,
             cart.totalPrice(),
-            List.of(),
+            new ArrayList<>(),
             "PENDENTE",
             cart,
             restaurant,
@@ -94,23 +94,27 @@ public class CustomerOrder {
     public OrderStatus nextStatus() {
         List<OrderStatus> validSequence = List.of(
             OrderStatus.NOVO,
-            OrderStatus.ACEITO,
             OrderStatus.EM_PREPARO,
             OrderStatus.PRONTO_PARA_ENTREGA,
             OrderStatus.SAIU_PARA_ENTREGA,
             OrderStatus.CONCLUIDO
         );
-        int size = orderInfo.size();
 
+        int size = orderInfo.size();
         if(size == OrderStatus.values().length) {
             return OrderStatus.CONCLUIDO;
         }
 
-        System.err.println( OrderStatus.values());
-
+        System.err.println(OrderStatus.values());
         OrderStatus value = OrderStatus.values()[size];
-        orderInfo.add(new OrderInfo(null, value, LocalDateTime.now(), this));
-
+        var newOrderInfo = new OrderInfo(value, LocalDateTime.now(), this);
+        System.err.println(size);
+        System.err.println(value);
+        System.err.println(newOrderInfo);
+        System.err.println(orderInfo);
+        System.err.println("ANTES DO ADD");
+        orderInfo.add(newOrderInfo);
+        System.err.println("DEPOIS DO ADD");
         return value;
     }
 
