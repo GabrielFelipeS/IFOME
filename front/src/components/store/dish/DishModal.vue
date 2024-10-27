@@ -5,7 +5,7 @@
 <template>
 	<div class="main">
 		<div class="img-container">
-			<button class="self-start text-tertiary-light hidden md:flex"><v-icon name="fa-times" scale="1.5" /></button>
+			<button class="close-btn"><v-icon name="fa-times" scale="1.5" /></button>
 			<img src="https://placehold.co/100" alt="Prato" class="image">
 		</div>
 		<div class="px-2 md:flex md:flex-col md:justify-between md:py-3 md:min-w-[120%] md:-translate-x-[17%]">
@@ -41,20 +41,23 @@
 		@apply flex flex-col justify-start mt-4 p-3 z-30;
 		@apply min-h-screen w-full mt-10 border shadow rounded-xl bg-white;
 		@apply fixed inset-0 mb-[91px] overflow-y-scroll;
+		@apply scroll-m-0;
 
 		@apply md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2;
 		@apply md:max-w-[1000px] md:min-h-0 md:max-h-[650px] md:h-fit;
 		@apply md:grid md:grid-cols-2 md:overflow-hidden md:shadow-2xl;
+
+		@apply no-scrollbar;
 	}
 	.img-container {
-		@apply flex flex-row justify-between items-center align-baseline p-3 w-full;
+		@apply flex flex-col justify-start items-center align-baseline p-3 w-full;
 
 		@apply md:flex-col md:justify-start md:w-[78%] md:h-fit;
 	}
 	.image {
-		@apply max-h-full max-w-full min-h-full min-w-full rounded-md;
+		@apply max-h-full max-w-full min-h-0 min-w-full rounded-md h-fit mt-10;
 
-		@apply md:min-h-0 md:mt-4;
+		@apply md:mt-8;
 	}
 	.dish-description {
 		@apply flex flex-col justify-between items-start align-baseline w-full gap-2;
@@ -90,5 +93,11 @@
 		@apply transition duration-300 ease-in-out;
 
 		@apply md:px-10;
+	}
+	.close-btn {
+		@apply self-end text-tertiary-light fixed bg-white rounded-2xl border border-tertiary-light;
+		@apply -translate-y-3 translate-x-3;
+
+		@apply md:self-start md:flex md:bg-transparent md:border-none md:rounded-none md:translate-x-0 md:translate-y-0;
 	}
 </style>
