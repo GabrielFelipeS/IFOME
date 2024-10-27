@@ -93,6 +93,7 @@ const addToCart = async () => {
 		@apply md:grid md:grid-cols-2 md:shadow-2xl md:gap-y-0;
 		@apply lg:max-w-[1000px] lg:overflow-hidden lg:max-h-fit;
 
+		@apply animate-fade animate-duration-300 animate-ease-in-out;
 		@apply no-scrollbar;
 	}
 	.img-container {
