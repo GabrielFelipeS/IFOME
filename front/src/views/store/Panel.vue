@@ -12,7 +12,7 @@
                 <OrderStatus />
             </div>
 
-            <div class="h-[100vh] w-[calc(100vw_-_450px)] flex flex-col items-center justify-center">
+            <div class="h-[100vh] w-[calc(100vw_-_450px)] flex flex-col items-center justify-center" v-if="!order">
                 <h1 class="text-3xl text-tertiary-subtle">
                     Selecione um pedido para visualizar detalhes
                 </h1>
@@ -34,5 +34,5 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-const order = ref(null);
+const order = ref(true);
 </script>
