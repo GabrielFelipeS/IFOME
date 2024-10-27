@@ -26,4 +26,11 @@ public class OrderInfo {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_order")
     private CustomerOrder customerOrder;
+
+    public OrderInfo(OrderStatus orderStatus, LocalDateTime localDateTime, CustomerOrder customerOrder) {
+        this.orderStatus = orderStatus;
+        this.localDateTime = localDateTime;
+        this.customerOrder = customerOrder;
+        System.err.println("TESTE");
+    }
 }
