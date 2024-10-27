@@ -2,6 +2,7 @@ package br.com.ifsp.ifome.services;
 
 import br.com.ifsp.ifome.entities.CustomerOrder;
 import br.com.ifsp.ifome.events.PedidoStatusChangedEvent;
+import com.pusher.rest.Pusher;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,8 @@ import org.yaml.snakeyaml.emitter.EmitterException;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +24,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class EventStatusEmitterService {
     private final ApplicationEventPublisher eventPublisher;
     private final Map<Long, List<SseEmitter>> sseEmitterHashMap;
+    private final Pusher pusher;
 
-    public EventStatusEmitterService(ApplicationEventPublisher eventPublisher) {
+    public EventStatusEmitterService(ApplicationEventPublisher eventPublisher, Pusher pusher) {
         this.eventPublisher = eventPublisher;
+        this.pusher = pusher;
         this.sseEmitterHashMap = new ConcurrentHashMap<>();
     }
 
@@ -80,17 +85,21 @@ public class EventStatusEmitterService {
 
     @Async
     public void updateStatusEmitter(CustomerOrder customerOrder)  {
-        System.err.println("ANTES DE ENVIAR MENSAGEM EMAIL");
-        eventPublisher.publishEvent(new PedidoStatusChangedEvent(customerOrder.getId(), customerOrder.getStatus(), customerOrder));
-        System.err.println("DEPOIS DE ENVIAR MENSAGEM EMAIL");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
 
-        System.err.println("PEGANDO EMITTER");
-        List<SseEmitter> sseEmitters = this.getEmitters(customerOrder);
-        System.err.println(sseEmitters);
-
-        for (SseEmitter emitter : sseEmitters) {
-            this.send(emitter, customerOrder);
-        }
+//        String formatTime = customerOrder.getOrderDate().format(dateTimeFormatter);
+        System.err.println(customerOrder.getOrderDate());
+//        System.err.println(formatTime);
+        System.err.println("ANTES DE EXECUTAR O PUSHER");
+        pusher.trigger(
+            customerOrder.getId().toString(),
+            "update_status",
+            Map.of(
+                "status", customerOrder.getStatus(),
+                "time", customerOrder.getOrderDate()
+            )
+        );
+        System.err.println("DEPOIS DE EXECUTAR O PUSHER");
     }
 
     private void send(SseEmitter emitter, CustomerOrder customerOrder) {

@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
@@ -84,4 +85,12 @@ public class CustomerOrder {
                 .replaceAll("_", " ");
     }
 
+    public String getOrderDate() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
+           return this.orderDate.format(dateTimeFormatter);
+    }
+
+    public Address getAddress() {
+        return this.cart.getClient().getAddress().get(0);
+    }
 }
