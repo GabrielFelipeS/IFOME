@@ -32,6 +32,7 @@
 import {onMounted, ref} from 'vue'
 import { useCart } from "@/stores/cart.js";
 import api from "@/services/api.js";
+import {useToast} from "vue-toast-notification";
 
 const emit = defineEmits(['search'])
 
@@ -44,11 +45,19 @@ function searchForm() {
 }
 
 const cart = useCart();
+const toat = useToast();
 
 const updateCart = async () => {
-	const response = await api.get('client/cart');
-	const order = response.data.data;
-	cart.updateCart(order);
+	if (localStorage.getItem('token') !== null) {
+		try {
+			const response = await api.get('client/cart');
+			const order = response.data.data;
+			cart.updateCart(order);
+		} catch (e) {
+			console.log("Erro ao carregar carrinho: " + e);
+			toast.error(e.data.message);
+		}
+	}
 }
 
 onMounted(() => {
