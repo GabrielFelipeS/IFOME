@@ -32,7 +32,7 @@ const addToCart = async () => {
 	};
 
 	try {
-		const response = await api.post('client/cart', JSON.stringify(payload));
+		const response = await api.post('client/cart/dish/', JSON.stringify(payload));
 		const order = response.data.data;
 		cart.updateCart(order);
 		const message = response.data.message;
