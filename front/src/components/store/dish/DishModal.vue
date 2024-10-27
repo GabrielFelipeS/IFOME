@@ -1,6 +1,17 @@
 <script setup>
 
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
+import { getImage } from "@/services/getImage.js";
+
+const emit = defineEmits(['close-dish-modal']);
+const props = defineProps({
+	dish: {
+		type: Object,
+	},
+	restaurant: {
+		type: Object,
+	}
+})
 
 const count = ref(1);
 const plusCount = () => {if (count.value < 99)count.value++}
@@ -10,17 +21,18 @@ const minusCount = () => {if (count.value > 1)count.value--}
 <template>
 	<div class="main">
 		<div class="img-container">
-			<button class="close-btn"><v-icon name="fa-times" scale="1.5" /></button>
-			<img src="https://placehold.co/100" alt="Prato" class="image">
+			<button class="close-btn" @click="emit('close-dish-modal')"><v-icon name="fa-times" scale="1.5" /></button>
+			<img :src="getImage(dish.dishImage)" alt="Prato" class="image">
 		</div>
-		<div class="px-2 md:flex md:flex-col md:justify-between md:py-3 md:min-w-[120%] md:-translate-x-[17%]">
+		<div class="px-2 w-full
+			md:flex md:flex-col md:max-h-[90%] md:justify-between md:py-3 md:pt-5 md:min-w-[120%] md:-translate-x-[17%]">
 			<div class="dish-description">
-				<span class="uppercase font-semibold">Tacos</span>
-				<span class="text-xs text-tertiary-light line-clamp-3 md:line-clamp-none">Criação de sistema de cadastro de pratos para restaurantes já cadastrados.Criação de sistema de cadastro de pratos para restaurantes já cadastrados.Criação de sistema de cadastro de pratos para restaurantes já cadastrados.Criação de sistema de cadastro de pratos para restaurantes já cadastrados.Criação de sistema de cadastro de pratos para restaurantes já cadastrados.</span>
-				<span class="uppercase text-green-500 font-semibold">R$ 30,00</span>
+				<span class="uppercase font-semibold">{{ dish.name }}</span>
+				<span class="text-xs text-tertiary-light line-clamp-3 md:line-clamp-none">{{ dish.description }}</span>
+				<span class="uppercase text-green-500 font-semibold">R$ {{ dish.price }}</span>
 			</div>
 			<div class="restaurant-description">
-				<span class="font-semibold md:mb-2">Antojitos <v-icon name="fa-store"/></span>
+				<span class="font-semibold md:mb-2">{{ restaurant.nameRestaurant }} <v-icon name="fa-store"/></span>
 				<hr>
 				<span class="self-end md:w-full md:self-start md:mt-2">80 a 90 Minutos</span>
 			</div>
@@ -49,19 +61,20 @@ const minusCount = () => {if (count.value > 1)count.value--}
 		@apply scroll-m-0;
 
 		@apply md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2;
-		@apply md:min-h-0 md:max-h-[75%] md:max-w-[90%] md:h-fit;
-		@apply md:grid md:grid-cols-2 md:shadow-2xl;
-		@apply lg:max-w-[1000px] lg:overflow-hidden;
+		@apply md:min-h-fit md:max-h-[75%] md:max-w-[90%] md:h-fit;
+		@apply md:grid md:grid-cols-2 md:shadow-2xl md:gap-y-0;
+		@apply lg:max-w-[1000px] lg:overflow-hidden lg:max-h-fit;
 
 		@apply no-scrollbar;
 	}
 	.img-container {
-		@apply flex flex-col justify-start items-center align-baseline p-3 w-full;
+		@apply flex flex-col justify-start items-center align-baseline p-3 w-full min-h-[40%] max-h-[50%] aspect-square;
+		@apply rounded-md;
 
-		@apply md:flex-col md:justify-start md:w-[78%] md:h-fit;
+		@apply md:flex-col md:justify-start md:w-[78%] md:max-h-[90%] md:pb-0;
 	}
 	.image {
-		@apply max-h-full max-w-full min-h-0 min-w-full rounded-md h-fit;
+		@apply rounded-md max-w-[80%] aspect-square h-auto object-fill min-w-full min-h-full;
 
 		@apply md:mt-8;
 	}

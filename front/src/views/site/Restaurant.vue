@@ -53,10 +53,18 @@
             </div>
         </div>
 		<div class="px-5 lg:grid grid-cols-3 gap-4 gap-y-0.5 mb-[91px]">
-			<DishCard v-for="dish in dishes" :dish="dish"/>
+			<DishCard
+				v-for="dish in dishes" :key="dish.id"
+				@click="selectedDish = dish"
+				:dish="dish"
+			/>
 		</div>
     </main>
-	<DishModal />
+	<DishModal
+		v-if="selectedDish !== null"
+		:dish="selectedDish" :restaurant="restaurant"
+		@close-dish-modal="selectedDish = null"
+	/>
     <FooterMobile />
 </template>
 
@@ -78,6 +86,7 @@ const restaurant = ref(null);
 const error = ref(null);
 
 const dishes = ref(null);
+const selectedDish = ref(null);
 
 const headers = {
     'Content-Type': 'application/json',
