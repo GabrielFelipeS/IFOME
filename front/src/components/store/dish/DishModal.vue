@@ -2,8 +2,9 @@
 
 import {onMounted, ref} from "vue";
 import { getImage } from "@/services/getImage.js";
+import api from "@/services/api.js";
 
-const emit = defineEmits(['close-dish-modal']);
+const emit = defineEmits(['close-dish-modal', 'add-to-cart']);
 const props = defineProps({
 	dish: {
 		type: Object,
@@ -14,8 +15,25 @@ const props = defineProps({
 })
 
 const count = ref(1);
+const details = ref('');
 const plusCount = () => {if (count.value < 99)count.value++}
 const minusCount = () => {if (count.value > 1)count.value--}
+
+const addToCart = async () => {
+	let payload = {
+		dishId: props.dish.id,
+		quantity: count.value,
+		detail: details.value,
+	};
+
+	try {
+		const response = await api.post('client/cart', JSON.stringify(payload));
+		console.log(response);
+	} catch (error) {
+		console.error('Error adding to cart:', error);
+	}
+};
+
 </script>
 
 <template>
@@ -38,7 +56,9 @@ const minusCount = () => {if (count.value > 1)count.value--}
 			</div>
 			<div class="observations">
 				<label>Observações:</label>
-				<textarea class="border border-soft-border rounded-md h-24 resize-none text-xs px-1"></textarea>
+				<textarea class="border border-soft-border rounded-md h-24 resize-none text-xs px-1"
+					v-model="details"
+				></textarea>
 			</div>
 		</div>
 		<div class="hidden md:flex"></div>
@@ -48,7 +68,7 @@ const minusCount = () => {if (count.value > 1)count.value--}
 				<input class="mx-3 text-black text-center max-w-5 h-full" v-model="count" disabled>
 				<button @click="minusCount"><v-icon name="fa-minus" /></button>
 			</div>
-			<button class="btn">Adicionar <v-icon name="fa-chevron-right"/></button>
+			<button @click='addToCart' class="btn">Adicionar <v-icon name="fa-chevron-right"/></button>
 		</div>
 	</div>
 </template>
