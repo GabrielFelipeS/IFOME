@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.services;
 
+import br.com.ifsp.ifome.infra.WebConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,20 +13,18 @@ import java.util.Random;
 @Service
 public class FileStorageService {
 
-    private final String PATH_TO_FOLDER_IMAGES = System.getProperty("user.dir") + "/src/main/resources/static/images/";
-
     public String storeFile(String cnpj, MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             throw new IOException("File is empty");
         }
 
-        File directory = new File(PATH_TO_FOLDER_IMAGES);
+        File directory = new File(WebConfig.PATH_TO_FOLDER_IMAGES);
         if (!directory.exists()) {
             directory.mkdirs(); // Cria o diretório
         }
 
         String newName = this.refactoreName(file.getOriginalFilename());
-        File uploadedFile = new File( PATH_TO_FOLDER_IMAGES  + "/" + newName);
+        File uploadedFile = new File( WebConfig.PATH_TO_FOLDER_IMAGES  + "/" + newName);
 
         file.transferTo(uploadedFile);
         return uploadedFile.getName(); // Retorna o caminho absoluto do arquivo salvo

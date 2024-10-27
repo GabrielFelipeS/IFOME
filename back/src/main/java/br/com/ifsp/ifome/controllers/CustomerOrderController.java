@@ -102,11 +102,11 @@ public class CustomerOrderController {
         security = @SecurityRequirement(name = "Bearer Token")
     )
 
-    @PutMapping("/updateStatus")
+    @PutMapping("/updateStatus/{customerOrderId}")
     @DocUpdateCustomerOrderStatus
-    public ResponseEntity<ApiResponse> updateOrderStatus(@RequestBody UpdateOrderStatusRequest request) {
+    public ResponseEntity<ApiResponse> updateOrderStatus(@RequestBody Long customerOrderId) {
         try {
-            customerOrderService.updateOrderStatus(request.customerOrderId());
+            customerOrderService.updateOrderStatus(customerOrderId);
             return ResponseEntity.ok(new ApiResponse("success", null, "Status atualizado com sucesso!"));
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(new ApiResponse("error", null, e.getMessage()));

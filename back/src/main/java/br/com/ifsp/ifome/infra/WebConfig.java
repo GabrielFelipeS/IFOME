@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    private final String PATH_TO_FOLDER_IMAGES = System.getProperty("user.dir") + "/src/main/resources/static/images/";
+    public static final String PATH_TO_FOLDER_IMAGES = System.getProperty("user.dir") + "/src/main/resources/static/images/";
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
