@@ -35,7 +35,7 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/cart")
+    @PostMapping("/cart/dish/")
     @DocsInsertOrderItemInCart
     public ResponseEntity<ApiResponse> addDishInCart(@RequestBody @Valid OrderItemRequest orderItemRequest, Principal principal) {
         CartResponse cartResponse = clientService.addDishCart(orderItemRequest, principal.getName());
@@ -45,7 +45,7 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("/cart")
+    @PutMapping("/cart/dish/")
     @DocsUpdateItemInCart
     public ResponseEntity<ApiResponse> updateQuantityOrderItemInCart(@RequestBody @Valid OrderItemUpdateRequest orderItemRequest, Principal principal) {
         clientService.updateQuantityOrderItemInCart(orderItemRequest, principal.getName());
