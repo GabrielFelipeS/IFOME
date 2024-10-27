@@ -44,8 +44,9 @@
 		@apply scroll-m-0;
 
 		@apply md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2;
-		@apply md:max-w-[1000px] md:min-h-0 md:max-h-[650px] md:h-fit;
-		@apply md:grid md:grid-cols-2 md:overflow-hidden md:shadow-2xl;
+		@apply md:min-h-0 md:max-h-[75%] md:max-w-[90%] md:h-fit;
+		@apply md:grid md:grid-cols-2 md:shadow-2xl;
+		@apply lg:max-w-[1000px] lg:overflow-hidden;
 
 		@apply no-scrollbar;
 	}
@@ -55,7 +56,7 @@
 		@apply md:flex-col md:justify-start md:w-[78%] md:h-fit;
 	}
 	.image {
-		@apply max-h-full max-w-full min-h-0 min-w-full rounded-md h-fit mt-10;
+		@apply max-h-full max-w-full min-h-0 min-w-full rounded-md h-fit;
 
 		@apply md:mt-8;
 	}
@@ -95,7 +96,7 @@
 		@apply md:px-10;
 	}
 	.close-btn {
-		@apply self-end text-tertiary-light fixed bg-white rounded-2xl border border-tertiary-light;
+		@apply self-end text-tertiary-light fixed bg-white rounded-3xl border border-tertiary-light p-0.5;
 		@apply -translate-y-3 translate-x-3;
 
 		@apply md:self-start md:flex md:bg-transparent md:border-none md:rounded-none md:translate-x-0 md:translate-y-0;
