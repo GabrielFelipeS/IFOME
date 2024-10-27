@@ -90,6 +90,7 @@ public class RestaurantController {
     )
     @GetMapping("/orders")
     public ResponseEntity<ApiResponse> getMapping(Principal principal) {
+        // TODO refactor method
         System.err.println(principal.getName());
         Optional<Restaurant> restaurantOpt = restaurantRepository.findByEmail(principal.getName());
 
