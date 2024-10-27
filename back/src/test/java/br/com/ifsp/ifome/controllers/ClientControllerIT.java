@@ -89,7 +89,7 @@ public class ClientControllerIT {
         DocumentContext documentContextFirst = JsonPath.parse(responseFirst.getBody());
         Integer quantityFirst = documentContextFirst.read("$.data.orderItems[0].quantity");
         Double unitPriceFirst = documentContextFirst.read("$.data.orderItems[0].unitPrice");
-        Double totalPriceFirst = documentContextFirst.read("$.data.totalprice");
+        Double totalPriceFirst = documentContextFirst.read("$.data.totalPrice");
 
         assertThat(quantityFirst).isEqualTo(2);
         assertThat((quantityFirst * unitPriceFirst)).isEqualTo(totalPriceFirst);
@@ -107,7 +107,7 @@ public class ClientControllerIT {
         List<OrderItem> orderItems = documentContextSecond.read("$.data.orderItems");
         Integer quantitySecond = documentContextSecond.read("$.data.orderItems[0].quantity");
         Double unitPriceSecond = documentContextSecond.read("$.data.orderItems[0].unitPrice");
-        Double  totalPriceSecond = documentContextSecond.read("$.data.totalprice");
+        Double  totalPriceSecond = documentContextSecond.read("$.data.totalPrice");
 
         assertThat(orderItems).isNotNull().isNotEmpty();
         assertThat(orderItems.size()).isEqualTo(1);

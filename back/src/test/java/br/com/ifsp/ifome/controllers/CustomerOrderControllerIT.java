@@ -186,7 +186,6 @@ public class CustomerOrderControllerIT {
         Long orderId = order.getId(); // Obtenha o ID do pedido criado
 
         // Atualizar e verificar a sequência de status
-        updateOrderStatusAndPrint(orderId, OrderStatus.ACEITO);
         updateOrderStatusAndPrint(orderId, OrderStatus.EM_PREPARO);
         updateOrderStatusAndPrint(orderId, OrderStatus.PRONTO_PARA_ENTREGA);
         updateOrderStatusAndPrint(orderId, OrderStatus.SAIU_PARA_ENTREGA);

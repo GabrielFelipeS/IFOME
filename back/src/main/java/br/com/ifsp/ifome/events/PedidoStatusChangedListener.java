@@ -64,11 +64,6 @@ public class PedidoStatusChangedListener  {
                 "Ta faltando mensagem para novo",
                 "mensagem boa");
 
-            case ACEITO -> new EmailSentPedidoStatus(
-                email,
-                "Ta faltando mensagem para novo",
-                "mensagem boa");
-
             case EM_PREPARO -> new EmailSentPedidoStatus(
                 email,
                 "está sendo praparado!",

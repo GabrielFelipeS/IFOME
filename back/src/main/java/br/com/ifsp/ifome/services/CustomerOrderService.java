@@ -95,7 +95,6 @@ public class CustomerOrderService {
     private OrderStatus getNextStatus(OrderStatus currentStatus) {
         List<OrderStatus> validSequence = List.of(
             OrderStatus.NOVO,
-            OrderStatus.ACEITO,
             OrderStatus.EM_PREPARO,
             OrderStatus.PRONTO_PARA_ENTREGA,
             OrderStatus.SAIU_PARA_ENTREGA,
