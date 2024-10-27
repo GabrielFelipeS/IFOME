@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@trevoreyre/autocomplete-vue": "^3.0.3",
     "axios": "^1.7.7",
     "oh-vue-icons": "^1.0.0-rc3",
     "pinia": "^2.1.7",
