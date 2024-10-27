@@ -1,5 +1,10 @@
 <script setup>
 
+import {ref} from "vue";
+
+const count = ref(1);
+const plusCount = () => {if (count.value < 99)count.value++}
+const minusCount = () => {if (count.value > 1)count.value--}
 </script>
 
 <template>
@@ -27,9 +32,9 @@
 		<div class="hidden md:flex"></div>
 		<div class="button-container">
 			<div class="btn-group">
-				<button><v-icon name="fa-plus" /></button>
-				<span class="mx-3 text-black">1</span>
-				<button><v-icon name="fa-minus" /></button>
+				<button @click="plusCount"><v-icon name="fa-plus" /></button>
+				<input class="mx-3 text-black text-center max-w-5 h-full" v-model="count" disabled>
+				<button @click="minusCount"><v-icon name="fa-minus" /></button>
 			</div>
 			<button class="btn">Adicionar <v-icon name="fa-chevron-right"/></button>
 		</div>
