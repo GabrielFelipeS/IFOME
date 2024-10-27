@@ -1,14 +1,16 @@
 import {defineStore} from "pinia";
-import {computed, ref} from "vue";
+import {ref} from "vue";
 
 export const useCart = defineStore("cart", () => {
 	const totalPrice = ref(0);
 	const totalItems = ref(0);
+	const order = ref({});
 
-	function updateCart(order) {
-		totalPrice.value = order.totalPrice;
-		totalItems.value = order.totalQuantity;
+	function updateCart(param) {
+		totalPrice.value = param.totalPrice;
+		totalItems.value = param.totalQuantity;
+		order.value = param;
 	}
 
-	return {totalPrice, totalItems, updateCart};
+	return {totalPrice, totalItems, order, updateCart};
 })

@@ -16,7 +16,7 @@
                 placeholder="Busque por item ou loja" v-model="query" @keyup.enter="searchForm" />
         </div>
         <div class="flex-row hidden md:flex">
-            <v-icon name="fa-shopping-bag" scale="1.5" class="text-primary cursor-pointer" />
+            <v-icon name="fa-shopping-bag" scale="1.5" class="text-primary cursor-pointer" @click="$emit('open-cart')"/>
             <div class="flex flex-col">
                 <p class="text-xs text-tertiary-light">R$ {{ cart.totalPrice.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</p>
                 <p class="text-xs text-tertiary-light">{{ cart.totalItems }} Itens</p>

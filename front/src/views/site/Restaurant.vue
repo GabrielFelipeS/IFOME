@@ -1,5 +1,5 @@
 <template>
-    <Header class="hidden md:flex" />
+    <Header class="hidden md:flex" @open-cart="cartOpen = !cartOpen"/>
     <main class="w-full min-h-[calc(100vh-75px)] bg-white md:mt-[75px] md:max-w-[1200px] mx-auto">
         <div v-if="!restaurant" class="w-full h-[250px] bg-gray-300 animate-pulse"></div>
 
@@ -65,7 +65,12 @@
 		:dish="selectedDish" :restaurant="restaurant"
 		@close-dish-modal="selectedDish = null"
 	/>
-    <FooterMobile />
+	<CartDetails
+		v-if="cartOpen"
+	/>
+    <FooterMobile
+		@open-cart="cartOpen = !cartOpen"
+	/>
 </template>
 
 <script setup>
@@ -77,6 +82,7 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import router from '@/router';
 import DishModal from "@/components/store/dish/DishModal.vue";
+import CartDetails from "@/components/site/CartDetails.vue";
 
 const route = useRoute();
 const restaurantId = route.params.id;
@@ -87,6 +93,8 @@ const error = ref(null);
 
 const dishes = ref(null);
 const selectedDish = ref(null);
+
+const cartOpen = ref(false);
 
 const headers = {
     'Content-Type': 'application/json',
