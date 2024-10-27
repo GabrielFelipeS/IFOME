@@ -85,14 +85,11 @@ public class CustomerOrderService {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
 
-        OrderStatus currentStatus = customerOrder.getStatus();
-        OrderStatus nextStatus = getNextStatus(currentStatus);
+       OrderStatus orderStatus = customerOrder.nextStatus();
 
-        // Atualize o status do pedido
-        customerOrder.setStatus(nextStatus);
         customerOrderRepository.save(customerOrder);
 
-        eventStatusEmitterService.updateStatusEmitter(customerOrder);
+        eventStatusEmitterService.updateStatusEmitter(customerOrder, orderStatus);
     }
 
     private OrderStatus getNextStatus(OrderStatus currentStatus) {
@@ -110,7 +107,7 @@ public class CustomerOrderService {
             throw new IllegalStateException("O status atual não pode ser alterado.");
         }
         System.err.println("currentIndex: " + currentIndex);
-        // Retorna o próximo status na sequência
+
         return validSequence.get(currentIndex + 1);
     }
 
