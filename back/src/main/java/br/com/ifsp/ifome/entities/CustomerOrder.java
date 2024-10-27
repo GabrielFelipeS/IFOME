@@ -87,6 +87,11 @@ public class CustomerOrder {
            return this.orderDate.format(dateTimeFormatter);
     }
 
+    public String getOrderDateTime() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_TIME;
+        return this.orderDate.format(dateTimeFormatter);
+    }
+
     public Address getAddress() {
         return this.cart.getClient().getAddress().get(0);
     }

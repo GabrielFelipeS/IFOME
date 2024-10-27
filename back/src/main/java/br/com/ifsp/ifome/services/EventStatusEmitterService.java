@@ -93,7 +93,8 @@ public class EventStatusEmitterService {
             Map.of(
                 "orderId", customerOrder.getId(),
                 "status", orderStatus.toString(),
-                "position", customerOrder.getOrderStatusId()
+                "position", customerOrder.getOrderStatusId(),
+                "time", customerOrder.getOrderDateTime()
             )
         );
         System.err.println("DEPOIS DE EXECUTAR O PUSHER");
