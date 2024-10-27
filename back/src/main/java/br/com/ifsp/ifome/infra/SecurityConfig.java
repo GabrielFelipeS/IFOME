@@ -48,7 +48,7 @@ public class SecurityConfig {
                         "/api/restaurant/", "/api/restaurant/{id}","/api/restaurant/all", "/api/dish/", "/api/dish/{id}", "/api/dish/restaurant/{id}","/api/dish/all")
                     .permitAll()
                     .requestMatchers(
-                        "/api/client/cart", "/api/client/cart/dish/{id}")
+                        "/api/client/cart", "/api/client/cart/dish/", "/api/client/cart/dish/{id}")
                     .hasRole("CLIENT")
 //                    .requestMatchers(HttpMethod.GET,"/api/order/status/{id}").permitAll()
 //                    .requestMatchers(HttpMethod.PUT,"/api/order/updateStatus").permitAll()
