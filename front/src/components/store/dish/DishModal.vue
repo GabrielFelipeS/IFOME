@@ -39,6 +39,11 @@ const addToCart = async () => {
 		toast.success(message);
 	} catch (error) {
 		console.error('Error adding to cart:', error);
+		if (error.status === 409) {
+			toast.warning(error.response?.data?.message);
+		} else {
+			toast.error(error.response?.data?.message);
+		}
 	}
 };
 
