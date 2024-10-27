@@ -159,7 +159,7 @@ public class CustomerOrderControllerIT {
         UpdateOrderStatusRequest updateRequest = new UpdateOrderStatusRequest(orderId);
         HttpHeaders headers = getHttpHeadersRestaurant(); // Obtenha os cabeçalhos do restaurante
         ResponseEntity<ApiResponse> response = testRestTemplate.exchange(
-                "/api/order/updateStatus", HttpMethod.PUT, new HttpEntity<>(updateRequest, headers), ApiResponse.class
+                "/api/order/updateStatus/"+orderId, HttpMethod.PUT, new HttpEntity<>(headers), ApiResponse.class
         );
 
         // Verifique se a atualização foi bem-sucedida
@@ -200,7 +200,7 @@ public class CustomerOrderControllerIT {
 
         // Enviar a requisição de atualização de status
         ResponseEntity<ApiResponse> response = testRestTemplate.exchange(
-                "/api/order/updateStatus", HttpMethod.PUT, new HttpEntity<>(updateRequest, headers), ApiResponse.class
+                "/api/order/updateStatus/"+orderId, HttpMethod.PUT, new HttpEntity<>(headers), ApiResponse.class
         );
 
         // Verifique se a atualização foi bem-sucedida

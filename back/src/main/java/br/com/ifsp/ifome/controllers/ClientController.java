@@ -9,8 +9,6 @@ import br.com.ifsp.ifome.dto.request.OrderItemRequest;
 import br.com.ifsp.ifome.dto.request.OrderItemUpdateRequest;
 import br.com.ifsp.ifome.dto.response.CartResponse;
 import br.com.ifsp.ifome.services.ClientService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +26,7 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    @GetMapping
+    @GetMapping("/cart")
     @DocsGetCart
     public ResponseEntity<ApiResponse> getCart(Principal principal) {
         CartResponse cartResponse = clientService.getCart(principal.getName());
@@ -37,7 +35,7 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping
+    @PostMapping("/cart")
     @DocsInsertOrderItemInCart
     public ResponseEntity<ApiResponse> addDishInCart(@RequestBody @Valid OrderItemRequest orderItemRequest, Principal principal) {
         CartResponse cartResponse = clientService.addDishCart(orderItemRequest, principal.getName());
@@ -47,7 +45,7 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping
+    @PutMapping("/cart")
     @DocsUpdateItemInCart
     public ResponseEntity<ApiResponse> updateQuantityOrderItemInCart(@RequestBody @Valid OrderItemUpdateRequest orderItemRequest, Principal principal) {
         clientService.updateQuantityOrderItemInCart(orderItemRequest, principal.getName());
@@ -57,7 +55,7 @@ public class ClientController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/cart/dish/{id}")
     @DocsDeleteDishInCart
     public ResponseEntity<ApiResponse> deleteOrderItemInCart(@PathVariable Long id, Principal principal) {
         clientService.removeDishInCart(id, principal.getName());

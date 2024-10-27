@@ -104,7 +104,7 @@ public class CustomerOrderController {
 
     @PutMapping("/updateStatus/{customerOrderId}")
     @DocUpdateCustomerOrderStatus
-    public ResponseEntity<ApiResponse> updateOrderStatus(@RequestBody Long customerOrderId) {
+    public ResponseEntity<ApiResponse> updateOrderStatus(@PathVariable Long customerOrderId) {
         try {
             customerOrderService.updateOrderStatus(customerOrderId);
             return ResponseEntity.ok(new ApiResponse("success", null, "Status atualizado com sucesso!"));
