@@ -91,8 +91,9 @@ public class EventStatusEmitterService {
             "order-channel",
             "order-status-updated_" + customerOrder.getId().toString(),
             Map.of(
-                "orderId", customerOrder.getOrderStatusId(),
-                "status", orderStatus.toString()
+                "orderId", customerOrder.getId(),
+                "status", orderStatus.toString(),
+                "position", customerOrder.getOrderStatusId()
             )
         );
         System.err.println("DEPOIS DE EXECUTAR O PUSHER");
