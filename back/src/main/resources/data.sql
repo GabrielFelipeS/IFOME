@@ -164,6 +164,8 @@ INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (1, 3, 2
 
 INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, status) VALUES (1015, 1, 1, 'PENDENTE', 'NOVO' );
 
+
+
 UPDATE cart SET customer_order_id = 1 WHERE client_id = 1 LIMIT 1;
 
 INSERT INTO cart (client_id) VALUES (2);

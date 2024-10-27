@@ -41,6 +41,7 @@ public class CustomerOrder {
     private DeliveryPerson deliveryPerson;
 
     @CreationTimestamp
+    @Column(name = "order_date")
     private LocalDateTime orderDate;
 
     public CustomerOrder(Cart cart, LocalDateTime orderDate, Double orderPrice,
