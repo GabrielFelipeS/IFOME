@@ -34,7 +34,7 @@ public class ClientControllerIT {
 
     @BeforeEach
     public void setUp() {
-        this.token = tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
+        this.token = tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_CLIENT")));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class ClientControllerIT {
         HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(OrderItemRequest, headers);
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
-            ("/api/client",
+            ("/api/client/cart",
                 requestEntity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -81,7 +81,7 @@ public class ClientControllerIT {
         HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(OrderItemRequest, headers);
 
         ResponseEntity<String> responseFirst = testRestTemplate.postForEntity
-            ("/api/client",
+            ("/api/client/cart",
                 requestEntity, String.class);
 
         assertThat(responseFirst.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -96,7 +96,7 @@ public class ClientControllerIT {
 
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
-            ("/api/client",
+            ("/api/client/cart",
                 requestEntity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -124,7 +124,7 @@ public class ClientControllerIT {
         HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(OrderItemRequest, headers);
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
-            ("/api/client",
+            ("/api/client/cart",
                 requestEntity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -135,12 +135,12 @@ public class ClientControllerIT {
     public void addDishInCartWhenClientNotExists() {
         OrderItemRequest OrderItemRequest = new OrderItemRequest(1L,2, null);
         HttpHeaders headers = new HttpHeaders();
-        token = tokenService.generateToken("email_nao_existe@gmail.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
+        token = tokenService.generateToken("email_nao_existe@gmail.com",  List.of(new SimpleGrantedAuthority("ROLE_CLIENT")));
         headers.set("Authorization", "Bearer " + token);
         HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(OrderItemRequest, headers);
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
-            ("/api/client",
+            ("/api/client/cart",
                 requestEntity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -157,7 +157,7 @@ public class ClientControllerIT {
         HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(OrderItemRequest, headers);
 
         ResponseEntity<String> responseFirst = testRestTemplate.postForEntity
-            ("/api/client",
+            ("/api/client/cart",
                 requestEntity, String.class);
 
         assertThat(responseFirst.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -166,7 +166,7 @@ public class ClientControllerIT {
         HttpEntity<OrderItemRequest> requestEntityAnotherRestaurant  = new HttpEntity<>(OrderItemRequestAnotherRestaurant, headers);
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
-            ("/api/client",
+            ("/api/client/cart",
                 requestEntityAnotherRestaurant, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
@@ -182,7 +182,7 @@ public class ClientControllerIT {
         HttpEntity<OrderItemRequest> requestEntity = getOrderItemRequestHttpEntity();
 
         ResponseEntity<String> responseInsert = testRestTemplate.postForEntity
-            ("/api/client",
+            ("/api/client/cart",
                 requestEntity, String.class);
 
         assertThat(responseInsert.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -191,14 +191,14 @@ public class ClientControllerIT {
         HttpEntity<OrderItemRequest> requestEntityUpdate = getOrderItemRequestHttpEntity(OrderItemRequestUpdate);
 
         ResponseEntity<String> responseUpdate = testRestTemplate.exchange
-            ("/api/client", HttpMethod.PUT,
+            ("/api/client/cart", HttpMethod.PUT,
                 requestEntityUpdate, String.class);
 
         assertThat(responseUpdate.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         HttpEntity<OrderItemRequest> requestHttpEntity = getRequestHttpEntity();
 
-        ResponseEntity<String> response = testRestTemplate.exchange("/api/client",  HttpMethod.GET, requestHttpEntity, String.class);
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/client/cart",  HttpMethod.GET, requestHttpEntity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContextSecond = JsonPath.parse(response.getBody());
@@ -215,7 +215,7 @@ public class ClientControllerIT {
         HttpHeaders headers = getHttpHeaders();
         HttpEntity<OrderItemRequest> requestEntityUpdate = new HttpEntity<>(headers);
 
-        ResponseEntity<String> response = testRestTemplate.exchange("/api/client",  HttpMethod.GET, requestEntityUpdate, String.class);
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/client/cart",  HttpMethod.GET, requestEntityUpdate, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContextSecond = JsonPath.parse(response.getBody());
@@ -231,14 +231,14 @@ public class ClientControllerIT {
         HttpEntity<OrderItemRequest> requestEntityInsert = getOrderItemRequestHttpEntity();
 
         ResponseEntity<String> responseFirst = testRestTemplate.postForEntity
-            ("/api/client",
+            ("/api/client/cart",
                 requestEntityInsert, String.class);
 
         assertThat(responseFirst.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         HttpEntity<OrderItemRequest> requestHttpEntity = getRequestHttpEntity();
 
-        ResponseEntity<String> response = testRestTemplate.exchange("/api/client",  HttpMethod.GET, requestHttpEntity, String.class);
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/client/cart",  HttpMethod.GET, requestHttpEntity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContextSecond = JsonPath.parse(response.getBody());
@@ -253,7 +253,7 @@ public class ClientControllerIT {
         HttpEntity<OrderItemRequest> requestEntity = getOrderItemRequestHttpEntity();
 
         ResponseEntity<String> responseInsert = testRestTemplate.postForEntity
-            ("/api/client",
+            ("/api/client/cart",
                 requestEntity, String.class);
 
         assertThat(responseInsert.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -261,12 +261,12 @@ public class ClientControllerIT {
         HttpEntity<OrderItemRequest> requestHttpEntity = getRequestHttpEntity();
 
         ResponseEntity<String> responseUpdate = testRestTemplate.exchange
-            ("/api/client/3", HttpMethod.DELETE,
+            ("/api/client/cart/dish/3", HttpMethod.DELETE,
                 requestHttpEntity, String.class);
 
         assertThat(responseUpdate.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        ResponseEntity<String> response = testRestTemplate.exchange("/api/client",  HttpMethod.GET, requestHttpEntity, String.class);
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/client/cart",  HttpMethod.GET, requestHttpEntity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContextSecond = JsonPath.parse(response.getBody());
@@ -281,7 +281,7 @@ public class ClientControllerIT {
         HttpEntity<OrderItemRequest> requestEntity = getOrderItemRequestHttpEntity();
 
         ResponseEntity<String> responseInsert = testRestTemplate.postForEntity
-            ("/api/client",
+            ("/api/client/cart",
                 requestEntity, String.class);
 
         assertThat(responseInsert.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -290,7 +290,7 @@ public class ClientControllerIT {
         HttpEntity<OrderItemRequest> requestHttpEntity = getRequestHttpEntity();
 
         ResponseEntity<String> response = testRestTemplate.exchange
-            ("/api/client/4", HttpMethod.DELETE,
+            ("/api/client/cart/dish/4", HttpMethod.DELETE,
                 requestHttpEntity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -349,7 +349,7 @@ public class ClientControllerIT {
         HttpEntity<OrderItemRequest> requestEntity = new HttpEntity<>(OrderItemRequest, headers);
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
-            ("/api/client",
+            ("/api/client/cart",
                 requestEntity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -362,7 +362,7 @@ public class ClientControllerIT {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        response = testRestTemplate.exchange("/api/client",  HttpMethod.GET, requestEntity, String.class);
+        response = testRestTemplate.exchange("/api/client/cart",  HttpMethod.GET, requestEntity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         System.err.println(response.getBody());
     }
