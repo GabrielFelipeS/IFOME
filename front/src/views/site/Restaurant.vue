@@ -101,7 +101,7 @@ const fetchRestaurantData = async () => {
             return;
         }
         restaurant.value = response.data.data;
-		dishes.value = restaurant.value.dish;
+		dishes.value = restaurant.value.dish.filter(dish => dish.availability === 'Disponível');
         imageUrl.value = `${import.meta.env.VITE_API_URL}image/${restaurant.value.restaurantImage}`;
     } catch (err) {
         router.push({ name: 'NotFound' });
