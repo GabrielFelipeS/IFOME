@@ -5,8 +5,11 @@ import br.com.ifsp.ifome.docs.DocsGetPagination;
 import br.com.ifsp.ifome.docs.DocsGetRestaurantById;
 import br.com.ifsp.ifome.docs.DocsOpenCloseRestaurant;
 import br.com.ifsp.ifome.dto.ApiResponse;
+import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
+import br.com.ifsp.ifome.entities.CustomerOrder;
 import br.com.ifsp.ifome.entities.Restaurant;
+import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.services.RestaurantService;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -16,15 +19,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @MultipartConfig
 @RequestMapping("/api/restaurant/")
 public class RestaurantController {
     private final RestaurantService restaurantService;
+    private final CustomerOrderRepository customerOrderRepository;
 
-    public RestaurantController(RestaurantService restaurantService){
+    public RestaurantController(RestaurantService restaurantService, CustomerOrderRepository customerOrderRepository){
         this.restaurantService = restaurantService;
+        this.customerOrderRepository = customerOrderRepository;
     }
 
     @GetMapping
@@ -71,7 +78,17 @@ public class RestaurantController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    @GetMapping("/orders")
+    public ResponseEntity<ApiResponse> getMapping(Principal principal) {
+        List<CustomerOrder> orders = customerOrderRepository.findAllByCartClientEmail(principal.getName());
 
+        var pedidos = orders.stream()
+            .map(CustomerOrderResponse::new)
+            .collect(Collectors.toList());
+
+        ApiResponse apiResponse = new ApiResponse("success", pedidos, null);
+        return ResponseEntity.ok(apiResponse);
+    }
 
 
 }

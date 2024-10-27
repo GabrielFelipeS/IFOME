@@ -55,6 +55,11 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.PUT, "/api/restaurant/").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.PATCH, "/api/restaurant/").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.POST, "/api/dish").hasRole("RESTAURANT")
+                    .requestMatchers(HttpMethod.PUT, "/api/order/updateStatus").hasRole("RESTAURANT")
+                    .requestMatchers(HttpMethod.GET, "/api/order/restaurantOrders").hasRole("RESTAURANT")
+                    .requestMatchers(HttpMethod.GET, "/api/restaurant/orders").hasRole("RESTAURANT")
+                    .requestMatchers(HttpMethod.GET, "/api/order/customerOrders").hasRole("CLIENT")
+
                     .anyRequest().authenticated())
             .headers(headers -> headers
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
