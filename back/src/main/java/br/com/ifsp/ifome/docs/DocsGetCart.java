@@ -25,7 +25,8 @@ import java.lang.annotation.Target;
                            "status": "success",
                            "data": {
                              "orderItems": [],
-                             "totalprice": 0
+                             "totalPrice": 0,
+                             "totalQuantity": 0
                            },
                            "message": "Carrinho encontrado!"
                          }
