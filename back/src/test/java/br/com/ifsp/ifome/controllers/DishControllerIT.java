@@ -90,6 +90,12 @@ public class DishControllerIT {
         assertThat(name).isEqualTo(dishRequest.name());
         assertThat(price).isEqualTo(dishRequest.price());
 
+        headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+
+        HttpEntity<String> get = new HttpEntity<>(headers);
+        response = testRestTemplate.exchange("/api/image/"+dishImage, HttpMethod.GET, get, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
