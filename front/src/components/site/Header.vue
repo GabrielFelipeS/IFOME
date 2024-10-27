@@ -29,8 +29,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
 import { useCart } from "@/stores/cart.js";
+import api from "@/services/api.js";
 
 const emit = defineEmits(['search'])
 
@@ -43,4 +44,14 @@ function searchForm() {
 }
 
 const cart = useCart();
+
+const updateCart = async () => {
+	const response = await api.get('client/cart');
+	const order = response.data.data;
+	cart.updateCart(order);
+}
+
+onMounted(() => {
+	updateCart();
+})
 </script>
