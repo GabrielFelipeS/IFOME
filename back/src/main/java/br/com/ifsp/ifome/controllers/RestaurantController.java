@@ -11,7 +11,9 @@ import br.com.ifsp.ifome.entities.CustomerOrder;
 import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.services.RestaurantService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.annotation.MultipartConfig;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -78,6 +80,9 @@ public class RestaurantController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    @Operation(
+        security = @SecurityRequirement(name = "Bearer Token")
+    )
     @GetMapping("/orders")
     public ResponseEntity<ApiResponse> getMapping(Principal principal) {
         List<CustomerOrder> orders = customerOrderRepository.findAllByCartClientEmail(principal.getName());
