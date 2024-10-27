@@ -7,7 +7,7 @@ export const useCart = defineStore("cart", () => {
 
 	function updateCart(order) {
 		totalPrice.value = order.totalPrice;
-		totalItems.value = order.quantity;
+		totalItems.value = order.totalQuantity;
 	}
 
 	return {totalPrice, totalItems, updateCart};
