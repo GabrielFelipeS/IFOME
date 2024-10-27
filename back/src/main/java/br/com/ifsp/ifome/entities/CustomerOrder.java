@@ -9,8 +9,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @Entity
 @Getter
@@ -24,8 +24,8 @@ public class CustomerOrder {
 
     private Double orderPrice;
 
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status = OrderStatus.NOVO;
+    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderInfo> orderInfo = new ArrayList<>();
 
     private String paymentStatus;
 
@@ -47,20 +47,22 @@ public class CustomerOrder {
     public CustomerOrder(Cart cart, LocalDateTime orderDate, Double orderPrice,
                          Restaurant restaurant, DeliveryPerson deliveryPerson, OrderStatus status, String paymentStatus)
     {
-        this(null, orderPrice, OrderStatus.NOVO, paymentStatus, cart, restaurant, deliveryPerson, orderDate);
+        this(null, orderPrice, List.of(), paymentStatus, cart, restaurant, deliveryPerson, orderDate);
+        this.nextStatus();
     }
 
     public CustomerOrder(Cart cart, Restaurant restaurant) {
         this(
             null,
             cart.totalPrice(),
-            OrderStatus.NOVO,
+            List.of(),
             "PENDENTE",
             cart,
             restaurant,
             null,
             LocalDateTime.now());
         cart.setCustomerOrder(this);
+        this.nextStatus();
     }
 
     public void calculateTotalPrice() {
@@ -79,11 +81,6 @@ public class CustomerOrder {
         return this.restaurant.getNameRestaurant();
     }
 
-    public String getStatusMessage() {
-        return status.toString()
-                .toLowerCase(Locale.ROOT)
-                .replaceAll("_", " ");
-    }
 
     public String getOrderDate() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
@@ -92,5 +89,32 @@ public class CustomerOrder {
 
     public Address getAddress() {
         return this.cart.getClient().getAddress().get(0);
+    }
+
+    public OrderStatus nextStatus() {
+        List<OrderStatus> validSequence = List.of(
+            OrderStatus.NOVO,
+            OrderStatus.ACEITO,
+            OrderStatus.EM_PREPARO,
+            OrderStatus.PRONTO_PARA_ENTREGA,
+            OrderStatus.SAIU_PARA_ENTREGA,
+            OrderStatus.CONCLUIDO
+        );
+        int size = orderInfo.size();
+
+        if(size == OrderStatus.values().length) {
+            return OrderStatus.CONCLUIDO;
+        }
+
+        System.err.println( OrderStatus.values());
+
+        OrderStatus value = OrderStatus.values()[size];
+        orderInfo.add(new OrderInfo(null, value, LocalDateTime.now(), this));
+
+        return value;
+    }
+
+    public Integer getOrderStatusId() {
+        return orderInfo.size();
     }
 }

@@ -117,6 +117,8 @@ public class Cart {
         return this;
     }
 
-
+    public Integer totalQuantity() {
+        return this.orderItems.stream().mapToInt(OrderItem::getQuantity).sum();
+    }
 
 }
