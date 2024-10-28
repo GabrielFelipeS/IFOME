@@ -1,13 +1,27 @@
 <script setup>
 import {useCart} from "@/stores/cart.js";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
+import api from "@/services/api.js";
 
 const cart = useCart();
 const order = cart.order;
 const deliveryFee = ref(0);
 
-console.log(order)
+const restaurant = ref({nameRestaurant: 'RESTAURANTE'});
+const restaurantId = order.orderItems[0].dish.restaurantId;
 
+const getRestaurantData = async () => {
+	try {
+		const response = await api.get(`restaurant/${restaurantId}`);
+		restaurant.value = response.data.data;
+	} catch (error) {
+		console.error("Error getRestaurantData:", error);
+	}
+}
+
+onMounted(() => {
+	getRestaurantData();
+})
 </script>
 
 <template>
@@ -15,7 +29,7 @@ console.log(order)
 		<div class="restaurant-description my-8">
 			<div class="flex flex-col text-center gap-3">
 				<span class="text-tertiary-light text-xs">Seu pedido em</span>
-				<span class="font-semibold">Antojitos</span>
+				<span class="font-semibold">{{ restaurant.nameRestaurant }}</span>
 			</div>
 			<button class="text-primary font-semibold">
 				Ver cardápio
@@ -25,7 +39,7 @@ console.log(order)
 		<div class="order-items mb-8">
 			<div class="product" v-for="item in order.orderItems">
 				<div class="flex flex-col items-start gap-1.5">
-					<span>{{ item.dish.name }}</span>
+					<span class="uppercase">{{ item.dish.name }}</span>
 					<button class="text-primary text-xs font-semibold">Remover</button>
 				</div>
 				<div class="mr-6 flex flex-col items-end">
