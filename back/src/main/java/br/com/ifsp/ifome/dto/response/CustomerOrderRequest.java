@@ -8,7 +8,7 @@ public record CustomerOrderRequest(
     Long id,
     Double orderPrice,
     String paymentStatus,
-    LocalDateTime orderDate
+    String orderDate
 ) {
     public static CustomerOrderRequest from(CustomerOrder customerOrder) {
         return new CustomerOrderRequest(
