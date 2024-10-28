@@ -92,6 +92,17 @@ public class CustomerOrderService {
         eventStatusEmitterService.updateStatusEmitter(customerOrder, orderStatus);
     }
 
+    public void previousOrderStatus(Long orderId) {
+        CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
+            .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
+
+        OrderStatus orderStatus = customerOrder.previousStatus();
+
+        customerOrderRepository.save(customerOrder);
+
+        eventStatusEmitterService.updateStatusEmitter(customerOrder, orderStatus);
+    }
+
     private OrderStatus getNextStatus(OrderStatus currentStatus) {
         List<OrderStatus> validSequence = List.of(
             OrderStatus.NOVO,
