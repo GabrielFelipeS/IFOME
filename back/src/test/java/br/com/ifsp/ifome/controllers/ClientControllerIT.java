@@ -173,7 +173,7 @@ public class ClientControllerIT {
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
         String message = documentContext.read("$.message");
-        assertThat(message).isEqualTo("Só pde ser incluido pratos do mesmo restaurante no pedido");
+        assertThat(message).isEqualTo("Só pode ser incluido pratos do mesmo restaurante no pedido");
     }
 
     @Test
