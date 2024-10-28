@@ -62,7 +62,7 @@ console.log(order)
 		@apply w-full max-w-[600px] h-full max-h-[90%] p-4 pb-[75px] ;
 		@apply flex flex-col overflow-y-scroll no-scrollbar;
 
-		@apply md:pb-0 md:max-h-full md:pt-[80px];
+		@apply md:pb-0 md:max-h-full md:pt-[80px] md:border md:rounded-none;
 	}
 	.restaurant-description {
 		@apply flex flex-row justify-between mx-12 mt-6 max-h-[20%];
