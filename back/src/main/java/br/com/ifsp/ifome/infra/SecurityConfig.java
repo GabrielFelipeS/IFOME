@@ -48,17 +48,22 @@ public class SecurityConfig {
                         "/api/restaurant/", "/api/restaurant/{id}","/api/restaurant/all", "/api/dish/", "/api/dish/{id}", "/api/dish/restaurant/{id}","/api/dish/all")
                     .permitAll()
 
-//                    .requestMatchers(HttpMethod.GET,"/api/order/status/{id}").permitAll()
-//                    .requestMatchers(HttpMethod.PUT,"/api/order/updateStatus").permitAll()
+                    .requestMatchers("/api/client/**").hasRole("CLIENT")
                     .requestMatchers(HttpMethod.PUT,"/api/order/teste").permitAll()
 
-                    .requestMatchers(HttpMethod.PUT, "/api/restaurant/").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.PATCH, "/api/restaurant/").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.POST, "/api/dish").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.PUT, "/api/order/updateStatus").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.GET, "/api/order/restaurantOrders").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.GET, "/api/restaurant/orders").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.GET, "/api/order/customerOrders").hasRole("CLIENT")
+
+                    .requestMatchers(
+                        HttpMethod.PUT,
+                        "/api/restaurant/",
+                        "/api/restaurant/order/status/{customerOrderId}",
+                        "/api/restaurant/order/status/{customerOrderId}/previous")
+                    .hasRole("RESTAURANT")
 
                     .anyRequest().authenticated())
             .headers(headers -> headers

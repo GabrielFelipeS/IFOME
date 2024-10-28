@@ -1,18 +1,13 @@
 package br.com.ifsp.ifome.services;
 
 import br.com.ifsp.ifome.entities.CustomerOrder;
-import br.com.ifsp.ifome.events.PedidoStatusChangedEvent;
+import br.com.ifsp.ifome.entities.OrderStatus;
 import com.pusher.rest.Pusher;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import org.yaml.snakeyaml.emitter.Emitter;
-import org.yaml.snakeyaml.emitter.EmitterException;
 
-import java.io.IOException;
-import java.nio.file.AccessDeniedException;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
@@ -78,45 +73,33 @@ public class EventStatusEmitterService {
 
         System.err.println(customerOrder.getId());
 
-        this.send(emitter, customerOrder);
+//        this.send(emitter, customerOrder);
 
         return emitter;
     }
 
     @Async
-    public void updateStatusEmitter(CustomerOrder customerOrder)  {
+    public void updateStatusEmitter(CustomerOrder customerOrder, OrderStatus orderStatus)  {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
+        System.err.println(orderStatus);
 
 //        String formatTime = customerOrder.getOrderDate().format(dateTimeFormatter);
         System.err.println(customerOrder.getOrderDate());
 //        System.err.println(formatTime);
         System.err.println("ANTES DE EXECUTAR O PUSHER");
         pusher.trigger(
-            customerOrder.getId().toString(),
-            "update_status",
+            "order-channel",
+            "order-status-updated_" + customerOrder.getId().toString(),
             Map.of(
-                "status", customerOrder.getStatus(),
-                "time", customerOrder.getOrderDate()
+                "orderId", customerOrder.getId(),
+                "status", orderStatus.toString(),
+                "position", customerOrder.getOrderStatusId(),
+                "time", customerOrder.getOrderDateTime()
             )
         );
         System.err.println("DEPOIS DE EXECUTAR O PUSHER");
     }
 
-    private void send(SseEmitter emitter, CustomerOrder customerOrder) {
-        try {
-            System.err.println(emitter);
-            System.err.println("ANTES DE ENVIAR MENSAGEM EMITTER");
-            emitter.send(customerOrder.getStatusMessage());
-            System.err.println("DEPOIS DE ENVIAR MENSAGEM EMITTER");
-        } catch (IOException e) {
-          //  System.err.println("Emmiter erro: " + e.getMessage());
-//            emitter.complete();
-            System.err.println("TA CHEGANDO AQUI 1");
-//            emitter.completeWithError(e);
-            this.remove(emitter, customerOrder);
-            System.err.println("TA CHEGANDO AQUI 2");
-        }
-    }
 
     private void remove(SseEmitter emitter, CustomerOrder customerOrder) {
         var emitters = sseEmitterHashMap.get(customerOrder.getId());

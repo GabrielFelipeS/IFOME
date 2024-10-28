@@ -6,12 +6,14 @@ import java.util.List;
 
 public record CartResponse(
         List<OrderItem> orderItems,
-        Double totalprice
+        Double totalPrice,
+        Integer totalQuantity
 ) {
     public CartResponse (Cart cart){
         this(
-                cart.getOrderItems(),
-                cart.totalPrice()
+            cart.getOrderItems(),
+            cart.totalPrice(),
+            cart.totalQuantity()
         );
     }
 }

@@ -9,8 +9,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @Entity
 @Getter
@@ -24,8 +24,8 @@ public class CustomerOrder {
 
     private Double orderPrice;
 
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status = OrderStatus.NOVO;
+    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderInfo> orderInfo;
 
     private String paymentStatus;
 
@@ -48,20 +48,22 @@ public class CustomerOrder {
     public CustomerOrder(Cart cart, LocalDateTime orderDate, Double orderPrice,
                          Restaurant restaurant, DeliveryPerson deliveryPerson, OrderStatus status, String paymentStatus)
     {
-        this(null, orderPrice, OrderStatus.NOVO, paymentStatus, cart, restaurant, deliveryPerson, orderDate);
+        this(null, orderPrice,  new ArrayList<>(), paymentStatus, cart, restaurant, deliveryPerson, orderDate);
+        this.nextStatus();
     }
 
     public CustomerOrder(Cart cart, Restaurant restaurant) {
         this(
             null,
             cart.totalPrice(),
-            OrderStatus.NOVO,
+            new ArrayList<>(),
             "PENDENTE",
             cart,
             restaurant,
             null,
             LocalDateTime.now());
         cart.setCustomerOrder(this);
+        this.nextStatus();
     }
 
     public void calculateTotalPrice() {
@@ -80,18 +82,61 @@ public class CustomerOrder {
         return this.restaurant.getNameRestaurant();
     }
 
-    public String getStatusMessage() {
-        return status.toString()
-                .toLowerCase(Locale.ROOT)
-                .replaceAll("_", " ");
-    }
 
     public String getOrderDate() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
            return this.orderDate.format(dateTimeFormatter);
     }
 
+    public String getOrderDateTime() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_TIME;
+        return this.orderDate.format(dateTimeFormatter);
+    }
+
     public Address getAddress() {
         return this.cart.getClient().getAddress().get(0);
     }
+
+    public OrderStatus nextStatus() {
+        List<OrderStatus> validSequence = List.of(
+            OrderStatus.NOVO,
+            OrderStatus.EM_PREPARO,
+            OrderStatus.PRONTO_PARA_ENTREGA,
+            OrderStatus.SAIU_PARA_ENTREGA,
+            OrderStatus.CONCLUIDO
+        );
+
+        int size = orderInfo.size();
+        if(size == OrderStatus.values().length) {
+            return OrderStatus.CONCLUIDO;
+        }
+
+        System.err.println(OrderStatus.values());
+        OrderStatus value = OrderStatus.values()[size];
+        var newOrderInfo = new OrderInfo(value, LocalDateTime.now(), this);
+
+        orderInfo.add(newOrderInfo);
+
+        return value;
+    }
+
+    public OrderStatus previousStatus() {
+        int size = orderInfo.size();
+        if(size == 0) {
+            return OrderStatus.NOVO;
+        }
+
+        OrderStatus currentSize = OrderStatus.values()[size];
+        OrderStatus value = OrderStatus.values()[size - 1];
+
+        orderInfo.removeIf(orderInfo -> orderInfo.getOrderStatus().equals(currentSize));
+
+        return value;
+    }
+
+    public Integer getOrderStatusId() {
+        return orderInfo.size();
+    }
+
+
 }

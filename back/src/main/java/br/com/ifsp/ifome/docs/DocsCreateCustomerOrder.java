@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 
 
 @Operation(
-    summary = "FInalizar pedido com pratos do carrinho",
+    summary = "Finalizar pedido com pratos do carrinho",
     security = @SecurityRequirement(name = "Bearer Token")
 )
 @ApiResponses({
