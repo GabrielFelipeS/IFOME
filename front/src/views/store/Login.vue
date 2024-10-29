@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import Header from "@/components/user/Header.vue";
 import {useRouter} from "vue-router";
 import api from "@/services/api.js";
@@ -66,7 +66,6 @@ const goToPage = async (page) => {
 // TODO: usar rota de validação para role de usuário
 
 onMounted(async () => {
-    window.addEventListener('resize', updateWindowWidth);
     try {
         const { data } = await api.get('/order/restaurantOrders');
         orders.value = data;
