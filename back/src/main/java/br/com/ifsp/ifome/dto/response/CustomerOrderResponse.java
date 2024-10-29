@@ -23,6 +23,7 @@ public record CustomerOrderResponse(
                 customerOrder.getClientName(),
                 customerOrder.getAddress(),
                 customerOrder.getCart().getOrderItems(),
+                customerOrder.getClientAddress(),
                 customerOrder.getOrderPrice(),
                 customerOrder.getOrderInfo(),
                 customerOrder.getPaymentStatus(),
