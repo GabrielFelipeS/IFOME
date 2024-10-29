@@ -1,15 +1,15 @@
 -- $2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG  -> @Password1
-INSERT INTO clients (name, email, password, date_of_birth, cpf, role)
-VALUES ('Gabriel', 'user1@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '52800314028', 'CLIENT');
+INSERT INTO clients (name, email, password, date_of_birth, cpf, phone, role)
+VALUES ('Gabriel', 'user1@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '52800314028', '(12) 1234-1234','CLIENT');
 
-INSERT INTO clients (name, email, password, date_of_birth, cpf, role)
-VALUES ('Gabriel', 'email1@email.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '92051362041', 'CLIENT');
+INSERT INTO clients (name, email, password, date_of_birth, cpf, phone,  role)
+VALUES ('Gabriel', 'email1@email.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '92051362041', '(12) 1234-1234', 'CLIENT');
 
-INSERT INTO clients (name, email, password, date_of_birth, cpf, role)
-VALUES ('Telha Rina', 'telha_rina@email.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '20000596000', 'CLIENT');
+INSERT INTO clients (name, email, password, date_of_birth, cpf, phone,  role)
+VALUES ('Telha Rina', 'telha_rina@email.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '20000596000', '(12) 1234-1234', 'CLIENT');
 
-INSERT INTO clients (name, email, password, date_of_birth, cpf, role)
-VALUES ('Gabriel', 'noreply.ifome@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '77025681008',  'CLIENT');
+INSERT INTO clients (name, email, password, date_of_birth, cpf,  phone, role)
+VALUES ('Gabriel', 'noreply.ifome@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '77025681008', '(12) 1234-1234',  'CLIENT');
 
 INSERT INTO address (name_address, cep, neighborhood, city, state, address, number, complement, details, type_residence, client_id)
 VALUES
@@ -180,6 +180,8 @@ INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (1, 3, 2
 INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, order_date) VALUES (1015, 1, 1, 'PENDENTE', CURRENT_TIMESTAMP);
 
 UPDATE cart SET customer_order_id = 1 WHERE client_id = 1 LIMIT 1;
+
+INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('NOVO' ,CURRENT_TIMESTAMP,1);
 -- Fim dos insert de pedido
 
 -- Outro pedido para cliente com id 2
@@ -195,6 +197,8 @@ INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (2, 3, 2
 INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, order_date) VALUES (1015, 1, 2, 'PENDENTE', CURRENT_TIMESTAMP);
 
 UPDATE cart SET customer_order_id = 2 WHERE client_id = 2 LIMIT 1;
+
+INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('NOVO', CURRENT_TIMESTAMP, 2);
 -- Fim dos insert de pedido
 
 -- Outro pedido para cliente com id 3
@@ -209,9 +213,10 @@ INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status,
 
 UPDATE customer_order SET delivery_id = 1 WHERE id = 3 LIMIT 1;
 UPDATE cart SET customer_order_id = 3 WHERE client_id = 3 LIMIT 1;
+
+INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('NOVO' ,CURRENT_TIMESTAMP,3);
 -- Fim dos insert de pedido
 
-INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('NOVO' ,CURRENT_TIMESTAMP,1);
 
 INSERT INTO cart (client_id) VALUES (3);
 
