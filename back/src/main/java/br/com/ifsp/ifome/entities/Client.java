@@ -42,6 +42,9 @@ public class Client implements PasswordPolicy, UserDetails  {
     @Column(length = 14, nullable = false, unique = true)
     private String cpf;
 
+    @Column(length = 15, nullable = false)
+    private String phone;
+
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Address> address= new ArrayList<>();
 
@@ -54,6 +57,7 @@ public class Client implements PasswordPolicy, UserDetails  {
         this.password = bCryptPasswordEncoder.encode(clientRequest.password());
         this.dateOfBirth = clientRequest.convertDateOfBirth();
         this.cpf = clientRequest.cpf().replaceAll("[^\\d]", "");
+        this.phone = clientRequest.phone();
         this.role = Role.CLIENT;
         this.setAddress(clientRequest.address());
     }

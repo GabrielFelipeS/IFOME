@@ -121,4 +121,7 @@ public class Cart {
         return this.orderItems.stream().mapToInt(OrderItem::getQuantity).sum();
     }
 
+    public String getClientPhone() {
+        return this.client.getPhone();
+    }
 }
