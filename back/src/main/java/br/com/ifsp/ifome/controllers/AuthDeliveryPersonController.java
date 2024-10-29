@@ -9,7 +9,7 @@ import br.com.ifsp.ifome.dto.request.DeliveryPersonRequest;
 import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.response.LoginResponse;
 import br.com.ifsp.ifome.dto.response.DeliveryPersonResponse;
-import br.com.ifsp.ifome.services.DeliveryPersonService;
+import br.com.ifsp.ifome.services.AuthDeliveryPersonService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -25,17 +25,17 @@ import java.net.URI;
 
 @RequestMapping("/api/auth/deliveryPerson")
 public class AuthDeliveryPersonController {
-    private final DeliveryPersonService deliveryPersonService;
+    private final AuthDeliveryPersonService authDeliveryPersonService;
 
-    public AuthDeliveryPersonController(DeliveryPersonService deliveryPersonService){
-        this.deliveryPersonService = deliveryPersonService;
+    public AuthDeliveryPersonController(AuthDeliveryPersonService authDeliveryPersonService){
+        this.authDeliveryPersonService = authDeliveryPersonService;
     }
 
     @SensiveData
     @DocsCreateDeliveryPerson
     @PostMapping
     public ResponseEntity<ApiResponse> create(@Valid @RequestBody DeliveryPersonRequest deliveryPersonRequest, UriComponentsBuilder ucb) throws MethodArgumentNotValidException {
-        DeliveryPersonResponse deliveryPersonResponse = deliveryPersonService.create(deliveryPersonRequest);
+        DeliveryPersonResponse deliveryPersonResponse = authDeliveryPersonService.create(deliveryPersonRequest);
         URI locationOfNewDeliveryPerson = ucb
                 .path("deliveryPerson/{id}")
                 .buildAndExpand(deliveryPersonResponse.id())
@@ -49,7 +49,7 @@ public class AuthDeliveryPersonController {
     @PostMapping("/login")
     @DocsDeliveryLogin
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest loginRequest)   {
-        LoginResponse loginResponse = deliveryPersonService.login(loginRequest);
+        LoginResponse loginResponse = authDeliveryPersonService.login(loginRequest);
         ApiResponse apiResponse = new ApiResponse("success", loginResponse, "Entregador logado com sucesso");
         return ResponseEntity.ok(apiResponse);
     }
