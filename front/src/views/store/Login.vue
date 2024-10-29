@@ -63,6 +63,22 @@ const goToPage = async (page) => {
 	await router.push({ name: page });
 };
 
+// TODO: usar rota de validação para role de usuário
+
+onMounted(async () => {
+    window.addEventListener('resize', updateWindowWidth);
+    try {
+        const { data } = await api.get('/order/restaurantOrders');
+        orders.value = data;
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('token');
+        } else {
+            router.push({ name: 'store-panel' });
+        }
+    }
+});
+
 const $toast = useToast();
 async function submitLogin(data) {
 	if (!data.email || !data.password) {
@@ -75,6 +91,7 @@ async function submitLogin(data) {
 			if (response.status === 200 || response.status === 201) {
 				$toast.success('Login realizado com sucesso!');
 				localStorage.setItem('token', response.data.data.token);
+				router.push({ name: 'store-panel' });
 			} else {
 				console.log(response)
 				$toast.error(response.data.message, {});
