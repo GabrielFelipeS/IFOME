@@ -68,7 +68,6 @@ const goToPage = async (page) => {
 onMounted(async () => {
     try {
         const { data } = await api.get('/order/restaurantOrders');
-        orders.value = data;
     } catch (error) {
         if (error.response && error.response.status === 401) {
             localStorage.removeItem('token');
