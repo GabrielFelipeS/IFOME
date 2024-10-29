@@ -34,6 +34,7 @@ import Orders from '@/components/store/panel/Orders.vue';
 import OrderStatus from '@/components/store/panel/OrderStatus.vue';
 import SidebarMenu from '@/components/store/panel/sidebarMenu.vue';
 import api from '@/services/api';
+import axios from 'axios';
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -49,14 +50,17 @@ function updateWindowWidth() {
 const isMobile = computed(() => windowWidth.value < 1280);
 
 onMounted(async () => {
-    window.addEventListener('resize', updateWindowWidth);
     try {
-        const { data } = await api.get('/order/restaurantOrders');
+        if(localStorage.getItem('token') === null) {
+            return router.push({ name: 'store-login' });
+        }
+        const { data } = await api.get('order/restaurantOrders');
+
         orders.value = data;
     } catch (error) {
         if (error.response && error.response.status === 401) {
-            localStorage.removeItem('token');
-            router.push({ name: 'store-login' });
+            await localStorage.removeItem('token');
+            return router.push({ name: 'store-login' });
         } else {
             console.error('Erro ao buscar pedidos:', error);
         }
@@ -72,6 +76,7 @@ function showOrderDetails(id) {
 }
 
 const currentOrder = computed(() => {
+    console.log(orders.value);
     return orders.value.find(order => order.orderId === selectedOrderId.value) || null;
 });
 

@@ -67,7 +67,12 @@ const goToPage = async (page) => {
 
 onMounted(async () => {
     try {
-        const { data } = await api.get('/order/restaurantOrders');
+        if(localStorage.getItem('token')) {
+			const { data } = await api.get('/order/restaurantOrders');
+			if(data) {
+				return router.push({ name: 'store-panel' });
+			}
+		}
     } catch (error) {
         if (error.response && error.response.status === 401) {
             localStorage.removeItem('token');
@@ -89,7 +94,7 @@ async function submitLogin(data) {
 			if (response.status === 200 || response.status === 201) {
 				$toast.success('Login realizado com sucesso!');
 				localStorage.setItem('token', response.data.data.token);
-				router.push({ name: 'store-panel' });
+				return router.push({ name: 'store-panel' });
 			} else {
 				console.log(response)
 				$toast.error(response.data.message, {});
