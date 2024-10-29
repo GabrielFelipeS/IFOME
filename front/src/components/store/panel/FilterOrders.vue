@@ -7,22 +7,24 @@
                 background-position: right 1rem center;
                 background-size: 1em;
             " v-model="filterSelected">
-            <option value="1">Todos</option>
-            <option value="2">Order 1</option>
-            <option value="3">Order 2</option>
-            <option value="4">Order 3</option>
+            <option value="all">Todos</option>
+            <option value="NOVO">Novo</option>
+            <option value="EM_PREPARO">Em Preparo</option>
+            <option value="PRONTO_PARA_ENTREGA">Pronto para Entrega</option>
+            <option value="SAIU_PARA_ENTREGA">Saiu para Entrega</option>
+            <option value="CONCLUIDO">Concluído</option>
         </select>
     </div>
 </template>
 
 <script setup>
-import { onUpdated, ref } from 'vue';
+import { watch, ref } from 'vue';
 
 const emits = defineEmits(['filter']);
-const filterSelected = ref(1);
+const filterSelected = ref('all');
 
-onUpdated(() => {
-    emits('filter', filterSelected.value);  
+// Observa mudanças no filtro e emite o valor selecionado
+watch(filterSelected, (newFilter) => {
+    emits('filter', newFilter);
 });
-
 </script>
