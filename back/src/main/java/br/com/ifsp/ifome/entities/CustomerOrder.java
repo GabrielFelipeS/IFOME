@@ -81,6 +81,9 @@ public class CustomerOrder {
         return this.restaurant.getNameRestaurant();
     }
 
+    public List<OrderItem> getOrderItems() {
+        return this.cart.getOrderItems();
+    }
 
     public String getOrderDate() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
