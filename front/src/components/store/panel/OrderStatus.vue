@@ -5,42 +5,36 @@
 
         <!-- Linha de Status -->
         <div class="flex justify-around items-center">
-
-            <!-- Status Solicitado -->
-            <div class="flex flex-col items-center text-center">
-                <v-icon name="fa-check-circle" class="w-8 h-8 text-primary" />
-                <p class="text-gray-700">Solicitado</p>
-                <span class="text-xs text-gray-500">19:30</span>
+            <div v-for="(state, index) in states" :key="state" class="flex flex-col items-center text-center">
+                <v-icon name="fa-check-circle" class="w-8 h-8" :class="{
+                    'text-red-500': index <= currentStatusIndex,
+                    'text-tertiary-light': index > currentStatusIndex
+                }" />
+                <p
+                    :class="{ 'text-red-500': index <= currentStatusIndex, 'text-gray-700': index > currentStatusIndex }">
+                    {{ state }}
+                </p>
             </div>
-
-            <!-- Status Em Preparo -->
-            <div class="flex flex-col items-center text-center">
-                <v-icon name="fa-check-circle" class="w-8 h-8 text-primary" />
-                <p class="text-gray-700">Em preparo</p>
-                <span class="text-xs text-gray-500">19:31</span>
-            </div>
-
-            <!-- Status Pronto -->
-            <div class="flex flex-col items-center text-center">
-                <v-icon name="fa-check-circle" class="w-8 h-8 text-tertiary-light" />
-                <p class="text-gray-700">Pronto</p>
-                <span class="text-xs text-gray-500">--:--</span>
-            </div>
-
-            <!-- Status Sair para Entrega -->
-            <div class="flex flex-col items-center text-center">
-                <v-icon name="fa-check-circle" class="w-8 h-8 text-tertiary-light" />
-                <p class="text-gray-700">Saiu Para Entrega</p>
-                <span class="text-xs text-gray-500">--:--</span>
-            </div>
-
-            <!-- Status Entregue -->
-            <div class="flex flex-col items-center text-center">
-                <v-icon name="fa-check-circle" class="w-8 h-8 text-tertiary-light" />
-                <p class="text-gray-700">Entregue</p>
-                <span class="text-xs text-gray-500">--:--</span>
-            </div>
-
         </div>
     </div>
 </template>
+
+<script setup>
+import { useOrderStatusStore } from '@/stores/orderStatus';
+import { computed } from 'vue';
+
+const props = defineProps(['order']);
+
+const states = [
+    'NOVO',
+    'EM_PREPARO',
+    'PRONTO_PARA_ENTREGA',
+    'SAIU_PARA_ENTREGA',
+    'CONCLUIDO',
+];
+
+const orderStatusStore = useOrderStatusStore();
+const currentStatus = computed(() => orderStatusStore.getOrderStatus(props.order.orderId) || props.order.orderInfo[props.order.orderInfo.length - 1].orderStatus);
+const currentStatusIndex = computed(() => states.indexOf(currentStatus.value));
+
+</script>
