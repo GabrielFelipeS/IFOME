@@ -92,8 +92,12 @@ public class CustomerOrder {
         return this.orderDate.format(dateTimeFormatter);
     }
 
-    public Address getAddress() {
+    public Address getClientAddress() {
         return this.cart.getClient().getAddress().get(0);
+    }
+
+    public Address getRestaurantAddress() {
+        return this.restaurant.getAddress().get(0);
     }
 
     public OrderStatus nextStatus() {
@@ -135,6 +139,11 @@ public class CustomerOrder {
 
     public Integer getOrderStatusId() {
         return orderInfo.size();
+    }
+
+
+    public String getClientPhone() {
+        return this.cart.getClientPhone();
     }
 
 
