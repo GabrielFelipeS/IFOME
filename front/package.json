@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "dependencies": {
     "@trevoreyre/autocomplete-vue": "^3.0.3",
@@ -20,11 +21,14 @@
     "vue-toast-notification": "^3.1.3"
   },
   "devDependencies": {
+    "@testing-library/vue": "^8.1.0",
     "@vitejs/plugin-vue": "^5.0.5",
     "autoprefixer": "^10.4.20",
+    "happy-dom": "^15.7.4",
     "postcss": "^8.4.45",
     "sass-embedded": "^1.78.0",
     "tailwindcss": "^3.4.11",
-    "vite": "^5.3.1"
+    "vite": "^5.3.1",
+    "vitest": "^2.1.4"
   }
 }
