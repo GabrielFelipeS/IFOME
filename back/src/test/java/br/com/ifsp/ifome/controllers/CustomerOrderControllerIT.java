@@ -20,6 +20,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -213,6 +214,119 @@ public class CustomerOrderControllerIT {
         // Printar o status atualizado
 //        System.out.println("Status atualizado para: " + updatedOrder.getStatus());
     }
+
+//    @Test
+//    @DirtiesContext
+//    public void shouldReturnOrdersByCustomerInAscendingOrder() {
+//        HttpHeaders headers = getHttpHeadersClientWithCustomerOrder();
+//        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+//
+//        ResponseEntity<List<CustomerOrderResponse>> response = testRestTemplate.exchange(
+//                "/api/order/customerOrders", HttpMethod.GET, requestEntity,
+//                new ParameterizedTypeReference<List<CustomerOrderResponse>>() {}
+//        );
+//
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+//        List<CustomerOrderResponse> orders = response.getBody();
+//
+//        assertThat(orders).isNotEmpty();
+//
+//        // Log the order dates for debugging
+//        for (CustomerOrderResponse order : orders) {
+//            System.out.println("Order Date: " + order.orderDate());
+//        }
+//
+//        LocalDateTime previousDate = orders.get(0).orderDate();
+//        for (int i = 1; i < orders.size(); i++) {
+//            LocalDateTime currentDate = orders.get(i).orderDate();
+//            assertThat(currentDate).isAfterOrEqualTo(previousDate);
+//            previousDate = currentDate;
+//        }
+//    }
+//
+//    @Test
+//    @DirtiesContext
+//    public void shouldReturnOrdersByCustomerInDescendingOrder() {
+//        HttpHeaders headers = getHttpHeadersClientWithCustomerOrder(); // Use a valid client header
+//        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+//
+//        ResponseEntity<List<CustomerOrderResponse>> response = testRestTemplate.exchange(
+//                "/api/order/customerOrders", HttpMethod.GET, requestEntity,
+//                new ParameterizedTypeReference<List<CustomerOrderResponse>>() {}
+//        );
+//
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+//        List<CustomerOrderResponse> orders = response.getBody();
+//
+//        // Verify the orders are in descending order of orderDate
+//        assertThat(orders).isNotEmpty();
+//
+//        // Compare orderDate of each order
+//        LocalDateTime previousDate = orders.get(0).orderDate();
+//        for (int i = 1; i < orders.size(); i++) {
+//            LocalDateTime currentDate = orders.get(i).orderDate();
+//            assertThat(currentDate).isBeforeOrEqualTo(previousDate); // Verify current orderDate is before or equal to previous
+//            previousDate = currentDate; // Update previousDate for the next comparison
+//        }
+//    }
+//
+//    @Test
+//    @DirtiesContext
+//    public void shouldReturnOrdersByRestaurantInAscendingOrder() {
+//        HttpHeaders headers = getHttpHeadersRestaurant();
+//        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+//
+//        ResponseEntity<List<CustomerOrderResponse>> response = testRestTemplate.exchange(
+//                "/api/order/restaurantOrders", HttpMethod.GET, requestEntity,
+//                new ParameterizedTypeReference<List<CustomerOrderResponse>>() {}
+//        );
+//
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+//        List<CustomerOrderResponse> orders = response.getBody();
+//
+//        assertThat(orders).isNotEmpty();
+//
+//        // Log the order dates for debugging
+//        for (CustomerOrderResponse order : orders) {
+//            System.out.println("Order Date: " + order.orderDate());
+//        }
+//
+//        LocalDateTime previousDate = orders.get(0).orderDate();
+//        for (int i = 1; i < orders.size(); i++) {
+//            LocalDateTime currentDate = orders.get(i).orderDate();
+//            assertThat(currentDate).isAfterOrEqualTo(previousDate);
+//            previousDate = currentDate;
+//        }
+//    }
+//
+//    @Test
+//    @DirtiesContext
+//    public void shouldReturnOrdersByRestaurantInDescendingOrder() {
+//        HttpHeaders headers = getHttpHeadersRestaurant(); // Use a valid client header
+//        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+//
+//        ResponseEntity<List<CustomerOrderResponse>> response = testRestTemplate.exchange(
+//                "/api/order/restaurantOrders", HttpMethod.GET, requestEntity,
+//                new ParameterizedTypeReference<List<CustomerOrderResponse>>() {}
+//        );
+//
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+//        List<CustomerOrderResponse> orders = response.getBody();
+//
+//        // Verify the orders are in descending order of orderDate
+//        assertThat(orders).isNotEmpty();
+//
+//        // Compare orderDate of each order
+//        LocalDateTime previousDate = orders.get(0).orderDate();
+//        for (int i = 1; i < orders.size(); i++) {
+//            LocalDateTime currentDate = orders.get(i).orderDate();
+//            assertThat(currentDate).isBeforeOrEqualTo(previousDate); // Verify current orderDate is before or equal to previous
+//            previousDate = currentDate; // Update previousDate for the next comparison
+//        }
+//    }
+
+
+
 
 
     private @NotNull HttpHeaders getHttpHeadersClient() {

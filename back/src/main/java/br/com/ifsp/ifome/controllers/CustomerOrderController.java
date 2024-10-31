@@ -84,9 +84,9 @@ public class CustomerOrderController {
         return ResponseEntity.ok(orders); // Retornar 200 OK com a lista de pedidos
     }
 
-    @Operation(
-        security = @SecurityRequirement(name = "Bearer Token")
-    )
+//    @Operation(
+//        security = @SecurityRequirement(name = "Bearer Token")
+//    )
 
     @PutMapping("/updateStatus/{customerOrderId}")
     @DocUpdateCustomerOrderStatus

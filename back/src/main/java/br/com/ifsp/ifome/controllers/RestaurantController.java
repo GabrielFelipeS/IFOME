@@ -86,10 +86,13 @@ public class RestaurantController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @Operation(
-        security = @SecurityRequirement(name = "Bearer Token")
-    )
+//    /@Operation(
+//        security = @SecurityRequirement(name = "Bearer Token")
+//    )
+
+    //TODO arrumar retorno de restaurante sem pedidos
     @GetMapping("/orders")
+    @DocsGetAllRestaurantOrders
     public ResponseEntity<ApiResponse> getMapping(Principal principal) {
         // TODO refactor method
         System.err.println(principal.getName());
