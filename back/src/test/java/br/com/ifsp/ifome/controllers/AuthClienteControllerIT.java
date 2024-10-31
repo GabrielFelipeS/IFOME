@@ -53,7 +53,10 @@ public class AuthClienteControllerIT {
         String token = documentContext.read("$.data.token");
         assertThat(token).isNotNull();
 
-        ResponseEntity<String> responseTokenValidation = restTemplate.postForEntity("/api/auth/token", token, String.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        ResponseEntity<String> responseTokenValidation = restTemplate.exchange("/api/auth/token", HttpMethod.POST, request, String.class);
         assertThat(responseTokenValidation.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 

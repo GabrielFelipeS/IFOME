@@ -13,8 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -44,7 +43,10 @@ public class AuthDeliveryPersonControllerIT {
         String token = documentContext.read("$.data.token");
         assertThat(token).isNotNull();
 
-        ResponseEntity<String> responseTokenValidation = testRestTemplate.postForEntity("/api/auth/token", token, String.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " +token);
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        ResponseEntity<String> responseTokenValidation = testRestTemplate.exchange("/api/auth/token", HttpMethod.POST, request, String.class);
         assertThat(responseTokenValidation.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
