@@ -67,6 +67,7 @@ import { useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import router from '@/router';
+import api from '@/services/api';
 
 const route = useRoute();
 const restaurantId = route.params.id;
@@ -84,7 +85,7 @@ const headers = {
 
 const fetchRestaurantData = async () => {
     try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}restaurant/${restaurantId}`, { headers });
+        const response = await api.get(`restaurant/${restaurantId}`);
         if (response.data.data === null) {
             router.push({ name: 'NotFound' });
             return;
