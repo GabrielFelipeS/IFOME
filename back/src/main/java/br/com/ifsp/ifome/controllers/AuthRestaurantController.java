@@ -47,7 +47,6 @@ public class AuthRestaurantController {
         @Valid @RequestPart("restaurant") RestaurantRequest restaurantRequest,
         UriComponentsBuilder ucb)
         throws IOException, MethodArgumentNotValidException {
-        System.err.println("TESTE");
         RestaurantResponse restaurantResponse = authRestaurantService.create(restaurantRequest, multipartFile);
 
         URI locationOfNewRestaurant = ucb
