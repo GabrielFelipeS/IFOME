@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class DeliveryPersonService {
+public class AuthDeliveryPersonService {
     private final LoginService loginService;
     private final TokenService tokenService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -26,9 +26,9 @@ public class DeliveryPersonService {
 
 
 
-    public DeliveryPersonService(TokenService tokenService, DeliveryPersonRepository deliveryPersonRepository,
-                                 BCryptPasswordEncoder bCryptPasswordEncoder,
-                                 List<Validator<DeliveryPersonRequest>> validators, LoginService loginService, EmailService emailService) {
+    public AuthDeliveryPersonService(TokenService tokenService, DeliveryPersonRepository deliveryPersonRepository,
+                                     BCryptPasswordEncoder bCryptPasswordEncoder,
+                                     List<Validator<DeliveryPersonRequest>> validators, LoginService loginService, EmailService emailService) {
         this.tokenService = tokenService;
         this.deliveryPersonRepository = deliveryPersonRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;

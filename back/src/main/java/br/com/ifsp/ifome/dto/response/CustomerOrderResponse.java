@@ -21,8 +21,8 @@ public record CustomerOrderResponse(
         this(
                 customerOrder.getId(),
                 customerOrder.getClientName(),
-                customerOrder.getAddress(),
-                customerOrder.getCart().getOrderItems(),
+                customerOrder.getClientAddress(),
+                customerOrder.getOrderItems(),
                 customerOrder.getOrderPrice(),
                 customerOrder.getOrderInfo(),
                 customerOrder.getPaymentStatus(),

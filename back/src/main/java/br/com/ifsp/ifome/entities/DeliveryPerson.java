@@ -51,7 +51,7 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
     @Column(length = 15, nullable = false)
     private String telephone;
 
-    @Column(name = "cnh_number", length = 11, nullable = false)
+    @Column(name = "cnh_number", length = 11, nullable = false, unique = true)
     private String cnhNumber;
 
     @Column(name = "cnh_validity", nullable = false)
@@ -82,6 +82,7 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
         this.cnhValidity = deliveryPersonRequest.cnhValidity();
         this.vehicleDocument = deliveryPersonRequest.vehicleDocument();
         this.bankAccount = new BankAccount(deliveryPersonRequest.bankAccount());
+        this.role = Role.DELIVERY;
         this.setAddress(deliveryPersonRequest.address());
     }
 
@@ -114,15 +115,14 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
         address.setDelivery(this);
         this.address = List.of(address);
     }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return this.role.getAuthorities();
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return email;
     }
 
     @Override

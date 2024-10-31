@@ -81,14 +81,26 @@ public class CustomerOrder {
         return this.restaurant.getNameRestaurant();
     }
 
+    public List<OrderItem> getOrderItems() {
+        return this.cart.getOrderItems();
+    }
 
     public String getOrderDate() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
            return this.orderDate.format(dateTimeFormatter);
     }
 
-    public Address getAddress() {
+    public String getOrderDateTime() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_TIME;
+        return this.orderDate.format(dateTimeFormatter);
+    }
+
+    public Address getClientAddress() {
         return this.cart.getClient().getAddress().get(0);
+    }
+
+    public Address getRestaurantAddress() {
+        return this.restaurant.getAddress().get(0);
     }
 
     public OrderStatus nextStatus() {
@@ -108,17 +120,34 @@ public class CustomerOrder {
         System.err.println(OrderStatus.values());
         OrderStatus value = OrderStatus.values()[size];
         var newOrderInfo = new OrderInfo(value, LocalDateTime.now(), this);
-        System.err.println(size);
-        System.err.println(value);
-        System.err.println(newOrderInfo);
-        System.err.println(orderInfo);
-        System.err.println("ANTES DO ADD");
+
         orderInfo.add(newOrderInfo);
-        System.err.println("DEPOIS DO ADD");
+
+        return value;
+    }
+
+    public OrderStatus previousStatus() {
+        int size = orderInfo.size();
+        if(size == 0) {
+            return OrderStatus.NOVO;
+        }
+
+        OrderStatus currentSize = OrderStatus.values()[size];
+        OrderStatus value = OrderStatus.values()[size - 1];
+
+        orderInfo.removeIf(orderInfo -> orderInfo.getOrderStatus().equals(currentSize));
+
         return value;
     }
 
     public Integer getOrderStatusId() {
         return orderInfo.size();
     }
+
+
+    public String getClientPhone() {
+        return this.cart.getClientPhone();
+    }
+
+
 }

@@ -4,8 +4,6 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
     <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
-    <logger name="com.zaxxer.hikari" level="DEBUG"/>
-    <logger name="HikariPool" level="DEBUG"/>
     <logger name="org.springframework.security" level="DEBUG" />
 
     <!-- Definindo os padrões para o arquivo de log -->

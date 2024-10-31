@@ -1,9 +1,6 @@
 package br.com.ifsp.ifome.controllers;
 
-import br.com.ifsp.ifome.docs.DocsGetAll;
-import br.com.ifsp.ifome.docs.DocsGetPagination;
-import br.com.ifsp.ifome.docs.DocsGetRestaurantById;
-import br.com.ifsp.ifome.docs.DocsOpenCloseRestaurant;
+import br.com.ifsp.ifome.docs.*;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
@@ -11,6 +8,7 @@ import br.com.ifsp.ifome.entities.CustomerOrder;
 import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
+import br.com.ifsp.ifome.services.CustomerOrderService;
 import br.com.ifsp.ifome.services.RestaurantService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,6 +17,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.annotation.MultipartConfig;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,11 +33,13 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
     private final CustomerOrderRepository customerOrderRepository;
     private final RestaurantRepository restaurantRepository;
+    private final CustomerOrderService customerOrderService;
 
-    public RestaurantController(RestaurantService restaurantService, CustomerOrderRepository customerOrderRepository, RestaurantRepository restaurantRepository){
+    public RestaurantController(RestaurantService restaurantService, CustomerOrderRepository customerOrderRepository, RestaurantRepository restaurantRepository, CustomerOrderService customerOrderService){
         this.restaurantService = restaurantService;
         this.customerOrderRepository = customerOrderRepository;
         this.restaurantRepository = restaurantRepository;
+        this.customerOrderService = customerOrderService;
     }
 
     @GetMapping
@@ -110,5 +111,27 @@ public class RestaurantController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    @PutMapping("/order/status/{customerOrderId}")
+    @DocUpdateCustomerOrderStatus
+    public ResponseEntity<ApiResponse> updateOrderStatus(@PathVariable Long customerOrderId) {
+        try {
+            customerOrderService.updateOrderStatus(customerOrderId);
+            return ResponseEntity.ok(new ApiResponse("success", null, "Status atualizado com sucesso!"));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(new ApiResponse("error", null, e.getMessage()));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("error", null, e.getMessage()));
+        } catch (Exception e) {
+            // Catch any other exceptions
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("error", null, "Erro inesperado: " + e.getMessage()));
+        }
+    }
+
+    @PutMapping("/order/status/{customerOrderId}/previous")
+    @DocUpdateCustomerOrderStatus
+    public ResponseEntity<ApiResponse> previousOrderStatus(@PathVariable Long customerOrderId) {
+            customerOrderService.previousOrderStatus(customerOrderId);
+            return ResponseEntity.ok(new ApiResponse("success", null, "Status atualizado com sucesso!"));
+    }
 
 }

@@ -48,20 +48,6 @@ public class CustomerOrderController {
     @Operation(
         security = @SecurityRequirement(name = "Bearer Token")
     )
-
-    @GetMapping("/status/{id}")
-    @DocGetStatusCustomerOrder
-    @Transactional
-    public SseEmitter getStatusCustomerOrder(@PathVariable Long id) throws IOException {
-        return customerOrderService.getEmitter(id);
-    }
-
-    @Operation(
-        security = @SecurityRequirement(name = "Bearer Token")
-    )
-
-
-
     @GetMapping("/customerOrders")
     @DocGetCustomerOrders
     public ResponseEntity<List<CustomerOrderResponse>> getAllCustomerOrders(Principal principal) {
