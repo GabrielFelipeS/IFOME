@@ -44,15 +44,15 @@ public class SecurityConfig {
                 request
                     .requestMatchers("/actuator/**", "/api/auth/**", "/api/image/**", "/h2-console/**").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/dish").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.GET,
-                        "/api/restaurant/", "/api/restaurant/{id}","/api/restaurant/all", "/api/dish/", "/api/dish/{id}", "/api/dish/restaurant/{id}","/api/dish/all")
+                "/api/restaurant/", "/api/restaurant/{id}","/api/restaurant/all", "/api/dish/", "/api/dish/{id}", "/api/dish/restaurant/{id}","/api/dish/all")
                     .permitAll()
 
                     .requestMatchers("/api/client/**").hasRole("CLIENT")
                     .requestMatchers(HttpMethod.PUT,"/api/order/teste").permitAll()
 
                     .requestMatchers(HttpMethod.PATCH, "/api/restaurant/").hasRole("RESTAURANT")
-                    .requestMatchers(HttpMethod.POST, "/api/dish").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.PUT, "/api/order/updateStatus").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.GET, "/api/order/restaurantOrders").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.GET, "/api/restaurant/orders").hasRole("RESTAURANT")

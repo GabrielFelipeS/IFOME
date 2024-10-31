@@ -4,6 +4,7 @@ import br.com.ifsp.ifome.dto.request.DishRequest;
 import br.com.ifsp.ifome.dto.response.DishResponse;
 import br.com.ifsp.ifome.entities.Dish;
 import br.com.ifsp.ifome.entities.Restaurant;
+import br.com.ifsp.ifome.exceptions.DishNotFoundException;
 import br.com.ifsp.ifome.repositories.DishRepository;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
 import org.springframework.data.domain.Page;
@@ -89,12 +90,11 @@ public class DishService {
             ;
     }
 
-    public Object getAvailableDishById(Long id) {
+    public DishResponse getAvailableDishById(Long id) {
         var dishResponse = this.dishRepository
             .findDishAvailableById(id)
-            .stream()
-            .map(DishResponse::new)
+            .orElseThrow(DishNotFoundException::new)
             ;
-        return dishResponse;
+        return new DishResponse(dishResponse);
     }
 }
