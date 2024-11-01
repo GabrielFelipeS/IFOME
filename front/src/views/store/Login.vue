@@ -65,17 +65,7 @@ const goToPage = async (page) => {
 
 // TODO: usar rota de validação para role de usuário
 
-onMounted(async () => {
-    try {
-        const { data } = await api.get('/order/restaurantOrders');
-    } catch (error) {
-        if (error.response && error.response.status === 401) {
-            localStorage.removeItem('token');
-        } else {
-            router.push({ name: 'store-panel' });
-        }
-    }
-});
+
 
 const $toast = useToast();
 async function submitLogin(data) {
