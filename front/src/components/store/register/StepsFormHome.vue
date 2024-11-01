@@ -87,7 +87,7 @@ async function submit(data) {
             password: currentData.value.password,
             confirmationPassword: currentData.value.confirmPassword,
             cnpj: currentData.value.cnpj,
-            address: [
+            address: 
                 {
                     nameAddress: "casa principal",
                     cep: currentData.value.address.cep,
@@ -100,7 +100,7 @@ async function submit(data) {
                     number: currentData.value.address.number,
                     details: currentData.value.address.details
                 }
-            ],
+            ,
             telephone: currentData.value.phone,
             foodCategory: currentData.value.specialty === 'Outro' ? currentData.value.other : currentData.value.specialty,
             paymentMethods: currentData.value.paymentMethods.toString(),
