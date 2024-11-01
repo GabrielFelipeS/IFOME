@@ -28,10 +28,10 @@ jobs:
           key: ${{ secrets.SSH_KEY_FRONT }}
           port: 22
           script: |
-            cd codes
-            git pull origin dev
-            cd ./front/
-            docker-compose down
-            docker-compose up -d --build
-            pwd
-            docker-compose logs -f
+            cd codes |
+            git pull origin dev |
+            cd ./front/ |
+            docker-compose down |
+            docker-compose up -d --build |
+            pwd |
+            docker-compose logs -f |
