@@ -29,6 +29,7 @@ jobs:
           port: 22
           script: |
             cd codes && \
+            cd IFOME && \
             git pull origin dev && \
             cd ./front/ && \
             docker compose down && \
