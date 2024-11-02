@@ -135,14 +135,14 @@ INSERT INTO delivery_person (
     cpf, name, date_of_birth, type_of_vehicle,
     plate, telephone,  cnh_number,
     bank, agency, account,
-    cnh_validity, vehicle_document, role
+    cnh_validity, vehicle_document, latitude, longitude, role
 )
 VALUES (
     'email1@email.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
     '52800314028','João da Silva', '1985-06-15','carro',
     'ABC-1234','(11) 98765-4321','12345678910',
     'Banco do Brasil','1234','00012345-6',
-    '2026-12-31','987654321','DELIVERY'
+    '2026-12-31','987654321', '-22.9716406', '-43.1845041', 'DELIVERY'
 );
 
 INSERT INTO delivery_person (
@@ -150,14 +150,14 @@ INSERT INTO delivery_person (
     cpf, name, date_of_birth, type_of_vehicle,
     plate, telephone,  cnh_number,
     bank, agency, account,
-    cnh_validity, vehicle_document, role
+    cnh_validity, vehicle_document, latitude, longitude, role
 )
 VALUES (
            'user1@email.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
            '70574622047','Neymar Junior', '1985-06-15','carro',
            'ABC-1234','(11) 98765-4321','12345678911',
            'Banco do Brasil','1234','00012345-6',
-           '2026-12-31','987654321','DELIVERY'
+           '2026-12-31','987654321', '-23.43881975', '-46.53746045330729', 'DELIVERY'
        );
 
 INSERT INTO address (
