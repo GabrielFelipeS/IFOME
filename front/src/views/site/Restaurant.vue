@@ -97,7 +97,7 @@ const imageUrl = ref('');
 const restaurant = ref(null);
 const error = ref(null);
 
-const dishes = ref(null);
+const dishes = ref([]);
 const selectedDish = ref(null);
 
 const cartOpen = ref(false);
