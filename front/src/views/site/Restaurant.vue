@@ -47,9 +47,9 @@
             <h2 class="text-2xl w-full text-start font-normal text-tertiary-light">Pratos</h2>
             <div
                 class="w-full h-[40px] md:full bg-background-inputs rounded-lg flex flex-row justify-between items-center mt-3">
-                <v-icon name="fa-search" scale="1" class="text-primary mx-4 cursor-pointer" @click="searchForm" />
+                <v-icon name="fa-search" scale="1" class="text-primary mx-4 cursor-pointer" @click="" />
                 <input type="text" class="w-full h-full bg-transparent text-tertiary text-lg  outline-none"
-                    placeholder="Busque nome" v-model="query" @keyup.enter="searchForm" />
+                    placeholder="Busque nome" @keyup.enter="" />
             </div>
         </div>
 		<div class="px-5 lg:grid grid-cols-3 gap-4 gap-y-0.5 mb-[91px]">
@@ -66,6 +66,7 @@
 		@close-dish-modal="selectedDish = null"
 	/>
 	<CartDetails
+		@open-cart="cartOpen = !cartOpen"
 		v-if="cartOpen"
 	/>
     <FooterMobile
