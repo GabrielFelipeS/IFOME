@@ -84,7 +84,6 @@ import FooterMobile from '@/components/site/FooterMobile.vue';
 import DishCard from "@/components/store/dish/DishCard.vue";
 import { useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
 import router from '@/router';
 import DishModal from "@/components/store/dish/DishModal.vue";
 import CartDetails from "@/components/site/CartDetails.vue";
@@ -101,11 +100,6 @@ const dishes = ref([]);
 const selectedDish = ref(null);
 
 const cartOpen = ref(false);
-
-const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + localStorage.getItem('token'),
-};
 
 const fetchRestaurantData = async () => {
     try {
