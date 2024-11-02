@@ -88,7 +88,7 @@ public class CustomerOrderService {
 
         customerOrderRepository.save(customerOrder);
 
-        orderStatusUpdateService.updateStatusOrder(customerOrder, orderStatus);
+        orderStatusUpdateService.updateStatusOrderToClient(customerOrder, orderStatus);
 
         deliveryService.choiceRestaurantWhenReady(customerOrder);
     }
@@ -101,7 +101,7 @@ public class CustomerOrderService {
 
         customerOrderRepository.save(customerOrder);
 
-        orderStatusUpdateService.updateStatusOrder(customerOrder, orderStatus);
+        orderStatusUpdateService.updateStatusOrderToClient(customerOrder, orderStatus);
     }
 
     private OrderStatus getNextStatus(OrderStatus currentStatus) {
