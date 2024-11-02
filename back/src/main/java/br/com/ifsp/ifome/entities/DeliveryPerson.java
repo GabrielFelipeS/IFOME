@@ -115,6 +115,7 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
         address.setDelivery(this);
         this.address = List.of(address);
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.role.getAuthorities();

@@ -16,26 +16,26 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
-public class EventStatusEmitterService {
+public class OrderStatusUpdateService {
     private final ApplicationEventPublisher eventPublisher;
     private final Map<Long, List<SseEmitter>> sseEmitterHashMap;
     private final Pusher pusher;
 
-    public EventStatusEmitterService(ApplicationEventPublisher eventPublisher, Pusher pusher) {
+    public OrderStatusUpdateService(ApplicationEventPublisher eventPublisher, Pusher pusher) {
         this.eventPublisher = eventPublisher;
         this.pusher = pusher;
         this.sseEmitterHashMap = new ConcurrentHashMap<>();
     }
 
     public SseEmitter getEmitter(CustomerOrder customerOrder) {
-        return this.addEmitter(customerOrder);
+        return this.addOrder(customerOrder);
     }
 
     private List<SseEmitter> getEmitters(CustomerOrder customerOrder) {
         return sseEmitterHashMap.getOrDefault(customerOrder.getId(), Collections.emptyList());
     }
 
-    public SseEmitter addEmitter(CustomerOrder customerOrder) {
+    public SseEmitter addOrder(CustomerOrder customerOrder) {
         System.err.println("CRIANDO EMITTER");
         SseEmitter emitter = new SseEmitter(3_600_000L );
 
@@ -79,7 +79,7 @@ public class EventStatusEmitterService {
     }
 
     @Async
-    public void updateStatusEmitter(CustomerOrder customerOrder, OrderStatus orderStatus)  {
+    public void updateStatusOrder(CustomerOrder customerOrder, OrderStatus orderStatus)  {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
         System.err.println(orderStatus);
 

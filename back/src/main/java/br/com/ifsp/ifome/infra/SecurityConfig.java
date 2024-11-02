@@ -57,6 +57,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/api/order/restaurantOrders").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.GET, "/api/restaurant/orders").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.GET, "/api/order/customerOrders").hasRole("CLIENT")
+                    .requestMatchers(HttpMethod.GET, "/api/delivery/orders/").hasRole("DELIVERY")
 
                     .requestMatchers(
                         HttpMethod.PUT,

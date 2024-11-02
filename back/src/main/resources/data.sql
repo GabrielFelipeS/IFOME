@@ -52,9 +52,10 @@ INSERT INTO restaurants (
     'RESTAURANT'
 );
 
-INSERT INTO address (name_address, cep, neighborhood, city, state, address, number, complement, details, type_residence, restaurant_id)
+INSERT INTO address (name_address, cep, neighborhood, city, state, address, number, complement, details, type_residence, latitude, longitude, restaurant_id)
 VALUES
-    ('Endereço Carlos', '03090-000', 'Mooca', 'São Paulo', 'SP', 'Rua da Mooca', '300', 'Apto 202', 'Perto do Parque da Mooca', 'Casa', 1);
+    ('Endereço Carlos', '03090-000', 'Mooca', 'São Paulo', 'SP', 'Rua da Mooca', '300', 'Apto 202',
+     'Perto do Parque da Mooca', 'Casa','-21.8682369', '-51.8508716', 1);
 
 INSERT INTO opening_hours (day_of_the_week, opening, closing, restaurant_id) VALUES
      ('Segunda-feira', '08:00', '22:00', 1),
@@ -100,11 +101,11 @@ INSERT INTO address (
     name_address, cep, neighborhood,
     city, state, address,
     number, complement, details,
-    type_residence, restaurant_id)
+    type_residence, latitude, longitude, restaurant_id)
 VALUES
     ('Endereço Chef', '22041-001', 'Copacabana',
      'Rio de Janeiro', 'RJ', 'Avenida Atlântica',
-     '1000', 'Loja 3', 'Frente à praia', 'Comercial', 2);
+     '1000', 'Loja 3', 'Frente à praia', 'Comercial', '-22.9716406', '-43.1845041', 2);
 
 -- Inserindo horário de funcionamento para o novo restaurante
 INSERT INTO opening_hours (day_of_the_week, opening, closing, restaurant_id)
@@ -177,7 +178,7 @@ INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (1, 3, 2
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (1, 4, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (1, 3, 29.00, 5);
 
-INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, order_date) VALUES (1015, 1, 1, 'PENDENTE', CURRENT_TIMESTAMP);
+INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_status, order_date) VALUES (1015, 1, 1, 'PENDENTE', 'NOVO', CURRENT_TIMESTAMP);
 
 
 
@@ -196,7 +197,7 @@ INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (2, 3, 2
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (2, 4, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (2, 3, 29.00, 5);
 
-INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, order_date) VALUES (1015, 1, 2, 'PENDENTE', CURRENT_TIMESTAMP);
+INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_status, order_date) VALUES (1015, 1, 2, 'PENDENTE','NOVO', CURRENT_TIMESTAMP);
 
 UPDATE cart SET customer_order_id = 2 WHERE client_id = 2 LIMIT 1;
 
@@ -211,7 +212,7 @@ INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 2, 2
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 3, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 4, 29.00, 5);
 
-INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, order_date) VALUES (1015, 1, 3, 'PENDENTE', CURRENT_TIMESTAMP);
+INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_status, order_date) VALUES (1015, 1, 3, 'PENDENTE', 'NOVO', CURRENT_TIMESTAMP);
 
 UPDATE customer_order SET delivery_id = 1 WHERE id = 3 LIMIT 1;
 UPDATE cart SET customer_order_id = 3 WHERE client_id = 3 LIMIT 1;

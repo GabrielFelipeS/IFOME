@@ -44,6 +44,10 @@ public class Address {
     @Column(length = 150, nullable = false)
     private String typeResidence;
 
+    private String latitude;
+
+    private String longitude;
+
     @JsonIgnore
     @JoinColumn(name = "client_id")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -59,7 +63,7 @@ public class Address {
     @JoinColumn(name = "delivery_id")
     private DeliveryPerson delivery;
 
-    public Address(AddressRequest addressRequest) {
+    public Address(AddressRequest addressRequest, String latitude, String longitude) {
         this.cep = addressRequest.cep();
         this.nameAddress = addressRequest.nameAddress();
         this.neighborhood = addressRequest.neighborhood();
@@ -70,5 +74,11 @@ public class Address {
         this.number = addressRequest.number();
         this.typeResidence = addressRequest.typeResidence();
         this.details = addressRequest.details();
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public Address(AddressRequest addressRequest) {
+        this(addressRequest, null, null);
     }
 }
