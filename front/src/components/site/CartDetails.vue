@@ -20,6 +20,7 @@ const getRestaurantData = async () => {
 }
 
 onMounted(() => {
+	window.scrollTo(0, 0);
 	getRestaurantData();
 })
 </script>

@@ -1,11 +1,13 @@
 <template>
-	<div class="fixed bottom-[75px] w-full px-8 py-2 flex flex-row justify-between z-50 items-center
-			bg-white border-t border-b border-soft-border drop-shadow-2xl" v-if="orderItems">
+	<div class="fixed bottom-[75px] w-full px-8 py-2 flex flex-row justify-between z-20 items-center md:hidden
+			bg-white border-t border-b border-soft-border drop-shadow-2xl" v-if="!cartOpen">
 		<span class="text-sm font-semibold flex flex-row items-center gap-2">
 			<img src="../../assets/img/logo_header_clean.png" alt="logo" class="max-h-8 object-contain" />
 			R$ {{ cart.totalPrice.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}
 		</span>
-		<button class="bg-primary text-white p-2 rounded-md text-sm">Ver sacola <v-icon name="fa-chevron-right" /></button>
+		<button class="bg-primary text-white p-2 rounded-md text-sm" @click="$emit('open-cart')">
+			Ver sacola <v-icon name="fa-chevron-right" />
+		</button>
 	</div>
 	<footer
 		class="w-full h-[75px] bg-white flex flex-row items-center justify-around fixed bottom-0 left-0 shadow-black shadow-2xl md:hidden z-50">
@@ -25,6 +27,11 @@ const orderItems = ref(null);
 
 orderItems.value = cart.order.orderItems;
 
+const props = defineProps({
+	cartOpen: {
+		type: Boolean,
+	}
+});
 
 onMounted(() => {
 	cart.updateCart();

@@ -70,7 +70,7 @@
 	/>
     <FooterMobile
 		@open-cart="cartOpen = !cartOpen"
-		v-if="!cartOpen"
+		:cart-open="cartOpen"
 	/>
 </template>
 
