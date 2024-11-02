@@ -37,7 +37,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     @Column(name = "food_category",length = 150, nullable = false)
     private String foodCategory;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Address> address;
 
     @Column(length = 15, nullable = false)
