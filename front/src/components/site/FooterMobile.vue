@@ -39,5 +39,4 @@ const hasCart = (orderItems.value !== undefined);
 onMounted(() => {
 	cart.updateCart();
 })
-console.log(orderItems.value);
 </script>
