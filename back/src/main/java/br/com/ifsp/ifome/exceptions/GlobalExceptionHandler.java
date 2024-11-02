@@ -117,4 +117,16 @@ public class GlobalExceptionHandler {
         response.put("message",  ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
+    @ExceptionHandler(CoordinatesException.class)
+    public  ResponseEntity<Map<String, Object>>  handleHttpMessageNotReadable(
+        CoordinatesException ex) {
+        logger.warn(ex.getMessage());
+        String message =  ex.getMessage();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", message);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
 }
