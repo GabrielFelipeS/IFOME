@@ -20,7 +20,7 @@
 
 <script setup>
 import {useCart} from "@/stores/cart.js";
-import {onMounted, ref} from "vue";
+import {onMounted} from "vue";
 
 const cart = useCart();
 

@@ -28,7 +28,7 @@ const getRestaurantData = async () => {
 
 const removeFromCart = async (id) => {
 	try {
-		const response = await api.delete('client/cart/dish/' + id);
+		await api.delete('client/cart/dish/' + id);
 		toast.default('Prato removido!', {position: "top-right"});
 	} catch (error) {
 		console.error("Erro remover do carrinho: ", error);
