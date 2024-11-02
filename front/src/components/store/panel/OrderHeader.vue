@@ -91,7 +91,11 @@ async function setState() {
         console.log('Pedido já concluído');
         return;
     }else{
-        await api.put(`order/updateStatus/${props.order.orderId}`);
+        await api.put(`order/updateStatus/${props.order.orderId}`, {}, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
     }
 }
 </script>
