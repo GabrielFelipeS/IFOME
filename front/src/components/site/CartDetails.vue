@@ -2,21 +2,34 @@
 import {useCart} from "@/stores/cart.js";
 import {onMounted, ref} from "vue";
 import api from "@/services/api.js";
+import {useToast} from "vue-toast-notification";
 
 const cart = useCart();
-const order = cart.order;
 const deliveryFee = ref(0);
 
 const restaurant = ref({nameRestaurant: 'RESTAURANTE'});
-const restaurantId = order.orderItems[0].dish.restaurantId;
+const restaurantId = cart.order.orderItems[0]?.dish.restaurantId || false;
 
 const getRestaurantData = async () => {
+	if (!restaurantId) {
+		return;
+	}
 	try {
 		const response = await api.get(`restaurant/${restaurantId}`);
 		restaurant.value = response.data.data;
 	} catch (error) {
 		console.error("Error getRestaurantData:", error);
 	}
+}
+
+const removeFromCart = async (id) => {
+	try {
+		const response = await api.delete('client/cart/dish/' + id);
+		console.log(response.data);
+	} catch (error) {
+		console.error("Erro remover do carrinho: ", error);
+	}
+	await cart.updateCart();
 }
 
 onMounted(() => {
@@ -26,47 +39,56 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="main">
-		<div class="restaurant-description my-8">
-			<div class="flex flex-col text-center gap-3">
-				<span class="text-tertiary-light text-xs">Seu pedido em</span>
-				<span class="font-semibold">{{ restaurant.nameRestaurant }}</span>
-			</div>
-			<button class="text-primary font-semibold">
-				Ver cardápio
+	<div class="main" :class="!restaurantId ? 'flex justify-center align-middle' : ''" >
+		<div v-if="!restaurantId" class="flex flex-col text-center align-middle self-center font-semibold gap-8">
+			Você ainda não adicionou nenhum item ao seu carrinho
+			<button class="p-2 bg-primary text-white rounded-md h-fit w-fit self-center"
+					@click="$emit('open-cart')">
+				Continuar Navegando
 			</button>
 		</div>
-		<span class="font-semibold mt-8">Resumo do pedido:</span>
-		<div class="order-items mb-8">
-			<div class="product" v-for="item in order.orderItems">
-				<div class="flex flex-col items-start gap-1.5">
-					<span class="uppercase">{{ item.dish.name }}</span>
-					<button class="text-primary text-xs font-semibold">Remover</button>
+		<div v-if="restaurantId">
+			<div class="restaurant-description my-8" v-if="restaurantId">
+				<div class="flex flex-col text-center gap-3">
+					<span class="text-tertiary-light text-xs">Seu pedido em</span>
+					<span class="font-semibold">{{ restaurant.nameRestaurant }}</span>
 				</div>
-				<div class="mr-6 flex flex-col items-end">
-					<span>R$ {{ item.unitPrice.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
-					<span>x{{ item.quantity }}</span>
+				<button class="text-primary font-semibold">
+					Ver cardápio
+				</button>
+			</div>
+			<span class="font-semibold mt-8">Resumo do pedido:</span>
+			<div class="order-items mb-8">
+				<div class="product" v-for="item in cart.order.orderItems">
+					<div class="flex flex-col items-start gap-1.5">
+						<span class="uppercase">{{ item.dish.name }}</span>
+						<button class="text-primary text-xs font-semibold" @click="removeFromCart(item.dishId)">Remover</button>
+					</div>
+					<div class="mr-6 flex flex-col items-end">
+						<span>R$ {{ item.unitPrice.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
+						<span>x{{ item.quantity }}</span>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="order-summary my-8">
-			<div class="flex flex-row justify-between text-xs text-tertiary-light">
-				<span>Subtotal</span>
-				<span>R$ {{ order.totalPrice.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
+			<div class="order-summary my-8">
+				<div class="flex flex-row justify-between text-xs text-tertiary-light">
+					<span>Subtotal</span>
+					<span>R$ {{ cart.order.totalPrice.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
+				</div>
+				<div class="flex flex-row justify-between text-xs text-tertiary-light">
+					<span>Taxa de entrega</span>
+					<span>R$ {{ deliveryFee.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
+				</div>
+				<div class="flex flex-row justify-between font-semibold">
+					<span>Total</span>
+					<span>R$ {{ (cart.order.totalPrice + deliveryFee).toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
+				</div>
 			</div>
-			<div class="flex flex-row justify-between text-xs text-tertiary-light">
-				<span>Taxa de entrega</span>
-				<span>R$ {{ deliveryFee.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
+			<div class="flex flex-row justify-center h-full my-8">
+				<button class="p-2 bg-primary text-white rounded-md h-fit self-end">
+					Escolher formas de pagamento <v-icon name="fa-chevron-right" />
+				</button>
 			</div>
-			<div class="flex flex-row justify-between font-semibold">
-				<span>Total</span>
-				<span>R$ {{ (order.totalPrice + deliveryFee).toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
-			</div>
-		</div>
-		<div class="flex flex-row justify-center h-full my-8">
-			<button class="p-2 bg-primary text-white rounded-md h-fit self-end">
-				Escolher formas de pagamento <v-icon name="fa-chevron-right" />
-			</button>
 		</div>
 	</div>
 </template>
