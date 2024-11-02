@@ -13,6 +13,6 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Lo
 
     List<CustomerOrder> findByRestaurantId(Long restaurantId);
 
-    @Query("SELECT c FROM CustomerOrder c WHERE c.deliveryPerson.email = :email AND c.paymentStatus != 'PAGO'")
+    @Query("SELECT c FROM CustomerOrder c WHERE c.deliveryPerson.email = :email order by c.orderDate asc")
     List<CustomerOrder> findAllByDeliveryPerson(@Param("email") String email);
 }

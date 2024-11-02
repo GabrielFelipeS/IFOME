@@ -51,7 +51,6 @@ public class ClientController {
         return ResponseEntity.ok(orders); // Return 200 OK with the list of orders
     }
 
-
     @GetMapping("/cart")
     @DocsGetCart
     public ResponseEntity<ApiResponse> getCart(Principal principal) {

@@ -4,6 +4,7 @@ import br.com.ifsp.ifome.entities.Address;
 import br.com.ifsp.ifome.entities.CustomerOrder;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public record DeliveryOrderResponse(
     String nameClient,
@@ -23,5 +24,11 @@ public record DeliveryOrderResponse(
           //TODO como devemos calcular a demora da rota
           LocalTime.now().plusMinutes(15)
         );
+    }
+
+    public String getOrderTime() {
+        System.err.println("AQUI?");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_TIME;
+        return this.expectedTime.format(dateTimeFormatter);
     }
 }

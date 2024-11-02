@@ -69,6 +69,10 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private String latitude;
+
+    private String longitude;
+
     public DeliveryPerson(DeliveryPersonRequest deliveryPersonRequest, PasswordEncoder passwordEncoder) {
         this.name = deliveryPersonRequest.name();
         this.cpf = deliveryPersonRequest.cpf().replaceAll("[^\\d]", "");

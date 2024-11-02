@@ -45,7 +45,7 @@ public class Client implements PasswordPolicy, UserDetails  {
     @Column(length = 15, nullable = false)
     private String phone;
 
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Address> address= new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
