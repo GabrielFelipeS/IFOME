@@ -52,7 +52,10 @@
                     placeholder="Busque nome" @keyup.enter="" />
             </div>
         </div>
-		<div class="px-5 lg:grid grid-cols-3 gap-4 gap-y-0.5 mb-[91px]">
+		<div class="text-center w-full mt-12 font-semibold px-8" v-if="dishes.length === 0">
+			Este restaurante não possui pratos disponíveis no momento
+		</div>
+		<div class="px-5 lg:grid grid-cols-3 gap-4 gap-y-0.5 mb-[91px]" v-if="dishes.length > 0">
 			<DishCard
 				v-for="dish in dishes" :key="dish.id"
 				@click="selectedDish = dish"
