@@ -23,9 +23,6 @@ import {useCart} from "@/stores/cart.js";
 import {onMounted, ref} from "vue";
 
 const cart = useCart();
-const orderItems = ref(null);
-
-orderItems.value = cart.order.orderItems;
 
 const props = defineProps({
 	cartOpen: {
@@ -34,7 +31,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['open-cart'])
 
-const hasCart = (orderItems.value !== undefined);
+const hasCart = (cart.order !== undefined && cart.order.orderItems && cart.order.orderItems.length > 0);
 
 onMounted(() => {
 	cart.updateCart();
