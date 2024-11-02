@@ -102,7 +102,7 @@ onMounted(() => {
 					<span>R$ {{ (cart.order.totalPrice + deliveryFee).toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
 				</div>
 			</div>
-			<div class="flex flex-row justify-center h-full my-8">
+			<div class="flex flex-row justify-center mb-[85px] md:my-0">
 				<button class="p-2 bg-primary text-white rounded-md h-fit self-end" @click="sendOrder">
 					Escolher formas de pagamento <v-icon name="fa-chevron-right" />
 				</button>
