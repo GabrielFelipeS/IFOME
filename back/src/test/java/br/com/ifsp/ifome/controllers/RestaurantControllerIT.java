@@ -36,17 +36,21 @@ public class RestaurantControllerIT {
     }
 
     @Test
+    @DisplayName("should return all restaurants with pagination")
+    public void shouldBeAbleReturnAllRestaurantWithPagination() {
+        ResponseEntity<String> response = testRestTemplate.getForEntity(
+            "/api/restaurant/",
+            String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
     @DisplayName("should return all restaurants")
     public void shouldBeAbleReturnAllRestaurant() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
-
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<String> response = testRestTemplate.exchange(
-            "/api/restaurant/",
-            HttpMethod.GET,
-            entity,
+        ResponseEntity<String> response = testRestTemplate.getForEntity(
+            "/api/restaurant/all",
             String.class
         );
 
@@ -56,15 +60,8 @@ public class RestaurantControllerIT {
     @Test
     @DisplayName("should be raturn restaurant by id")
     public void shouldBeReturnRestaurant() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
-
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<String> response = testRestTemplate.exchange(
+        ResponseEntity<String> response = testRestTemplate.getForEntity(
             "/api/restaurant/1",
-            HttpMethod.GET,
-            entity,
             String.class
         );
 
@@ -74,15 +71,8 @@ public class RestaurantControllerIT {
     @Test
     @DisplayName("should not be return restaurant by id does not exist")
     public void shouldNotBeReturnRestaurant() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
-
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<String> response = testRestTemplate.exchange(
+        ResponseEntity<String> response = testRestTemplate.getForEntity(
             "/api/restaurant/999",
-            HttpMethod.GET,
-            entity,
             String.class
         );
 
