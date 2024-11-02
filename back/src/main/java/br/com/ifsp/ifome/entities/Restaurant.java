@@ -95,6 +95,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.bankAccount = new BankAccount(restaurantRequest.bankAccount());
         this.isOpen = false;
         this.setAddress(restaurantRequest.address());
+        this.role = Role.RESTAURANT;
     }
 
     public Restaurant(Long id, String nameRestaurant, String cnpj,
