@@ -81,12 +81,7 @@ public class OrderStatusUpdateService {
     @Async
     public void updateStatusOrder(CustomerOrder customerOrder, OrderStatus orderStatus)  {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
-        System.err.println(orderStatus);
 
-//        String formatTime = customerOrder.getOrderDate().format(dateTimeFormatter);
-        System.err.println(customerOrder.getOrderDate());
-//        System.err.println(formatTime);
-        System.err.println("ANTES DE EXECUTAR O PUSHER");
         pusher.trigger(
             "order-channel",
             "order-status-updated_" + customerOrder.getId().toString(),
@@ -97,9 +92,7 @@ public class OrderStatusUpdateService {
                 "time", customerOrder.getOrderDateTime()
             )
         );
-        System.err.println("DEPOIS DE EXECUTAR O PUSHER");
     }
-
 
     private void remove(SseEmitter emitter, CustomerOrder customerOrder) {
         var emitters = sseEmitterHashMap.get(customerOrder.getId());
