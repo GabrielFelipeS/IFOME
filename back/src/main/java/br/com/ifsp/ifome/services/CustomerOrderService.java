@@ -25,15 +25,17 @@ public class CustomerOrderService {
     private final RestaurantRepository restaurantRepository;
     private final CustomerOrderRepository customerOrderRepository;
     private final CartRepository cartRepository;
-    private final EventStatusEmitterService eventStatusEmitterService;
+    private final OrderStatusUpdateService orderStatusUpdateService;
+    private final DeliveryService deliveryService;
 
     public CustomerOrderService(RestaurantRepository restaurantRepository, CustomerOrderRepository customerOrderRepository,
                                 CartRepository cartRepository,
-                                EventStatusEmitterService eventStatusEmitterService) {
+                                OrderStatusUpdateService orderStatusUpdateService, DeliveryService deliveryService) {
         this.restaurantRepository = restaurantRepository;
         this.customerOrderRepository = customerOrderRepository;
         this.cartRepository = cartRepository;
-        this.eventStatusEmitterService = eventStatusEmitterService;
+        this.orderStatusUpdateService = orderStatusUpdateService;
+        this.deliveryService = deliveryService;
     }
 
     public CustomerOrderRequest createOrder(Principal principal) {
@@ -50,7 +52,8 @@ public class CustomerOrderService {
 
         customerOrderRepository.save(customerOrder);
 
-        eventStatusEmitterService.addEmitter(customerOrder);
+        // TODO Fazer update de pedidos aqui
+        orderStatusUpdateService.addOrder(customerOrder);
 
         return CustomerOrderRequest.from(customerOrder);
     }
@@ -85,11 +88,13 @@ public class CustomerOrderService {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
 
-       OrderStatus orderStatus = customerOrder.nextStatus();
+        OrderStatus orderStatus = customerOrder.nextStatus();
 
         customerOrderRepository.save(customerOrder);
 
-        eventStatusEmitterService.updateStatusEmitter(customerOrder, orderStatus);
+        orderStatusUpdateService.updateStatusOrder(customerOrder, orderStatus);
+
+        deliveryService.choiceRestaurantWhenReady(customerOrder);
     }
 
     public void previousOrderStatus(Long orderId) {
@@ -100,7 +105,7 @@ public class CustomerOrderService {
 
         customerOrderRepository.save(customerOrder);
 
-        eventStatusEmitterService.updateStatusEmitter(customerOrder, orderStatus);
+        orderStatusUpdateService.updateStatusOrder(customerOrder, orderStatus);
     }
 
     private OrderStatus getNextStatus(OrderStatus currentStatus) {
@@ -124,7 +129,7 @@ public class CustomerOrderService {
     public SseEmitter getEmitter(Long id) {
         System.err.println(id);
         Optional<CustomerOrder> customerOrder = customerOrderRepository.findById(id);
-        SseEmitter emitter =  eventStatusEmitterService.getEmitter(customerOrder.get());
+        SseEmitter emitter =  orderStatusUpdateService.getEmitter(customerOrder.get());
         System.err.println(emitter);
         return emitter;
     }

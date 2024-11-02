@@ -2,6 +2,7 @@ package br.com.ifsp.ifome.services;
 
 import br.com.ifsp.ifome.dto.response.DeliveryOrderResponse;
 import br.com.ifsp.ifome.entities.CustomerOrder;
+import br.com.ifsp.ifome.entities.OrderStatus;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.repositories.DeliveryPersonRepository;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,12 @@ public class DeliveryService {
         customerOrders.forEach(System.err::println);
 
         return customerOrders.stream().map(DeliveryOrderResponse::new).toList();
+    }
+
+    public void choiceRestaurantWhenReady(CustomerOrder customerOrder) {
+        boolean isNotReady = !customerOrder.getCurrentOrderStatus().equals(OrderStatus.PRONTO_PARA_ENTREGA);
+        if(isNotReady) return;
+
+
     }
 }

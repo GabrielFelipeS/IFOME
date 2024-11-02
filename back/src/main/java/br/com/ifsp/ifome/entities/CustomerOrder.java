@@ -145,6 +145,14 @@ public class CustomerOrder {
         return orderInfo.size();
     }
 
+    public OrderStatus getCurrentOrderStatus() {
+        int size = orderInfo.size();
+        if(size == 0) {
+            return OrderStatus.NOVO;
+        }
+
+        return OrderStatus.values()[size];
+    }
 
     public String getClientPhone() {
         return this.cart.getClientPhone();
