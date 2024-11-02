@@ -35,7 +35,7 @@ public class DeliveryControllerIT {
 
     @Test
     public void getAllOrderByDeliveryPersonWithNoneOrder() {
-        ResponseEntity<String> response = testRestTemplate.exchange("/api/delivery/",
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/delivery/orders/",
                                                 HttpMethod.GET, getHttpEntityWithNoneOrder(), String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -48,7 +48,7 @@ public class DeliveryControllerIT {
 
     @Test
     public void getAllOrderByDeliveryPersonWithSomeOrder() {
-        ResponseEntity<String> response = testRestTemplate.exchange("/api/delivery/",
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/delivery/orders/",
             HttpMethod.GET, getHttpEntityWithOrder(), String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
