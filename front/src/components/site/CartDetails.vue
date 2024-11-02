@@ -10,6 +10,10 @@ const deliveryFee = ref(0);
 const restaurant = ref({nameRestaurant: 'RESTAURANTE'});
 const restaurantId = cart.order.orderItems[0]?.dish.restaurantId || false;
 
+const toast = useToast();
+
+const emit = defineEmits(['open-cart']);
+
 const getRestaurantData = async () => {
 	if (!restaurantId) {
 		return;
@@ -25,11 +29,25 @@ const getRestaurantData = async () => {
 const removeFromCart = async (id) => {
 	try {
 		const response = await api.delete('client/cart/dish/' + id);
-		console.log(response.data);
+		toast.default('Prato removido!', {position: "top-right"});
 	} catch (error) {
 		console.error("Erro remover do carrinho: ", error);
+		toast.error('Erro ao remover do carrinho', {position: "top-right"});
 	}
 	await cart.updateCart();
+}
+
+const sendOrder = async () => {
+	try {
+		const response = await api.post('order');
+		const data = response.data.data; // TODO: Adicionar Pinia para guardar os dados do pedido feito.
+		toast.success(response.data.message, {position: "top-right"});
+	} catch (error) {
+		console.error("Erro ao enviar pedido: ", error);
+		toast.error('Erro ao enviar pedido, tente novamente mais tarde', {position: "top-right"});
+	}
+	await cart.updateCart();
+	emit('open-cart');
 }
 
 onMounted(() => {
@@ -43,7 +61,7 @@ onMounted(() => {
 		<div v-if="!restaurantId" class="flex flex-col text-center align-middle self-center font-semibold gap-8">
 			Você ainda não adicionou nenhum item ao seu carrinho
 			<button class="p-2 bg-primary text-white rounded-md h-fit w-fit self-center"
-					@click="$emit('open-cart')">
+					@click="emit('open-cart')">
 				Continuar Navegando
 			</button>
 		</div>
@@ -85,7 +103,7 @@ onMounted(() => {
 				</div>
 			</div>
 			<div class="flex flex-row justify-center h-full my-8">
-				<button class="p-2 bg-primary text-white rounded-md h-fit self-end">
+				<button class="p-2 bg-primary text-white rounded-md h-fit self-end" @click="sendOrder">
 					Escolher formas de pagamento <v-icon name="fa-chevron-right" />
 				</button>
 			</div>
