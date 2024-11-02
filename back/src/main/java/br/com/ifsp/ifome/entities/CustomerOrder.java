@@ -45,10 +45,13 @@ public class CustomerOrder {
     @Column(name = "order_date")
     private LocalDateTime orderDate;
 
+    @Enumerated(EnumType.STRING)
+    private OrderStatus currentOrderStatus;
+
     public CustomerOrder(Cart cart, LocalDateTime orderDate, Double orderPrice,
                          Restaurant restaurant, DeliveryPerson deliveryPerson, OrderStatus status, String paymentStatus)
     {
-        this(null, orderPrice,  new ArrayList<>(), paymentStatus, cart, restaurant, deliveryPerson, orderDate);
+        this(null, orderPrice,  new ArrayList<>(), paymentStatus, cart, restaurant, deliveryPerson, orderDate, status);
         this.nextStatus();
     }
 
@@ -61,7 +64,8 @@ public class CustomerOrder {
             cart,
             restaurant,
             null,
-            LocalDateTime.now());
+            LocalDateTime.now(),
+            OrderStatus.NOVO);
         cart.setCustomerOrder(this);
         this.nextStatus();
     }
@@ -123,6 +127,7 @@ public class CustomerOrder {
         var newOrderInfo = new OrderInfo(value, LocalDateTime.now(), this);
 
         orderInfo.add(newOrderInfo);
+        this.setCurrentOrderStatus(value);
 
         return value;
     }
@@ -145,14 +150,7 @@ public class CustomerOrder {
         return orderInfo.size();
     }
 
-    public OrderStatus getCurrentOrderStatus() {
-        int size = orderInfo.size();
-        if(size == 0) {
-            return OrderStatus.NOVO;
-        }
 
-        return OrderStatus.values()[size];
-    }
 
     public String getClientPhone() {
         return this.cart.getClientPhone();
