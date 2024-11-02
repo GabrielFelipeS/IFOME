@@ -51,7 +51,11 @@ const isMobile = computed(() => windowWidth.value < 1280);
 onMounted(async () => {
     window.addEventListener('resize', updateWindowWidth);
     try {
-        const { data } = await api.get('/order/restaurantOrders');
+        const { data } = await api.get('/order/restaurantOrders' ,{
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
         orders.value = data;
     } catch (error) {
         if (error.response && error.response.status === 401) {
