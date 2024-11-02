@@ -67,18 +67,14 @@ public class CustomerOrderService {
     }
 
     public List<CustomerOrderResponse> getAllOrdersByRestaurant(String restaurantEmail) {
-        // Obtenha o restaurante correspondente ao email
         Optional<Restaurant> restaurantOpt = restaurantRepository.findByEmail(restaurantEmail);
 
-        // Verifique se o restaurante foi encontrado
         Restaurant restaurant = restaurantOpt.orElseThrow(() ->
                 new EntityNotFoundException("Restaurante não encontrado com o email: " + restaurantEmail)
         );
 
-        // Busque todos os pedidos associados a este restaurante
         List<CustomerOrder> orders = customerOrderRepository.findByRestaurantId(restaurant.getId());
 
-        // Converta as entidades CustomerOrder em CustomerOrderResponse
         return orders.stream()
                 .map(CustomerOrderResponse::new) // Assumindo que você tem um construtor adequado
                 .collect(Collectors.toList());
