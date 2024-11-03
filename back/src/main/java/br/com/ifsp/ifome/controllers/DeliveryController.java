@@ -36,15 +36,15 @@ public class DeliveryController {
         return ResponseEntity.ok(new ApiResponse("success", deliveryPersonResponse, "Pedidos disponíveis"));
     }
 
-    @Operation(
-        security = @SecurityRequirement(name = "Bearer Token")
-    )
-    @GetMapping("/orders/")
-    public ResponseEntity<ApiResponse> getOrders(Principal principal) {
-        List<DeliveryOrderResponse> orders = deliveryService.getOrders(principal);
-
-        return ResponseEntity.ok(new ApiResponse("success", orders, "Pedidos disponíveis"));
-    }
+//    @Operation(
+//        security = @SecurityRequirement(name = "Bearer Token")
+//    )
+//    @GetMapping("/orders/")
+//    public ResponseEntity<ApiResponse> getOrders(Principal principal) {
+//        List<DeliveryOrderResponse> orders = deliveryService.getOrders(principal);
+//
+//        return ResponseEntity.ok(new ApiResponse("success", orders, "Pedidos disponíveis"));
+//    }
 
     // TODO fazer verificação de customerOrder é do entregador logado
     @PutMapping("/order/status/{customerOrderId}")
@@ -76,7 +76,7 @@ public class DeliveryController {
     @GetMapping("/order/")
     public ResponseEntity<ApiResponse> getOrder(Principal principal) {
         var responseOptional = deliveryService.getCustomerOrderId(principal);
-
+        System.err.println("AQUI 2");
         if(responseOptional.isEmpty()) {
             return ResponseEntity.ok(new ApiResponse("success", Collections.emptyList(), "Buscando pedido!"));
         }
