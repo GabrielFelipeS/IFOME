@@ -96,18 +96,28 @@ public class Cart {
         }
     }
 
-    public void removeDishBy(Long dishId) {
+    public OrderItem removeDishBy(Long dishId) {
         Optional<OrderItem> optionalOrderItem = this.orderItems.stream()
+            .peek(orderItem -> System.out.println(orderItem.getCart()))
             .filter(orderItem -> Objects.equals(orderItem.getDishId(), dishId))
             .findFirst();
-
-        if(optionalOrderItem.isPresent()) {
-            System.err.println("AQUI");
-            OrderItem orderItem = optionalOrderItem.get();
-            this.orderItems.remove(orderItem);
-        } else {
+        if(optionalOrderItem.isEmpty()) {
             throw new DishNotFoundInCartException();
         }
+
+        OrderItem orderItem = optionalOrderItem.get();
+
+        System.err.println(orderItem);
+        System.err.println("-----------------");
+        System.err.println("Antes de remover");
+        this.orderItems.forEach(System.err::println);
+        this.orderItems.remove(orderItem);
+        orderItem.setCart(null);
+        System.err.println("Depois de remover");
+        this.orderItems.forEach(System.err::println);
+        System.err.println("-----------------");
+
+        return orderItem;
     }
 
     public Cart cartCannotBeEmpty() {
