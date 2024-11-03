@@ -4,7 +4,7 @@ import br.com.ifsp.ifome.dto.response.CustomerOrderRequest;
 import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
 import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.CustomerOrder;
-import br.com.ifsp.ifome.entities.OrderStatus;
+import br.com.ifsp.ifome.entities.OrderClientStatus;
 import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.exceptions.CartCannotBeEmptyException;
 import br.com.ifsp.ifome.exceptions.RestaurantNotFoundException;
@@ -84,11 +84,11 @@ public class CustomerOrderService {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
 
-        OrderStatus orderStatus = customerOrder.nextStatus();
+        OrderClientStatus orderClientStatus = customerOrder.nextStatus();
 
         customerOrderRepository.save(customerOrder);
 
-        orderStatusUpdateService.updateStatusOrderToClient(customerOrder, orderStatus);
+        orderStatusUpdateService.updateStatusOrderToClient(customerOrder, orderClientStatus);
 
         deliveryService.choiceRestaurantWhenReady(customerOrder);
     }
@@ -97,20 +97,20 @@ public class CustomerOrderService {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
 
-        OrderStatus orderStatus = customerOrder.previousStatus();
+        OrderClientStatus orderClientStatus = customerOrder.previousStatus();
 
         customerOrderRepository.save(customerOrder);
 
-        orderStatusUpdateService.updateStatusOrderToClient(customerOrder, orderStatus);
+        orderStatusUpdateService.updateStatusOrderToClient(customerOrder, orderClientStatus);
     }
 
-    private OrderStatus getNextStatus(OrderStatus currentStatus) {
-        List<OrderStatus> validSequence = List.of(
-            OrderStatus.NOVO,
-            OrderStatus.EM_PREPARO,
-            OrderStatus.PRONTO_PARA_ENTREGA,
-            OrderStatus.SAIU_PARA_ENTREGA,
-            OrderStatus.CONCLUIDO
+    private OrderClientStatus getNextStatus(OrderClientStatus currentStatus) {
+        List<OrderClientStatus> validSequence = List.of(
+            OrderClientStatus.NOVO,
+            OrderClientStatus.EM_PREPARO,
+            OrderClientStatus.PRONTO_PARA_ENTREGA,
+            OrderClientStatus.SAIU_PARA_ENTREGA,
+            OrderClientStatus.CONCLUIDO
         );
 
         int currentIndex = validSequence.indexOf(currentStatus);
