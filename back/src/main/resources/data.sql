@@ -154,7 +154,7 @@ INSERT INTO delivery_person (
     cnh_validity, vehicle_document, latitude, longitude, role
 )
 VALUES (
-           'user1@email.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
+           'email2@email.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
            '70574622047','Neymar Junior', '1985-06-15','carro',
            'ABC-1234','(11) 98765-4321','12345678911',
            'Banco do Brasil','1234','00012345-6',
@@ -178,7 +178,7 @@ INSERT INTO delivery_person (
     cnh_validity, vehicle_document, latitude, longitude, role
 )
 VALUES (
-           'user3@gmail.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
+           'email3@email.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
            '32841654021','João Silva', '1990-07-20','moto',
            'DEF-5678','(11) 91234-5678','23456789101',
            'Santander','5678','12345678-9',
@@ -202,7 +202,7 @@ INSERT INTO delivery_person (
     cnh_validity, vehicle_document, latitude, longitude, role
 )
 VALUES (
-           'user4@gmail.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
+           'email4@email.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
            '57812543090','Carlos Santana', '1988-08-05','bicicleta',
            'N/A','(11) 95678-1234','34567891202',
            'Caixa Econômica','9876','98765432-1',
@@ -226,7 +226,7 @@ INSERT INTO delivery_person (
     cnh_validity, vehicle_document, latitude, longitude, role
 )
 VALUES (
-           'user5@gmail.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
+           'email5@email.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
            '91234567890','Fernanda Costa', '1992-09-15','carro',
            'GHI-9101','(11) 92345-6789','45678912303',
            'Itaú','3456','34567890-2',
@@ -250,7 +250,7 @@ INSERT INTO delivery_person (
     cnh_validity, vehicle_document, latitude, longitude, role
 )
 VALUES (
-           'user6@gmail.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
+           'email6@email.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
            '67812345980','Mariana Silva', '1994-04-25','moto',
            'JKL-3456','(11) 93456-7890','56789123404',
            'Bradesco','1234','45678901-3',
@@ -323,11 +323,32 @@ INSERT INTO order_info_delivery (order_delivery_status, local_date_time, custome
 -- Fim dos insert de pedido
 
 
+-- Outro pedido para cliente com id 3
 INSERT INTO cart (client_id) VALUES (3);
 
+INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 1, 29.00, 5);
+INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 2, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 3, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 4, 29.00, 5);
-INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 3, 29.00, 5);
-INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 3, 29.00, 5);
-INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 4, 29.00, 5);
-INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 3, 29.00, 5);
+
+INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, current_order_delivery_status, order_date, delivery_cost) VALUES (1015, 1, 3, 'PENDENTE', 'PRONTO_PARA_ENTREGA', 'NOVO', CURRENT_TIMESTAMP, 10.0);
+
+UPDATE customer_order SET delivery_id = 2 WHERE id = 3 LIMIT 1;
+
+UPDATE cart SET customer_order_id = 4 WHERE client_id = 3 LIMIT 1;
+
+INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('NOVO' ,CURRENT_TIMESTAMP,4);
+INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('EM_PREPARO' ,CURRENT_TIMESTAMP,4);
+INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('PRONTO_PARA_ENTREGA' ,CURRENT_TIMESTAMP,4);
+
+INSERT INTO order_info_delivery (order_delivery_status, local_date_time, customer_order) VALUES ('NOVO', CURRENT_TIMESTAMP,4);
+-- Fim dos insert de pedido
+
+INSERT INTO cart (client_id) VALUES (3);
+
+INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (4, 3, 29.00, 5);
+INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (4, 4, 29.00, 5);
+INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (4, 3, 29.00, 5);
+INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (4, 3, 29.00, 5);
+INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (4, 4, 29.00, 5);
+INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (4, 3, 29.00, 5);
