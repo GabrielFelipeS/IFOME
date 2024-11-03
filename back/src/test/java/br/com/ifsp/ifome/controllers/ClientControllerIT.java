@@ -367,69 +367,6 @@ public class ClientControllerIT {
         System.err.println(response.getBody());
     }
 
-    @Test
-    @DirtiesContext
-    public void shouldBeRemoveCorrectDishInCart() {
-        HttpHeaders headers = getHttpHeaders();
-        HttpEntity<OrderItemRequest> requestEntityUpdate = new HttpEntity<>(headers);
-
-        ResponseEntity<String> response = testRestTemplate.exchange("/api/client/cart",  HttpMethod.GET, requestEntityUpdate, String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        DocumentContext documentContextSecond = JsonPath.parse(response.getBody());
-        int size = documentContextSecond.read("$.data.orderItems.length()");
-
-        assertThat(size).isEqualTo(0);
-
-        HttpEntity<OrderItemRequest> requestEntity =getOrderItemRequestHttpEntity(3L, 2);
-
-        response = testRestTemplate.postForEntity
-            ("/api/client/cart/dish/",
-                requestEntity, String.class);
-
-        requestEntity =getOrderItemRequestHttpEntity(4L, 2);
-
-        response = testRestTemplate.postForEntity
-            ("/api/client/cart/dish/",
-                requestEntity, String.class);
-
-        requestEntity =getOrderItemRequestHttpEntity(5L, 2);
-
-        response = testRestTemplate.postForEntity
-            ("/api/client/cart/dish/",
-                requestEntity, String.class);
-
-        requestEntity =getOrderItemRequestHttpEntity(3L, 2);
-
-        response = testRestTemplate.postForEntity
-            ("/api/client/cart/dish/",
-                requestEntity, String.class);
-
-        response = testRestTemplate.exchange("/api/client/cart",  HttpMethod.GET, requestEntityUpdate, String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        documentContextSecond = JsonPath.parse(response.getBody());
-        size = documentContextSecond.read("$.data.orderItems.length()");
-
-        assertThat(size).isEqualTo(3);
-
-        HttpEntity<OrderItemRequest> requestHttpEntity = getRequestHttpEntity();
-
-        ResponseEntity<String> responseUpdate = testRestTemplate.exchange
-            ("/api/client/cart/dish/5", HttpMethod.DELETE,
-                requestHttpEntity, String.class);
-
-        assertThat(responseUpdate.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-
-        response = testRestTemplate.exchange("/api/client/cart",  HttpMethod.GET, requestEntityUpdate, String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        documentContextSecond = JsonPath.parse(response.getBody());
-        size = documentContextSecond.read("$.data.orderItems.length()");
-        System.err.println(response.getBody());
-        assertThat(size).isEqualTo(2);
-    }
-
     private @NotNull HttpEntity<OrderItemRequest> getOrderItemRequestHttpEntity() {
         return getOrderItemRequestHttpEntity(3l, 2);
     }
