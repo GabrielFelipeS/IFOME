@@ -27,6 +27,10 @@ public class CustomerOrder {
     @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderInfo> orderInfo;
 
+    // TODO arrumar um jeito para remover isso
+    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderInfoDelivery> orderInfoDelivery;
+
     private String paymentStatus;
 
     @ManyToOne
@@ -46,12 +50,17 @@ public class CustomerOrder {
     private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus currentOrderStatus;
+    private OrderClientStatus currentOrderClientStatus;
+
+    @Enumerated(EnumType.STRING)
+    private OrderDeliveryStatus currentOrderDeliveryStatus;
+
+    private Double deliveryCost;
 
     public CustomerOrder(Cart cart, LocalDateTime orderDate, Double orderPrice,
-                         Restaurant restaurant, DeliveryPerson deliveryPerson, OrderStatus status, String paymentStatus)
+                         Restaurant restaurant, DeliveryPerson deliveryPerson, OrderClientStatus status, String paymentStatus)
     {
-        this(null, orderPrice,  new ArrayList<>(), paymentStatus, cart, restaurant, deliveryPerson, orderDate, status);
+        this(null, orderPrice,  new ArrayList<>(), new ArrayList<>(), paymentStatus, cart, restaurant, deliveryPerson, orderDate, status, null, 0.0);
         this.nextStatus();
     }
 
@@ -60,12 +69,15 @@ public class CustomerOrder {
             null,
             cart.totalPrice(),
             new ArrayList<>(),
+            new ArrayList<>(),
             "PENDENTE",
             cart,
             restaurant,
             null,
             LocalDateTime.now(),
-            OrderStatus.NOVO);
+            OrderClientStatus.NOVO,
+            null,
+            0.0);
         cart.setCustomerOrder(this);
         this.nextStatus();
     }
@@ -108,40 +120,32 @@ public class CustomerOrder {
         return this.restaurant.getAddress().get(0);
     }
 
-    public OrderStatus nextStatus() {
-        List<OrderStatus> validSequence = List.of(
-            OrderStatus.NOVO,
-            OrderStatus.EM_PREPARO,
-            OrderStatus.PRONTO_PARA_ENTREGA,
-            OrderStatus.SAIU_PARA_ENTREGA,
-            OrderStatus.CONCLUIDO
-        );
-
+    public OrderClientStatus nextStatus() {
         int size = orderInfo.size();
-        if(size == OrderStatus.values().length) {
-            return OrderStatus.CONCLUIDO;
+        if(size == OrderClientStatus.values().length) {
+            return OrderClientStatus.CONCLUIDO;
         }
 
-        System.err.println(OrderStatus.values());
-        OrderStatus value = OrderStatus.values()[size];
+        System.err.println(OrderClientStatus.values());
+        OrderClientStatus value = OrderClientStatus.values()[size];
         var newOrderInfo = new OrderInfo(value, LocalDateTime.now(), this);
 
         orderInfo.add(newOrderInfo);
-        this.setCurrentOrderStatus(value);
+        this.setCurrentOrderClientStatus(value);
 
         return value;
     }
 
-    public OrderStatus previousStatus() {
+    public OrderClientStatus previousStatus() {
         int size = orderInfo.size();
         if(size == 0) {
-            return OrderStatus.NOVO;
+            return OrderClientStatus.NOVO;
         }
 
-        OrderStatus currentSize = OrderStatus.values()[size];
-        OrderStatus value = OrderStatus.values()[size - 1];
+        OrderClientStatus currentSize = OrderClientStatus.values()[size];
+        OrderClientStatus value = OrderClientStatus.values()[size - 1];
 
-        orderInfo.removeIf(orderInfo -> orderInfo.getOrderStatus().equals(currentSize));
+        orderInfo.removeIf(orderInfo -> orderInfo.getOrderClientStatus().equals(currentSize));
 
         return value;
     }
@@ -157,4 +161,36 @@ public class CustomerOrder {
     }
 
 
+    public Double deliveryCost() {
+        return deliveryCost;
+    }
+
+    public OrderDeliveryStatus nextDeliveryStatus() {
+        int size = orderInfo.size();
+        if(size == OrderClientStatus.values().length) {
+            return OrderDeliveryStatus.CONCLUIDO;
+        }
+
+        OrderDeliveryStatus value = OrderDeliveryStatus.values()[size];
+        var newOrderInfo = new OrderInfoDelivery(value, LocalDateTime.now(), this);
+
+        orderInfoDelivery.add(newOrderInfo);
+        this.setCurrentOrderDeliveryStatus(value);
+
+        return value;
+    }
+
+    public OrderDeliveryStatus previousStatusDelivery() {
+        int size = orderInfo.size();
+        if(size == 0) {
+            return OrderDeliveryStatus.NOVO;
+        }
+
+        OrderDeliveryStatus currentSize = OrderDeliveryStatus.values()[size];
+        OrderDeliveryStatus value = OrderDeliveryStatus.values()[size - 1];
+
+        orderInfoDelivery.removeIf(orderInfoDelivery -> orderInfoDelivery.getOrderDeliveryStatus().equals(currentSize));
+
+        return value;
+    }
 }
