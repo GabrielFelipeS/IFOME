@@ -28,7 +28,7 @@ public class CustomerOrder {
     private List<OrderInfo> orderInfo;
 
     // TODO arrumar um jeito para remover isso
-    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<OrderInfoDelivery> orderInfoDelivery;
 
     private String paymentStatus;
@@ -166,14 +166,20 @@ public class CustomerOrder {
     }
 
     public OrderDeliveryStatus nextDeliveryStatus() {
-        int size = orderInfo.size();
-        if(size == OrderClientStatus.values().length) {
+        int size = orderInfoDelivery.size();
+
+//        if(size == 0) {
+//            orderInfoDelivery.add(new OrderInfoDelivery(OrderDeliveryStatus.NOVO, LocalDateTime.now(), this));
+//        }
+
+        if(size == OrderDeliveryStatus.values().length) {
             return OrderDeliveryStatus.CONCLUIDO;
         }
 
         OrderDeliveryStatus value = OrderDeliveryStatus.values()[size];
+        System.err.println("Value " + value);
         var newOrderInfo = new OrderInfoDelivery(value, LocalDateTime.now(), this);
-
+        System.err.println(newOrderInfo);
         orderInfoDelivery.add(newOrderInfo);
         this.setCurrentOrderDeliveryStatus(value);
 
