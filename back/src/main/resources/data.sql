@@ -185,7 +185,7 @@ INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status,
 
 UPDATE cart SET customer_order_id = 1 WHERE client_id = 1 LIMIT 1;
 
-INSERT INTO order_info (order_client_status, local_date_time, customer_order) VALUES ('NOVO' ,CURRENT_TIMESTAMP,1);
+INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('NOVO' ,CURRENT_TIMESTAMP,1);
 -- Fim dos insert de pedido
 
 -- Outro pedido para cliente com id 2
@@ -202,7 +202,7 @@ INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status,
 
 UPDATE cart SET customer_order_id = 2 WHERE client_id = 2 LIMIT 1;
 
-INSERT INTO order_info (order_client_status, local_date_time, customer_order) VALUES ('NOVO', CURRENT_TIMESTAMP, 2);
+INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('NOVO', CURRENT_TIMESTAMP, 2);
 -- Fim dos insert de pedido
 
 -- Outro pedido para cliente com id 3
@@ -218,7 +218,7 @@ INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status,
 UPDATE customer_order SET delivery_id = 1 WHERE id = 3 LIMIT 1;
 UPDATE cart SET customer_order_id = 3 WHERE client_id = 3 LIMIT 1;
 
-INSERT INTO order_info (order_client_status, local_date_time, customer_order) VALUES ('NOVO' ,CURRENT_TIMESTAMP,3);
+INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('NOVO' ,CURRENT_TIMESTAMP,3);
 -- Fim dos insert de pedido
 
 
