@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.dto.response.PusherDeliveryOrderResponse;
 import br.com.ifsp.ifome.services.TokenService;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -35,28 +36,28 @@ public class DeliveryControllerIT {
 
     @Test
     public void getAllOrderByDeliveryPersonWithNoneOrder() {
-        ResponseEntity<String> response = testRestTemplate.exchange("/api/delivery/orders/",
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/delivery/order/",
                                                 HttpMethod.GET, getHttpEntityWithNoneOrder(), String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         DocumentContext documentContext= JsonPath.parse(response.getBody());
         System.err.println(response.getBody());
 
-        List<String> orders = documentContext.read("$.data");
-        assertThat(orders).isNotNull().isEmpty();
+        String message = documentContext.read("$.message");
+        assertThat(message).isEqualTo("Buscando pedido!" );
     }
 
     @Test
     public void getAllOrderByDeliveryPersonWithSomeOrder() {
-        ResponseEntity<String> response = testRestTemplate.exchange("/api/delivery/orders/",
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/delivery/order/",
             HttpMethod.GET, getHttpEntityWithOrder(), String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         DocumentContext documentContext= JsonPath.parse(response.getBody());
         System.err.println(response.getBody());
 
-        List<String> orders = documentContext.read("$.data");
-        assertThat(orders).isNotNull().isNotEmpty();
+        String message = documentContext.read("$.message");
+        assertThat(message).isEqualTo("Pedido atual pego com sucesso!");
     }
 
     private HttpEntity getHttpEntityWithNoneOrder() {
