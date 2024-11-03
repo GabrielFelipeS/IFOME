@@ -1,7 +1,6 @@
 package br.com.ifsp.ifome.services;
 
 import br.com.ifsp.ifome.dto.request.CoordinatesRequest;
-import br.com.ifsp.ifome.dto.request.RefuseOrderRequest;
 import br.com.ifsp.ifome.dto.response.DeliveryOrderResponse;
 import br.com.ifsp.ifome.dto.response.DeliveryPersonResponse;
 import br.com.ifsp.ifome.entities.*;
@@ -41,7 +40,7 @@ public class DeliveryService {
     }
 
     @Async  // TODO melhorar forma de busca
-    public void choiceRestaurantWhenReady(CustomerOrder customerOrder) {
+    public void choiceDeliveryPersonWhenReady(CustomerOrder customerOrder) {
         boolean isNotReady = !customerOrder.getCurrentOrderClientStatus().equals(OrderClientStatus.PRONTO_PARA_ENTREGA);
         if(isNotReady) return;
 
@@ -54,7 +53,9 @@ public class DeliveryService {
 
         double minDistance = Double.MAX_VALUE;
 
-        DeliveryPerson deliveryPersonChoice = deliveryPersons.get(0);
+        System.err.println("AQUI 1");
+        DeliveryPerson deliveryPersonChoice = null;
+        System.err.println("AQUI 2");
 
         for(DeliveryPerson deliveryPerson : deliveryPersons) {
             double distance = calculateDistance(addressRestaurant, deliveryPerson.getLatitude(), deliveryPerson.getLongitude());
@@ -65,6 +66,20 @@ public class DeliveryService {
             }
         }
 
+        if(deliveryPersonChoice == null) {
+            // TODO criar uma classe thread que emcapsula isso, para também usar um limitador
+//            Thread thread = new Thread(() -> {
+//                try {
+//                    Thread.sleep(10000);
+//                    this.choiceDeliveryPersonWhenReady(customerOrder);
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            });
+//            thread.start();
+            return;
+        }
+
         customerOrder.setDeliveryPerson(deliveryPersonChoice);
         System.err.println(minDistance);
         double preciseDelivery = minDistance * 1;
@@ -72,7 +87,6 @@ public class DeliveryService {
         customerOrder.setDeliveryCost(preciseDelivery);
         customerOrderRepository.save(customerOrder);
 
-        System.err.println("AQUI 1");
         orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder, OrderDeliveryStatus.NOVO);
     }
 
@@ -153,7 +167,7 @@ public class DeliveryService {
 
         refuseCustomerOrderRepository.save(refuseCustomerOrder);
 
-        this.choiceRestaurantWhenReady(customerOrder);
+        this.choiceDeliveryPersonWhenReady(customerOrder);
     }
 
     public DeliveryPersonResponse getByEmail(String email) {
@@ -176,6 +190,6 @@ public class DeliveryService {
 
         this.customerOrderRepository.save(customerOrder);
 
-        this.choiceRestaurantWhenReady(customerOrder);
+        this.choiceDeliveryPersonWhenReady(customerOrder);
     }
 }

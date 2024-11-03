@@ -169,6 +169,102 @@ INSERT INTO address (
 VALUES
     ('Endereço Carlos', '03090-000', 'Mooca', 'São Paulo', 'SP', 'Rua da Mooca', '300', 'Apto 202', 'Perto do Parque da Mooca', 'Casa', 1);
 
+-- Entregador 3
+INSERT INTO delivery_person (
+    email, password,
+    cpf, name, date_of_birth, type_of_vehicle,
+    plate, telephone,  cnh_number,
+    bank, agency, account,
+    cnh_validity, vehicle_document, latitude, longitude, role
+)
+VALUES (
+           'user3@gmail.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
+           '32841654021','João Silva', '1990-07-20','moto',
+           'DEF-5678','(11) 91234-5678','23456789101',
+           'Santander','5678','12345678-9',
+           '2025-11-30','234567890', '-23.532126', '-46.629177', 'DELIVERY'
+       );
+
+INSERT INTO address (
+    name_address, cep, neighborhood,
+    city, state, address,
+    number, complement, details,
+    type_residence, delivery_id)
+VALUES
+    ('Endereço João', '04020-000', 'Vila Mariana', 'São Paulo', 'SP', 'Rua Vergueiro', '400', 'Apto 402', 'Próximo ao metrô Ana Rosa', 'Apartamento', 3);
+
+-- Entregador 4
+INSERT INTO delivery_person (
+    email, password,
+    cpf, name, date_of_birth, type_of_vehicle,
+    plate, telephone,  cnh_number,
+    bank, agency, account,
+    cnh_validity, vehicle_document, latitude, longitude, role
+)
+VALUES (
+           'user4@gmail.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
+           '57812543090','Carlos Santana', '1988-08-05','bicicleta',
+           'N/A','(11) 95678-1234','34567891202',
+           'Caixa Econômica','9876','98765432-1',
+           '2024-10-01','345678912', '-23.558708', '-46.648454', 'DELIVERY'
+       );
+
+INSERT INTO address (
+    name_address, cep, neighborhood,
+    city, state, address,
+    number, complement, details,
+    type_residence, delivery_id)
+VALUES
+    ('Endereço Carlos', '05510-000', 'Butantã', 'São Paulo', 'SP', 'Av. Vital Brasil', '500', 'Casa', 'Perto do metrô Butantã', 'Casa', 4);
+
+-- Entregador 5
+INSERT INTO delivery_person (
+    email, password,
+    cpf, name, date_of_birth, type_of_vehicle,
+    plate, telephone,  cnh_number,
+    bank, agency, account,
+    cnh_validity, vehicle_document, latitude, longitude, role
+)
+VALUES (
+           'user5@gmail.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
+           '91234567890','Fernanda Costa', '1992-09-15','carro',
+           'GHI-9101','(11) 92345-6789','45678912303',
+           'Itaú','3456','34567890-2',
+           '2027-06-15','456789123', '-23.550520', '-46.633308', 'DELIVERY'
+       );
+
+INSERT INTO address (
+    name_address, cep, neighborhood,
+    city, state, address,
+    number, complement, details,
+    type_residence, delivery_id)
+VALUES
+    ('Endereço Fernanda', '01310-000', 'Bela Vista', 'São Paulo', 'SP', 'Av. Paulista', '600', 'Apto 603', 'Próximo ao MASP', 'Apartamento', 5);
+
+-- Entregador 6
+INSERT INTO delivery_person (
+    email, password,
+    cpf, name, date_of_birth, type_of_vehicle,
+    plate, telephone,  cnh_number,
+    bank, agency, account,
+    cnh_validity, vehicle_document, latitude, longitude, role
+)
+VALUES (
+           'user6@gmail.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
+           '67812345980','Mariana Silva', '1994-04-25','moto',
+           'JKL-3456','(11) 93456-7890','56789123404',
+           'Bradesco','1234','45678901-3',
+           '2026-08-20','567891234', '-23.561416', '-46.655881', 'DELIVERY'
+       );
+
+INSERT INTO address (
+    name_address, cep, neighborhood,
+    city, state, address,
+    number, complement, details,
+    type_residence, delivery_id)
+VALUES
+    ('Endereço Mariana', '04578-000', 'Itaim Bibi', 'São Paulo', 'SP', 'Rua Tabapuã', '700', 'Apto 704', 'Próximo ao Parque do Povo', 'Apartamento', 6);
+
 -- Um pedido para client com id 1
 INSERT INTO cart (client_id) VALUES (1);
 

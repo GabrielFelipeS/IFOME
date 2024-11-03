@@ -90,7 +90,7 @@ public class CustomerOrderService {
 
         orderStatusUpdateService.updateStatusOrderToClient(customerOrder, orderClientStatus);
 
-        deliveryService.choiceRestaurantWhenReady(customerOrder);
+        deliveryService.choiceDeliveryPersonWhenReady(customerOrder);
     }
 
     public void previousOrderStatus(Long orderId) {
