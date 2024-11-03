@@ -5,7 +5,7 @@ import br.com.ifsp.ifome.dto.request.OrderItemRequest;
 import br.com.ifsp.ifome.dto.request.UpdateOrderStatusRequest;
 import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
 import br.com.ifsp.ifome.entities.CustomerOrder;
-import br.com.ifsp.ifome.entities.OrderStatus;
+import br.com.ifsp.ifome.entities.OrderClientStatus;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.services.TokenService;
 import org.jetbrains.annotations.NotNull;
@@ -178,13 +178,13 @@ public class CustomerOrderControllerIT {
     public void shouldFollowOrderStatusSequence() {
         Long orderId = 1L;
 
-        updateOrderStatusAndPrint(orderId, OrderStatus.EM_PREPARO);
-        updateOrderStatusAndPrint(orderId, OrderStatus.PRONTO_PARA_ENTREGA);
-        updateOrderStatusAndPrint(orderId, OrderStatus.SAIU_PARA_ENTREGA);
-        updateOrderStatusAndPrint(orderId, OrderStatus.CONCLUIDO);
+        updateOrderStatusAndPrint(orderId, OrderClientStatus.EM_PREPARO);
+        updateOrderStatusAndPrint(orderId, OrderClientStatus.PRONTO_PARA_ENTREGA);
+        updateOrderStatusAndPrint(orderId, OrderClientStatus.SAIU_PARA_ENTREGA);
+        updateOrderStatusAndPrint(orderId, OrderClientStatus.CONCLUIDO);
     }
 
-    private void updateOrderStatusAndPrint(Long orderId, OrderStatus expectedStatus) {
+    private void updateOrderStatusAndPrint(Long orderId, OrderClientStatus expectedStatus) {
         UpdateOrderStatusRequest updateRequest = new UpdateOrderStatusRequest(orderId);
         HttpHeaders headers = getHttpHeadersRestaurant(); // Obtenha os cabeçalhos do restaurante
 
@@ -197,9 +197,9 @@ public class CustomerOrderControllerIT {
         assertThat(response.getBody().message()).isEqualTo("Status atualizado com sucesso!");
 
         CustomerOrder updatedOrder = customerOrderRepository.findById(orderId).orElseThrow();
-        assertThat(updatedOrder.getCurrentOrderStatus()).isEqualTo(expectedStatus);
+        assertThat(updatedOrder.getCurrentOrderClientStatus()).isEqualTo(expectedStatus);
 
-        System.err.println("Status atualizado para: " + updatedOrder.getCurrentOrderStatus());
+        System.err.println("Status atualizado para: " + updatedOrder.getCurrentOrderClientStatus());
     }
 
 //    @Test
