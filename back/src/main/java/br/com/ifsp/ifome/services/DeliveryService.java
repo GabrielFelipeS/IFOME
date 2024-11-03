@@ -42,7 +42,44 @@ public class DeliveryService {
 
     @Async  // TODO melhorar forma de busca
     public void choiceDeliveryPersonWhenReady(CustomerOrder customerOrder) {
+        boolean isNotReady = !customerOrder.getCurrentOrderClientStatus().equals(OrderClientStatus.PRONTO_PARA_ENTREGA);
+        if(isNotReady) return;
 
+        System.err.println(customerOrder.getRestaurantAddress());
+        List<DeliveryPerson> deliveryPersons = deliveryPersonRepository.findDeliveryPersonAvailable();
+        deliveryPersons.stream().forEach(System.err::println);
+        Address addressRestaurant = customerOrder.getRestaurantAddress();
+        double minDistance = Double.MAX_VALUE;
+        System.err.println("AQUI 1");
+        DeliveryPerson deliveryPersonChoice = null;
+        System.err.println("AQUI 2");
+        for(DeliveryPerson deliveryPerson : deliveryPersons) {
+            double distance = calculateDistance(addressRestaurant, deliveryPerson.getLatitude(), deliveryPerson.getLongitude());
+            System.err.println(distance);
+            if(distance < minDistance) {
+                minDistance = distance;
+                deliveryPersonChoice = deliveryPerson;
+            }
+        }
+        if(deliveryPersonChoice == null) {
+            // TODO criar uma classe thread que emcapsula isso, para também usar um limitador
+//            Thread thread = new Thread(() -> {
+//                try {
+//                    Thread.sleep(10000);
+//                    this.choiceDeliveryPersonWhenReady(customerOrder);
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            });
+//            thread.start();
+            return;
+        }
+        customerOrder.setDeliveryPerson(deliveryPersonChoice);
+        System.err.println(minDistance);
+        double preciseDelivery = minDistance * 1;
+        customerOrder.setDeliveryCost(preciseDelivery);
+        customerOrderRepository.save(customerOrder);
+        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder, OrderDeliveryStatus.NOVO);
     }
 
     private double calculateDistance(Address restaurantAddress, String latitudeDeliveryPerson, String longitudeDeliveryPerson) {
@@ -152,11 +189,18 @@ public class DeliveryService {
         this.choiceDeliveryPersonWhenReady(customerOrder);
     }
 
-    public PusherDeliveryOrderResponse getCustomerOrderId(Long customerOrderId) {
-        CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow();
+    public Optional<PusherDeliveryOrderResponse> getCustomerOrderId(Principal principal) {
+//        var customerOrdes = customerOrderRepository.findAllByDeliveryPerson(principal.getName());
+        var customerOrdes = customerOrderRepository.findActiveOrderDeliveryPerson(principal.getName());
+
+        if(customerOrdes.isEmpty()) {
+            return Optional.empty();
+        }
+
+        CustomerOrder customerOrder = customerOrdes.get(0);
 
         DeliveryOrderResponse deliveryOrderResponse = new DeliveryOrderResponse(customerOrder);
 
-        return PusherDeliveryOrderResponse.from(customerOrder, deliveryOrderResponse);
+        return Optional.of(PusherDeliveryOrderResponse.from(customerOrder, deliveryOrderResponse));
     }
 }
