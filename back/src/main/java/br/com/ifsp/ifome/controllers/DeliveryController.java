@@ -69,6 +69,15 @@ public class DeliveryController {
         return ResponseEntity.ok(new ApiResponse("success", null, "Status atualizado com sucesso!"));
     }
 
+    @Operation(
+        security = @SecurityRequirement(name = "Bearer Token")
+    )
+    @GetMapping("/order/{customerOrderId}")
+    public ResponseEntity<ApiResponse> getOrder(@PathVariable Long customerOrderId) {
+        var response = deliveryService.getCustomerOrderId(customerOrderId);
+        return ResponseEntity.ok(new ApiResponse("success", response, "Status atualizado com sucesso!"));
+    }
+
     @PutMapping("/coordinates/")
     public ResponseEntity<ApiResponse> updateCoordinates(
         @RequestBody CoordinatesRequest coordinatesRequest,
