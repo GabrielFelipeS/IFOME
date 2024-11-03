@@ -2,6 +2,7 @@ package br.com.ifsp.ifome.dto.response;
 
 import br.com.ifsp.ifome.entities.OrderDeliveryStatus;
 import br.com.ifsp.ifome.entities.OrderInfoDelivery;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,11 +15,11 @@ public record OrderInfoDeliveryResponse (
 
     public static OrderInfoDeliveryResponse from(OrderInfoDelivery orderInfoDelivery) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_TIME;
-
+        System.err.println("AQUI 1");
         return new OrderInfoDeliveryResponse(
             orderInfoDelivery.getId(),
             orderInfoDelivery.getOrderDeliveryStatus(),
-            orderInfoDelivery.getLocalDateTime().format(dateTimeFormatter)
+            LocalDateTime.now().format(dateTimeFormatter)
         );
     }
 }
