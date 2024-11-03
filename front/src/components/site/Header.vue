@@ -16,10 +16,10 @@
                 placeholder="Busque por item ou loja" v-model="query" @keyup.enter="searchForm" />
         </div>
         <div class="flex-row hidden md:flex">
-            <v-icon name="fa-shopping-bag" scale="1.5" class="text-primary cursor-pointer" />
+            <v-icon name="fa-shopping-bag" scale="1.5" class="text-primary cursor-pointer" @click="emit('open-cart')"/>
             <div class="flex flex-col">
-                <p class="text-xs text-tertiary-light">R$ 00,00</p>
-                <p class="text-xs text-tertiary-light">0 Items</p>
+                <p class="text-xs text-tertiary-light">R$ {{ cart.totalPrice.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</p>
+                <p class="text-xs text-tertiary-light">{{ cart.totalItems }} Itens</p>
             </div>
         </div>
         <div class="hidden md:block">
@@ -29,9 +29,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
+import { useCart } from "@/stores/cart.js";
+import api from "@/services/api.js";
+import {useToast} from "vue-toast-notification";
 
-const emit = defineEmits(['search'])
+const emit = defineEmits(['search', 'open-cart'])
 
 const query = ref('')
 
@@ -40,4 +43,24 @@ function searchForm() {
         emit('search', query.value)
     }
 }
+
+const cart = useCart();
+const toat = useToast();
+
+const updateCart = async () => {
+	if (localStorage.getItem('token') !== null) {
+		try {
+			const response = await api.get('client/cart');
+			const order = response.data.data;
+			cart.updateCart(order);
+		} catch (e) {
+			console.log("Erro ao carregar carrinho: " + e);
+			toast.error(e.data.message);
+		}
+	}
+}
+
+onMounted(() => {
+	updateCart();
+})
 </script>
