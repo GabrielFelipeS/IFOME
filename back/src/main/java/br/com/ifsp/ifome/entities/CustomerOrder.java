@@ -145,7 +145,7 @@ public class CustomerOrder {
         OrderClientStatus currentSize = OrderClientStatus.values()[size];
         OrderClientStatus value = OrderClientStatus.values()[size - 1];
 
-        orderInfo.removeIf(orderInfo -> orderInfo.getOrderClientStatus().equals(currentSize));
+        orderInfo.removeIf(orderInfo -> orderInfo.getOrderStatus().equals(currentSize));
 
         return value;
     }
