@@ -13,6 +13,7 @@ import br.com.ifsp.ifome.exceptions.DishNotFoundInCartException;
 import br.com.ifsp.ifome.repositories.CartRepository;
 import br.com.ifsp.ifome.repositories.ClientRepository;
 import br.com.ifsp.ifome.repositories.DishRepository;
+import br.com.ifsp.ifome.repositories.OrderItemRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,11 +23,13 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final DishRepository dishRepository;
     private final CartRepository cartRepository;
+    private final OrderItemRepository orderItemRepository;
 
-    public ClientService(ClientRepository clientRepository, DishRepository dishRepository, CartRepository cartRepository) {
+    public ClientService(ClientRepository clientRepository, DishRepository dishRepository, CartRepository cartRepository, OrderItemRepository orderItemRepository) {
         this.clientRepository = clientRepository;
         this.dishRepository = dishRepository;
         this.cartRepository = cartRepository;
+        this.orderItemRepository = orderItemRepository;
     }
 
     public CartResponse getCart(String email) {
@@ -60,10 +63,13 @@ public class ClientService {
 
     public void removeDishInCart(Long dishId, String email) {
         this.dishIdExistsOrElseThrow(dishId);
-       
         Optional<Cart> optionalCart = this.cartRepository.findFirstByClientEmail(email);
         Cart cart = optionalCart.orElseThrow(DishNotFoundInCartException::new);
-        cart.removeDishBy(dishId);
+
+        OrderItem orderItem = cart.removeDishBy(dishId);;
+
+        orderItemRepository.delete(orderItem);
+
         this.cartRepository.save(cart);
     }
 
