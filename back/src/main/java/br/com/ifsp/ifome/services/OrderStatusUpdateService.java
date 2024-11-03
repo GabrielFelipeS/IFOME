@@ -1,6 +1,9 @@
 package br.com.ifsp.ifome.services;
 
 import br.com.ifsp.ifome.dto.response.DeliveryOrderResponse;
+import br.com.ifsp.ifome.dto.response.OrderInfoDeliveryResponse;
+import br.com.ifsp.ifome.dto.response.OrderItemDeliveryResponse;
+import br.com.ifsp.ifome.dto.response.OrderItemResponse;
 import br.com.ifsp.ifome.entities.CustomerOrder;
 import br.com.ifsp.ifome.entities.OrderClientStatus;
 import br.com.ifsp.ifome.entities.OrderDeliveryStatus;
@@ -14,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -102,19 +106,35 @@ public class OrderStatusUpdateService {
 
         System.err.println(deliveryOrderResponse.addressRestaurant());
         System.err.println("ANTES DO PUSHER");
+
+
+
+        var orderInfoDeliveryList = customerOrder
+                                .getOrderInfoDelivery()
+                                .stream()
+                                .map(OrderInfoDeliveryResponse::from)
+                                .toList();
+
+        orderInfoDeliveryList.forEach(System.err::println);
+
+        Map<String, Object> map = Map.of(
+            "customerOrderId", customerOrder.getId(),
+            "nameClient", deliveryOrderResponse.nameClient(),
+            "phoneClient", deliveryOrderResponse.phoneClient(),
+            "addressClient", deliveryOrderResponse.addressClient(),
+            "addressRestaurant", deliveryOrderResponse.addressRestaurant(),
+            "totalPrice", deliveryOrderResponse.totalPrice(),
+            "expectedTime", deliveryOrderResponse.getOrderTime(),
+            "deliveryCost", customerOrder.deliveryCost(),
+            "status", orderInfoDeliveryList,
+            "orderItens", customerOrder.getOrderItems().stream().map(OrderItemDeliveryResponse::new).toList()
+            );
+
         pusher.trigger(
             "pedidos",
-            "entregador_" + customerOrder.getDeliveryPerson().getId().toString(),
-            Map.of(
-                "nameClient", deliveryOrderResponse.nameClient(),
-                "phoneClient", deliveryOrderResponse.phoneClient(),
-                "addressClient", deliveryOrderResponse.addressClient(),
-                "addressRestaurant", deliveryOrderResponse.addressRestaurant(),
-                "totalPrice", deliveryOrderResponse.totalPrice(),
-                "expectedTime", deliveryOrderResponse.getOrderTime(),
-                  "deliveryCost", customerOrder.deliveryCost(),
-                "status", orderInfoDelivery.toString().replaceAll("_", "").toLowerCase()
-            )
+//            "entregador_" + customerOrder.getDeliveryPerson().getId().toString(),
+            "entregador_" + 1,
+            map
         );
         System.err.println("DEPOIS DO PUSHER");
     }
