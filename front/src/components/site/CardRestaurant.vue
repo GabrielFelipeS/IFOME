@@ -32,6 +32,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import {getImage} from "@/services/getImage.js";
 
 const props = defineProps({
     restaurant: Object
@@ -39,7 +40,7 @@ const props = defineProps({
 
 const currentDay = ref('');
 const currentTime = ref('');
-const imageUrl = `${import.meta.env.VITE_API_URL}image/${props.restaurant.restaurantImage}`;
+const imageUrl = getImage(props.restaurant.restaurantImage);
 
 onMounted(() => {
     const now = new Date();

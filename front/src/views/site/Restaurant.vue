@@ -88,6 +88,7 @@ import router from '@/router';
 import DishModal from "@/components/store/dish/DishModal.vue";
 import CartDetails from "@/components/site/CartDetails.vue";
 import api from '@/services/api';
+import {getImage} from "@/services/getImage.js";
 
 const route = useRoute();
 const restaurantId = route.params.id;
@@ -110,7 +111,7 @@ const fetchRestaurantData = async () => {
         }
         restaurant.value = response.data.data;
 		dishes.value = restaurant.value.dish.filter(dish => dish.availability === 'Disponível');
-        imageUrl.value = `${import.meta.env.VITE_API_URL}image/${restaurant.value.restaurantImage}`;
+		imageUrl.value = getImage(restaurant.value.restaurantImage);
     } catch (err) {
         router.push({ name: 'NotFound' });
         console.error(err);
