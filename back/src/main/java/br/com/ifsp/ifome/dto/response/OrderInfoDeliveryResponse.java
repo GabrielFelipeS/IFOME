@@ -15,11 +15,11 @@ public record OrderInfoDeliveryResponse (
 
     public static OrderInfoDeliveryResponse from(OrderInfoDelivery orderInfoDelivery) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_TIME;
-        System.err.println("AQUI 1");
+
         return new OrderInfoDeliveryResponse(
             orderInfoDelivery.getId(),
             orderInfoDelivery.getOrderDeliveryStatus(),
-            LocalDateTime.now().format(dateTimeFormatter)
+            orderInfoDelivery.getLocalDateTime().format(dateTimeFormatter)
         );
     }
 }
