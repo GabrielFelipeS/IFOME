@@ -77,10 +77,6 @@ public class CustomerOrderController {
 
         List<CustomerOrderResponse> orders = customerOrderService.getAllOrdersByRestaurant(restaurantEmail);
 
-        if (orders.isEmpty()) {
-            return ResponseEntity.noContent().build(); // Retornar 204 No Content se não houver pedidos
-        }
-
         return ResponseEntity.ok(orders); // Retornar 200 OK com a lista de pedidos
     }
 
