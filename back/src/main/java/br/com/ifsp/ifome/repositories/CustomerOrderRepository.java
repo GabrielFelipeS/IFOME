@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Long>
 {
@@ -15,4 +16,7 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Lo
 
     @Query("SELECT c FROM CustomerOrder c WHERE c.deliveryPerson.email = :email order by c.orderDate asc")
     List<CustomerOrder> findAllByDeliveryPerson(@Param("email") String email);
+
+    @Query("SELECT c FROM CustomerOrder c WHERE c.deliveryPerson.email = :email AND c.currentOrderClientStatus != 'CONCLUIDO'")
+    List<CustomerOrder> findActiveOrderDeliveryPerson(String email);
 }

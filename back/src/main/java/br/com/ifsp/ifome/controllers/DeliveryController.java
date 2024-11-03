@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -72,10 +73,15 @@ public class DeliveryController {
     @Operation(
         security = @SecurityRequirement(name = "Bearer Token")
     )
-    @GetMapping("/order/{customerOrderId}")
-    public ResponseEntity<ApiResponse> getOrder(@PathVariable Long customerOrderId) {
-        var response = deliveryService.getCustomerOrderId(customerOrderId);
-        return ResponseEntity.ok(new ApiResponse("success", response, "Status atualizado com sucesso!"));
+    @GetMapping("/order/")
+    public ResponseEntity<ApiResponse> getOrder(Principal principal) {
+        var responseOptional = deliveryService.getCustomerOrderId(principal);
+
+        if(responseOptional.isEmpty()) {
+            return ResponseEntity.ok(new ApiResponse("success", Collections.emptyList(), "Buscando pedido!"));
+        }
+
+        return ResponseEntity.ok(new ApiResponse("success", responseOptional.get(), "Pedido atual pego com sucesso!"));
     }
 
     @PutMapping("/coordinates/")
