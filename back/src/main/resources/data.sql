@@ -312,9 +312,12 @@ INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 4, 2
 INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, order_date) VALUES (1015, 1, 3, 'PENDENTE', 'NOVO', CURRENT_TIMESTAMP);
 
 UPDATE customer_order SET delivery_id = 1 WHERE id = 3 LIMIT 1;
+
 UPDATE cart SET customer_order_id = 3 WHERE client_id = 3 LIMIT 1;
 
 INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('NOVO' ,CURRENT_TIMESTAMP,3);
+
+INSERT INTO order_info_delivery (order_delivery_status, customer_order) VALUES ('NOVO', 3);
 -- Fim dos insert de pedido
 
 
