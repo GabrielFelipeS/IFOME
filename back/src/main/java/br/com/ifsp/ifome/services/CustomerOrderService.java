@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.security.Principal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -74,6 +75,10 @@ public class CustomerOrderService {
         );
 
         List<CustomerOrder> orders = customerOrderRepository.findByRestaurantId(restaurant.getId());
+
+        if(orders.isEmpty()) {
+            return Collections.emptyList();
+        }
 
         return orders.stream()
                 .map(CustomerOrderResponse::new) // Assumindo que você tem um construtor adequado
