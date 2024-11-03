@@ -199,4 +199,22 @@ public class CustomerOrder {
 
         return value;
     }
+
+
+    public void nextClientStatusByDeliveryStatus() {
+        int sizeOrderInfo = this.orderInfo.size();
+        int sizeInfoDelivery = this.orderInfoDelivery.size();
+
+        if(sizeOrderInfo == 3 && sizeInfoDelivery == 6) {
+            this.orderInfo.add(new OrderInfo(OrderClientStatus.SAIU_PARA_ENTREGA, LocalDateTime.now(), this));
+            return;
+        }
+
+        if(sizeOrderInfo == 4 && sizeInfoDelivery== 7) {
+            this.orderInfo.add(new OrderInfo(OrderClientStatus.SAIU_PARA_ENTREGA, LocalDateTime.now(), this));
+            return;
+        }
+
+        this.orderInfo.forEach(o -> System.err.println(o.getOrderStatus()));
+    }
 }

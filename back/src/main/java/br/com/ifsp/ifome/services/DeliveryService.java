@@ -5,6 +5,7 @@ import br.com.ifsp.ifome.dto.response.DeliveryOrderResponse;
 import br.com.ifsp.ifome.dto.response.DeliveryPersonResponse;
 import br.com.ifsp.ifome.dto.response.PusherDeliveryOrderResponse;
 import br.com.ifsp.ifome.entities.*;
+import br.com.ifsp.ifome.exceptions.DeclineNotAvailableException;
 import br.com.ifsp.ifome.exceptions.DeliveryPersontNotFoundException;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.repositories.DeliveryPersonRepository;
@@ -79,7 +80,10 @@ public class DeliveryService {
             return;
         }
         customerOrder.setDeliveryPerson(deliveryPersonChoice);
-        System.err.println(minDistance);
+
+        System.err.println("Min distance: " + minDistance);
+        System.err.println("Entregador escolhido: " + customerOrder.getDeliveryPerson().getEmail());
+
         double preciseDelivery = minDistance * 1;
         customerOrder.setDeliveryCost(preciseDelivery);
         customerOrderRepository.save(customerOrder);
@@ -96,17 +100,17 @@ public class DeliveryService {
         double diffLatitude = latDeliveryPerson - latRestaurant;
         double diffLongitude = lonDeliveryPerson - lonRestaurant;
 
-        System.err.println("Latitude");
-        System.err.println(latRestaurant);
-        System.err.println(latDeliveryPerson);
-
-        System.err.println("Longitude");
-        System.err.println(lonRestaurant);
-        System.err.println(lonDeliveryPerson);
-
-        System.err.println("Diferença");
-        System.err.println(diffLatitude);
-        System.err.println(diffLongitude);
+//        System.err.println("Latitude");
+//        System.err.println(latRestaurant);
+//        System.err.println(latDeliveryPerson);
+//
+//        System.err.println("Longitude");
+//        System.err.println(lonRestaurant);
+//        System.err.println(lonDeliveryPerson);
+//
+//        System.err.println("Diferença");
+//        System.err.println(diffLatitude);
+//        System.err.println(diffLongitude);
 
         double diffAngular = Math.pow(Math.sin(diffLatitude / 2), 2)
             + Math.cos(latRestaurant) * Math.cos(latDeliveryPerson) * Math.pow(Math.sin(diffLongitude / 2), 2);
@@ -135,6 +139,8 @@ public class DeliveryService {
 
         OrderDeliveryStatus orderDeliveryStatus = customerOrder.nextDeliveryStatus();
 
+        customerOrder.nextClientStatusByDeliveryStatus();
+
         customerOrderRepository.save(customerOrder);
         System.err.println("AQUI: " + orderDeliveryStatus);
 
@@ -145,29 +151,43 @@ public class DeliveryService {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
 
+        if(customerOrder.getOrderInfoDelivery().size() == 1) {
+            return;
+        }
+
         OrderInfoDelivery orderDeliveryStatus = customerOrder.previousStatusDelivery();
 
         orderInfoDeliveryRepository.delete(orderDeliveryStatus);
 
-//        customerOrderRepository.save(customerOrder);
+        customerOrderRepository.save(customerOrder);
 
         orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
     }
 
     public void refuseOrder(Long customerOrderId, String justification, Principal principal) {
-            DeliveryPerson deliveryPerson = deliveryPersonRepository
-                                            .findByEmail(principal.getName())
-                                            .orElseThrow(DeliveryPersontNotFoundException::new);
+        DeliveryPerson deliveryPerson = deliveryPersonRepository
+                                        .findByEmail(principal.getName())
+                                        .orElseThrow(DeliveryPersontNotFoundException::new);
 
-            CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow();
+        CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow();
 
-            customerOrder.setDeliveryPerson(null);
+        var currentOrderDelivery = customerOrder.getOrderInfoDelivery();
 
-            customerOrderRepository.save(customerOrder);
+        if(currentOrderDelivery.size() >= 6) {
+            throw new DeclineNotAvailableException(customerOrder.getCurrentOrderDeliveryStatus().toString());
+        }
 
-            var refuseCustomerOrder = new RefuseCustomerOrder(
-                customerOrderId, deliveryPerson.getId(), justification
-            );
+        customerOrder.setDeliveryPerson(null);
+
+        customerOrderRepository.save(customerOrder);
+
+        OrderInfoDelivery orderDeliveryStatus = customerOrder.previousStatusDelivery();
+
+        orderInfoDeliveryRepository.delete(orderDeliveryStatus);
+
+        var refuseCustomerOrder = new RefuseCustomerOrder(
+            customerOrderId, deliveryPerson.getId(), justification
+        );
 
         refuseCustomerOrderRepository.save(refuseCustomerOrder);
 
