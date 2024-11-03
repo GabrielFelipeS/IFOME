@@ -186,16 +186,16 @@ public class CustomerOrder {
         return value;
     }
 
-    public OrderDeliveryStatus previousStatusDelivery() {
-        int size = orderInfo.size();
+    public OrderInfoDelivery previousStatusDelivery() {
+        int size = orderInfoDelivery.size();
         if(size == 0) {
-            return OrderDeliveryStatus.NOVO;
+            return new OrderInfoDelivery(OrderDeliveryStatus.NOVO, LocalDateTime.now(), this);
         }
 
-        OrderDeliveryStatus currentSize = OrderDeliveryStatus.values()[size];
-        OrderDeliveryStatus value = OrderDeliveryStatus.values()[size - 1];
+        OrderInfoDelivery value = orderInfoDelivery.get(size - 1);
+        value.setCustomerOrder(null);
 
-        orderInfoDelivery.removeIf(orderInfoDelivery -> orderInfoDelivery.getOrderDeliveryStatus().equals(currentSize));
+        orderInfoDelivery.remove(size - 1);
 
         return value;
     }
