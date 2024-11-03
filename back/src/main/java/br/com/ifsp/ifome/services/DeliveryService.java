@@ -8,6 +8,7 @@ import br.com.ifsp.ifome.entities.*;
 import br.com.ifsp.ifome.exceptions.DeliveryPersontNotFoundException;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.repositories.DeliveryPersonRepository;
+import br.com.ifsp.ifome.repositories.OrderInfoDeliveryRepository;
 import br.com.ifsp.ifome.repositories.RefuseCustomerOrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.scheduling.annotation.Async;
@@ -25,12 +26,14 @@ public class DeliveryService {
     private final CustomerOrderRepository customerOrderRepository;
     private final OrderStatusUpdateService orderStatusUpdateService;
     private final RefuseCustomerOrderRepository refuseCustomerOrderRepository;
+    private final OrderInfoDeliveryRepository orderInfoDeliveryRepository;
 
-    public DeliveryService(DeliveryPersonRepository deliveryPersonRepository, CustomerOrderRepository customerOrderRepository, OrderStatusUpdateService orderStatusUpdateService, RefuseCustomerOrderRepository refuseCustomerOrderRepository) {
+    public DeliveryService(DeliveryPersonRepository deliveryPersonRepository, CustomerOrderRepository customerOrderRepository, OrderStatusUpdateService orderStatusUpdateService, RefuseCustomerOrderRepository refuseCustomerOrderRepository, OrderInfoDeliveryRepository orderInfoDeliveryRepository) {
         this.deliveryPersonRepository = deliveryPersonRepository;
         this.customerOrderRepository = customerOrderRepository;
         this.orderStatusUpdateService = orderStatusUpdateService;
         this.refuseCustomerOrderRepository = refuseCustomerOrderRepository;
+        this.orderInfoDeliveryRepository = orderInfoDeliveryRepository;
     }
 
     public List<DeliveryOrderResponse> getOrders(Principal principal) {
@@ -43,8 +46,9 @@ public class DeliveryService {
     @Async  // TODO melhorar forma de busca
     public void choiceDeliveryPersonWhenReady(CustomerOrder customerOrder) {
         boolean isNotReady = !customerOrder.getCurrentOrderClientStatus().equals(OrderClientStatus.PRONTO_PARA_ENTREGA);
+        System.err.println( customerOrder.getCurrentOrderClientStatus()+ " " + isNotReady);
         if(isNotReady) return;
-
+        System.err.println("AQUI NÂO");
         System.err.println(customerOrder.getRestaurantAddress());
         List<DeliveryPerson> deliveryPersons = deliveryPersonRepository.findDeliveryPersonAvailable();
         deliveryPersons.stream().forEach(System.err::println);
@@ -79,7 +83,8 @@ public class DeliveryService {
         double preciseDelivery = minDistance * 1;
         customerOrder.setDeliveryCost(preciseDelivery);
         customerOrderRepository.save(customerOrder);
-        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder, OrderDeliveryStatus.NOVO);
+
+        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
     }
 
     private double calculateDistance(Address restaurantAddress, String latitudeDeliveryPerson, String longitudeDeliveryPerson) {
@@ -132,18 +137,21 @@ public class DeliveryService {
 
         customerOrderRepository.save(customerOrder);
         System.err.println("AQUI: " + orderDeliveryStatus);
-        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder, orderDeliveryStatus);
+
+        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
     }
 
     public void previousOrderStatus(Long orderId) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
 
-        OrderDeliveryStatus orderDeliveryStatus = customerOrder.previousStatusDelivery();
+        OrderInfoDelivery orderDeliveryStatus = customerOrder.previousStatusDelivery();
 
-        customerOrderRepository.save(customerOrder);
+        orderInfoDeliveryRepository.delete(orderDeliveryStatus);
 
-        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder, orderDeliveryStatus);
+//        customerOrderRepository.save(customerOrder);
+
+        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
     }
 
     public void refuseOrder(Long customerOrderId, String justification, Principal principal) {
@@ -190,7 +198,6 @@ public class DeliveryService {
     }
 
     public Optional<PusherDeliveryOrderResponse> getCustomerOrderId(Principal principal) {
-//        var customerOrdes = customerOrderRepository.findAllByDeliveryPerson(principal.getName());
         var customerOrdes = customerOrderRepository.findActiveOrderDeliveryPerson(principal.getName());
 
         if(customerOrdes.isEmpty()) {
