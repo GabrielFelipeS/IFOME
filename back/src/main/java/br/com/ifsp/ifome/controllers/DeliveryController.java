@@ -3,6 +3,7 @@ package br.com.ifsp.ifome.controllers;
 import br.com.ifsp.ifome.docs.DocUpdateCustomerOrderStatus;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.CoordinatesRequest;
+import br.com.ifsp.ifome.dto.request.RefuseOrderRequest;
 import br.com.ifsp.ifome.dto.response.DeliveryOrderResponse;
 import br.com.ifsp.ifome.dto.response.DeliveryPersonResponse;
 import br.com.ifsp.ifome.services.DeliveryService;
@@ -34,7 +35,6 @@ public class DeliveryController {
         return ResponseEntity.ok(new ApiResponse("success", deliveryPersonResponse, "Pedidos disponíveis"));
     }
 
-
     @Operation(
         security = @SecurityRequirement(name = "Bearer Token")
     )
@@ -45,6 +45,7 @@ public class DeliveryController {
         return ResponseEntity.ok(new ApiResponse("success", orders, "Pedidos disponíveis"));
     }
 
+    // TODO fazer verificação de customerOrder é do entregador logado
     @PutMapping("/order/status/{customerOrderId}")
     @DocUpdateCustomerOrderStatus
     public ResponseEntity<ApiResponse> updateOrderStatus(@PathVariable Long customerOrderId) {
@@ -52,6 +53,15 @@ public class DeliveryController {
         return ResponseEntity.ok(new ApiResponse("success", null, "Status atualizado com sucesso!"));
     }
 
+    // TODO fazer verificação de customerOrder é do entregador logado
+    @PutMapping("/order/status/{customerOrderId}/refuse")
+    @DocUpdateCustomerOrderStatus
+    public ResponseEntity<ApiResponse> refuseOrder(@PathVariable Long customerOrderId, RefuseOrderRequest refuseOrderRequest, Principal principal) {
+        deliveryService.refuseOrder(customerOrderId, refuseOrderRequest.justification(), principal);
+        return ResponseEntity.ok(new ApiResponse("success", null, "Pedido recusado com sucesso!"));
+    }
+
+    // TODO fazer verificação de customerOrder é do entregador logado
     @PutMapping("/order/status/{customerOrderId}/previous")
     @DocUpdateCustomerOrderStatus
     public ResponseEntity<ApiResponse> previousOrderStatus(@PathVariable Long customerOrderId) {
@@ -68,10 +78,11 @@ public class DeliveryController {
         return ResponseEntity.ok(new ApiResponse("success", null, "Coordenadas atualizadas"));
     }
 
-    @GetMapping
-    public ResponseEntity<ApiResponse> teste() {
-
+    @PutMapping("/choice/delivery/{customerOrderId}")
+    public ResponseEntity<ApiResponse> teste(@PathVariable Long customerOrderId) {
+        deliveryService.simuleChoice(customerOrderId);
         return ResponseEntity.ok(new ApiResponse("success", null, "Coordenadas atualizadas"));
     }
+
 
 }
