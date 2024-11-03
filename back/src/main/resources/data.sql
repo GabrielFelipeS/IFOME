@@ -11,12 +11,12 @@ VALUES ('Telha Rina', 'telha_rina@email.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpV
 INSERT INTO clients (name, email, password, date_of_birth, cpf,  phone, role)
 VALUES ('Gabriel', 'noreply.ifome@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '77025681008', '(12) 1234-1234',  'CLIENT');
 
-INSERT INTO address (name_address, cep, neighborhood, city, state, address, number, complement, details, type_residence, client_id)
+INSERT INTO address (name_address, cep, neighborhood, city, state, address, number, complement, details, type_residence, latitude, longitude, client_id)
 VALUES
-    ('Endereço João', '05413-020', 'Pinheiros', 'São Paulo', 'SP', 'Rua dos Três Irmãos', '50', NULL, 'Próximo à Praça da República', 'Casa', 1),
-    ('Endereço Maria', '01234-567', 'Centro', 'São Paulo', 'SP', 'Avenida São João', '500','Apto 101', 'Próximo ao Parque Villa-Lobos' , 'Apartamento', 2),
-    ('Endereço Carlos', '03090-000', 'Mooca', 'São Paulo', 'SP', 'Rua da Mooca', '300', 'Apto 202', 'Perto do Parque da Mooca', 'Casa', 3),
-    ('Endereço Carlos', '03090-000', 'Mooca', 'São Paulo', 'SP', 'Rua da Mooca', '300', 'Apto 202', 'Perto do Parque da Mooca', 'Casa', 4);
+    ('Endereço João', '05413-020', 'Pinheiros', 'São Paulo', 'SP', 'Rua dos Três Irmãos', '50', NULL, 'Próximo à Praça da República', 'Casa', '-23.5895527', '-46.7157754', 1),
+    ('Endereço Maria', '01234-567', 'Centro', 'São Paulo', 'SP', 'Avenida São João', '500','Apto 101', 'Próximo ao Parque Villa-Lobos' , 'Apartamento', '-23.1958622', '-45.89846969888535', 2),
+    ('Endereço Carlos', '03090-000', 'Mooca', 'São Paulo', 'SP', 'Rua da Mooca', '300', 'Apto 202', 'Perto do Parque da Mooca', 'Casa', '-23.553584112883435', '-46.62239845521472', 3),
+    ('Endereço Carlos', '03090-000', 'Mooca', 'São Paulo', 'SP', 'Rua da Mooca', '300', 'Apto 202', 'Perto do Parque da Mooca', 'Casa',  '-23.553584112883435', '-46.62239845521472', 4);
 
 INSERT INTO restaurants (
     name_restaurant,
@@ -55,7 +55,8 @@ INSERT INTO restaurants (
 INSERT INTO address (name_address, cep, neighborhood, city, state, address, number, complement, details, type_residence, latitude, longitude, restaurant_id)
 VALUES
     ('Endereço Carlos', '03090-000', 'Mooca', 'São Paulo', 'SP', 'Rua da Mooca', '300', 'Apto 202',
-     'Perto do Parque da Mooca', 'Casa','-21.8682369', '-51.8508716', 1);
+     'Perto do Parque da Mooca', 'Casa','-23.5585905', '-46.5900739', 1);
+--      'Perto do Parque da Mooca', 'Casa','-23.524153650000002', '-46.621807429313016', 1);
 
 INSERT INTO opening_hours (day_of_the_week, opening, closing, restaurant_id) VALUES
      ('Segunda-feira', '08:00', '22:00', 1),
@@ -142,7 +143,7 @@ VALUES (
     '52800314028','João da Silva', '1985-06-15','carro',
     'ABC-1234','(11) 98765-4321','12345678910',
     'Banco do Brasil','1234','00012345-6',
-    '2026-12-31','987654321', '-22.9716406', '-43.1845041', 'DELIVERY'
+    '2026-12-31','987654321', '-23.460437', '-46.5325546', 'DELIVERY'
 );
 
 INSERT INTO delivery_person (
@@ -178,13 +179,13 @@ INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (1, 3, 2
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (1, 4, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (1, 3, 29.00, 5);
 
-INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_status, order_date) VALUES (1015, 1, 1, 'PENDENTE', 'NOVO', CURRENT_TIMESTAMP);
+INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, order_date) VALUES (1015, 1, 1, 'PENDENTE', 'NOVO', CURRENT_TIMESTAMP);
 
 
 
 UPDATE cart SET customer_order_id = 1 WHERE client_id = 1 LIMIT 1;
 
-INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('NOVO' ,CURRENT_TIMESTAMP,1);
+INSERT INTO order_info (order_client_status, local_date_time, customer_order) VALUES ('NOVO' ,CURRENT_TIMESTAMP,1);
 -- Fim dos insert de pedido
 
 -- Outro pedido para cliente com id 2
@@ -197,11 +198,11 @@ INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (2, 3, 2
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (2, 4, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (2, 3, 29.00, 5);
 
-INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_status, order_date) VALUES (1015, 1, 2, 'PENDENTE','NOVO', CURRENT_TIMESTAMP);
+INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, order_date) VALUES (1015, 1, 2, 'PENDENTE','NOVO', CURRENT_TIMESTAMP);
 
 UPDATE cart SET customer_order_id = 2 WHERE client_id = 2 LIMIT 1;
 
-INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('NOVO', CURRENT_TIMESTAMP, 2);
+INSERT INTO order_info (order_client_status, local_date_time, customer_order) VALUES ('NOVO', CURRENT_TIMESTAMP, 2);
 -- Fim dos insert de pedido
 
 -- Outro pedido para cliente com id 3
@@ -212,12 +213,12 @@ INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 2, 2
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 3, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 4, 29.00, 5);
 
-INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_status, order_date) VALUES (1015, 1, 3, 'PENDENTE', 'NOVO', CURRENT_TIMESTAMP);
+INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, order_date) VALUES (1015, 1, 3, 'PENDENTE', 'NOVO', CURRENT_TIMESTAMP);
 
 UPDATE customer_order SET delivery_id = 1 WHERE id = 3 LIMIT 1;
 UPDATE cart SET customer_order_id = 3 WHERE client_id = 3 LIMIT 1;
 
-INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('NOVO' ,CURRENT_TIMESTAMP,3);
+INSERT INTO order_info (order_client_status, local_date_time, customer_order) VALUES ('NOVO' ,CURRENT_TIMESTAMP,3);
 -- Fim dos insert de pedido
 
 

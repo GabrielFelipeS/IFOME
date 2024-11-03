@@ -113,7 +113,7 @@ public class RestaurantController {
         ApiResponse apiResponse = new ApiResponse("success", pedidos, null);
         return ResponseEntity.ok(apiResponse);
     }
-
+    // TODO fazer verificação de customerOrder é do restaurante logado
     @PutMapping("/order/status/{customerOrderId}")
     @DocUpdateCustomerOrderStatus
     public ResponseEntity<ApiResponse> updateOrderStatus(@PathVariable Long customerOrderId) {
@@ -129,7 +129,7 @@ public class RestaurantController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("error", null, "Erro inesperado: " + e.getMessage()));
         }
     }
-
+    // TODO fazer verificação de customerOrder é do restaurante logado
     @PutMapping("/order/status/{customerOrderId}/previous")
     @DocUpdateCustomerOrderStatus
     public ResponseEntity<ApiResponse> previousOrderStatus(@PathVariable Long customerOrderId) {

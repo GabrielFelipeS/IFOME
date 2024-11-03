@@ -9,8 +9,8 @@ import java.time.format.DateTimeFormatter;
 public record DeliveryOrderResponse(
     String nameClient,
     String phoneClient,
-    Address addressClient,
-    Address addressRestaurant,
+    AddressResponse addressClient,
+    AddressResponse addressRestaurant,
     Double totalPrice,
     LocalTime expectedTime
 ) {
@@ -18,8 +18,8 @@ public record DeliveryOrderResponse(
         this(
           customerOrder.getClientName(),
           customerOrder.getClientPhone(),
-          customerOrder.getClientAddress(),
-          customerOrder.getRestaurantAddress(),
+          AddressResponse.from(customerOrder.getClientAddress()),
+          AddressResponse.from(customerOrder.getRestaurantAddress()),
           customerOrder.getOrderPrice(),
           //TODO como devemos calcular a demora da rota
           LocalTime.now().plusMinutes(15)

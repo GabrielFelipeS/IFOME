@@ -14,12 +14,12 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderInfo {
+public class OrderInfoDelivery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Enumerated(EnumType.STRING)
-    private OrderClientStatus orderStatus;
+    private OrderDeliveryStatus orderDeliveryStatus;
     private LocalDateTime localDateTime;
 
     @JsonIgnore
@@ -27,8 +27,8 @@ public class OrderInfo {
     @JoinColumn(name = "customer_order")
     private CustomerOrder customerOrder;
 
-    public OrderInfo(OrderClientStatus orderStatus, LocalDateTime localDateTime, CustomerOrder customerOrder) {
-        this.orderStatus = orderStatus;
+    public OrderInfoDelivery(OrderDeliveryStatus orderDeliveryStatus, LocalDateTime localDateTime, CustomerOrder customerOrder) {
+        this.orderDeliveryStatus = orderDeliveryStatus;
         this.localDateTime = localDateTime;
         this.customerOrder = customerOrder;
         System.err.println("TESTE");

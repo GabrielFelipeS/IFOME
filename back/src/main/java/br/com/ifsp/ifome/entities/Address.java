@@ -53,12 +53,12 @@ public class Address {
     @ManyToOne(fetch = FetchType.LAZY)
     private Client client;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name = "delivery_id")
     private DeliveryPerson delivery;

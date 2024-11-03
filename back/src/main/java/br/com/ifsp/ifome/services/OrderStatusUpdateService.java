@@ -1,16 +1,15 @@
 package br.com.ifsp.ifome.services;
 
 import br.com.ifsp.ifome.dto.response.DeliveryOrderResponse;
-import br.com.ifsp.ifome.entities.Address;
 import br.com.ifsp.ifome.entities.CustomerOrder;
-import br.com.ifsp.ifome.entities.OrderStatus;
+import br.com.ifsp.ifome.entities.OrderClientStatus;
+import br.com.ifsp.ifome.entities.OrderDeliveryStatus;
 import com.pusher.rest.Pusher;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
@@ -82,7 +81,7 @@ public class OrderStatusUpdateService {
     }
 
     @Async
-    public void updateStatusOrderToClient(CustomerOrder customerOrder, OrderStatus orderStatus)  {
+    public void updateStatusOrderToClient(CustomerOrder customerOrder, OrderClientStatus orderClientStatus)  {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
 
         pusher.trigger(
@@ -90,7 +89,7 @@ public class OrderStatusUpdateService {
             "order-status-updated_" + customerOrder.getId().toString(),
             Map.of(
                 "orderId", customerOrder.getId(),
-                "status", orderStatus.toString(),
+                "status", orderClientStatus.toString(),
                 "position", customerOrder.getOrderStatusId(),
                 "time", customerOrder.getOrderDateTime()
             )
@@ -98,21 +97,23 @@ public class OrderStatusUpdateService {
     }
 
     @Async
-    public void updateStatusOrderToRestaurant(CustomerOrder customerOrder, OrderStatus orderStatus) {
+    public void updateStatusOrderToRestaurant(CustomerOrder customerOrder, OrderDeliveryStatus orderInfoDelivery) {
         DeliveryOrderResponse deliveryOrderResponse = new DeliveryOrderResponse(customerOrder);
 
+        System.err.println(deliveryOrderResponse.addressRestaurant());
         System.err.println("ANTES DO PUSHER");
         pusher.trigger(
             "pedidos",
             "entregador_" + customerOrder.getDeliveryPerson().getId().toString(),
             Map.of(
-                "teste", "era pra ir"
-//                "nameClient", deliveryOrderResponse.nameClient(),
-//                "phoneClient", deliveryOrderResponse.phoneClient(),
-//                "addressClient", deliveryOrderResponse.addressClient(),
-//                "addressRestaurant", deliveryOrderResponse.addressRestaurant()
-//                "totalPrice", deliveryOrderResponse.totalPrice()
-//                "expectedTime", deliveryOrderResponse.getOrderTime()
+                "nameClient", deliveryOrderResponse.nameClient(),
+                "phoneClient", deliveryOrderResponse.phoneClient(),
+                "addressClient", deliveryOrderResponse.addressClient(),
+                "addressRestaurant", deliveryOrderResponse.addressRestaurant(),
+                "totalPrice", deliveryOrderResponse.totalPrice(),
+                "expectedTime", deliveryOrderResponse.getOrderTime(),
+                  "deliveryCost", customerOrder.deliveryCost(),
+                "status", orderInfoDelivery.toString().replaceAll("_", "").toLowerCase()
             )
         );
         System.err.println("DEPOIS DO PUSHER");

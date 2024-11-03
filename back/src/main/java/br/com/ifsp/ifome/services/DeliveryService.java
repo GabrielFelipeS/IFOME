@@ -1,19 +1,20 @@
 package br.com.ifsp.ifome.services;
 
 import br.com.ifsp.ifome.dto.request.CoordinatesRequest;
+import br.com.ifsp.ifome.dto.request.RefuseOrderRequest;
 import br.com.ifsp.ifome.dto.response.DeliveryOrderResponse;
 import br.com.ifsp.ifome.dto.response.DeliveryPersonResponse;
-import br.com.ifsp.ifome.entities.Address;
-import br.com.ifsp.ifome.entities.CustomerOrder;
-import br.com.ifsp.ifome.entities.DeliveryPerson;
-import br.com.ifsp.ifome.entities.OrderStatus;
+import br.com.ifsp.ifome.entities.*;
+import br.com.ifsp.ifome.exceptions.DeliveryPersontNotFoundException;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.repositories.DeliveryPersonRepository;
+import br.com.ifsp.ifome.repositories.RefuseCustomerOrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,11 +24,13 @@ public class DeliveryService {
     private final DeliveryPersonRepository deliveryPersonRepository;
     private final CustomerOrderRepository customerOrderRepository;
     private final OrderStatusUpdateService orderStatusUpdateService;
+    private final RefuseCustomerOrderRepository refuseCustomerOrderRepository;
 
-    public DeliveryService(DeliveryPersonRepository deliveryPersonRepository, CustomerOrderRepository customerOrderRepository, OrderStatusUpdateService orderStatusUpdateService) {
+    public DeliveryService(DeliveryPersonRepository deliveryPersonRepository, CustomerOrderRepository customerOrderRepository, OrderStatusUpdateService orderStatusUpdateService, RefuseCustomerOrderRepository refuseCustomerOrderRepository) {
         this.deliveryPersonRepository = deliveryPersonRepository;
         this.customerOrderRepository = customerOrderRepository;
         this.orderStatusUpdateService = orderStatusUpdateService;
+        this.refuseCustomerOrderRepository = refuseCustomerOrderRepository;
     }
 
     public List<DeliveryOrderResponse> getOrders(Principal principal) {
@@ -39,7 +42,7 @@ public class DeliveryService {
 
     @Async  // TODO melhorar forma de busca
     public void choiceRestaurantWhenReady(CustomerOrder customerOrder) {
-        boolean isNotReady = !customerOrder.getCurrentOrderStatus().equals(OrderStatus.PRONTO_PARA_ENTREGA);
+        boolean isNotReady = !customerOrder.getCurrentOrderClientStatus().equals(OrderClientStatus.PRONTO_PARA_ENTREGA);
         if(isNotReady) return;
 
         System.err.println(customerOrder.getRestaurantAddress());
@@ -63,9 +66,14 @@ public class DeliveryService {
         }
 
         customerOrder.setDeliveryPerson(deliveryPersonChoice);
+        System.err.println(minDistance);
+        double preciseDelivery = minDistance * 1;
+
+        customerOrder.setDeliveryCost(preciseDelivery);
+        customerOrderRepository.save(customerOrder);
 
         System.err.println("AQUI 1");
-        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder, OrderStatus.NOVO);
+        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder, OrderDeliveryStatus.NOVO);
     }
 
     private double calculateDistance(Address restaurantAddress, String latitudeDeliveryPerson, String longitudeDeliveryPerson) {
@@ -76,6 +84,18 @@ public class DeliveryService {
 
         double diffLatitude = latDeliveryPerson - latRestaurant;
         double diffLongitude = lonDeliveryPerson - lonRestaurant;
+
+        System.err.println("Latitude");
+        System.err.println(latRestaurant);
+        System.err.println(latDeliveryPerson);
+
+        System.err.println("Longitude");
+        System.err.println(lonRestaurant);
+        System.err.println(lonDeliveryPerson);
+
+        System.err.println("Diferença");
+        System.err.println(diffLatitude);
+        System.err.println(diffLongitude);
 
         double diffAngular = Math.pow(Math.sin(diffLatitude / 2), 2)
             + Math.cos(latRestaurant) * Math.cos(latDeliveryPerson) * Math.pow(Math.sin(diffLongitude / 2), 2);
@@ -98,15 +118,64 @@ public class DeliveryService {
         deliveryPersonRepository.save(deliveryPerson);
     }
 
-    public void updateOrderStatus(Long customerOrderId) {
-        
+    public void updateOrderStatus(Long orderId) {
+        CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
+            .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
+
+        OrderDeliveryStatus orderDeliveryStatus = customerOrder.nextDeliveryStatus();
+
+        customerOrderRepository.save(customerOrder);
+
+        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder, orderDeliveryStatus);
     }
 
-    public void previousOrderStatus(Long customerOrderId) {
+    public void previousOrderStatus(Long orderId) {
+        CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
+            .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
+
+        OrderDeliveryStatus orderDeliveryStatus = customerOrder.previousStatusDelivery();
+
+        customerOrderRepository.save(customerOrder);
+
+        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder, orderDeliveryStatus);
+    }
+
+    public void refuseOrder(Long customerOrderId, String justification, Principal principal) {
+            DeliveryPerson deliveryPerson = deliveryPersonRepository
+                                            .findByEmail(principal.getName())
+                                            .orElseThrow(DeliveryPersontNotFoundException::new);
+
+            CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow();
+
+            var refuseCustomerOrder = new RefuseCustomerOrder(
+                customerOrderId, deliveryPerson.getId(), justification
+            );
+
+        refuseCustomerOrderRepository.save(refuseCustomerOrder);
+
+        this.choiceRestaurantWhenReady(customerOrder);
     }
 
     public DeliveryPersonResponse getByEmail(String email) {
         DeliveryPerson deliveryPerson = deliveryPersonRepository.findByEmail(email).orElseThrow();
         return new DeliveryPersonResponse(deliveryPerson);
+    }
+
+    public void simuleChoice(Long customerOrderId) {
+        CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow();
+
+        if(customerOrder.getOrderInfo().size() == 3) {
+            customerOrder.setOrderInfo(
+                List.of(
+                    new OrderInfo(OrderClientStatus.NOVO, LocalDateTime.now(), customerOrder)
+                    ,new OrderInfo(OrderClientStatus.EM_PREPARO, LocalDateTime.now(), customerOrder)
+                    ,new OrderInfo(OrderClientStatus.PRONTO_PARA_ENTREGA, LocalDateTime.now(), customerOrder)
+                )
+            );
+        }
+
+        this.customerOrderRepository.save(customerOrder);
+
+        this.choiceRestaurantWhenReady(customerOrder);
     }
 }
