@@ -186,17 +186,35 @@ public class CustomerOrder {
         return value;
     }
 
-    public OrderDeliveryStatus previousStatusDelivery() {
-        int size = orderInfo.size();
+    public OrderInfoDelivery previousStatusDelivery() {
+        int size = orderInfoDelivery.size();
         if(size == 0) {
-            return OrderDeliveryStatus.NOVO;
+            return new OrderInfoDelivery(OrderDeliveryStatus.NOVO, LocalDateTime.now(), this);
         }
 
-        OrderDeliveryStatus currentSize = OrderDeliveryStatus.values()[size];
-        OrderDeliveryStatus value = OrderDeliveryStatus.values()[size - 1];
+        OrderInfoDelivery value = orderInfoDelivery.get(size - 1);
+        value.setCustomerOrder(null);
 
-        orderInfoDelivery.removeIf(orderInfoDelivery -> orderInfoDelivery.getOrderDeliveryStatus().equals(currentSize));
+        orderInfoDelivery.remove(size - 1);
 
         return value;
+    }
+
+
+    public void nextClientStatusByDeliveryStatus() {
+        int sizeOrderInfo = this.orderInfo.size();
+        int sizeInfoDelivery = this.orderInfoDelivery.size();
+
+        if(sizeOrderInfo == 3 && sizeInfoDelivery == 6) {
+            this.orderInfo.add(new OrderInfo(OrderClientStatus.SAIU_PARA_ENTREGA, LocalDateTime.now(), this));
+            return;
+        }
+
+        if(sizeOrderInfo == 4 && sizeInfoDelivery== 7) {
+            this.orderInfo.add(new OrderInfo(OrderClientStatus.SAIU_PARA_ENTREGA, LocalDateTime.now(), this));
+            return;
+        }
+
+        this.orderInfo.forEach(o -> System.err.println(o.getOrderStatus()));
     }
 }

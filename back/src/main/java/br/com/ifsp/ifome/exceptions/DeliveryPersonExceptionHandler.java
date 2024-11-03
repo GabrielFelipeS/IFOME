@@ -28,4 +28,15 @@ public class DeliveryPersonExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
+
+    @ExceptionHandler(DeclineNotAvailableException.class)
+    public  ResponseEntity<Map<String, Object>>  handleDeclineNotAvailableException(
+        DeclineNotAvailableException ex) {
+        logger.warn(ex.getMessage());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message",  ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
 }

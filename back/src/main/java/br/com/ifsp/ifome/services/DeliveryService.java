@@ -5,9 +5,11 @@ import br.com.ifsp.ifome.dto.response.DeliveryOrderResponse;
 import br.com.ifsp.ifome.dto.response.DeliveryPersonResponse;
 import br.com.ifsp.ifome.dto.response.PusherDeliveryOrderResponse;
 import br.com.ifsp.ifome.entities.*;
+import br.com.ifsp.ifome.exceptions.DeclineNotAvailableException;
 import br.com.ifsp.ifome.exceptions.DeliveryPersontNotFoundException;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.repositories.DeliveryPersonRepository;
+import br.com.ifsp.ifome.repositories.OrderInfoDeliveryRepository;
 import br.com.ifsp.ifome.repositories.RefuseCustomerOrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.scheduling.annotation.Async;
@@ -25,12 +27,14 @@ public class DeliveryService {
     private final CustomerOrderRepository customerOrderRepository;
     private final OrderStatusUpdateService orderStatusUpdateService;
     private final RefuseCustomerOrderRepository refuseCustomerOrderRepository;
+    private final OrderInfoDeliveryRepository orderInfoDeliveryRepository;
 
-    public DeliveryService(DeliveryPersonRepository deliveryPersonRepository, CustomerOrderRepository customerOrderRepository, OrderStatusUpdateService orderStatusUpdateService, RefuseCustomerOrderRepository refuseCustomerOrderRepository) {
+    public DeliveryService(DeliveryPersonRepository deliveryPersonRepository, CustomerOrderRepository customerOrderRepository, OrderStatusUpdateService orderStatusUpdateService, RefuseCustomerOrderRepository refuseCustomerOrderRepository, OrderInfoDeliveryRepository orderInfoDeliveryRepository) {
         this.deliveryPersonRepository = deliveryPersonRepository;
         this.customerOrderRepository = customerOrderRepository;
         this.orderStatusUpdateService = orderStatusUpdateService;
         this.refuseCustomerOrderRepository = refuseCustomerOrderRepository;
+        this.orderInfoDeliveryRepository = orderInfoDeliveryRepository;
     }
 
     public List<DeliveryOrderResponse> getOrders(Principal principal) {
@@ -43,8 +47,9 @@ public class DeliveryService {
     @Async  // TODO melhorar forma de busca
     public void choiceDeliveryPersonWhenReady(CustomerOrder customerOrder) {
         boolean isNotReady = !customerOrder.getCurrentOrderClientStatus().equals(OrderClientStatus.PRONTO_PARA_ENTREGA);
+        System.err.println( customerOrder.getCurrentOrderClientStatus()+ " " + isNotReady);
         if(isNotReady) return;
-
+        System.err.println("AQUI NÂO");
         System.err.println(customerOrder.getRestaurantAddress());
         List<DeliveryPerson> deliveryPersons = deliveryPersonRepository.findDeliveryPersonAvailable();
         deliveryPersons.stream().forEach(System.err::println);
@@ -75,11 +80,15 @@ public class DeliveryService {
             return;
         }
         customerOrder.setDeliveryPerson(deliveryPersonChoice);
-        System.err.println(minDistance);
+
+        System.err.println("Min distance: " + minDistance);
+        System.err.println("Entregador escolhido: " + customerOrder.getDeliveryPerson().getEmail());
+
         double preciseDelivery = minDistance * 1;
         customerOrder.setDeliveryCost(preciseDelivery);
         customerOrderRepository.save(customerOrder);
-        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder, OrderDeliveryStatus.NOVO);
+
+        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
     }
 
     private double calculateDistance(Address restaurantAddress, String latitudeDeliveryPerson, String longitudeDeliveryPerson) {
@@ -91,17 +100,17 @@ public class DeliveryService {
         double diffLatitude = latDeliveryPerson - latRestaurant;
         double diffLongitude = lonDeliveryPerson - lonRestaurant;
 
-        System.err.println("Latitude");
-        System.err.println(latRestaurant);
-        System.err.println(latDeliveryPerson);
-
-        System.err.println("Longitude");
-        System.err.println(lonRestaurant);
-        System.err.println(lonDeliveryPerson);
-
-        System.err.println("Diferença");
-        System.err.println(diffLatitude);
-        System.err.println(diffLongitude);
+//        System.err.println("Latitude");
+//        System.err.println(latRestaurant);
+//        System.err.println(latDeliveryPerson);
+//
+//        System.err.println("Longitude");
+//        System.err.println(lonRestaurant);
+//        System.err.println(lonDeliveryPerson);
+//
+//        System.err.println("Diferença");
+//        System.err.println(diffLatitude);
+//        System.err.println(diffLongitude);
 
         double diffAngular = Math.pow(Math.sin(diffLatitude / 2), 2)
             + Math.cos(latRestaurant) * Math.cos(latDeliveryPerson) * Math.pow(Math.sin(diffLongitude / 2), 2);
@@ -130,36 +139,55 @@ public class DeliveryService {
 
         OrderDeliveryStatus orderDeliveryStatus = customerOrder.nextDeliveryStatus();
 
+        customerOrder.nextClientStatusByDeliveryStatus();
+
         customerOrderRepository.save(customerOrder);
         System.err.println("AQUI: " + orderDeliveryStatus);
-        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder, orderDeliveryStatus);
+
+        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
     }
 
     public void previousOrderStatus(Long orderId) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
 
-        OrderDeliveryStatus orderDeliveryStatus = customerOrder.previousStatusDelivery();
+        if(customerOrder.getOrderInfoDelivery().size() == 1) {
+            return;
+        }
+
+        OrderInfoDelivery orderDeliveryStatus = customerOrder.previousStatusDelivery();
+
+        orderInfoDeliveryRepository.delete(orderDeliveryStatus);
 
         customerOrderRepository.save(customerOrder);
 
-        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder, orderDeliveryStatus);
+        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
     }
 
     public void refuseOrder(Long customerOrderId, String justification, Principal principal) {
-            DeliveryPerson deliveryPerson = deliveryPersonRepository
-                                            .findByEmail(principal.getName())
-                                            .orElseThrow(DeliveryPersontNotFoundException::new);
+        DeliveryPerson deliveryPerson = deliveryPersonRepository
+                                        .findByEmail(principal.getName())
+                                        .orElseThrow(DeliveryPersontNotFoundException::new);
 
-            CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow();
+        CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow();
 
-            customerOrder.setDeliveryPerson(null);
+        var currentOrderDelivery = customerOrder.getOrderInfoDelivery();
 
-            customerOrderRepository.save(customerOrder);
+        if(currentOrderDelivery.size() >= 6) {
+            throw new DeclineNotAvailableException(customerOrder.getCurrentOrderDeliveryStatus().toString());
+        }
 
-            var refuseCustomerOrder = new RefuseCustomerOrder(
-                customerOrderId, deliveryPerson.getId(), justification
-            );
+        customerOrder.setDeliveryPerson(null);
+
+        customerOrderRepository.save(customerOrder);
+
+        OrderInfoDelivery orderDeliveryStatus = customerOrder.previousStatusDelivery();
+
+        orderInfoDeliveryRepository.delete(orderDeliveryStatus);
+
+        var refuseCustomerOrder = new RefuseCustomerOrder(
+            customerOrderId, deliveryPerson.getId(), justification
+        );
 
         refuseCustomerOrderRepository.save(refuseCustomerOrder);
 
@@ -190,7 +218,6 @@ public class DeliveryService {
     }
 
     public Optional<PusherDeliveryOrderResponse> getCustomerOrderId(Principal principal) {
-//        var customerOrdes = customerOrderRepository.findAllByDeliveryPerson(principal.getName());
         var customerOrdes = customerOrderRepository.findActiveOrderDeliveryPerson(principal.getName());
 
         if(customerOrdes.isEmpty()) {

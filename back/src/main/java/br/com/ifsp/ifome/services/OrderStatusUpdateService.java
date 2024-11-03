@@ -101,7 +101,7 @@ public class OrderStatusUpdateService {
     }
 
     @Async
-    public void updateStatusOrderToRestaurant(CustomerOrder customerOrder, OrderDeliveryStatus orderInfoDelivery) {
+    public void updateStatusOrderToRestaurant(CustomerOrder customerOrder) {
         DeliveryOrderResponse deliveryOrderResponse = new DeliveryOrderResponse(customerOrder);
 
         System.err.println(deliveryOrderResponse.addressRestaurant());
@@ -132,9 +132,9 @@ public class OrderStatusUpdateService {
 
         pusher.trigger(
             "pedidos",
-//            "entregador_" + customerOrder.getDeliveryPerson().getId().toString(),
-            "entregador_" + 1,
-            map
+            "entregador_" + customerOrder.getDeliveryPerson().getId().toString(),
+//            "entregador_" + 1,
+           map
         );
         System.err.println("DEPOIS DO PUSHER");
     }
