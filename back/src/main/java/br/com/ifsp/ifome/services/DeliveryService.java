@@ -12,6 +12,7 @@ import br.com.ifsp.ifome.repositories.DeliveryPersonRepository;
 import br.com.ifsp.ifome.repositories.OrderInfoDeliveryRepository;
 import br.com.ifsp.ifome.repositories.RefuseCustomerOrderRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -111,16 +112,21 @@ public class DeliveryService {
     private double calculateDistance(Address restaurantAddress, String latitudeDeliveryPerson, String longitudeDeliveryPerson) {
         System.err.println("AQUI 5");
         System.err.println("latRestaurant " + restaurantAddress.getLatitude());
-        System.err.println("lonRestaurant ");
-        System.err.println("latDeliveryPerson ");
-        System.err.println("lonDeliveryPerson ");
+        System.err.println("lonRestaurant " + restaurantAddress.getLongitude());
+        System.err.println("latDeliveryPerson " + latitudeDeliveryPerson);
+        System.err.println("lonDeliveryPerson " + longitudeDeliveryPerson);
+
         double latRestaurant = Math.toRadians(Double.parseDouble(restaurantAddress.getLatitude()));
         double lonRestaurant = Math.toRadians(Double.parseDouble(restaurantAddress.getLongitude()));
         double latDeliveryPerson = Math.toRadians(Double.parseDouble(latitudeDeliveryPerson));
         double lonDeliveryPerson = Math.toRadians(Double.parseDouble(longitudeDeliveryPerson));
 
+        System.err.println("Passou das conversões");
+
         double diffLatitude = latDeliveryPerson - latRestaurant;
         double diffLongitude = lonDeliveryPerson - lonRestaurant;
+
+        System.err.println("Passou das diferenças");
 
 //        System.err.println("Latitude");
 //        System.err.println(latRestaurant);
@@ -136,12 +142,17 @@ public class DeliveryService {
 
         double diffAngular = Math.pow(Math.sin(diffLatitude / 2), 2)
             + Math.cos(latRestaurant) * Math.cos(latDeliveryPerson) * Math.pow(Math.sin(diffLongitude / 2), 2);
+
+        System.err.println("Passou da diff angular " + diffAngular);
+
         double anguloCentral = 2 * Math.atan2(Math.sqrt(diffAngular), Math.sqrt(1 - diffAngular));
+
+        System.err.println("Passou da angulo central " + anguloCentral);
 
         return RAIO_DA_TERRA_KM * anguloCentral;
     }
 
-    public void updateCoordinates(CoordinatesRequest coordinatesRequest, Principal principal) {
+    public void updateCoordinates(@Valid CoordinatesRequest coordinatesRequest, Principal principal) {
         Optional<DeliveryPerson> deliveryPersonOptional = deliveryPersonRepository.findByEmail(principal.getName());
 
         DeliveryPerson deliveryPerson = deliveryPersonOptional
