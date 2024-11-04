@@ -110,8 +110,8 @@ const updateLocation = async () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async (position) => {
             const currentLocation = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
             };
 
             try {
