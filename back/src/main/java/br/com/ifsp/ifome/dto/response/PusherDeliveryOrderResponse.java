@@ -14,7 +14,7 @@ public record PusherDeliveryOrderResponse(
     String expectedTime,
     Double deliveryCost,
     List<OrderInfoDeliveryResponse> status,
-    List<OrderItemDeliveryResponse> orderItens
+    List<OrderItemDeliveryResponse> orderItems
 ) {
 
     public static PusherDeliveryOrderResponse from(CustomerOrder customerOrder, DeliveryOrderResponse deliveryOrderResponse) {
