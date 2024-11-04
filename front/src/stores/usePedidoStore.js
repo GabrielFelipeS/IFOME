@@ -12,7 +12,7 @@ export const usePedidoStore = defineStore('pedido', {
         expectedTime: null,
         nameClient: "",
         phoneClient: "",
-        orderItems: [],
+        orderItems: {},
         totalPrice: null,
     }),
 
@@ -34,8 +34,10 @@ export const usePedidoStore = defineStore('pedido', {
             this.expectedTime = details.expectedTime;
             this.nameClient = details.nameClient;
             this.phoneClient = details.phoneClient;
-            this.orderItems = details.orderItems;
             this.totalPrice = details.totalPrice;
+        },
+        setOrderItems(items) {
+            this.orderItems = items;
         },
         resetOrderData() {
             this.status = 'buscando';
