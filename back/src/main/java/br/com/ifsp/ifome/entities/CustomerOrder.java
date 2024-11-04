@@ -205,13 +205,13 @@ public class CustomerOrder {
         int sizeOrderInfo = this.orderInfo.size();
         int sizeInfoDelivery = this.orderInfoDelivery.size();
 
-        if(sizeOrderInfo == 3 && sizeInfoDelivery == 6) {
+        if(sizeOrderInfo == 3 && sizeInfoDelivery == 4) {
            this.nextStatus();
             this.orderInfo.forEach(o -> System.err.println(o.getOrderStatus()));
             return true;
         }
 
-        if(sizeOrderInfo == 4 && sizeInfoDelivery== 7) {
+        if(sizeOrderInfo == 4 && sizeInfoDelivery== 5) {
             this.nextStatus();
             this.orderInfo.forEach(o -> System.err.println(o.getOrderStatus()));
             return true;
