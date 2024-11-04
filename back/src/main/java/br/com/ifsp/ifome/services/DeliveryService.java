@@ -139,12 +139,16 @@ public class DeliveryService {
 
         OrderDeliveryStatus orderDeliveryStatus = customerOrder.nextDeliveryStatus();
 
-        customerOrder.nextClientStatusByDeliveryStatus();
+        boolean status = customerOrder.nextClientStatusByDeliveryStatus();
 
         customerOrderRepository.save(customerOrder);
         System.err.println("AQUI: " + orderDeliveryStatus);
 
         orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
+
+        if(status) {
+            orderStatusUpdateService.updateStatusOrderToClient(customerOrder, customerOrder.getCurrentOrderClientStatus());
+        }
     }
 
     public void previousOrderStatus(Long orderId) {
@@ -162,6 +166,8 @@ public class DeliveryService {
         customerOrderRepository.save(customerOrder);
 
         orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
+
+//        orderStatusUpdateService.updateStatusOrderToClient(customerOrder, customerOrder.getCurrentOrderClientStatus());
     }
 
     public void refuseOrder(Long customerOrderId, String justification, Principal principal) {
@@ -229,5 +235,15 @@ public class DeliveryService {
         DeliveryOrderResponse deliveryOrderResponse = new DeliveryOrderResponse(customerOrder);
 
         return Optional.of(PusherDeliveryOrderResponse.from(customerOrder, deliveryOrderResponse));
+    }
+
+    public String setAvailable(Principal principal) {
+        DeliveryPerson deliveryPerson = deliveryPersonRepository.findByEmail(principal.getName()).get();
+
+        String available = deliveryPerson.getAvailable();
+        deliveryPerson.setAvailable(available.equals("Disponível")? "Indisponível" : "Disponível");
+        deliveryPersonRepository.save(deliveryPerson);
+
+        return String.format("Você está %s!", deliveryPerson.getAvailable());
     }
 }
