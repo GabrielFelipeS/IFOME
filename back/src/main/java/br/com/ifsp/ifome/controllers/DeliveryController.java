@@ -4,17 +4,16 @@ import br.com.ifsp.ifome.docs.DocUpdateCustomerOrderStatus;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.CoordinatesRequest;
 import br.com.ifsp.ifome.dto.request.RefuseOrderRequest;
-import br.com.ifsp.ifome.dto.response.DeliveryOrderResponse;
 import br.com.ifsp.ifome.dto.response.DeliveryPersonResponse;
 import br.com.ifsp.ifome.services.DeliveryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Collections;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/delivery/")
@@ -89,7 +88,7 @@ public class DeliveryController {
     )
     @PutMapping("/coordinates/")
     public ResponseEntity<ApiResponse> updateCoordinates(
-        @RequestBody CoordinatesRequest coordinatesRequest,
+        @RequestBody @Valid CoordinatesRequest coordinatesRequest,
         Principal principal) {
         deliveryService.updateCoordinates(coordinatesRequest, principal);
 

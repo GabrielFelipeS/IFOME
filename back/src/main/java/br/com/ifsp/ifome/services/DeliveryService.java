@@ -161,7 +161,7 @@ public class DeliveryService {
                                         );
 
         deliveryPerson.setLatitude(coordinatesRequest.latitude());
-        deliveryPerson.setLongitude(coordinatesRequest.longitute());
+        deliveryPerson.setLongitude(coordinatesRequest.longitude());
 
         deliveryPersonRepository.save(deliveryPerson);
     }

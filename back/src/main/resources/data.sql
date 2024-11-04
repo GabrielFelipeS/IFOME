@@ -316,7 +316,6 @@ UPDATE cart SET customer_order_id = 3 WHERE client_id = 3 LIMIT 1;
 INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('NOVO' ,CURRENT_TIMESTAMP,3);
 INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('EM_PREPARO' ,CURRENT_TIMESTAMP,3);
 
-INSERT INTO order_info_delivery (order_delivery_status, local_date_time, customer_order) VALUES ('NOVO', CURRENT_TIMESTAMP,3);
 -- Fim dos insert de pedido
 
 -- Outro pedido para cliente com id 3
