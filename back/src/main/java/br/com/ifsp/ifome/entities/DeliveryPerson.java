@@ -69,6 +69,8 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private String available;
+
     private String latitude;
 
     private String longitude;
@@ -87,6 +89,7 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
         this.vehicleDocument = deliveryPersonRequest.vehicleDocument();
         this.bankAccount = new BankAccount(deliveryPersonRequest.bankAccount());
         this.role = Role.DELIVERY;
+        this.available = "Indisponível";
         this.setAddress(deliveryPersonRequest.address());
     }
 
@@ -111,6 +114,7 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
         this.vehicleDocument = vehicleDocument;
         this.address = address;
         this.bankAccount = bankAccount;
+        this.available = "Indisponível";
         this.role = Role.DELIVERY;
     }
 
