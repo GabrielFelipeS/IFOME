@@ -13,8 +13,9 @@
             @cancelar="handleCancelar" v-if="currentStatus === 'EM_PREPARO' || currentStatus === 'NO_LOCAL'" />
 
         <PedidoPronto :pedidoId="pedidoStore.customerOrderId" :cliente="pedidoStore.nameClient"
-            :itens="pedidoStore.orderItems.map(item => item.dishName)" :endereco="pedidoStore.clientData.address"
-            @cancelar="handleCancelar" @sairParaEntrega="handleSairParaEntrega" v-if="currentStatus === 'PRONTO'" />
+            :itens="pedidoStore.orderItems ? pedidoStore.orderItems.map(item => item.dishName) : []"
+            :endereco="pedidoStore.clientData.address" @cancelar="handleCancelar"
+            @sairParaEntrega="handleSairParaEntrega" v-if="currentStatus === 'PRONTO'" />
 
         <IndoAteCliente :endereco="pedidoStore.clientData.address" @entregar="handleEntregar"
             v-if="currentStatus === 'A_CAMINHO'" />
@@ -24,7 +25,7 @@
 </template>
 
 <script setup>
-import { computed, watch } from 'vue';
+import { computed, onUpdated, watch } from 'vue';
 import { usePedidoStore } from '@/stores/usePedidoStore';
 
 import BuscandoPedidos from '@/components/delivery/status/BuscandoPedidos.vue';
