@@ -27,7 +27,11 @@ onMounted(async () => {
     const channel = pusherService.subscribe('pedidos');
 
     try {
-        const { data } = await api.get('delivery/order/');
+        const { data } = await api.get('delivery/order/', {}, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        });
 
         if (data.status === "success" && data.data) {
             const orderData = data.data;
@@ -66,7 +70,11 @@ onMounted(async () => {
     }
 
     try {
-        const { data } = await api.get('delivery/info/');
+        const { data } = await api.get('delivery/info/', {}, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        });
         user.value = data.data;
 
         channel.bind(`entregador_${user.value.id}`, (data) => {
