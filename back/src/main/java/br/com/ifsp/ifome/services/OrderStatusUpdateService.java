@@ -127,7 +127,7 @@ public class OrderStatusUpdateService {
             "expectedTime", deliveryOrderResponse.getOrderTime(),
             "deliveryCost", customerOrder.deliveryCost(),
             "status", orderInfoDeliveryList,
-            "orderItens", customerOrder.getOrderItems().stream().map(OrderItemDeliveryResponse::new).toList()
+            "orderItems", customerOrder.getOrderItems().stream().map(OrderItemDeliveryResponse::new).toList()
             );
 
         pusher.trigger(
