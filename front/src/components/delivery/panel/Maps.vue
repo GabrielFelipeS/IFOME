@@ -10,18 +10,13 @@ import restaurantIcon from '@/assets/restaurant.png';
 import clientIcon from '@/assets/house.png';
 import { usePedidoStore } from '@/stores/usePedidoStore';
 
-const props = defineProps({
-    restaurantLocation: {
-        type: Object,
-        default: null,
-    },
-    clientLocation: {
-        type: Object,
-        default: null,
-    }
-});
-
 const pedidoStore = usePedidoStore();
+
+const restaurantLocation = computed(() => pedidoStore.restaurantLocation);
+const clientLocation = computed(() => pedidoStore.clientLocation);
+
+watch(restaurantLocation, () => updateMapMarkers());
+watch(clientLocation, () => updateMapMarkers());
 
 const loader = new Loader({
     apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
@@ -72,15 +67,15 @@ const updateMapMarkers = () => {
         map.setZoom(15);
     } else if (currentStatus.value === 'NOVO') {
         // Mostrar restaurante e cliente
-        if (props.restaurantLocation) addMarker(props.restaurantLocation, restaurantIcon);
-        if (props.clientLocation) addMarker(props.clientLocation, clientIcon);
+        if (restaurantLocation.value) addMarker(restaurantLocation.value, restaurantIcon);
+        if (clientLocation.value) addMarker(clientLocation.value, clientIcon);
     } else if (['ACEITO', 'EM_PREPARO', 'NO_LOCAL', 'PRONTO'].includes(currentStatus.value)) {
         // Mostrar restaurante e entregador
-        if (props.restaurantLocation) addMarker(props.restaurantLocation, restaurantIcon);
+        if (restaurantLocation.value) addMarker(restaurantLocation.value, restaurantIcon);
         addMarker(currentLocation.value, deliveryBikeIcon); // Entregador
     } else if (currentStatus.value === 'A_CAMINHO') {
         // Mostrar cliente e entregador
-        if (props.clientLocation) addMarker(props.clientLocation, clientIcon);
+        if (clientLocation.value) addMarker(clientLocation.value, clientIcon);
         addMarker(currentLocation.value, deliveryBikeIcon); // Entregador
     } else if (currentStatus.value === 'CONCLUIDO') {
         // Mostrar apenas a localização do entregador
