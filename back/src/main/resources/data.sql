@@ -136,14 +136,14 @@ INSERT INTO delivery_person (
     cpf, name, date_of_birth, type_of_vehicle,
     plate, telephone,  cnh_number,
     bank, agency, account,
-    cnh_validity, vehicle_document, latitude, longitude, role
+    cnh_validity, vehicle_document, latitude, longitude,  available, role
 )
 VALUES (
     'email1@email.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
     '52800314028','João da Silva', '1985-06-15','carro',
     'ABC-1234','(11) 98765-4321','12345678910',
     'Banco do Brasil','1234','00012345-6',
-    '2026-12-31','987654321', '-23.460437', '-46.5325546', 'DELIVERY'
+    '2026-12-31','987654321', '-23.460437', '-46.5325546', 'Disponível', 'DELIVERY'
 );
 
 INSERT INTO delivery_person (
@@ -151,14 +151,14 @@ INSERT INTO delivery_person (
     cpf, name, date_of_birth, type_of_vehicle,
     plate, telephone,  cnh_number,
     bank, agency, account,
-    cnh_validity, vehicle_document, latitude, longitude, role
+    cnh_validity, vehicle_document, latitude, longitude, available, role
 )
 VALUES (
            'email2@email.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
            '70574622047','Neymar Junior', '1985-06-15','carro',
            'ABC-1234','(11) 98765-4321','12345678911',
            'Banco do Brasil','1234','00012345-6',
-           '2026-12-31','987654321', '-23.43881975', '-46.53746045330729', 'DELIVERY'
+           '2026-12-31','987654321', '-23.43881975', '-46.53746045330729','Indisponível', 'DELIVERY'
        );
 
 INSERT INTO address (
@@ -175,14 +175,14 @@ INSERT INTO delivery_person (
     cpf, name, date_of_birth, type_of_vehicle,
     plate, telephone,  cnh_number,
     bank, agency, account,
-    cnh_validity, vehicle_document, latitude, longitude, role
+    cnh_validity, vehicle_document, latitude, longitude, available, role
 )
 VALUES (
            'email3@email.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
            '32841654021','João Silva', '1990-07-20','moto',
            'DEF-5678','(11) 91234-5678','23456789101',
            'Santander','5678','12345678-9',
-           '2025-11-30','234567890', '-23.532126', '-46.629177', 'DELIVERY'
+           '2025-11-30','234567890', '-23.532126', '-46.629177','Indisponível',  'DELIVERY'
        );
 
 INSERT INTO address (
@@ -199,14 +199,14 @@ INSERT INTO delivery_person (
     cpf, name, date_of_birth, type_of_vehicle,
     plate, telephone,  cnh_number,
     bank, agency, account,
-    cnh_validity, vehicle_document, latitude, longitude, role
+    cnh_validity, vehicle_document, latitude, longitude, available, role
 )
 VALUES (
            'email4@email.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
            '57812543090','Carlos Santana', '1988-08-05','bicicleta',
            'N/A','(11) 95678-1234','34567891202',
            'Caixa Econômica','9876','98765432-1',
-           '2024-10-01','345678912', '-23.558708', '-46.648454', 'DELIVERY'
+           '2024-10-01','345678912', '-23.558708', '-46.648454','Indisponível',  'DELIVERY'
        );
 
 INSERT INTO address (
@@ -223,14 +223,14 @@ INSERT INTO delivery_person (
     cpf, name, date_of_birth, type_of_vehicle,
     plate, telephone,  cnh_number,
     bank, agency, account,
-    cnh_validity, vehicle_document, latitude, longitude, role
+    cnh_validity, vehicle_document, latitude, longitude, available, role
 )
 VALUES (
            'email5@email.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
            '91234567890','Fernanda Costa', '1992-09-15','carro',
            'GHI-9101','(11) 92345-6789','45678912303',
            'Itaú','3456','34567890-2',
-           '2027-06-15','456789123', '-23.550520', '-46.633308', 'DELIVERY'
+           '2027-06-15','456789123', '-23.550520', '-46.633308','Indisponível',  'DELIVERY'
        );
 
 INSERT INTO address (
@@ -247,14 +247,14 @@ INSERT INTO delivery_person (
     cpf, name, date_of_birth, type_of_vehicle,
     plate, telephone,  cnh_number,
     bank, agency, account,
-    cnh_validity, vehicle_document, latitude, longitude, role
+    cnh_validity, vehicle_document, latitude, longitude, available, role
 )
 VALUES (
            'email6@email.com','$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
            '67812345980','Mariana Silva', '1994-04-25','moto',
            'JKL-3456','(11) 93456-7890','56789123404',
            'Bradesco','1234','45678901-3',
-           '2026-08-20','567891234', '-23.561416', '-46.655881', 'DELIVERY'
+           '2026-08-20','567891234', '-23.561416', '-46.655881', 'Indisponível', 'DELIVERY'
        );
 
 INSERT INTO address (
@@ -311,17 +311,13 @@ INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 4, 2
 
 INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, current_order_delivery_status, order_date, delivery_cost) VALUES (1015, 1, 3, 'PENDENTE', 'PRONTO_PARA_ENTREGA', 'NOVO', CURRENT_TIMESTAMP, 10.0);
 
-UPDATE customer_order SET delivery_id = 1 WHERE id = 3 LIMIT 1;
-
 UPDATE cart SET customer_order_id = 3 WHERE client_id = 3 LIMIT 1;
 
 INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('NOVO' ,CURRENT_TIMESTAMP,3);
 INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('EM_PREPARO' ,CURRENT_TIMESTAMP,3);
-INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('PRONTO_PARA_ENTREGA' ,CURRENT_TIMESTAMP,3);
 
 INSERT INTO order_info_delivery (order_delivery_status, local_date_time, customer_order) VALUES ('NOVO', CURRENT_TIMESTAMP,3);
 -- Fim dos insert de pedido
-
 
 -- Outro pedido para cliente com id 3
 INSERT INTO cart (client_id) VALUES (3);
@@ -333,13 +329,10 @@ INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 4, 2
 
 INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, current_order_delivery_status, order_date, delivery_cost) VALUES (1015, 1, 3, 'PENDENTE', 'PRONTO_PARA_ENTREGA', 'NOVO', CURRENT_TIMESTAMP, 10.0);
 
-UPDATE customer_order SET delivery_id = 2 WHERE id = 3 LIMIT 1;
-
 UPDATE cart SET customer_order_id = 4 WHERE client_id = 3 LIMIT 1;
 
 INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('NOVO' ,CURRENT_TIMESTAMP,4);
 INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('EM_PREPARO' ,CURRENT_TIMESTAMP,4);
-INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('PRONTO_PARA_ENTREGA' ,CURRENT_TIMESTAMP,4);
 
 INSERT INTO order_info_delivery (order_delivery_status, local_date_time, customer_order) VALUES ('NOVO', CURRENT_TIMESTAMP,4);
 -- Fim dos insert de pedido

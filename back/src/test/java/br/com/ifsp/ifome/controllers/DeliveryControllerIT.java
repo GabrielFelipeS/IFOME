@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 
@@ -30,11 +31,12 @@ public class DeliveryControllerIT {
 
     @BeforeEach
     public void setUp() {
-        this.token_delivery_any_order = "Bearer " + tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_DELIVERY")));
-        this.token_delivery_none_order = "Bearer " + tokenService.generateToken("user1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_DELIVERY")));
+        this.token_delivery_any_order = "Bearer " + tokenService.generateToken("email2@email.com",  List.of(new SimpleGrantedAuthority("ROLE_DELIVERY")));
+        this.token_delivery_none_order = "Bearer " + tokenService.generateToken("email7@email.com",  List.of(new SimpleGrantedAuthority("ROLE_DELIVERY")));
     }
 
     @Test
+    @DirtiesContext
     public void getAllOrderByDeliveryPersonWithNoneOrder() {
         ResponseEntity<String> response = testRestTemplate.exchange("/api/delivery/order/",
                                                 HttpMethod.GET, getHttpEntityWithNoneOrder(), String.class);
@@ -48,6 +50,7 @@ public class DeliveryControllerIT {
     }
 
     @Test
+    @DirtiesContext
     public void getAllOrderByDeliveryPersonWithSomeOrder() {
         ResponseEntity<String> response = testRestTemplate.exchange("/api/delivery/order/",
             HttpMethod.GET, getHttpEntityWithOrder(), String.class);

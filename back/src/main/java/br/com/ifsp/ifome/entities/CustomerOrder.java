@@ -201,20 +201,22 @@ public class CustomerOrder {
     }
 
 
-    public void nextClientStatusByDeliveryStatus() {
+    public boolean nextClientStatusByDeliveryStatus() {
         int sizeOrderInfo = this.orderInfo.size();
         int sizeInfoDelivery = this.orderInfoDelivery.size();
 
         if(sizeOrderInfo == 3 && sizeInfoDelivery == 6) {
-            this.orderInfo.add(new OrderInfo(OrderClientStatus.SAIU_PARA_ENTREGA, LocalDateTime.now(), this));
-            return;
+           this.nextStatus();
+            this.orderInfo.forEach(o -> System.err.println(o.getOrderStatus()));
+            return true;
         }
 
         if(sizeOrderInfo == 4 && sizeInfoDelivery== 7) {
-            this.orderInfo.add(new OrderInfo(OrderClientStatus.SAIU_PARA_ENTREGA, LocalDateTime.now(), this));
-            return;
+            this.nextStatus();
+            this.orderInfo.forEach(o -> System.err.println(o.getOrderStatus()));
+            return true;
         }
 
-        this.orderInfo.forEach(o -> System.err.println(o.getOrderStatus()));
+        return false;
     }
 }
