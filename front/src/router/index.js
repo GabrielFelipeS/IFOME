@@ -74,6 +74,11 @@ const router = createRouter({
           name: 'delivery-login',
           component: () => import('../views/delivery/Login.vue'),
         },
+        {
+          path: 'panel',
+          name: 'delivery-panel',
+          component: () => import('../views/delivery/Home.vue'),
+        }
       ],
     },
     {
