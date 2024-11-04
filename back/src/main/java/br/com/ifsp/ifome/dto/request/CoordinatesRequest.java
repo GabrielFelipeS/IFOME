@@ -6,5 +6,5 @@ public record CoordinatesRequest(
     @NotBlank
     String latitude,
     @NotBlank
-    String longitute
+    String longitude
 ) { }
