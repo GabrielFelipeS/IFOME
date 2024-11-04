@@ -105,6 +105,8 @@ public class DeliveryController {
     @PutMapping("/info/available/")
     public ResponseEntity<ApiResponse> setAvailable(Principal principal) {
         String message = deliveryService.setAvailable(principal);
-        return ResponseEntity.ok(new ApiResponse("success", null, message));
+        DeliveryPersonResponse deliveryPersonResponse = deliveryService.getByEmail(principal.getName());
+
+        return ResponseEntity.ok(new ApiResponse("success", deliveryPersonResponse, message));
     }
 }

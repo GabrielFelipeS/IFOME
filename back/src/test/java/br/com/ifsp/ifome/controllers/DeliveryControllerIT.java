@@ -28,10 +28,12 @@ public class DeliveryControllerIT {
 
     private String token_delivery_any_order;
     private String token_delivery_none_order;
+    private String token_restaurant;
 
     @BeforeEach
     public void setUp() {
-        this.token_delivery_any_order = "Bearer " + tokenService.generateToken("email2@email.com",  List.of(new SimpleGrantedAuthority("ROLE_DELIVERY")));
+        this.token_restaurant = "Bearer " + tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
+        this.token_delivery_any_order = "Bearer " + tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_DELIVERY")));
         this.token_delivery_none_order = "Bearer " + tokenService.generateToken("email7@email.com",  List.of(new SimpleGrantedAuthority("ROLE_DELIVERY")));
     }
 
@@ -52,7 +54,12 @@ public class DeliveryControllerIT {
     @Test
     @DirtiesContext
     public void getAllOrderByDeliveryPersonWithSomeOrder() {
-        ResponseEntity<String> response = testRestTemplate.exchange("/api/delivery/order/",
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/restaurant/order/status/3",
+            HttpMethod.PUT, getHttpEntityRestaurant(), String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        response = testRestTemplate.exchange("/api/delivery/order/",
             HttpMethod.GET, getHttpEntityWithOrder(), String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -61,6 +68,12 @@ public class DeliveryControllerIT {
 
         String message = documentContext.read("$.message");
         assertThat(message).isEqualTo("Pedido atual pego com sucesso!");
+    }
+
+    private HttpEntity getHttpEntityRestaurant() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", this.token_restaurant);
+        return new HttpEntity(headers);
     }
 
     private HttpEntity getHttpEntityWithNoneOrder() {
