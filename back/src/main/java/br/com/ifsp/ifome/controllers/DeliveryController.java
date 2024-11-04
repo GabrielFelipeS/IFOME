@@ -99,5 +99,12 @@ public class DeliveryController {
         return ResponseEntity.ok(new ApiResponse("success", null, "Coordenadas atualizadas"));
     }
 
-
+    @Operation(
+        security = @SecurityRequirement(name = "Bearer Token")
+    )
+    @PutMapping("/info/available/")
+    public ResponseEntity<ApiResponse> setAvailable(Principal principal) {
+        String message = deliveryService.setAvailable(principal);
+        return ResponseEntity.ok(new ApiResponse("success", null, message));
+    }
 }
