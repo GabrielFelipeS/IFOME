@@ -56,7 +56,7 @@ public class DeliveryService {
         System.err.println("AQUI NÂO");
         System.err.println(customerOrder.getRestaurantAddress());
 
-        List<DeliveryPerson> deliveryPersons = deliveryPersonRepository.findDeliveryPersonAvailable();
+        List<DeliveryPerson> deliveryPersons = deliveryPersonRepository.findDeliveryPersonAvailable(customerOrder.getId());
         deliveryPersons.stream().forEach(System.err::println);
         Address addressRestaurant = customerOrder.getRestaurantAddress();
 

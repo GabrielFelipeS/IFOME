@@ -3,6 +3,7 @@ package br.com.ifsp.ifome.repositories;
 import br.com.ifsp.ifome.entities.DeliveryPerson;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,14 +23,13 @@ public interface DeliveryPersonRepository extends CrudRepository<DeliveryPerson,
     AND NOT EXISTS (
         SELECT co
         FROM CustomerOrder co
-        WHERE co.deliveryPerson = d
-        AND co.currentOrderClientStatus != 'CONCLUIDO'
-    )
-    AND NOT EXISTS (
-        SELECT r
-        FROM RefuseCustomerOrder r
-        WHERE r.deliveryId = d.id
+        WHERE co.id = :id AND co.deliveryPerson.id = d.id AND co.currentOrderClientStatus != 'CONCLUIDO'
+        OR EXISTS (
+            SELECT r
+            FROM RefuseCustomerOrder r
+            WHERE r.deliveryId = d.id AND r.customerOrderId = co.id AND r.customerOrderId = :id
+        )
     )
 """)
-    List<DeliveryPerson> findDeliveryPersonAvailable();
+    List<DeliveryPerson> findDeliveryPersonAvailable(@Param("id") Long id);
 }
