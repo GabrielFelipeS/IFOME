@@ -74,6 +74,9 @@ public class DeliveryService {
                 deliveryPersonChoice = deliveryPerson;
             }
         }
+
+        System.err.println("AQUI 3");
+
         if(deliveryPersonChoice == null) {
             // TODO criar uma classe thread que emcapsula isso, para também usar um limitador
 //            Thread thread = new Thread(() -> {
@@ -85,10 +88,12 @@ public class DeliveryService {
 //                }
 //            });
 //            thread.start();
+            System.err.println("ENTROU NO IF");
             return;
         }
+        System.err.println("AQUI 4");
         customerOrder.setDeliveryPerson(deliveryPersonChoice);
-
+        System.err.println("AQUI 5");
         System.err.println("Min distance: " + minDistance);
         System.err.println("Entregador escolhido: " + customerOrder.getDeliveryPerson().getEmail());
 
@@ -104,6 +109,11 @@ public class DeliveryService {
     }
 
     private double calculateDistance(Address restaurantAddress, String latitudeDeliveryPerson, String longitudeDeliveryPerson) {
+        System.err.println("AQUI 5");
+        System.err.println("latRestaurant " + restaurantAddress.getLatitude());
+        System.err.println("lonRestaurant ");
+        System.err.println("latDeliveryPerson ");
+        System.err.println("lonDeliveryPerson ");
         double latRestaurant = Math.toRadians(Double.parseDouble(restaurantAddress.getLatitude()));
         double lonRestaurant = Math.toRadians(Double.parseDouble(restaurantAddress.getLongitude()));
         double latDeliveryPerson = Math.toRadians(Double.parseDouble(latitudeDeliveryPerson));
