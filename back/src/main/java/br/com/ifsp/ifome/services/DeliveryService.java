@@ -44,20 +44,28 @@ public class DeliveryService {
         return customerOrders.stream().map(DeliveryOrderResponse::new).toList();
     }
 
-    @Async  // TODO melhorar forma de busca
+    // TODO melhorar forma de busca
+    // TODO refatorar essa metodo
+    @Async
     public void choiceDeliveryPersonWhenReady(CustomerOrder customerOrder) {
         boolean isNotReady = !customerOrder.getCurrentOrderClientStatus().equals(OrderClientStatus.PRONTO_PARA_ENTREGA);
         System.err.println( customerOrder.getCurrentOrderClientStatus()+ " " + isNotReady);
         if(isNotReady) return;
+
         System.err.println("AQUI NÂO");
         System.err.println(customerOrder.getRestaurantAddress());
+
         List<DeliveryPerson> deliveryPersons = deliveryPersonRepository.findDeliveryPersonAvailable();
         deliveryPersons.stream().forEach(System.err::println);
         Address addressRestaurant = customerOrder.getRestaurantAddress();
+
         double minDistance = Double.MAX_VALUE;
         System.err.println("AQUI 1");
+
         DeliveryPerson deliveryPersonChoice = null;
+
         System.err.println("AQUI 2");
+
         for(DeliveryPerson deliveryPerson : deliveryPersons) {
             double distance = calculateDistance(addressRestaurant, deliveryPerson.getLatitude(), deliveryPerson.getLongitude());
             System.err.println(distance);
@@ -86,6 +94,10 @@ public class DeliveryService {
 
         double preciseDelivery = minDistance * 1;
         customerOrder.setDeliveryCost(preciseDelivery);
+        customerOrder.nextDeliveryStatus();
+
+        customerOrder.getOrderInfo().forEach(System.out::println);
+
         customerOrderRepository.save(customerOrder);
 
         orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
