@@ -65,8 +65,8 @@ onMounted(async () => {
 
     } catch (error) {
         console.log(error);
-        localStorage.removeItem('token');
-        router.push({ name: 'delivery-login' });
+        // localStorage.removeItem('token');
+        // router.push({ name: 'delivery-login' });
     }
 
     try {
@@ -101,8 +101,8 @@ onMounted(async () => {
         });
     } catch (error) {
         console.log(error);
-        localStorage.removeItem('token');
-        router.push({ name: 'delivery-login' });
+        // localStorage.removeItem('token');
+        // router.push({ name: 'delivery-login' });
     }
 });
 
