@@ -84,6 +84,9 @@ public class DeliveryController {
         return ResponseEntity.ok(new ApiResponse("success", responseOptional.get(), "Pedido atual pego com sucesso!"));
     }
 
+    @Operation(
+        security = @SecurityRequirement(name = "Bearer Token")
+    )
     @PutMapping("/coordinates/")
     public ResponseEntity<ApiResponse> updateCoordinates(
         @RequestBody CoordinatesRequest coordinatesRequest,
@@ -93,6 +96,9 @@ public class DeliveryController {
         return ResponseEntity.ok(new ApiResponse("success", null, "Coordenadas atualizadas"));
     }
 
+    @Operation(
+        security = @SecurityRequirement(name = "Bearer Token")
+    )
     @PutMapping("/choice/delivery/{customerOrderId}")
     public ResponseEntity<ApiResponse> teste(@PathVariable Long customerOrderId) {
         deliveryService.simuleChoice(customerOrderId);
