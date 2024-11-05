@@ -19,11 +19,11 @@ public interface DeliveryPersonRepository extends CrudRepository<DeliveryPerson,
     @Query("""
     SELECT d
     FROM DeliveryPerson d
-    WHERE d.available = 'Disponível'
+    WHERE d.available = 'Disponível' AND d.latitude IS NOT NULL  AND d.longitude IS NOT NULL
     AND NOT EXISTS (
         SELECT co
         FROM CustomerOrder co
-        WHERE co.id = :id AND co.deliveryPerson.id = d.id AND co.currentOrderClientStatus != 'CONCLUIDO'
+        WHERE co.deliveryPerson.id = d.id AND co.currentOrderClientStatus != 'CONCLUIDO'
         OR EXISTS (
             SELECT r
             FROM RefuseCustomerOrder r
