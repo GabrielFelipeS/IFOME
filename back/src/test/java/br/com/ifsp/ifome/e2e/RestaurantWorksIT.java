@@ -1,4 +1,4 @@
-package br.com.ifsp.ifome.works;
+package br.com.ifsp.ifome.e2e;
 
 import br.com.ifsp.ifome.dto.request.*;
 import br.com.ifsp.ifome.services.TokenService;
