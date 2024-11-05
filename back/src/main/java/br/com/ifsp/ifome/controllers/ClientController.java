@@ -45,10 +45,10 @@ public class ClientController {
         List<CustomerOrderResponse> orders = customerOrderService.getAllOrdersByCustomer(principal.getName());
 
         if (orders.isEmpty()) {
-            return ResponseEntity.noContent().build(); // Return 204 No Content if no orders found
+            return ResponseEntity.noContent().build();
         }
 
-        return ResponseEntity.ok(orders); // Return 200 OK with the list of orders
+        return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/cart")
