@@ -62,8 +62,7 @@ const sendForm = async () => {
 		"dateOfBirth": date,
 		"cpf": formData.value.cpf,
 		"phone": formData.value.phone,
-		"address": [
-			{
+		"address": {
 				"nameAddress": "Endereço Principal",
 				"typeResidence": formData.value.typeResidence,
 				"cep": formData.value.cep,
@@ -75,7 +74,6 @@ const sendForm = async () => {
 				"number": formData.value.houseNumber + '',
 				"details": formData.value.details
 			}
-		]
 	}
 
 	await api.post('auth/client', JSON.stringify(data), {
