@@ -1,7 +1,6 @@
 <template>
     <Header />
-    <Maps :restaurantLocation="pedidoStore.restaurantLocation ? pedidoStore.restaurantLocation : null"
-        :clientLocation="pedidoStore.clientLocation ? pedidoStore.clientLocation : null" />
+    <Maps />
     <Footer />
 </template>
 
@@ -9,17 +8,13 @@
 import Header from '@/components/delivery/panel/Header.vue';
 import Footer from '@/components/delivery/panel/Footer.vue';
 import Maps from '@/components/delivery/panel/Maps.vue';
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import pusher from '@/services/pusherOrders';
 import { usePedidoStore } from '@/stores/usePedidoStore';
 import api from '@/services/api';
-import { useRouter } from 'vue-router';
 
 const pedidoStore = usePedidoStore();
 const pusherService = pusher;
-const router = useRouter();
-
-console.log(pedidoStore);
 
 const user = ref(null);
 
@@ -36,7 +31,7 @@ onMounted(async () => {
         if (data.status === "success" && data.data) {
             const orderData = data.data;
 
-            console.log(orderData);
+            console.log('Vindo da API:', orderData);
 
             if (orderData.status && orderData.status.length > 0) {
                 pedidoStore.setStatus(orderData.status);
@@ -58,9 +53,10 @@ onMounted(async () => {
                 expectedTime: orderData.expectedTime,
                 nameClient: orderData.nameClient,
                 phoneClient: orderData.phoneClient,
-                orderItems: orderData.orderItens,
                 totalPrice: orderData.totalPrice
             });
+
+            pedidoStore.setOrderItems(orderData.orderItems);
         }
 
     } catch (error) {
@@ -78,7 +74,7 @@ onMounted(async () => {
         user.value = data.data;
 
         channel.bind(`entregador_${user.value.id}`, (data) => {
-            console.log(data);
+            console.log('Vindo do Pusher:', data);
             pedidoStore.setStatus(data.status);
 
             if (data.addressRestaurant) {
@@ -95,9 +91,10 @@ onMounted(async () => {
                 expectedTime: data.expectedTime,
                 nameClient: data.nameClient,
                 phoneClient: data.phoneClient,
-                orderItems: data.orderItems,
                 totalPrice: data.totalPrice
             });
+
+            pedidoStore.setOrderItems(data.orderItems);
         });
     } catch (error) {
         console.log(error);
