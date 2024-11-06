@@ -93,12 +93,6 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
         this.setAddress(deliveryPersonRequest.address());
     }
 
-
-    public DeliveryPerson(Long id, String name, String cpf, String email, String password,
-                          LocalDate dateOfBirth, String typeOfVehicle, String telephone,
-                          String cnh, String vehicleDocument, List<Address> address,
-                          BankAccount bankAccount,  PasswordEncoder passwordEncoder) {}
-
     public DeliveryPerson(Long id, String name, String cpf, String email, String password, LocalDate dateOfBirth, String typeOfVehicle, String plate,String telephone, String cnhNumber, LocalDate cnhValidity, String vehicleDocument, List<Address> address, BankAccount bankAccount, PasswordEncoder passwordEncoder) {
         this.id = id;
         this.name = name;

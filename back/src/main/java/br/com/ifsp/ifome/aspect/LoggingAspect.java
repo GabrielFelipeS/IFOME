@@ -22,7 +22,7 @@ public class LoggingAspect {
     @Pointcut("within(@org.springframework.stereotype.Service *)")
     public void serviceMethods() {}
 
-    @Pointcut("@annotation(br.com.ifsp.ifome.aspect.SensiveData)")
+    @Pointcut("@annotation(br.com.ifsp.ifome.aspect.SensitiveData)")
     public void sensiveDataMethods() {}
 
     @Pointcut("@annotation(br.com.ifsp.ifome.aspect.Login)")

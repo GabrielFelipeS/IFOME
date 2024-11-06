@@ -1,6 +1,6 @@
 package br.com.ifsp.ifome.services;
 
-import br.com.ifsp.ifome.aspect.SensiveData;
+import br.com.ifsp.ifome.aspect.SensitiveData;
 import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
 import br.com.ifsp.ifome.dto.response.RestaurantLoginResponse;
@@ -40,7 +40,7 @@ public class AuthRestaurantService {
         this.addressCoordinatesService = addressCoordinatesService;
     }
 
-    @SensiveData
+    @SensitiveData
     public RestaurantResponse create(RestaurantRequest restaurantRequest, MultipartFile multipartFile) throws MethodArgumentNotValidException, IOException {
         validatorService.isValid(restaurantRequest);
 
@@ -55,7 +55,7 @@ public class AuthRestaurantService {
     }
 
 
-    @SensiveData
+    @SensitiveData
     public RestaurantLoginResponse login(LoginRequest loginRequest) {
         Optional<Restaurant> restaurantOptional = restaurantRepository.findByEmail(loginRequest.email());
 

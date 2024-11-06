@@ -65,7 +65,7 @@ public class ClientController {
     public ResponseEntity<ApiResponse> addDishInCart(@RequestBody @Valid OrderItemRequest orderItemRequest, Principal principal) {
         CartResponse cartResponse = clientService.addDishCart(orderItemRequest, principal.getName());
         System.err.println(cartResponse);
-        ApiResponse response = new ApiResponse("success", cartResponse, "Prado adicionado no carrinho");
+        ApiResponse response = new ApiResponse("success", cartResponse, "Prato adicionado no carrinho");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

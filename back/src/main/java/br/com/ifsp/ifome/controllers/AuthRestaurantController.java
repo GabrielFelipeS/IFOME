@@ -1,7 +1,7 @@
 package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.aspect.Login;
-import br.com.ifsp.ifome.aspect.SensiveData;
+import br.com.ifsp.ifome.aspect.SensitiveData;
 import br.com.ifsp.ifome.docs.DocsCreateRestaurant;
 import br.com.ifsp.ifome.docs.DocsRestaurantLogin;
 import br.com.ifsp.ifome.dto.ApiResponse;
@@ -10,7 +10,6 @@ import br.com.ifsp.ifome.dto.request.RestaurantRequest;
 import br.com.ifsp.ifome.dto.response.RestaurantLoginResponse;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
 import br.com.ifsp.ifome.services.AuthRestaurantService;
-import br.com.ifsp.ifome.services.FileStorageService;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -31,22 +30,19 @@ import java.net.URI;
 @RequestMapping("/api/auth/restaurant")
 public class AuthRestaurantController {
     private final AuthRestaurantService authRestaurantService;
-    private final FileStorageService fileStorageService;
 
-    public AuthRestaurantController(AuthRestaurantService authRestaurantService, FileStorageService fileStorageService){
+    public AuthRestaurantController(AuthRestaurantService authRestaurantService){
         this.authRestaurantService = authRestaurantService;
-        this.fileStorageService = fileStorageService;
     }
 
-    @SensiveData
+    @SensitiveData
     @Transactional
     @DocsCreateRestaurant
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ApiResponse> create(
         @RequestParam("file")  MultipartFile multipartFile,
         @Valid @RequestPart("restaurant") RestaurantRequest restaurantRequest,
-        UriComponentsBuilder ucb)
-        throws IOException, MethodArgumentNotValidException {
+        UriComponentsBuilder ucb) throws IOException, MethodArgumentNotValidException {
         RestaurantResponse restaurantResponse = authRestaurantService.create(restaurantRequest, multipartFile);
 
         URI locationOfNewRestaurant = ucb
@@ -58,9 +54,10 @@ public class AuthRestaurantController {
         return ResponseEntity.created(locationOfNewRestaurant).body(apiResponse);
     }
 
-    @SensiveData  @Login
-    @PostMapping("/login")
+    @Login
+    @SensitiveData
     @DocsRestaurantLogin
+    @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         RestaurantLoginResponse restaurantLoginResponse = authRestaurantService.login(loginRequest);
 

@@ -1,6 +1,6 @@
 package br.com.ifsp.ifome.services;
 
-import br.com.ifsp.ifome.aspect.SensiveData;
+import br.com.ifsp.ifome.aspect.SensitiveData;
 import br.com.ifsp.ifome.entities.Client;
 import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,14 +15,14 @@ import java.util.Optional;
 @Service
 public class LoginService {
 
-    @SensiveData
+    @SensitiveData
     public void isLoginIncorrect(Optional<? extends PasswordPolicy> passwordPolicyOptional, String rawPassword , BCryptPasswordEncoder bCryptPasswordEncoder) {
         if(passwordPolicyOptional.isEmpty() || passwordPolicyOptional.get().isLoginIncorrect(rawPassword, bCryptPasswordEncoder)) {
             throw new BadCredentialsException("email ou senha incorretos!");
         }
     }
 
-    @SensiveData
+    @SensitiveData
     public String generateTokenForgotPassword(Client client) throws Exception {
         KeyBasedPersistenceTokenService tokenService = getInstanceFor(client.getPassword());
 
@@ -31,7 +31,7 @@ public class LoginService {
         return token.getKey();
     }
 
-    @SensiveData
+    @SensitiveData
     private KeyBasedPersistenceTokenService getInstanceFor(String password) throws Exception {
         KeyBasedPersistenceTokenService tokenService = new KeyBasedPersistenceTokenService();
 
