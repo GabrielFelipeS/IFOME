@@ -42,8 +42,9 @@ public class AuthClientService {
     @SensitiveData
     public ClientResponse create(ClientRequest clientRequest) throws MethodArgumentNotValidException {
         validatorService.isValid(clientRequest);
-        Client client = new Client(clientRequest, bCryptPasswordEncoder);
-        client = clientRepository.save(client);
+
+        Client client = clientRepository.save(new Client(clientRequest, bCryptPasswordEncoder));
+
         return new ClientResponse(client);
     }
 
@@ -67,7 +68,7 @@ public class AuthClientService {
         if(client.isEmpty()) return;
 
         String token = loginService.generateTokenForgotPassword(client.get());
-        System.out.println(token);
+
         String body = String.format("link: http://%s:%d/api/auth/client/change_password?token=%s", request.getServerName(), request.getServerPort(), token);
 
         emailService.sendEmail(email,
