@@ -91,7 +91,7 @@ INSERT INTO restaurants (
     account, is_open, role
 ) VALUES (
      'Pizzaria do Chef', '12345678000199', 'Pizzaria', '(21) 9876-5432',
-     'Chef Antônio', '12345678901','chefantonio@pizzas.com',
+     'Chef Antônio', '12345678901','email2@email.com',
      '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',  'Dinheiro, Cartão, Pix',
      'pizzaria_chef.jpeg',  'Caixa Econômica',  '4321',
      '00123456-7',  true, 'RESTAURANT'
