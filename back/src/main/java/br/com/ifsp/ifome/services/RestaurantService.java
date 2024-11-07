@@ -37,15 +37,16 @@ public class RestaurantService {
 
      public Page<RestaurantResponse> getAllRestaurants(Pageable pageable) {
         return restaurantRepository.findAll(PageRequest.of(
-            pageable.getPageNumber(),
-            pageable.getPageSize(),
-            pageable.getSortOr(Sort.by(Sort.Direction.ASC,"nameRestaurant"))
-        )).map(RestaurantResponse::from);
+                    pageable.getPageNumber(),
+                    pageable.getPageSize(),
+                    pageable.getSortOr(Sort.by(Sort.Direction.ASC,"nameRestaurant"))
+                )).map(RestaurantResponse::from);
     }
 
-    public Restaurant findById(Long id) {
-        return restaurantRepository.findById(id)
+    public RestaurantResponse findById(Long id) {
+        Restaurant restaurant = restaurantRepository.findById(id)
             .orElseThrow(RestaurantNotFoundException::new);
+        return RestaurantResponse.from(restaurant);
     }
 
 }

@@ -64,8 +64,8 @@ public class RestaurantController {
     @GetMapping("/{id}")
     @DocsGetRestaurantById
     public ResponseEntity<ApiResponse> getRestaurantById(@PathVariable Long id) {
-        Restaurant restaurant = restaurantService.findById(id);
-        var restaurantResponse = RestaurantResponse.from(restaurant);
+        var restaurantResponse = restaurantService.findById(id);
+
         ApiResponse apiResponse = new ApiResponse("success", restaurantResponse, "Restaurante encontrado com sucesso");
         return ResponseEntity.ok(apiResponse);
     }
@@ -74,6 +74,7 @@ public class RestaurantController {
     @DocsOpenCloseRestaurant
      public ResponseEntity<ApiResponse> putOpen(Principal principal) {
         String message = restaurantService.changeStateOpen(principal);
+
         ApiResponse apiResponse = new ApiResponse("success", null, message);
         return ResponseEntity.ok(apiResponse);
     }
@@ -82,19 +83,17 @@ public class RestaurantController {
     @DocsOpenCloseRestaurant
     public ResponseEntity<ApiResponse> patchOpen(Principal principal) {
         String message = restaurantService.changeStateOpen(principal);
+
         ApiResponse apiResponse = new ApiResponse("success", null, message);
         return ResponseEntity.ok(apiResponse);
     }
 
-//    /@Operation(
-//        security = @SecurityRequirement(name = "Bearer Token")
-//    )
-
     //TODO arrumar retorno de restaurante sem pedidos
+    // TODO refactor method
     @GetMapping("/orders")
     @DocsGetAllRestaurantOrders
     public ResponseEntity<ApiResponse> getMapping(Principal principal) {
-        // TODO refactor method
+
         System.err.println(principal.getName());
         Optional<Restaurant> restaurantOpt = restaurantRepository.findByEmail(principal.getName());
 
@@ -113,7 +112,9 @@ public class RestaurantController {
         ApiResponse apiResponse = new ApiResponse("success", pedidos, null);
         return ResponseEntity.ok(apiResponse);
     }
+
     // TODO fazer verificação de customerOrder é do restaurante logado
+    // TODO Refacotrar esse metodo
     @PutMapping("/order/status/{customerOrderId}")
     @DocUpdateCustomerOrderStatus
     public ResponseEntity<ApiResponse> updateOrderStatus(@PathVariable Long customerOrderId) {
@@ -129,6 +130,7 @@ public class RestaurantController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("error", null, "Erro inesperado: " + e.getMessage()));
         }
     }
+
     // TODO fazer verificação de customerOrder é do restaurante logado
     @PutMapping("/order/status/{customerOrderId}/previous")
     @DocUpdateCustomerOrderStatus
