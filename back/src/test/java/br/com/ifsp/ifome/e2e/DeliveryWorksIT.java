@@ -37,13 +37,13 @@ public class DeliveryWorksIT {
 //        this.token_delivery = tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_CLIENT")));
         this.token_restaurant = tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
         String deliveryAlreadyExists =  tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_DELIVERY")));
-//        ResponseEntity<String> response = testRestTemplate.exchange("/api/delivery/info/available/", HttpMethod.PUT, getHttpEntity(deliveryAlreadyExists),  String.class);
-//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        ResponseEntity<String> response = testRestTemplate.exchange("/api/delivery/info/available/", HttpMethod.PUT, getHttpEntity(deliveryAlreadyExists),  String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
     @DirtiesContext
-    public void shouldBeRemoveCorrectDishInCart() {
+    public void mustBeAbleToPerformAllTheFunctionalitiesForTheDeliveryPerson() {
         DeliveryPersonRequest deliveryPersonRequest = generateDelivery();
         ResponseEntity<String> response = testRestTemplate.postForEntity("/api/auth/deliveryPerson", deliveryPersonRequest, String.class);
 
