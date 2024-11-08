@@ -29,14 +29,12 @@ public class RestaurantControllerIT {
     private TokenService tokenService;
 
     private String tokenWithOrders;
-    private String tokenNoneOrders;
     private String tokenOtherRestaurant;
     private String tokenValidButRestaurantNotExist;
 
     @BeforeEach
     public void setUp() {
         this.tokenWithOrders = tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
-        this.tokenNoneOrders = tokenService.generateToken("email2@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
         this.tokenOtherRestaurant = tokenService.generateToken("email2@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
         this.tokenValidButRestaurantNotExist = tokenService.generateToken("restaurant_not_exists@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
     }
@@ -145,7 +143,7 @@ public class RestaurantControllerIT {
         ResponseEntity<String> response = testRestTemplate.exchange(
             "/api/restaurant/orders",
             HttpMethod.GET,
-            getHttpEntity(tokenNoneOrders),
+            getHttpEntity(tokenOtherRestaurant),
             String.class
         );
 
@@ -181,7 +179,7 @@ public class RestaurantControllerIT {
 
     @Test
     @DirtiesContext
-    @DisplayName("It should not be possible to update status the order from restaurant ID 1")
+    @DisplayName("Should not be possible to update status the order from restaurant ID 1")
     public void shouldBeSuccessByUpdateStateOfTheACustomerOrder() {
         ResponseEntity<String> response = testRestTemplate.exchange(
             "/api/restaurant/order/status/1",
@@ -209,8 +207,8 @@ public class RestaurantControllerIT {
 
     @Test
     @DirtiesContext
-    @DisplayName("It should not be possible to update status the order from restaurant ID 1")
-    public void shouldReturn401ByUpdateStateOfTheACustomerOrder() {
+    @DisplayName("Should not be possible to update status the order from other restaurant")
+    public void shouldNotBePossibleUpdateStateOfTheOrderFromOtherRestaurant() {
         ResponseEntity<String> response = testRestTemplate.exchange(
             "/api/restaurant/order/status/1",
             HttpMethod.PUT,
@@ -218,12 +216,12 @@ public class RestaurantControllerIT {
             String.class
         );
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
     @DirtiesContext
-    @DisplayName("It should not be possible to upgrade to order status from id 1 to the previous status")
+    @DisplayName("Should not be possible to upgrade to order status from id 1 to the previous status")
     public void shouldBeAbleUpdateCustomerOrderStatusToThePreviousStatus() {
         ResponseEntity<String> response = testRestTemplate.exchange(
             "/api/restaurant/order/status/1/previous",
@@ -251,7 +249,7 @@ public class RestaurantControllerIT {
 
     @Test
     @DirtiesContext
-    @DisplayName("It should not be possible to upgrade to order status from id 1 to the previous status")
+    @DisplayName("Should not be possible to upgrade to order status from id 1 to the previous status")
     public void shouldReturn401ByUpdatePreviousStateOfTheACustomerOrder() {
         ResponseEntity<String> response = testRestTemplate.exchange(
             "/api/restaurant/order/status/1/previous",
