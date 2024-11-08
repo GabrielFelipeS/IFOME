@@ -6,8 +6,9 @@ import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.CustomerOrder;
 import br.com.ifsp.ifome.entities.OrderClientStatus;
 import br.com.ifsp.ifome.entities.Restaurant;
-import br.com.ifsp.ifome.exceptions.CartCannotBeEmptyException;
-import br.com.ifsp.ifome.exceptions.RestaurantNotFoundException;
+import br.com.ifsp.ifome.exceptions.client.CartCannotBeEmptyException;
+import br.com.ifsp.ifome.exceptions.restaurant.OrderNotFromRestaurantException;
+import br.com.ifsp.ifome.exceptions.restaurant.RestaurantNotFoundException;
 import br.com.ifsp.ifome.repositories.CartRepository;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
@@ -85,9 +86,13 @@ public class CustomerOrderService {
                 .collect(Collectors.toList());
     }
 
-    public void updateOrderStatus(Long orderId) {
+    public void updateOrderStatus(Long orderId, String email) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
+
+        if(customerOrder.getRestaurantEmailDoesNotEquals(email)) {
+            throw new OrderNotFromRestaurantException("O pedido não pertence ao restaurante logado");
+        }
 
         OrderClientStatus orderClientStatus = customerOrder.nextStatus();
 
@@ -98,9 +103,13 @@ public class CustomerOrderService {
         deliveryService.choiceDeliveryPersonWhenReady(customerOrder);
     }
 
-    public void previousOrderStatus(Long orderId) {
+    public void previousOrderStatus(Long orderId, String email) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
+
+        if(customerOrder.getRestaurantEmailDoesNotEquals(email)) {
+            throw new OrderNotFromRestaurantException("O pedido não pertence ao restaurante logado");
+        }
 
         OrderClientStatus orderClientStatus = customerOrder.previousStatus();
 

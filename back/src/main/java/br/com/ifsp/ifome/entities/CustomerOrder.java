@@ -220,4 +220,8 @@ public class CustomerOrder {
 
         return false;
     }
+
+    public boolean getRestaurantEmailDoesNotEquals(String email) {
+        return !this.restaurant.getEmail().equals(email);
+    }
 }

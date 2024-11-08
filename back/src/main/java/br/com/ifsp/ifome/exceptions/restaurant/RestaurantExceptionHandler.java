@@ -18,7 +18,7 @@ public class RestaurantExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(RestaurantExceptionHandler.class);
 
     @ExceptionHandler(RestaurantNotFoundException.class)
-    public  ResponseEntity<Map<String, Object>>  handleMaxUploadSizeExceededPart(
+    public  ResponseEntity<Map<String, Object>>  handleRestaurantNotFoundException(
         RestaurantNotFoundException ex) {
         logger.warn(ex.getMessage());
 
@@ -26,5 +26,16 @@ public class RestaurantExceptionHandler {
         response.put("message",  ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(OrderNotFromRestaurantException.class)
+    public  ResponseEntity<Map<String, Object>>  handleOrderNotFromRestaurantException(
+        OrderNotFromRestaurantException ex) {
+        logger.warn(ex.getMessage());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message",  ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 }
