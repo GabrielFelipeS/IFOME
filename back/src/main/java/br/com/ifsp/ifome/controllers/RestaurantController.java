@@ -73,7 +73,6 @@ public class RestaurantController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    //TODO arrumar retorno de restaurante sem pedidos
     @GetMapping("/orders")
     @DocsGetAllRestaurantOrders
     public ResponseEntity<ApiResponse> getOrders(Principal principal) {
@@ -83,20 +82,22 @@ public class RestaurantController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    // TODO fazer verificação de customerOrder é do restaurante logado
     @PutMapping("/order/status/{customerOrderId}")
     @DocUpdateCustomerOrderStatus
     public ResponseEntity<ApiResponse> updateOrderStatus(@PathVariable Long customerOrderId, Principal principal) {
         customerOrderService.updateOrderStatus(customerOrderId, principal.getName());
-        return ResponseEntity.ok(new ApiResponse("success", null, "Status atualizado com sucesso!"));
+
+        ApiResponse response = new ApiResponse("success", null, "Status atualizado com sucesso!");
+        return ResponseEntity.ok(response);
     }
 
-    // TODO fazer verificação de customerOrder é do restaurante logado
     @PutMapping("/order/status/{customerOrderId}/previous")
     @DocUpdateCustomerOrderStatus
     public ResponseEntity<ApiResponse> previousOrderStatus(@PathVariable Long customerOrderId, Principal principal) {
         customerOrderService.previousOrderStatus(customerOrderId, principal.getName());
-        return ResponseEntity.ok(new ApiResponse("success", null, "Status atualizado com sucesso!"));
+
+        ApiResponse response = new ApiResponse("success", null, "Status atualizado com sucesso!");
+        return ResponseEntity.ok(response);
     }
 
 }
