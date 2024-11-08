@@ -2,7 +2,7 @@ package br.com.ifsp.ifome.services;
 
 import br.com.ifsp.ifome.dto.request.AddressRequest;
 import br.com.ifsp.ifome.entities.Address;
-import br.com.ifsp.ifome.exceptions.CoordinatesException;
+import br.com.ifsp.ifome.exceptions.delivery.CoordinatesException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;

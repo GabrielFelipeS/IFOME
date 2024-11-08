@@ -1,4 +1,4 @@
-package br.com.ifsp.ifome.exceptions;
+package br.com.ifsp.ifome.exceptions.delivery;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

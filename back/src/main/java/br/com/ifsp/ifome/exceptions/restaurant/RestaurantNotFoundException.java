@@ -1,4 +1,4 @@
-package br.com.ifsp.ifome.exceptions;
+package br.com.ifsp.ifome.exceptions.restaurant;
 
 public class RestaurantNotFoundException extends RuntimeException{
     public RestaurantNotFoundException(String message) {

@@ -28,13 +28,15 @@ public class RestaurantControllerIT {
     @Autowired
     private TokenService tokenService;
 
-    private String token;
+    private String tokenWithOrders;
+    private String tokenNoneOrders;
     private String tokenOtherRestaurant;
     private String tokenValidButRestaurantNotExist;
 
     @BeforeEach
     public void setUp() {
-        this.token = tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
+        this.tokenWithOrders = tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
+        this.tokenNoneOrders = tokenService.generateToken("email2@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
         this.tokenOtherRestaurant = tokenService.generateToken("email2@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
         this.tokenValidButRestaurantNotExist = tokenService.generateToken("restaurant_not_exists@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
     }
@@ -62,7 +64,7 @@ public class RestaurantControllerIT {
     }
 
     @Test
-    @DisplayName("Should be raturn restaurant by id")
+    @DisplayName("Should be return restaurant by id")
     public void shouldBeReturnRestaurant() {
         ResponseEntity<String> response = testRestTemplate.getForEntity(
             "/api/restaurant/1",
@@ -138,6 +140,19 @@ public class RestaurantControllerIT {
     }
 
     @Test
+    @DisplayName("Should be able to take customer orders with restaurant does not have orders")
+    public void shouldBeReturnAllOrdersByRestaurantWhenRestaurantDoesNotHaveOrders() {
+        ResponseEntity<String> response = testRestTemplate.exchange(
+            "/api/restaurant/orders",
+            HttpMethod.GET,
+            getHttpEntity(tokenNoneOrders),
+            String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
     @DisplayName("Should not be able to take customer orders when token valid but restaurant does not exist")
     public void shouldNotBeReturnAllOrdersByRestaurantWhenRestaurantNotExist() {
         ResponseEntity<String> response = testRestTemplate.exchange(
@@ -203,7 +218,7 @@ public class RestaurantControllerIT {
             String.class
         );
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
@@ -222,7 +237,7 @@ public class RestaurantControllerIT {
 
     @Test
     @DirtiesContext
-    @DisplayName("Should return 403 when trying to update to previous status update the status of a non-restaurant order")
+    @DisplayName("Should return when trying to update to previous status update the status of a non-restaurant order")
     public void shouldReturn403BUpdatePreviousStateOfTheACustomerOrderWhenDoesNot() {
         ResponseEntity<String> response = testRestTemplate.exchange(
             "/api/restaurant/order/status/1/previous",
@@ -255,7 +270,7 @@ public class RestaurantControllerIT {
     }
 
     private HttpEntity<Void> getHttpEntity() {
-        HttpHeaders headers = getHttpHeaders(token);
+        HttpHeaders headers = getHttpHeaders(tokenWithOrders);
         return new HttpEntity<>(headers);
     }
 

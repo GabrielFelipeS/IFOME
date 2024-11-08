@@ -98,6 +98,11 @@ public class CustomerOrder {
         return this.restaurant.getNameRestaurant();
     }
 
+    public String getRestaurantEmail() {
+        return this.restaurant.getEmail();
+    }
+
+
     public List<OrderItem> getOrderItems() {
         return this.cart.getOrderItems();
     }
@@ -167,10 +172,6 @@ public class CustomerOrder {
 
     public OrderDeliveryStatus nextDeliveryStatus() {
         int size = orderInfoDelivery.size();
-
-//        if(size == 0) {
-//            orderInfoDelivery.add(new OrderInfoDelivery(OrderDeliveryStatus.NOVO, LocalDateTime.now(), this));
-//        }
 
         if(size == OrderDeliveryStatus.values().length) {
             return OrderDeliveryStatus.CONCLUIDO;

@@ -1,9 +1,9 @@
 package br.com.ifsp.ifome.entities;
 
 
-import br.com.ifsp.ifome.exceptions.CartCannotBeEmptyException;
-import br.com.ifsp.ifome.exceptions.DishFromAnotherRestaurant;
-import br.com.ifsp.ifome.exceptions.DishNotFoundInCartException;
+import br.com.ifsp.ifome.exceptions.client.CartCannotBeEmptyException;
+import br.com.ifsp.ifome.exceptions.client.DishFromAnotherRestaurant;
+import br.com.ifsp.ifome.exceptions.client.DishNotFoundInCartException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

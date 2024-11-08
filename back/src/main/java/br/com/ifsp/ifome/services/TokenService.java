@@ -1,7 +1,7 @@
 package br.com.ifsp.ifome.services;
 
 import br.com.ifsp.ifome.aspect.SensitiveData;
-import br.com.ifsp.ifome.exceptions.InvalidTokenException;
+import br.com.ifsp.ifome.exceptions.global.InvalidTokenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.GrantedAuthority;
