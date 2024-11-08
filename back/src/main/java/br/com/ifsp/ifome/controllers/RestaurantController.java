@@ -3,42 +3,27 @@ package br.com.ifsp.ifome.controllers;
 import br.com.ifsp.ifome.docs.*;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
-import br.com.ifsp.ifome.dto.response.RestaurantResponse;
-import br.com.ifsp.ifome.entities.CustomerOrder;
-import br.com.ifsp.ifome.entities.Restaurant;
-import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
-import br.com.ifsp.ifome.repositories.RestaurantRepository;
 import br.com.ifsp.ifome.services.CustomerOrderService;
 import br.com.ifsp.ifome.services.RestaurantService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.annotation.MultipartConfig;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @MultipartConfig
 @RequestMapping("/api/restaurant/")
 public class RestaurantController {
     private final RestaurantService restaurantService;
-    private final CustomerOrderRepository customerOrderRepository;
-    private final RestaurantRepository restaurantRepository;
     private final CustomerOrderService customerOrderService;
 
-    public RestaurantController(RestaurantService restaurantService, CustomerOrderRepository customerOrderRepository, RestaurantRepository restaurantRepository, CustomerOrderService customerOrderService){
+    public RestaurantController(RestaurantService restaurantService, CustomerOrderService customerOrderService){
         this.restaurantService = restaurantService;
-        this.customerOrderRepository = customerOrderRepository;
-        this.restaurantRepository = restaurantRepository;
         this.customerOrderService = customerOrderService;
     }
 
@@ -73,7 +58,7 @@ public class RestaurantController {
     @PutMapping
     @DocsOpenCloseRestaurant
      public ResponseEntity<ApiResponse> putOpen(Principal principal) {
-        String message = restaurantService.changeStateOpen(principal);
+        String message = restaurantService.changeStateOpen(principal.getName());
 
         ApiResponse apiResponse = new ApiResponse("success", null, message);
         return ResponseEntity.ok(apiResponse);
@@ -82,61 +67,36 @@ public class RestaurantController {
     @PatchMapping
     @DocsOpenCloseRestaurant
     public ResponseEntity<ApiResponse> patchOpen(Principal principal) {
-        String message = restaurantService.changeStateOpen(principal);
+        String message = restaurantService.changeStateOpen(principal.getName());
 
         ApiResponse apiResponse = new ApiResponse("success", null, message);
         return ResponseEntity.ok(apiResponse);
     }
 
     //TODO arrumar retorno de restaurante sem pedidos
-    // TODO refactor method
     @GetMapping("/orders")
     @DocsGetAllRestaurantOrders
-    public ResponseEntity<ApiResponse> getMapping(Principal principal) {
-
-        System.err.println(principal.getName());
-        Optional<Restaurant> restaurantOpt = restaurantRepository.findByEmail(principal.getName());
-
-        // Verifique se o restaurante foi encontrado
-        Restaurant restaurant = restaurantOpt.orElseThrow(() ->
-            new EntityNotFoundException("Restaurante não encontrado com o email: " + principal.getName())
-        );
-
-        // Busque todos os pedidos associados a este restaurante
-        List<CustomerOrder> orders = customerOrderRepository.findByRestaurantId(restaurant.getId());
-        orders.stream().forEach(System.err::println);
-        var pedidos = orders.stream()
-            .map(CustomerOrderResponse::new)
-            .collect(Collectors.toList());
+    public ResponseEntity<ApiResponse> getOrders(Principal principal) {
+        List<CustomerOrderResponse> pedidos = restaurantService.getOrders(principal.getName());
 
         ApiResponse apiResponse = new ApiResponse("success", pedidos, null);
         return ResponseEntity.ok(apiResponse);
     }
 
     // TODO fazer verificação de customerOrder é do restaurante logado
-    // TODO Refacotrar esse metodo
     @PutMapping("/order/status/{customerOrderId}")
     @DocUpdateCustomerOrderStatus
     public ResponseEntity<ApiResponse> updateOrderStatus(@PathVariable Long customerOrderId) {
-        try {
-            customerOrderService.updateOrderStatus(customerOrderId);
-            return ResponseEntity.ok(new ApiResponse("success", null, "Status atualizado com sucesso!"));
-        } catch (IllegalStateException e) {
-            return ResponseEntity.badRequest().body(new ApiResponse("error", null, e.getMessage()));
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("error", null, e.getMessage()));
-        } catch (Exception e) {
-            // Catch any other exceptions
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("error", null, "Erro inesperado: " + e.getMessage()));
-        }
+        customerOrderService.updateOrderStatus(customerOrderId);
+        return ResponseEntity.ok(new ApiResponse("success", null, "Status atualizado com sucesso!"));
     }
 
     // TODO fazer verificação de customerOrder é do restaurante logado
     @PutMapping("/order/status/{customerOrderId}/previous")
     @DocUpdateCustomerOrderStatus
     public ResponseEntity<ApiResponse> previousOrderStatus(@PathVariable Long customerOrderId) {
-            customerOrderService.previousOrderStatus(customerOrderId);
-            return ResponseEntity.ok(new ApiResponse("success", null, "Status atualizado com sucesso!"));
+        customerOrderService.previousOrderStatus(customerOrderId);
+        return ResponseEntity.ok(new ApiResponse("success", null, "Status atualizado com sucesso!"));
     }
 
 }
