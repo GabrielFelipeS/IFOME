@@ -49,7 +49,7 @@ public class RestaurantController {
     @GetMapping("/{id}")
     @DocsGetRestaurantById
     public ResponseEntity<ApiResponse> getRestaurantById(@PathVariable Long id) {
-        var restaurantResponse = restaurantService.findById(id);
+        var restaurantResponse = restaurantService.findRestaurantResponseById(id);
 
         ApiResponse apiResponse = new ApiResponse("success", restaurantResponse, "Restaurante encontrado com sucesso");
         return ResponseEntity.ok(apiResponse);
