@@ -1,5 +1,30 @@
 <script setup>
+import api from "@/services/api.js";
+import {onMounted, ref} from "vue";
+import {getImage} from "@/services/getImage.js";
 
+const props = defineProps({
+	order: {
+		type: Object,
+		required: true,
+	},
+});
+
+const restaurantId = props.order.orderItems[0].restaurantId;
+const restaurant = ref([]);
+
+const getRestaurantData = async () => {
+	const response = await api.get('restaurant/' + restaurantId);
+	if (response.status === 200) {
+		restaurant.value = response.data.data;
+	}
+}
+
+onMounted(() => {
+	getRestaurantData();
+});
+
+console.log(restaurant)
 </script>
 
 <template>
@@ -14,9 +39,9 @@
 			</div>
 		</div>
 		<div class="flex flex-row w-full gap-6">
-			<img src="@/assets/img/logo_header_clean.png" alt="logo" class="object-left max-h-16 max-w-16"/>
+			<img :src="getImage( restaurant.restaurantImage )" alt="logo" class="object-left max-h-16 max-w-16 rounded-full" />
 			<div class="flex flex-col w-full justify-center">
-				<span class="w-full font-semibold -mb-1">Antojitos</span>
+				<span class="w-full font-semibold -mb-1">{{ restaurant.nameRestaurant }}</span>
 				<span class="w-full font-semibold text-tertiary-light text-sm">Entrega parceira</span>
 			</div>
 		</div>
