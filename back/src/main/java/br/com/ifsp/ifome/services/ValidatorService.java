@@ -16,10 +16,16 @@ public class ValidatorService<T> {
         this.validators = validators;
     }
 
+    /**
+     * Recebe um request a ser validado, valida baseado no atributo validators.
+     * Caso alguma validação de validators falhe lançará uma exceção
+     *
+     * @param request Request a ser validado
+     * @throws MethodArgumentNotValidException Lança a exceção caso uma validação falhe
+     */
     public void isValid(T request) throws MethodArgumentNotValidException {
-        System.err.println(validators);
-
         BindingResult bindingResult = new BeanPropertyBindingResult(request, request.getClass().getName());
+
         validators.stream()
             .map(validator -> validator.isValid(request))
             .filter(Optional::isPresent)
