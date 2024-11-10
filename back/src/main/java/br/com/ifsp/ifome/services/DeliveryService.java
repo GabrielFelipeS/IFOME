@@ -21,6 +21,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Serviço responsável pelo gerenciamento das entregas de pedidos.
+ * Inclui operações para selecionar entregadores, calcular distâncias,
+ * atualizar o status do pedido e gerenciar recusas de entregas.
+ */
+
 @Service
 public class DeliveryService {
     private static final double RAIO_DA_TERRA_KM = 6371.01; // Raio da Terra em quilômetros
@@ -47,6 +53,12 @@ public class DeliveryService {
 
     // TODO melhorar forma de busca
     // TODO refatorar essa metodo
+
+    /**
+     * Escolhe um entregador para o pedido quando o pedido está como o status pronto para entrega.
+     *
+     * @param customerOrder Pedido do cliente que está pronto para entrega
+     */
     @Async
     public void choiceDeliveryPersonWhenReady(CustomerOrder customerOrder) {
         boolean isNotReady = !customerOrder.getCurrentOrderClientStatus().equals(OrderClientStatus.PRONTO_PARA_ENTREGA);
@@ -109,6 +121,14 @@ public class DeliveryService {
         orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
     }
 
+    /**
+     * Calcula a distância entre o restaurante e o entregador por meio de um cálculo utilizando a latitude geográfica de ambos
+     *
+     * @param restaurantAddress Endereço do restaurante para obter a informação de latitude e longitude do restaurante
+     * @param latitudeDeliveryPerson Para obter a informação de latitude do entregador
+     * @param longitudeDeliveryPerson Para obter a informação de longitude do entregador
+     * @return A distância cálculada em km
+     */
     private double calculateDistance(Address restaurantAddress, String latitudeDeliveryPerson, String longitudeDeliveryPerson) {
         System.err.println("AQUI 5");
         System.err.println("latRestaurant " + restaurantAddress.getLatitude());
@@ -152,6 +172,13 @@ public class DeliveryService {
         return RAIO_DA_TERRA_KM * anguloCentral;
     }
 
+
+    /**
+     * Atualiza as informações de coordenadas do entregador logado
+     *
+     * @param coordinatesRequest Novas informações de coordenadas do entregador
+     * @param principal Identificação do usuário logado
+     */
     public void updateCoordinates(@Valid CoordinatesRequest coordinatesRequest, Principal principal) {
         Optional<DeliveryPerson> deliveryPersonOptional = deliveryPersonRepository.findByEmail(principal.getName());
 
@@ -166,6 +193,12 @@ public class DeliveryService {
         deliveryPersonRepository.save(deliveryPerson);
     }
 
+
+    /**
+     * Atualiza o status do pedido para o próximo status definido na sequência
+     *
+     * @param orderId Id do pedido que deve ser atualizado
+     */
     public void updateOrderStatus(Long orderId) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
@@ -184,6 +217,11 @@ public class DeliveryService {
         }
     }
 
+    /**
+     *Reverte o stautus do pedido para o status anterior
+     *
+     * @param orderId Id do pedido que deve ser atualizado
+     */
     public void previousOrderStatus(Long orderId) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
@@ -203,6 +241,14 @@ public class DeliveryService {
 //        orderStatusUpdateService.updateStatusOrderToClient(customerOrder, customerOrder.getCurrentOrderClientStatus());
     }
 
+
+    /**
+     * Registra a recusa de entrega de um pedido pelo entregador
+     *
+     * @param customerOrderId Identificador do pedido que foi recusado
+     * @param justification Justifica da recusa da entrega
+     * @param principal Identificação do usuário entregador logado
+     */
     public void refuseOrder(Long customerOrderId, String justification, Principal principal) {
         DeliveryPerson deliveryPerson = deliveryPersonRepository
                                         .findByEmail(principal.getName())
@@ -233,11 +279,22 @@ public class DeliveryService {
         this.choiceDeliveryPersonWhenReady(customerOrder);
     }
 
+    /***
+     * Retorna as informações do entregador pelo o e-mail
+     *
+     * @param email Email do entregador
+     * @return Informações do entregador encontrado com o e-mail
+     */
     public DeliveryPersonResponse getByEmail(String email) {
         DeliveryPerson deliveryPerson = deliveryPersonRepository.findByEmail(email).orElseThrow();
         return new DeliveryPersonResponse(deliveryPerson);
     }
 
+    /**
+     *Simula a escolha de um entregador de um pedido
+     *
+     * @param customerOrderId Identificador do pedido
+     */
     public void simuleChoice(Long customerOrderId) {
         CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow();
 
@@ -256,6 +313,13 @@ public class DeliveryService {
         this.choiceDeliveryPersonWhenReady(customerOrder);
     }
 
+
+    /**
+     * Obtem o pedido associado ao entregador logado, caso exista
+     *
+     * @param principal Informações do usuário logado
+     * @return Retorna o pedido ativo que está associado ao entregador
+     */
     public Optional<PusherDeliveryOrderResponse> getCustomerOrderId(Principal principal) {
         var customerOrdes = customerOrderRepository.findActiveOrderDeliveryPerson(principal.getName());
 
@@ -270,6 +334,12 @@ public class DeliveryService {
         return Optional.of(PusherDeliveryOrderResponse.from(customerOrder, deliveryOrderResponse));
     }
 
+    /**
+     *Determina o status de disponibilidade do entregador
+     *
+     * @param principal Informações do usuário logado
+     * @return Mensagem que indica o status atual de disponibilidade do entregador logado
+     */
     public String setAvailable(Principal principal) {
         DeliveryPerson deliveryPerson = deliveryPersonRepository.findByEmail(principal.getName()).get();
 
