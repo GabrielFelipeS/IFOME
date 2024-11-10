@@ -38,8 +38,7 @@ public class RestaurantService {
         restaurant.reverseStatusOpen();
         restaurantRepository.save(restaurant);
 
-        String message = String.format("Restaurante %s com sucesso!", restaurant.isOpen()? "aberto" : "fechado");
-        return message;
+        return String.format("Restaurante %s com sucesso!", restaurant.isOpen()? "aberto" : "fechado");
     }
 
     /**
@@ -77,9 +76,20 @@ public class RestaurantService {
      * @return restaurante com id passado como parametro
      * @throws RestaurantNotFoundException Caso não encontre o restaurante com o id especificado
      */
-    public RestaurantResponse findById(Long id) {
-        Restaurant restaurant = restaurantRepository.findById(id)
+    public Restaurant findById(Long id) {
+        return restaurantRepository.findById(id)
             .orElseThrow(RestaurantNotFoundException::new);
+    }
+
+    /**
+     * Busca um restaurante pelo id
+     *
+     * @param id id do restaurante
+     * @return restaurante com id passado como parametro
+     * @throws RestaurantNotFoundException Caso não encontre o restaurante com o id especificado
+     */
+    public RestaurantResponse findRestaurantResponseById(Long id) {
+        Restaurant restaurant = this.findById(id);
         return RestaurantResponse.from(restaurant);
     }
 
@@ -102,5 +112,18 @@ public class RestaurantService {
         return orders.stream()
             .map(CustomerOrderResponse::new)
             .toList();
+    }
+
+    /**
+     *
+     * @param restaurantEmail Email do restaurante
+     * @return restaurante encontrado com o E-mail
+     * @throws RestaurantNotFoundException Caso não encontre o restaurante
+     */
+    public Restaurant findByEmail(String restaurantEmail) {
+        Optional<Restaurant> restaurantOpt = restaurantRepository.findByEmail(restaurantEmail);
+        return restaurantOpt.orElseThrow(() ->
+            new RestaurantNotFoundException("Restaurante não encontrado com o email: " + restaurantEmail)
+        );
     }
 }
