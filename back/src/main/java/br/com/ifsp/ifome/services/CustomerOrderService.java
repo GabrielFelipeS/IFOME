@@ -48,8 +48,6 @@ public class CustomerOrderService {
 
         customerOrderRepository.save(customerOrder);
 
-        orderStatusUpdateService.addOrder(customerOrder);
-
         return CustomerOrderRequest.from(customerOrder);
     }
 
