@@ -18,6 +18,11 @@ import java.util.Map;
 @Service
 public class AddressCoordinatesService {
 
+    /**
+     *
+     * @param addressRequest Informações do endereço
+     * @return Informações do endereço contendo latitude e longitude
+     */
     public Address createAddressWithCoordinates(AddressRequest addressRequest) {
         Map<String, String> latitudeAndLongitude = new HashMap<>();
         String endereco = String.format("%s, %s, %s, %s, %s", addressRequest.address(), addressRequest.number(),addressRequest.city(), addressRequest.state(), "Brasil");
