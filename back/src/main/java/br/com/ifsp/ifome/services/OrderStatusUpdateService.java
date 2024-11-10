@@ -33,57 +33,6 @@ public class OrderStatusUpdateService {
         this.sseEmitterHashMap = new ConcurrentHashMap<>();
     }
 
-    public SseEmitter getEmitter(CustomerOrder customerOrder) {
-        return this.addOrder(customerOrder);
-    }
-
-    private List<SseEmitter> getEmitters(CustomerOrder customerOrder) {
-        return sseEmitterHashMap.getOrDefault(customerOrder.getId(), Collections.emptyList());
-    }
-
-    public SseEmitter addOrder(CustomerOrder customerOrder) {
-        System.err.println("CRIANDO EMITTER");
-        SseEmitter emitter = new SseEmitter(3_600_000L );
-
-        System.err.println("ONTIMEOUT EMITTER");
-        emitter.onTimeout(() -> {
-            System.err.println("AQUI");
-            sseEmitterHashMap.remove(customerOrder.getId());
-        });
-
-        System.err.println("ONCOMPLETION EMITTER");
-        emitter.onCompletion(() ->
-          this.remove(emitter, customerOrder)
-        );
-
-        System.err.println("ONERROR EMITTER");
-        emitter.onError((e) -> {
-            System.err.println("Emmiter Erro: " + e.getMessage());
-            this.remove(emitter, customerOrder);
-        });
-
-        System.err.println("ADICIONANDO EMITTER");
-
-        var newEmitter = new CopyOnWriteArrayList<>(List.of(emitter));
-
-        if(sseEmitterHashMap.containsKey(customerOrder.getId())) {
-            sseEmitterHashMap.merge(customerOrder.getId(), newEmitter, (currentValue, newValue) -> {
-                System.err.println(currentValue);
-                System.err.println(newValue);
-                currentValue.addAll(newValue);
-                return currentValue;
-            });
-        } else {
-            sseEmitterHashMap.put(customerOrder.getId(), newEmitter);
-        }
-
-        System.err.println(customerOrder.getId());
-
-//        this.send(emitter, customerOrder);
-
-        return emitter;
-    }
-
     @Async
     public void updateStatusOrderToClient(CustomerOrder customerOrder, OrderClientStatus orderClientStatus)  {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
@@ -133,21 +82,9 @@ public class OrderStatusUpdateService {
         pusher.trigger(
             "pedidos",
             "entregador_" + customerOrder.getDeliveryPerson().getId().toString(),
-//            "entregador_" + 1,
            map
         );
         System.err.println("DEPOIS DO PUSHER");
     }
 
-    private void remove(SseEmitter emitter, CustomerOrder customerOrder) {
-        var emitters = sseEmitterHashMap.get(customerOrder.getId());
-        System.err.println(emitters);
-        System.err.println(sseEmitterHashMap);
-        emitters.remove(emitter);
-        System.err.println(emitters);
-        sseEmitterHashMap.put(customerOrder.getId(), emitters);
-        System.err.println(sseEmitterHashMap);
-
-        System.err.println("EXECUTOU E NÂO DEVIA");
-    }
 }
