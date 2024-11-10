@@ -16,6 +16,7 @@ import br.com.ifsp.ifome.repositories.DishRepository;
 import br.com.ifsp.ifome.repositories.OrderItemRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -73,6 +74,15 @@ public class ClientService {
         this.cartRepository.save(cart);
     }
 
+    public void clearCart(String email) {
+        Optional<Cart> optionalCart = this.cartRepository.findFirstByClientEmail(email);
+        Cart cart = optionalCart.orElseThrow(DishNotFoundInCartException::new);
+
+        cart.clearCart();
+
+        this.cartRepository.save(cart);
+    }
+
     private Cart getCartOrCreateNewCart(String email, Client client) {
         Optional<Cart> optionalCart = this.cartRepository.findFirstByClientEmail(email);
 
@@ -96,4 +106,6 @@ public class ClientService {
             throw new DishNotFoundException();
         }
     }
+
+
 }

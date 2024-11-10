@@ -9,6 +9,8 @@ import br.com.ifsp.ifome.dto.response.CustomerOrderRequest;
 import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
 import br.com.ifsp.ifome.services.ClientService;
 import br.com.ifsp.ifome.services.CustomerOrderService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -84,6 +86,14 @@ public class ClientController {
     @DocsDeleteDishInCart
     public ResponseEntity<ApiResponse> deleteOrderItemInCart(@PathVariable Long id, Principal principal) {
         clientService.removeDishInCart(id, principal.getName());
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DocsClearCart
+    @DeleteMapping("/cart/clear/")
+    public ResponseEntity<ApiResponse> clearCart(Principal principal) {
+        clientService.clearCart(principal.getName());
 
         return ResponseEntity.noContent().build();
     }

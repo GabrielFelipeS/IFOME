@@ -134,4 +134,8 @@ public class Cart {
     public String getClientPhone() {
         return this.client.getPhone();
     }
+
+    public void clearCart() {
+        this.orderItems.clear();
+    }
 }
