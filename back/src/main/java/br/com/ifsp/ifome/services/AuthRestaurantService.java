@@ -44,7 +44,7 @@ public class AuthRestaurantService {
     public RestaurantResponse create(RestaurantRequest restaurantRequest, MultipartFile multipartFile) throws MethodArgumentNotValidException, IOException {
         validatorService.isValid(restaurantRequest);
 
-        String imageUrl = fileStorageService.storeFile(restaurantRequest.cnpj(), multipartFile);
+        String imageUrl = fileStorageService.storeFile(multipartFile);
 
         Address address = addressCoordinatesService.createAddressWithCoordinates(restaurantRequest.address());
 
