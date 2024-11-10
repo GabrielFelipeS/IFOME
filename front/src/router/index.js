@@ -8,7 +8,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      children:[
+      children: [
         {
           path: '/restaurants',
           name: 'restaurants',
@@ -38,6 +38,11 @@ const router = createRouter({
           path: 'new-dish',
           name: 'store-new-dish',
           component: () => import('@/views/store/NewDish.vue'),
+        },
+        {
+          path: 'panel',
+          name: 'store-panel',
+          component: () => import('@/views/store/Panel.vue'),
         },
       ],
     },
@@ -69,12 +74,21 @@ const router = createRouter({
           name: 'delivery-login',
           component: () => import('../views/delivery/Login.vue'),
         },
+        {
+          path: 'panel',
+          name: 'delivery-panel',
+          component: () => import('../views/delivery/Home.vue'),
+        }
       ],
     },
     {
       path: '/NotFound',
       name: 'NotFound',
       component: () => import('@/views/site/NotFound.vue'),
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: { name: 'NotFound' },
     }
   ],
 });

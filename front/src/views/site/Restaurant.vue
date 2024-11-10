@@ -1,5 +1,5 @@
 <template>
-    <Header class="hidden md:flex" />
+    <Header class="hidden md:flex" @open-cart="cartOpen = !cartOpen"/>
     <main class="w-full min-h-[calc(100vh-75px)] bg-white md:mt-[75px] md:max-w-[1200px] mx-auto">
         <div v-if="!restaurant" class="w-full h-[250px] bg-gray-300 animate-pulse"></div>
 
@@ -15,7 +15,7 @@
             </div>
 
             <div
-                class="w-full flex flex-row md:flex-row items-center p-4 rounded-t-lg bg-white mt-[-45px] md:mt-5 relative z-50">
+                class="w-full flex flex-row md:flex-row items-center p-4 rounded-t-lg bg-white mt-[-45px] md:mt-5 relative z-20">
                 <img :src="imageUrl || '../../assets/img/logo_header_clean.png'" alt="Logo do Restaurante"
                     class="w-20 h-20 object-cover rounded-full" />
 
@@ -47,16 +47,35 @@
             <h2 class="text-2xl w-full text-start font-normal text-tertiary-light">Pratos</h2>
             <div
                 class="w-full h-[40px] md:full bg-background-inputs rounded-lg flex flex-row justify-between items-center mt-3">
-                <v-icon name="fa-search" scale="1" class="text-primary mx-4 cursor-pointer" @click="searchForm" />
+                <v-icon name="fa-search" scale="1" class="text-primary mx-4 cursor-pointer" @click="" />
                 <input type="text" class="w-full h-full bg-transparent text-tertiary text-lg  outline-none"
-                    placeholder="Busque nome" v-model="query" @keyup.enter="searchForm" />
+                    placeholder="Busque nome" @keyup.enter="" />
             </div>
         </div>
-		<div class="px-5 lg:grid grid-cols-3 gap-4 gap-y-0.5 mb-[91px]">
-			<DishCard v-for="dish in dishes" :dish="dish"/>
+		<div class="text-center w-full mt-12 font-semibold px-8" v-if="dishes.length === 0">
+			Este restaurante não possui pratos disponíveis no momento
+		</div>
+		<div class="px-5 lg:grid grid-cols-3 gap-4 gap-y-0.5 mb-[91px]" v-if="dishes.length > 0">
+			<DishCard
+				v-for="dish in dishes" :key="dish.id"
+				@click="selectedDish = dish"
+				:dish="dish"
+			/>
 		</div>
     </main>
-    <FooterMobile />
+	<DishModal
+		v-if="selectedDish !== null"
+		:dish="selectedDish" :restaurant="restaurant"
+		@close-dish-modal="selectedDish = null"
+	/>
+	<CartDetails
+		@open-cart="cartOpen = !cartOpen"
+		v-if="cartOpen"
+	/>
+    <FooterMobile
+		@open-cart="cartOpen = !cartOpen"
+		:cart-open="cartOpen"
+	/>
 </template>
 
 <script setup>
@@ -65,8 +84,11 @@ import FooterMobile from '@/components/site/FooterMobile.vue';
 import DishCard from "@/components/store/dish/DishCard.vue";
 import { useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
 import router from '@/router';
+import DishModal from "@/components/store/dish/DishModal.vue";
+import CartDetails from "@/components/site/CartDetails.vue";
+import api from '@/services/api';
+import {getImage} from "@/services/getImage.js";
 
 const route = useRoute();
 const restaurantId = route.params.id;
@@ -75,23 +97,21 @@ const imageUrl = ref('');
 const restaurant = ref(null);
 const error = ref(null);
 
-const dishes = ref(null);
+const dishes = ref([]);
+const selectedDish = ref(null);
 
-const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + localStorage.getItem('token'),
-};
+const cartOpen = ref(false);
 
 const fetchRestaurantData = async () => {
     try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}restaurant/${restaurantId}`, { headers });
+        const response = await api.get(`restaurant/${restaurantId}`);
         if (response.data.data === null) {
             router.push({ name: 'NotFound' });
             return;
         }
         restaurant.value = response.data.data;
-		dishes.value = restaurant.value.dish;
-        imageUrl.value = `${import.meta.env.VITE_API_URL}image/${restaurant.value.restaurantImage}`;
+		dishes.value = restaurant.value.dish.filter(dish => dish.availability === 'Disponível');
+		imageUrl.value = getImage(restaurant.value.restaurantImage);
     } catch (err) {
         router.push({ name: 'NotFound' });
         console.error(err);
