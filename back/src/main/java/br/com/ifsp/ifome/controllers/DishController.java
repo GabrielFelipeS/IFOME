@@ -41,7 +41,7 @@ public class DishController {
         @Valid @RequestPart("dish")DishRequest dishRequest,
         Principal principal, UriComponentsBuilder ucb)
         throws IOException, MethodArgumentNotValidException{
-        DishResponse dishResponse = dishService.create(dishRequest, multipartFile, principal);
+        DishResponse dishResponse = dishService.create(dishRequest, multipartFile, principal.getName());
 
         URI locationOfNewDish = ucb
             .path("dish/{id}")
