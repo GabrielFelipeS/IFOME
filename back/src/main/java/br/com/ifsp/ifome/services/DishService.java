@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DishService {
@@ -29,7 +30,6 @@ public class DishService {
         this.dishRepository = dishRepository;
         this.fileStorageService = fileStorageService;
         this.restaurantRepository = restaurantRepository;
-
     }
 
     public DishResponse create(DishRequest dishRequest, MultipartFile multipartFile, Long restaurantId)
@@ -96,5 +96,32 @@ public class DishService {
             .orElseThrow(DishNotFoundException::new)
             ;
         return new DishResponse(dishResponse);
+    }
+
+
+    /**
+     * Busca o prato disponível baseado no id, lança uma exceção caso não encontre
+     *
+     * @param dishId Id do prato
+     * @return Objeto Dish, contendo informações do prato
+     * @throws DishNotFoundException Caso não encontre um prato disponível com o id passado.
+     */
+    public Dish getDishAvailableOrElseThrow(Long dishId) {
+        Optional<Dish> optionalDish = dishRepository.findDishAvailableById(dishId);
+        return optionalDish.orElseThrow(DishNotFoundException::new);
+    }
+
+    /**
+     * Verifica a existencia de um prato baseado no id, lança uma exceção caso não exista
+     *
+     * @param dishId Id do prato
+     * @throws DishNotFoundException Caso não encontre um prato disponível com o id passado.
+     */
+    public void dishIdExistsOrElseThrow(Long dishId) {
+        boolean exists = dishRepository.existsById(dishId);
+
+        if(!exists) {
+            throw new DishNotFoundException();
+        }
     }
 }
