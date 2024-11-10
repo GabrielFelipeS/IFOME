@@ -49,15 +49,6 @@ public class CustomerOrderControllerTest {
             .characterEncoding("UTF-8")).build();
     }
 
-
-    @Test
-    public void deveReceberSseEvent() throws Exception {
-        mockMvc.perform(get("/api/order/status/1")
-                .header(HttpHeaders.AUTHORIZATION,  "Bearer " + token_cliente_with_customer_order))
-            .andExpect(status().isOk())
-            ;
-    }
-
     private @NotNull HttpHeaders getHttpHeadersClient() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token_cliente);

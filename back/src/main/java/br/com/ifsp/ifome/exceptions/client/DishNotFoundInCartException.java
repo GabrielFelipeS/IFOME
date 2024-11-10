@@ -1,4 +1,4 @@
-package br.com.ifsp.ifome.exceptions;
+package br.com.ifsp.ifome.exceptions.client;
 
 public class DishNotFoundInCartException extends RuntimeException{
     public DishNotFoundInCartException() {

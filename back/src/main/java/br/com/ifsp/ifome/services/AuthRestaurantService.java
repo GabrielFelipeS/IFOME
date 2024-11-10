@@ -1,10 +1,11 @@
 package br.com.ifsp.ifome.services;
 
-import br.com.ifsp.ifome.aspect.SensiveData;
+import br.com.ifsp.ifome.aspect.SensitiveData;
 import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
 import br.com.ifsp.ifome.dto.response.RestaurantLoginResponse;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
+import br.com.ifsp.ifome.entities.Address;
 import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
 import br.com.ifsp.ifome.validation.interfaces.Validator;
@@ -26,30 +27,35 @@ public class AuthRestaurantService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ValidatorService<RestaurantRequest> validatorService;
     private final FileStorageService fileStorageService;
+    private final AddressCoordinatesService addressCoordinatesService;
 
     public AuthRestaurantService(TokenService tokenService, RestaurantRepository restaurantRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-                                 List<Validator<RestaurantRequest>> validators, LoginService loginService, FileStorageService fileStorageService) {
+                                 List<Validator<RestaurantRequest>> validators, LoginService loginService, FileStorageService fileStorageService, AddressCoordinatesService addressCoordinatesService) {
         this.tokenService = tokenService;
         this.restaurantRepository = restaurantRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.validatorService = new ValidatorService<>(validators);
         this.loginService = loginService;
         this.fileStorageService = fileStorageService;
+        this.addressCoordinatesService = addressCoordinatesService;
     }
 
-    @SensiveData
+    @SensitiveData
     public RestaurantResponse create(RestaurantRequest restaurantRequest, MultipartFile multipartFile) throws MethodArgumentNotValidException, IOException {
         validatorService.isValid(restaurantRequest);
 
         String imageUrl = fileStorageService.storeFile(restaurantRequest.cnpj(), multipartFile);
 
-        Restaurant restaurant = new Restaurant(restaurantRequest, bCryptPasswordEncoder, imageUrl);
+        Address address = addressCoordinatesService.createAddressWithCoordinates(restaurantRequest.address());
+
+        Restaurant restaurant = new Restaurant(restaurantRequest, address, bCryptPasswordEncoder, imageUrl);
 
         restaurant = restaurantRepository.save(restaurant);
         return RestaurantResponse.from(restaurant);
     }
 
-    @SensiveData
+
+    @SensitiveData
     public RestaurantLoginResponse login(LoginRequest loginRequest) {
         Optional<Restaurant> restaurantOptional = restaurantRepository.findByEmail(loginRequest.email());
 

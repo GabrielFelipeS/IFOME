@@ -19,7 +19,7 @@ public class OrderInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
+    private OrderClientStatus orderStatus;
     private LocalDateTime localDateTime;
 
     @JsonIgnore
@@ -27,7 +27,7 @@ public class OrderInfo {
     @JoinColumn(name = "customer_order")
     private CustomerOrder customerOrder;
 
-    public OrderInfo(OrderStatus orderStatus, LocalDateTime localDateTime, CustomerOrder customerOrder) {
+    public OrderInfo(OrderClientStatus orderStatus, LocalDateTime localDateTime, CustomerOrder customerOrder) {
         this.orderStatus = orderStatus;
         this.localDateTime = localDateTime;
         this.customerOrder = customerOrder;

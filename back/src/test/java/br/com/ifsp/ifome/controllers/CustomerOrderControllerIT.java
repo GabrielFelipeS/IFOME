@@ -5,7 +5,7 @@ import br.com.ifsp.ifome.dto.request.OrderItemRequest;
 import br.com.ifsp.ifome.dto.request.UpdateOrderStatusRequest;
 import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
 import br.com.ifsp.ifome.entities.CustomerOrder;
-import br.com.ifsp.ifome.entities.OrderStatus;
+import br.com.ifsp.ifome.entities.OrderClientStatus;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.services.TokenService;
 import org.jetbrains.annotations.NotNull;
@@ -20,11 +20,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -178,41 +176,30 @@ public class CustomerOrderControllerIT {
     @Test
     @DirtiesContext
     public void shouldFollowOrderStatusSequence() {
-        // Criar um pedido no banco de dados com o status inicial "NOVO"
-        CustomerOrder order = new CustomerOrder();
-//        order.setStatus(OrderStatus.NOVO);
-        customerOrderRepository.save(order); // Salve o pedido
-//        System.out.println("Status inicial: " + order.getStatus());
+        Long orderId = 1L;
 
-        Long orderId = order.getId(); // Obtenha o ID do pedido criado
-
-        // Atualizar e verificar a sequência de status
-        updateOrderStatusAndPrint(orderId, OrderStatus.EM_PREPARO);
-        updateOrderStatusAndPrint(orderId, OrderStatus.PRONTO_PARA_ENTREGA);
-        updateOrderStatusAndPrint(orderId, OrderStatus.SAIU_PARA_ENTREGA);
-        updateOrderStatusAndPrint(orderId, OrderStatus.CONCLUIDO);
+        updateOrderStatusAndPrint(orderId, OrderClientStatus.EM_PREPARO);
+        updateOrderStatusAndPrint(orderId, OrderClientStatus.PRONTO_PARA_ENTREGA);
+        updateOrderStatusAndPrint(orderId, OrderClientStatus.SAIU_PARA_ENTREGA);
+        updateOrderStatusAndPrint(orderId, OrderClientStatus.CONCLUIDO);
     }
 
-    private void updateOrderStatusAndPrint(Long orderId, OrderStatus expectedStatus) {
-        // Crie o request para atualizar o status
+    private void updateOrderStatusAndPrint(Long orderId, OrderClientStatus expectedStatus) {
         UpdateOrderStatusRequest updateRequest = new UpdateOrderStatusRequest(orderId);
         HttpHeaders headers = getHttpHeadersRestaurant(); // Obtenha os cabeçalhos do restaurante
 
-        // Enviar a requisição de atualização de status
         ResponseEntity<ApiResponse> response = testRestTemplate.exchange(
                 "/api/order/updateStatus/"+orderId, HttpMethod.PUT, new HttpEntity<>(headers), ApiResponse.class
         );
 
-        // Verifique se a atualização foi bem-sucedida
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
         assertThat(response.getBody().message()).isEqualTo("Status atualizado com sucesso!");
 
-        // Verifique se o status foi atualizado corretamente no banco de dados
         CustomerOrder updatedOrder = customerOrderRepository.findById(orderId).orElseThrow();
-//        assertThat(updatedOrder.getStatus()).isEqualTo(expectedStatus);
+        assertThat(updatedOrder.getCurrentOrderClientStatus()).isEqualTo(expectedStatus);
 
-        // Printar o status atualizado
-//        System.out.println("Status atualizado para: " + updatedOrder.getStatus());
+        System.err.println("Status atualizado para: " + updatedOrder.getCurrentOrderClientStatus());
     }
 
 //    @Test

@@ -28,25 +28,22 @@ public class RestaurantControllerIT {
     @Autowired
     private TokenService tokenService;
 
-    private String token;
+    private String tokenWithOrders;
+    private String tokenOtherRestaurant;
+    private String tokenValidButRestaurantNotExist;
 
     @BeforeEach
     public void setUp() {
-        this.token = tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
+        this.tokenWithOrders = tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
+        this.tokenOtherRestaurant = tokenService.generateToken("email2@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
+        this.tokenValidButRestaurantNotExist = tokenService.generateToken("restaurant_not_exists@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
     }
 
     @Test
-    @DisplayName("should return all restaurants")
-    public void shouldBeAbleReturnAllRestaurant() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
-
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<String> response = testRestTemplate.exchange(
+    @DisplayName("Should return all restaurants with pagination")
+    public void shouldBeAbleReturnAllRestaurantWithPagination() {
+        ResponseEntity<String> response = testRestTemplate.getForEntity(
             "/api/restaurant/",
-            HttpMethod.GET,
-            entity,
             String.class
         );
 
@@ -54,17 +51,21 @@ public class RestaurantControllerIT {
     }
 
     @Test
-    @DisplayName("should be raturn restaurant by id")
+    @DisplayName("Should return all restaurants")
+    public void shouldBeAbleReturnAllRestaurant() {
+        ResponseEntity<String> response = testRestTemplate.getForEntity(
+            "/api/restaurant/all",
+            String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DisplayName("Should be return restaurant by id")
     public void shouldBeReturnRestaurant() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
-
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<String> response = testRestTemplate.exchange(
+        ResponseEntity<String> response = testRestTemplate.getForEntity(
             "/api/restaurant/1",
-            HttpMethod.GET,
-            entity,
             String.class
         );
 
@@ -72,17 +73,10 @@ public class RestaurantControllerIT {
     }
 
     @Test
-    @DisplayName("should not be return restaurant by id does not exist")
+    @DisplayName("Should not be return restaurant by id does not exist")
     public void shouldNotBeReturnRestaurant() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
-
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<String> response = testRestTemplate.exchange(
+        ResponseEntity<String> response = testRestTemplate.getForEntity(
             "/api/restaurant/999",
-            HttpMethod.GET,
-            entity,
             String.class
         );
 
@@ -91,12 +85,9 @@ public class RestaurantControllerIT {
 
     @Test
     @DirtiesContext
-    @DisplayName("should be reverse open with put")
+    @DisplayName("Should be reverse open with put")
     public void shouldBeReverseOpenPut() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
-
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        HttpEntity<Void> entity = getHttpEntity();
 
         ResponseEntity<String> response = testRestTemplate.exchange(
             "/api/restaurant/",
@@ -114,12 +105,9 @@ public class RestaurantControllerIT {
 
     @Test
     @DirtiesContext
-    @DisplayName("should be return is open restaurant")
+    @DisplayName("Should be return is open restaurant")
     public void shouldBeIsOpen() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
-
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        HttpEntity<Void> entity = getHttpEntity();
 
         ResponseEntity<String> response = testRestTemplate.exchange(
             "/api/restaurant/1",
@@ -134,6 +122,166 @@ public class RestaurantControllerIT {
 
         Boolean isOpen = document.read("$.data.isOpen");
         assertThat(isOpen).isEqualTo(false);
+    }
+
+    @Test
+    @DisplayName("Should be able to take customer orders")
+    public void shouldBeReturnAllOrdersByRestaurant() {
+        ResponseEntity<String> response = testRestTemplate.exchange(
+            "/api/restaurant/orders",
+            HttpMethod.GET,
+            getHttpEntity(),
+            String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DisplayName("Should be able to take customer orders with restaurant does not have orders")
+    public void shouldBeReturnAllOrdersByRestaurantWhenRestaurantDoesNotHaveOrders() {
+        ResponseEntity<String> response = testRestTemplate.exchange(
+            "/api/restaurant/orders",
+            HttpMethod.GET,
+            getHttpEntity(tokenOtherRestaurant),
+            String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DisplayName("Should not be able to take customer orders when token valid but restaurant does not exist")
+    public void shouldNotBeReturnAllOrdersByRestaurantWhenRestaurantNotExist() {
+        ResponseEntity<String> response = testRestTemplate.exchange(
+            "/api/restaurant/orders",
+            HttpMethod.GET,
+            getHttpEntity(tokenValidButRestaurantNotExist),
+            String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    @DisplayName("Should not be able to take customer orders")
+    public void shouldReturn401ByGetOrders() {
+        ResponseEntity<String> response = testRestTemplate.exchange(
+            "/api/restaurant/orders",
+            HttpMethod.GET,
+            getHttpEntityInvalid(),
+            String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+
+    @Test
+    @DirtiesContext
+    @DisplayName("Should not be possible to update status the order from restaurant ID 1")
+    public void shouldBeSuccessByUpdateStateOfTheACustomerOrder() {
+        ResponseEntity<String> response = testRestTemplate.exchange(
+            "/api/restaurant/order/status/1",
+            HttpMethod.PUT,
+            getHttpEntity(),
+            String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("Should return 403 when trying to update the status of a non-restaurant order")
+    public void shouldReturn403ByUpdateStateWhenDoesNot() {
+        ResponseEntity<String> response = testRestTemplate.exchange(
+            "/api/restaurant/order/status/1",
+            HttpMethod.PUT,
+            getHttpEntity(tokenOtherRestaurant),
+            String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("Should not be possible to update status the order from other restaurant")
+    public void shouldNotBePossibleUpdateStateOfTheOrderFromOtherRestaurant() {
+        ResponseEntity<String> response = testRestTemplate.exchange(
+            "/api/restaurant/order/status/1",
+            HttpMethod.PUT,
+            getHttpEntityInvalid(),
+            String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("Should not be possible to upgrade to order status from id 1 to the previous status")
+    public void shouldBeAbleUpdateCustomerOrderStatusToThePreviousStatus() {
+        ResponseEntity<String> response = testRestTemplate.exchange(
+            "/api/restaurant/order/status/1/previous",
+            HttpMethod.PUT,
+            getHttpEntity(),
+            String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("Should return when trying to update to previous status update the status of a non-restaurant order")
+    public void shouldReturn403BUpdatePreviousStateOfTheACustomerOrderWhenDoesNot() {
+        ResponseEntity<String> response = testRestTemplate.exchange(
+            "/api/restaurant/order/status/1/previous",
+            HttpMethod.PUT,
+            getHttpEntity(tokenOtherRestaurant),
+            String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("Should not be possible to upgrade to order status from id 1 to the previous status")
+    public void shouldReturn401ByUpdatePreviousStateOfTheACustomerOrder() {
+        ResponseEntity<String> response = testRestTemplate.exchange(
+            "/api/restaurant/order/status/1/previous",
+            HttpMethod.PUT,
+            getHttpEntityInvalid(),
+            String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+
+    private HttpEntity<Void> getHttpEntity(String token) {
+        HttpHeaders headers = getHttpHeaders(token);
+        return new HttpEntity<>(headers);
+    }
+
+    private HttpEntity<Void> getHttpEntity() {
+        HttpHeaders headers = getHttpHeaders(tokenWithOrders);
+        return new HttpEntity<>(headers);
+    }
+
+    private HttpEntity<Void> getHttpEntityInvalid() {
+        HttpHeaders headers = getHttpHeaders("");
+        return new HttpEntity<>(headers);
+    }
+
+
+    private HttpHeaders getHttpHeaders(String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        return headers;
     }
 }
 

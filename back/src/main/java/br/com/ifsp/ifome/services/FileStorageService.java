@@ -13,6 +13,8 @@ import java.util.Random;
 @Service
 public class FileStorageService {
 
+    // TODO Fazer conversçao para webp
+    // TODO Fazer validação se é uma imagem
     public String storeFile(String cnpj, MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             throw new IOException("File is empty");

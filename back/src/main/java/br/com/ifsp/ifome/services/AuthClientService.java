@@ -1,6 +1,6 @@
 package br.com.ifsp.ifome.services;
 
-import br.com.ifsp.ifome.aspect.SensiveData;
+import br.com.ifsp.ifome.aspect.SensitiveData;
 import br.com.ifsp.ifome.dto.request.ClientRequest;
 import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.response.ClientResponse;
@@ -39,15 +39,16 @@ public class AuthClientService {
         this.emailService = emailService;
     }
 
-    @SensiveData
+    @SensitiveData
     public ClientResponse create(ClientRequest clientRequest) throws MethodArgumentNotValidException {
         validatorService.isValid(clientRequest);
-        Client client = new Client(clientRequest, bCryptPasswordEncoder);
-        client = clientRepository.save(client);
+
+        Client client = clientRepository.save(new Client(clientRequest, bCryptPasswordEncoder));
+
         return new ClientResponse(client);
     }
 
-    @SensiveData
+    @SensitiveData
     public LoginResponse login(LoginRequest loginRequest) {
         Optional<Client> clientOptional = clientRepository.findByEmail(loginRequest.email());
 
@@ -67,7 +68,7 @@ public class AuthClientService {
         if(client.isEmpty()) return;
 
         String token = loginService.generateTokenForgotPassword(client.get());
-        System.out.println(token);
+
         String body = String.format("link: http://%s:%d/api/auth/client/change_password?token=%s", request.getServerName(), request.getServerPort(), token);
 
         emailService.sendEmail(email,

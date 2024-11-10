@@ -1,9 +1,9 @@
 package br.com.ifsp.ifome.entities;
 
 
-import br.com.ifsp.ifome.exceptions.CartCannotBeEmptyException;
-import br.com.ifsp.ifome.exceptions.DishFromAnotherRestaurant;
-import br.com.ifsp.ifome.exceptions.DishNotFoundInCartException;
+import br.com.ifsp.ifome.exceptions.client.CartCannotBeEmptyException;
+import br.com.ifsp.ifome.exceptions.client.DishFromAnotherRestaurant;
+import br.com.ifsp.ifome.exceptions.client.DishNotFoundInCartException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,7 +26,7 @@ public class Cart {
     @JoinColumn(name = "client_id")
     private Client client;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @ManyToOne
@@ -96,18 +96,28 @@ public class Cart {
         }
     }
 
-    public void removeDishBy(Long dishId) {
+    public OrderItem removeDishBy(Long dishId) {
         Optional<OrderItem> optionalOrderItem = this.orderItems.stream()
+            .peek(orderItem -> System.out.println(orderItem.getCart()))
             .filter(orderItem -> Objects.equals(orderItem.getDishId(), dishId))
             .findFirst();
-
-        if(optionalOrderItem.isPresent()) {
-            System.err.println("AQUI");
-            OrderItem orderItem = optionalOrderItem.get();
-            this.orderItems.remove(orderItem);
-        } else {
+        if(optionalOrderItem.isEmpty()) {
             throw new DishNotFoundInCartException();
         }
+
+        OrderItem orderItem = optionalOrderItem.get();
+
+        System.err.println(orderItem);
+        System.err.println("-----------------");
+        System.err.println("Antes de remover");
+        this.orderItems.forEach(System.err::println);
+        this.orderItems.remove(orderItem);
+        orderItem.setCart(null);
+        System.err.println("Depois de remover");
+        this.orderItems.forEach(System.err::println);
+        System.err.println("-----------------");
+
+        return orderItem;
     }
 
     public Cart cartCannotBeEmpty() {
@@ -121,4 +131,11 @@ public class Cart {
         return this.orderItems.stream().mapToInt(OrderItem::getQuantity).sum();
     }
 
+    public String getClientPhone() {
+        return this.client.getPhone();
+    }
+
+    public void clearCart() {
+        this.orderItems.clear();
+    }
 }

@@ -9,6 +9,8 @@ import br.com.ifsp.ifome.dto.response.CustomerOrderRequest;
 import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
 import br.com.ifsp.ifome.services.ClientService;
 import br.com.ifsp.ifome.services.CustomerOrderService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,12 +47,11 @@ public class ClientController {
         List<CustomerOrderResponse> orders = customerOrderService.getAllOrdersByCustomer(principal.getName());
 
         if (orders.isEmpty()) {
-            return ResponseEntity.noContent().build(); // Return 204 No Content if no orders found
+            return ResponseEntity.noContent().build();
         }
 
-        return ResponseEntity.ok(orders); // Return 200 OK with the list of orders
+        return ResponseEntity.ok(orders);
     }
-
 
     @GetMapping("/cart")
     @DocsGetCart
@@ -66,7 +67,7 @@ public class ClientController {
     public ResponseEntity<ApiResponse> addDishInCart(@RequestBody @Valid OrderItemRequest orderItemRequest, Principal principal) {
         CartResponse cartResponse = clientService.addDishCart(orderItemRequest, principal.getName());
         System.err.println(cartResponse);
-        ApiResponse response = new ApiResponse("success", cartResponse, "Prado adicionado no carrinho");
+        ApiResponse response = new ApiResponse("success", cartResponse, "Prato adicionado no carrinho");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -85,6 +86,14 @@ public class ClientController {
     @DocsDeleteDishInCart
     public ResponseEntity<ApiResponse> deleteOrderItemInCart(@PathVariable Long id, Principal principal) {
         clientService.removeDishInCart(id, principal.getName());
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DocsClearCart
+    @DeleteMapping("/cart/clear/")
+    public ResponseEntity<ApiResponse> clearCart(Principal principal) {
+        clientService.clearCart(principal.getName());
 
         return ResponseEntity.noContent().build();
     }

@@ -27,6 +27,10 @@ public class CustomerOrder {
     @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderInfo> orderInfo;
 
+    // TODO arrumar um jeito para remover isso
+    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
+    private List<OrderInfoDelivery> orderInfoDelivery;
+
     private String paymentStatus;
 
     @ManyToOne
@@ -45,10 +49,18 @@ public class CustomerOrder {
     @Column(name = "order_date")
     private LocalDateTime orderDate;
 
+    @Enumerated(EnumType.STRING)
+    private OrderClientStatus currentOrderClientStatus;
+
+    @Enumerated(EnumType.STRING)
+    private OrderDeliveryStatus currentOrderDeliveryStatus;
+
+    private Double deliveryCost;
+
     public CustomerOrder(Cart cart, LocalDateTime orderDate, Double orderPrice,
-                         Restaurant restaurant, DeliveryPerson deliveryPerson, OrderStatus status, String paymentStatus)
+                         Restaurant restaurant, DeliveryPerson deliveryPerson, OrderClientStatus status, String paymentStatus)
     {
-        this(null, orderPrice,  new ArrayList<>(), paymentStatus, cart, restaurant, deliveryPerson, orderDate);
+        this(null, orderPrice,  new ArrayList<>(), new ArrayList<>(), paymentStatus, cart, restaurant, deliveryPerson, orderDate, status, null, 0.0);
         this.nextStatus();
     }
 
@@ -57,11 +69,15 @@ public class CustomerOrder {
             null,
             cart.totalPrice(),
             new ArrayList<>(),
+            new ArrayList<>(),
             "PENDENTE",
             cart,
             restaurant,
             null,
-            LocalDateTime.now());
+            LocalDateTime.now(),
+            OrderClientStatus.NOVO,
+            null,
+            0.0);
         cart.setCustomerOrder(this);
         this.nextStatus();
     }
@@ -82,6 +98,14 @@ public class CustomerOrder {
         return this.restaurant.getNameRestaurant();
     }
 
+    public String getRestaurantEmail() {
+        return this.restaurant.getEmail();
+    }
+
+
+    public List<OrderItem> getOrderItems() {
+        return this.cart.getOrderItems();
+    }
 
     public String getOrderDate() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
@@ -93,41 +117,38 @@ public class CustomerOrder {
         return this.orderDate.format(dateTimeFormatter);
     }
 
-    public Address getAddress() {
+    public Address getClientAddress() {
         return this.cart.getClient().getAddress().get(0);
     }
 
-    public OrderStatus nextStatus() {
-        List<OrderStatus> validSequence = List.of(
-            OrderStatus.NOVO,
-            OrderStatus.EM_PREPARO,
-            OrderStatus.PRONTO_PARA_ENTREGA,
-            OrderStatus.SAIU_PARA_ENTREGA,
-            OrderStatus.CONCLUIDO
-        );
+    public Address getRestaurantAddress() {
+        return this.restaurant.getAddress().get(0);
+    }
 
+    public OrderClientStatus nextStatus() {
         int size = orderInfo.size();
-        if(size == OrderStatus.values().length) {
-            return OrderStatus.CONCLUIDO;
+        if(size == OrderClientStatus.values().length) {
+            return OrderClientStatus.CONCLUIDO;
         }
 
-        System.err.println(OrderStatus.values());
-        OrderStatus value = OrderStatus.values()[size];
+        System.err.println(OrderClientStatus.values());
+        OrderClientStatus value = OrderClientStatus.values()[size];
         var newOrderInfo = new OrderInfo(value, LocalDateTime.now(), this);
 
         orderInfo.add(newOrderInfo);
+        this.setCurrentOrderClientStatus(value);
 
         return value;
     }
 
-    public OrderStatus previousStatus() {
+    public OrderClientStatus previousStatus() {
         int size = orderInfo.size();
         if(size == 0) {
-            return OrderStatus.NOVO;
+            return OrderClientStatus.NOVO;
         }
 
-        OrderStatus currentSize = OrderStatus.values()[size];
-        OrderStatus value = OrderStatus.values()[size - 1];
+        OrderClientStatus currentSize = OrderClientStatus.values()[size];
+        OrderClientStatus value = OrderClientStatus.values()[size - 1];
 
         orderInfo.removeIf(orderInfo -> orderInfo.getOrderStatus().equals(currentSize));
 
@@ -139,4 +160,68 @@ public class CustomerOrder {
     }
 
 
+
+    public String getClientPhone() {
+        return this.cart.getClientPhone();
+    }
+
+
+    public Double deliveryCost() {
+        return deliveryCost;
+    }
+
+    public OrderDeliveryStatus nextDeliveryStatus() {
+        int size = orderInfoDelivery.size();
+
+        if(size == OrderDeliveryStatus.values().length) {
+            return OrderDeliveryStatus.CONCLUIDO;
+        }
+
+        OrderDeliveryStatus value = OrderDeliveryStatus.values()[size];
+        System.err.println("Value " + value);
+        var newOrderInfo = new OrderInfoDelivery(value, LocalDateTime.now(), this);
+        System.err.println(newOrderInfo);
+        orderInfoDelivery.add(newOrderInfo);
+        this.setCurrentOrderDeliveryStatus(value);
+
+        return value;
+    }
+
+    public OrderInfoDelivery previousStatusDelivery() {
+        int size = orderInfoDelivery.size();
+        if(size == 0) {
+            return new OrderInfoDelivery(OrderDeliveryStatus.NOVO, LocalDateTime.now(), this);
+        }
+
+        OrderInfoDelivery value = orderInfoDelivery.get(size - 1);
+        value.setCustomerOrder(null);
+
+        orderInfoDelivery.remove(size - 1);
+
+        return value;
+    }
+
+
+    public boolean nextClientStatusByDeliveryStatus() {
+        int sizeOrderInfo = this.orderInfo.size();
+        int sizeInfoDelivery = this.orderInfoDelivery.size();
+
+        if(sizeOrderInfo == 3 && sizeInfoDelivery == 4) {
+           this.nextStatus();
+            this.orderInfo.forEach(o -> System.err.println(o.getOrderStatus()));
+            return true;
+        }
+
+        if(sizeOrderInfo == 4 && sizeInfoDelivery== 5) {
+            this.nextStatus();
+            this.orderInfo.forEach(o -> System.err.println(o.getOrderStatus()));
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean getRestaurantEmailDoesNotEquals(String email) {
+        return !this.restaurant.getEmail().equals(email);
+    }
 }

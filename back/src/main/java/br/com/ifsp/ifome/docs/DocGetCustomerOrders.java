@@ -23,7 +23,6 @@ import java.lang.annotation.Target;
                 @ApiResponse(responseCode = "401", description = "Cliente não autenticado")
         }
 )
-
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DocGetCustomerOrders {

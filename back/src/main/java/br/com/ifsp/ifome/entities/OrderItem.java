@@ -56,12 +56,12 @@ public class OrderItem {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         OrderItem orderItem = (OrderItem) object;
-        return Objects.equals(dish, orderItem.dish) && Objects.equals(cart, orderItem.cart);
+        return Objects.equals(dish.getId(), orderItem.dish.getId()) &&  Objects.equals(dish, orderItem.dish) && Objects.equals(cart, orderItem.cart);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dish, cart);
+        return Objects.hash(dish.getId(), cart.getId());
     }
 
 

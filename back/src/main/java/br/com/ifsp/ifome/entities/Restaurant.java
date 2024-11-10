@@ -37,7 +37,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     @Column(name = "food_category",length = 150, nullable = false)
     private String foodCategory;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Address> address;
 
     @Column(length = 15, nullable = false)
@@ -76,7 +76,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     @Column(name = "is_open")
     private Boolean isOpen;
 
-    public Restaurant(RestaurantRequest restaurantRequest, BCryptPasswordEncoder bCryptPasswordEncoder, String restaurantImage){
+    public Restaurant(RestaurantRequest restaurantRequest, Address address,BCryptPasswordEncoder bCryptPasswordEncoder, String restaurantImage){
         this.nameRestaurant = restaurantRequest.nameRestaurant();
         this.cnpj = restaurantRequest.cnpj().replaceAll("[^\\d]", "");
         this.foodCategory = restaurantRequest.foodCategory();
@@ -94,7 +94,10 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.restaurantImage = restaurantImage;
         this.bankAccount = new BankAccount(restaurantRequest.bankAccount());
         this.isOpen = false;
-        this.setAddress(restaurantRequest.address());
+        this.address = List.of(address);
+        this.role = Role.RESTAURANT;
+
+        address.setRestaurant(this);
     }
 
     public Restaurant(Long id, String nameRestaurant, String cnpj,
@@ -120,11 +123,11 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.isOpen = isOpen;
     }
 
-    public void setAddress(AddressRequest addressRequest) {
-        Address address = new Address(addressRequest);
-        address.setRestaurant(this);
-        this.address = List.of(address);
-    }
+//    public void setAddress(AddressRequest addressRequest) {
+//        Address address = new Address(addressRequest);
+//        address.setRestaurant(this);
+//        this.address = List.of(address);
+//    }
 
     public boolean isOpen() {
         return this.getIsOpen();
