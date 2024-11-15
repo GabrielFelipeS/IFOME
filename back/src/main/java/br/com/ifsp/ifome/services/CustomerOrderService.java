@@ -22,18 +22,16 @@ import java.util.stream.Collectors;
 public class CustomerOrderService {
     private final CustomerOrderRepository customerOrderRepository;
     private final OrderStatusUpdateService orderStatusUpdateService;
-    private final DeliveryService deliveryService;
     private final RestaurantService restaurantService;
     private final ClientService clientService;
     private final ChoiceDeliveryService choiceDeliveryService;
 
     public CustomerOrderService(CustomerOrderRepository customerOrderRepository,
                                 OrderStatusUpdateService orderStatusUpdateService,
-                                DeliveryService deliveryService, RestaurantService restaurantService,
+                                RestaurantService restaurantService,
                                 ClientService clientService, ChoiceDeliveryService choiceDeliveryService) {
         this.customerOrderRepository = customerOrderRepository;
         this.orderStatusUpdateService = orderStatusUpdateService;
-        this.deliveryService = deliveryService;
         this.restaurantService = restaurantService;
         this.clientService = clientService;
         this.choiceDeliveryService = choiceDeliveryService;
