@@ -1,12 +1,20 @@
 package br.com.ifsp.ifome.services;
 
+import br.com.ifsp.ifome.events.EmailSentPedidoStatus;
+import br.com.ifsp.ifome.events.PedidoStatusChangedEvent;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 public class EmailService {
@@ -41,5 +49,33 @@ public class EmailService {
     public void sendEmail(MimeMessage mimeMessage) throws MessagingException {
         mimeMessage.setFrom(from);
         mailSender.send(mimeMessage);
+    }
+
+    /**
+     * Envia um email de atualização do status para o cliente
+     *
+     * @param emailSentPedidoStatus Contém os valores que vão ser enviados no email
+     * @param statusChangedEvent Evento de atualização do status
+     * @throws MessagingException
+     * @throws IOException
+     */
+    public void sendEmailStatusChanged(EmailSentPedidoStatus emailSentPedidoStatus, PedidoStatusChangedEvent statusChangedEvent)
+        throws MessagingException, IOException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        helper.setTo(emailSentPedidoStatus.to());
+        helper.setSubject("Seu pedido " + emailSentPedidoStatus.subject());
+
+        Path htmlPath = Paths.get("src/main/resources/emails/atualizacao-pedido.html");
+        String htmlContent = new String(Files.readAllBytes(htmlPath))
+            .replace("${id_pedido}", statusChangedEvent.getPedidoId().toString())
+            .replace("${status_pedido}", emailSentPedidoStatus.subject())
+            .replace("${mensagem}", emailSentPedidoStatus.body())
+            ;
+
+        helper.setText(htmlContent, true);
+
+        this.sendEmail(message);
     }
 }
