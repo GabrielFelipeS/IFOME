@@ -2,6 +2,7 @@
 import api from "@/services/api.js";
 import {onMounted, ref} from "vue";
 import {getImage} from "@/services/getImage.js";
+import {useRouter} from "vue-router";
 
 const props = defineProps({
 	order: {
@@ -22,6 +23,8 @@ const getRestaurantData = async () => {
 getRestaurantData();
 
 console.log(props.order);
+
+const router = useRouter();
 </script>
 
 <template>
@@ -44,7 +47,7 @@ console.log(props.order);
 		</div>
 		<div class="flex flex-row w-full justify-between px-8 py-2">
 			<button class="text-primary font-semibold">Ajuda</button>
-			<button class="text-primary font-semibold">Acompanhar</button>
+			<button class="text-primary font-semibold" @click="router.push('/order/' + props.order.orderId)">Acompanhar</button>
 		</div>
 	</div>
 </template>
