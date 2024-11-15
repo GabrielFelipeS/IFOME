@@ -1,4 +1,4 @@
-package br.com.ifsp.ifome.exceptions;
+package br.com.ifsp.ifome.exceptions.delivery;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public class DeliveryPersonExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(DeliveryPersonExceptionHandler.class);
 
     @ExceptionHandler(DeliveryPersontNotFoundException.class)
-    public  ResponseEntity<Map<String, Object>>  handleMaxUploadSizeExceededPart(
+    public  ResponseEntity<Map<String, Object>>  handleDeliveryPersontNotFoundException(
         DeliveryPersontNotFoundException ex) {
         logger.warn(ex.getMessage());
 

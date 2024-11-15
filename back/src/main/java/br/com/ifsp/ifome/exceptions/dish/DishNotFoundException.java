@@ -1,4 +1,4 @@
-package br.com.ifsp.ifome.exceptions;
+package br.com.ifsp.ifome.exceptions.dish;
 
 public class DishNotFoundException extends RuntimeException{
     public DishNotFoundException() {

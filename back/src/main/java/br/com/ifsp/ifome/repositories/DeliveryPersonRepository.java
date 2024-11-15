@@ -15,7 +15,8 @@ public interface DeliveryPersonRepository extends CrudRepository<DeliveryPerson,
     Optional<DeliveryPerson> findByEmail(String email);
     boolean existsByCnhNumber(String cnhNumber);
 
-//    @Query("SELECT d FROM DeliveryPerson d JOIN CustomerOrder co ON co.currentOrderClientStatus != 'CONCLUIDO'")
+
+
     @Query("""
     SELECT d
     FROM DeliveryPerson d

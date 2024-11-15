@@ -1,6 +1,6 @@
 package br.com.ifsp.ifome.controllers;
 
-import br.com.ifsp.ifome.aspect.SensiveData;
+import br.com.ifsp.ifome.aspect.SensitiveData;
 import br.com.ifsp.ifome.services.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -22,7 +22,7 @@ public class TokenController {
 
 
     @PostMapping
-    @SensiveData
+    @SensitiveData
     @Operation(summary = "Verificar se esta logado", security = @SecurityRequirement(name = "Bearer Token"))
     public ResponseEntity<String> validToken(Authentication authentication) {
         if(authentication.isAuthenticated()) {
@@ -33,7 +33,7 @@ public class TokenController {
     }
 
 
-    @SensiveData
+    @SensitiveData
     @PostMapping("/restaurant/")
     @Operation(summary = "Verificar se esta logado como restaurante", security = @SecurityRequirement(name = "Bearer Token"))
     public ResponseEntity<String> validTokenRestaurant(Authentication authentication) {
@@ -47,7 +47,7 @@ public class TokenController {
         }
     }
 
-    @SensiveData
+    @SensitiveData
     @PostMapping("/client/")
     @Operation(summary = "Verificar se esta logado como cliente", security = @SecurityRequirement(name = "Bearer Token"))
     public ResponseEntity<String> validTokenClient(Authentication authentication) {
@@ -62,7 +62,7 @@ public class TokenController {
         }
     }
 
-    @SensiveData
+    @SensitiveData
     @PostMapping("/delivery/")
     @Operation(summary = "Verificar se esta logado como entregador", security = @SecurityRequirement(name = "Bearer Token"))
     public ResponseEntity<String> validTokenDelivery(Authentication authentication) {

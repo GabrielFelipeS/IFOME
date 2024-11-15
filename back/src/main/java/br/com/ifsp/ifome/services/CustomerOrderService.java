@@ -6,59 +6,62 @@ import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.CustomerOrder;
 import br.com.ifsp.ifome.entities.OrderClientStatus;
 import br.com.ifsp.ifome.entities.Restaurant;
-import br.com.ifsp.ifome.exceptions.CartCannotBeEmptyException;
-import br.com.ifsp.ifome.exceptions.RestaurantNotFoundException;
-import br.com.ifsp.ifome.repositories.CartRepository;
+import br.com.ifsp.ifome.exceptions.client.CustomerNotFoundInCartException;
+import br.com.ifsp.ifome.exceptions.restaurant.OrderNotFromRestaurantException;
+import br.com.ifsp.ifome.exceptions.restaurant.RestaurantNotFoundException;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
-import br.com.ifsp.ifome.repositories.RestaurantRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class CustomerOrderService {
-    private final RestaurantRepository restaurantRepository;
     private final CustomerOrderRepository customerOrderRepository;
-    private final CartRepository cartRepository;
     private final OrderStatusUpdateService orderStatusUpdateService;
-    private final DeliveryService deliveryService;
+    private final RestaurantService restaurantService;
+    private final ClientService clientService;
+    private final ChoiceDeliveryService choiceDeliveryService;
 
-    public CustomerOrderService(RestaurantRepository restaurantRepository, CustomerOrderRepository customerOrderRepository,
-                                CartRepository cartRepository,
-                                OrderStatusUpdateService orderStatusUpdateService, DeliveryService deliveryService) {
-        this.restaurantRepository = restaurantRepository;
+    public CustomerOrderService(CustomerOrderRepository customerOrderRepository,
+                                OrderStatusUpdateService orderStatusUpdateService,
+                                RestaurantService restaurantService,
+                                ClientService clientService, ChoiceDeliveryService choiceDeliveryService) {
         this.customerOrderRepository = customerOrderRepository;
-        this.cartRepository = cartRepository;
         this.orderStatusUpdateService = orderStatusUpdateService;
-        this.deliveryService = deliveryService;
+        this.restaurantService = restaurantService;
+        this.clientService = clientService;
+        this.choiceDeliveryService = choiceDeliveryService;
     }
 
+    /**
+     * Cria um pedido baseado no carrinho não vazio do cliente
+     *
+     * @param principal Indivíduo que está logado
+     * @return Informações do pedido criado
+     */
+    // TODO mover o essa pegada de pegar o restaurante para o clientService
     public CustomerOrderRequest createOrder(Principal principal) {
-        Cart cart = cartRepository
-            .findFirstByClientEmail(principal.getName())
-            .orElseThrow(CartCannotBeEmptyException::new)
-            .cartCannotBeEmpty();
+        Cart cart = clientService.getCartNotEmpty(principal.getName());
 
-        Restaurant restaurant = restaurantRepository
-            .findById(cart.getIdRestaurant())
-            .orElseThrow(RestaurantNotFoundException::new);
+        Restaurant restaurant = restaurantService.findById(cart.getIdRestaurant());
 
         CustomerOrder customerOrder = new CustomerOrder(cart, restaurant);
 
         customerOrderRepository.save(customerOrder);
 
-        // TODO Fazer update de pedidos aqui
-        orderStatusUpdateService.addOrder(customerOrder);
-
         return CustomerOrderRequest.from(customerOrder);
     }
 
+    /**
+     * Pegar todos os pedidos do cliente
+     *
+     * @param customerEmail Email do cliente
+     * @return Lista de pedidos do cliente
+     */
     public List<CustomerOrderResponse> getAllOrdersByCustomer(String customerEmail) {
         List<CustomerOrder> orders = customerOrderRepository.findAllByCartClientEmail(customerEmail);
 
@@ -67,12 +70,15 @@ public class CustomerOrderService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retorna todos os pedidos do restaurante
+     *
+     * @param restaurantEmail Email do restaurante
+     * @return Lista de pedidos
+     * @throws RestaurantNotFoundException Caso não encontre o restaurante
+     */
     public List<CustomerOrderResponse> getAllOrdersByRestaurant(String restaurantEmail) {
-        Optional<Restaurant> restaurantOpt = restaurantRepository.findByEmail(restaurantEmail);
-
-        Restaurant restaurant = restaurantOpt.orElseThrow(() ->
-                new EntityNotFoundException("Restaurante não encontrado com o email: " + restaurantEmail)
-        );
+        Restaurant restaurant = restaurantService.findByEmail(restaurantEmail);
 
         List<CustomerOrder> orders = customerOrderRepository.findByRestaurantId(restaurant.getId());
 
@@ -85,9 +91,21 @@ public class CustomerOrderService {
                 .collect(Collectors.toList());
     }
 
-    public void updateOrderStatus(Long orderId) {
+    /**
+     * Atualiza o status do pedido de um restaurante para o próximo status. Caso o status do pedido vá para {@code PRONTO_PARA_ENTREGAR} inicia-se o processo de busca de um entregador
+     *
+     * @param orderId Id do pedido
+     * @param email Email do restaurante
+     * @throws CustomerNotFoundInCartException Caso não encontre o pedido
+     * @throws OrderNotFromRestaurantException Caso o pedido seja de outro restaurante
+     */
+    public void updateOrderStatus(Long orderId, String email) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
-            .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
+            .orElseThrow(() -> new CustomerNotFoundInCartException("Pedido não encontrado com ID: " + orderId));
+
+        if(customerOrder.getRestaurantEmailDoesNotEquals(email)) {
+            throw new OrderNotFromRestaurantException("O pedido não pertence ao restaurante logado");
+        }
 
         OrderClientStatus orderClientStatus = customerOrder.nextStatus();
 
@@ -95,12 +113,24 @@ public class CustomerOrderService {
 
         orderStatusUpdateService.updateStatusOrderToClient(customerOrder, orderClientStatus);
 
-        deliveryService.choiceDeliveryPersonWhenReady(customerOrder);
+        choiceDeliveryService.choiceDeliveryPersonWhenReady(customerOrder);
     }
 
-    public void previousOrderStatus(Long orderId) {
+    /**
+     * Atualiza o status do pedido de um restaurante para o status anterior.
+     *
+     * @param orderId Id do pedido
+     * @param email Email do restaurante
+     * @throws CustomerNotFoundInCartException Caso não encontre o pedido
+     * @throws OrderNotFromRestaurantException Caso o pedido seja de outro restaurante
+     */
+    public void previousOrderStatus(Long orderId, String email) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
+
+        if(customerOrder.getRestaurantEmailDoesNotEquals(email)) {
+            throw new OrderNotFromRestaurantException("O pedido não pertence ao restaurante logado");
+        }
 
         OrderClientStatus orderClientStatus = customerOrder.previousStatus();
 
@@ -108,31 +138,4 @@ public class CustomerOrderService {
 
         orderStatusUpdateService.updateStatusOrderToClient(customerOrder, orderClientStatus);
     }
-
-    private OrderClientStatus getNextStatus(OrderClientStatus currentStatus) {
-        List<OrderClientStatus> validSequence = List.of(
-            OrderClientStatus.NOVO,
-            OrderClientStatus.EM_PREPARO,
-            OrderClientStatus.PRONTO_PARA_ENTREGA,
-            OrderClientStatus.SAIU_PARA_ENTREGA,
-            OrderClientStatus.CONCLUIDO
-        );
-
-        int currentIndex = validSequence.indexOf(currentStatus);
-        if (currentIndex == -1 || currentIndex == validSequence.size() - 1) {
-            throw new IllegalStateException("O status atual não pode ser alterado.");
-        }
-        System.err.println("currentIndex: " + currentIndex);
-
-        return validSequence.get(currentIndex + 1);
-    }
-
-    public SseEmitter getEmitter(Long id) {
-        System.err.println(id);
-        Optional<CustomerOrder> customerOrder = customerOrderRepository.findById(id);
-        SseEmitter emitter =  orderStatusUpdateService.getEmitter(customerOrder.get());
-        System.err.println(emitter);
-        return emitter;
-    }
-
 }

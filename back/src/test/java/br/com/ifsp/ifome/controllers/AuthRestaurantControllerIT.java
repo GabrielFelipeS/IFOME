@@ -79,9 +79,9 @@ public class AuthRestaurantControllerIT {
             "@Senha1",
             "@Senha1",
             "10882594000165",
-            new AddressRequest("35170-222", "casa 1","neighborhood", "city", "state",
-                "address", "complement",
-                "12", "condominio","details"),
+            new AddressRequest("35170-222", "casa 1","Vila Rio", "Guarulhos", "São Paulo",
+                "Av. Salgado Filho", "Em frente a pizzaria",
+                "3501", "casa","details"),
             "(11) 1234-5678",
             "Pizzaria",
             "Dinheiro, Cartão",
@@ -144,14 +144,12 @@ public class AuthRestaurantControllerIT {
         assertThat(addressJson).isNotNull();
 
         assertThat(addressJson.getCep()).isEqualTo("35170-222");
-        assertThat(addressJson.getNeighborhood()).isEqualTo("neighborhood");
-        assertThat(addressJson.getCity()).isEqualTo("city");
-        assertThat(addressJson.getAddress()).isEqualTo("address");
-        assertThat(addressJson.getComplement()).isEqualTo("complement");
-        assertThat(addressJson.getNumber()).isEqualTo("12");
-        assertThat(addressJson.getComplement()).isEqualTo("complement");
-        assertThat(addressJson.getTypeResidence()).isEqualTo("condominio");
-
+        assertThat(addressJson.getNeighborhood()).isEqualTo("Vila Rio");
+        assertThat(addressJson.getCity()).isEqualTo("Guarulhos");
+        assertThat(addressJson.getAddress()).isEqualTo("Av. Salgado Filho");
+        assertThat(addressJson.getComplement()).isEqualTo("Em frente a pizzaria");
+        assertThat(addressJson.getNumber()).isEqualTo("3501");
+        assertThat(addressJson.getTypeResidence()).isEqualTo("casa");
     }
 
     @Test

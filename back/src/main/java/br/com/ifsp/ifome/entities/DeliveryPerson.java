@@ -8,11 +8,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -75,6 +75,8 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
 
     private String longitude;
 
+    private LocalDateTime lastUpdate;
+
     public DeliveryPerson(DeliveryPersonRequest deliveryPersonRequest, PasswordEncoder passwordEncoder) {
         this.name = deliveryPersonRequest.name();
         this.cpf = deliveryPersonRequest.cpf().replaceAll("[^\\d]", "");
@@ -93,12 +95,6 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
         this.setAddress(deliveryPersonRequest.address());
     }
 
-
-    public DeliveryPerson(Long id, String name, String cpf, String email, String password,
-                          LocalDate dateOfBirth, String typeOfVehicle, String telephone,
-                          String cnh, String vehicleDocument, List<Address> address,
-                          BankAccount bankAccount,  PasswordEncoder passwordEncoder) {}
-
     public DeliveryPerson(Long id, String name, String cpf, String email, String password, LocalDate dateOfBirth, String typeOfVehicle, String plate,String telephone, String cnhNumber, LocalDate cnhValidity, String vehicleDocument, List<Address> address, BankAccount bankAccount, PasswordEncoder passwordEncoder) {
         this.id = id;
         this.name = name;
@@ -116,6 +112,11 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
         this.bankAccount = bankAccount;
         this.available = "Indisponível";
         this.role = Role.DELIVERY;
+    }
+
+    @PreUpdate
+    public void atualizarUltimaAlteracao() {
+        this.lastUpdate = LocalDateTime.now();
     }
 
     public void setAddress(AddressRequest addressRequest) {

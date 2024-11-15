@@ -1,4 +1,4 @@
-package br.com.ifsp.ifome.exceptions;
+package br.com.ifsp.ifome.exceptions.dish;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

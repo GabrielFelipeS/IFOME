@@ -53,7 +53,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.PUT,"/api/order/teste").permitAll()
 
                     .requestMatchers(HttpMethod.PATCH, "/api/restaurant/").hasRole("RESTAURANT")
-                    .requestMatchers(HttpMethod.PUT, "/api/order/updateStatus").hasRole("RESTAURANT")
+                    .requestMatchers(HttpMethod.PUT, "/api/order/updateStatus/{customerOrderId}").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.GET, "/api/order/restaurantOrders").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.GET, "/api/restaurant/orders").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.GET, "/api/order/customerOrders").hasRole("CLIENT")

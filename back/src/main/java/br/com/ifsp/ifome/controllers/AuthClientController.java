@@ -2,7 +2,7 @@ package br.com.ifsp.ifome.controllers;
 
 
 import br.com.ifsp.ifome.aspect.Login;
-import br.com.ifsp.ifome.aspect.SensiveData;
+import br.com.ifsp.ifome.aspect.SensitiveData;
 import br.com.ifsp.ifome.docs.DocsClientLogin;
 import br.com.ifsp.ifome.docs.DocsCreateClient;
 import br.com.ifsp.ifome.dto.ApiResponse;
@@ -11,7 +11,6 @@ import br.com.ifsp.ifome.dto.request.ForgotPasswordRequest;
 import br.com.ifsp.ifome.dto.request.LoginRequest;
 import br.com.ifsp.ifome.dto.response.ClientResponse;
 import br.com.ifsp.ifome.dto.response.LoginResponse;
-import br.com.ifsp.ifome.repositories.ClientRepository;
 import br.com.ifsp.ifome.services.AuthClientService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -26,14 +25,12 @@ import java.net.URI;
 @RequestMapping("/api/auth/client")
 public class AuthClientController {
     private final AuthClientService authClientService;
-    private final ClientRepository clientRepository;
 
-    public AuthClientController(AuthClientService authClientService, ClientRepository clientRepository) {
+    public AuthClientController(AuthClientService authClientService) {
         this.authClientService = authClientService;
-        this.clientRepository = clientRepository;
     }
 
-    @SensiveData
+    @SensitiveData
     @PostMapping
     @DocsCreateClient
     public ResponseEntity<ApiResponse> create(@Valid @RequestBody ClientRequest clientRequest , UriComponentsBuilder ucb) throws MethodArgumentNotValidException {
@@ -48,15 +45,18 @@ public class AuthClientController {
         return ResponseEntity.created(locationOfNewClient).body(response);
     }
 
-    @SensiveData @Login
-    @PostMapping("/login")
+    @Login
+    @SensitiveData
     @DocsClientLogin
+    @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         LoginResponse loginResponse = authClientService.login(loginRequest);
+
         ApiResponse apiResponse = new ApiResponse("success", loginResponse, "Cliente logado com sucesso");
         return ResponseEntity.ok(apiResponse);
     }
 
+    // TODO Terminar isso
     @PostMapping("/forgot_password")
     public void forgotPassword(HttpServletRequest request, @RequestBody @Valid ForgotPasswordRequest forgotPasswordRequest) throws Exception {
         System.err.println(request.getServerName());

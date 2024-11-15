@@ -1,7 +1,7 @@
 package br.com.ifsp.ifome.services;
 
-import br.com.ifsp.ifome.aspect.SensiveData;
-import br.com.ifsp.ifome.exceptions.InvalidTokenException;
+import br.com.ifsp.ifome.aspect.SensitiveData;
+import br.com.ifsp.ifome.exceptions.global.InvalidTokenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,12 +32,19 @@ public class TokenService {
         this.now = now;
     }
 
-    @SensiveData
-    public String generateToken(String subject, Collection<? extends GrantedAuthority> grantedAuthorities) {
+    /**
+     * Cria um token colocando o email do usuário, permissões e o tempo de expiração
+     *
+     * @param email Email do usuário a ser logado
+     * @param grantedAuthorities Permissões que o usuário vai possuir
+     * @return Token gerado
+     */
+    @SensitiveData
+    public String generateToken(String email, Collection<? extends GrantedAuthority> grantedAuthorities) {
         var authorities = grantedAuthorities.stream().map(GrantedAuthority::getAuthority).toList();
         var claims = JwtClaimsSet.builder()
             .issuer("api_ifome")
-            .subject(subject)
+            .subject(email)
             .issuedAt(now)
             .expiresAt(now.plusSeconds(expiresIn))
             .claim("authorities", authorities)
@@ -47,7 +54,13 @@ public class TokenService {
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
-    @SensiveData
+    /**
+     *  Valida o token passado como parâmetro
+     *
+     * @param token Token a ser validado
+     * @throws InvalidTokenException Quando o token é inválido
+     */
+    @SensitiveData
     public void validToken(String token) {
         try {
             Jwt jwt = jwtDecoder.decode(token);

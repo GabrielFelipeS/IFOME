@@ -98,13 +98,13 @@ public class CustomerOrder {
         return this.restaurant.getNameRestaurant();
     }
 
-    public List<OrderItem> getOrderItems() {
-        return this.cart.getOrderItems();
+    public String getRestaurantEmail() {
+        return this.restaurant.getEmail();
     }
 
-    public String getOrderDate() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
-           return this.orderDate.format(dateTimeFormatter);
+
+    public List<OrderItem> getOrderItems() {
+        return this.cart.getOrderItems();
     }
 
     public String getOrderDateTime() {
@@ -154,7 +154,7 @@ public class CustomerOrder {
         return orderInfo.size();
     }
 
-
+    public Long getDeliveryPersonId() { return deliveryPerson.getId();}
 
     public String getClientPhone() {
         return this.cart.getClientPhone();
@@ -167,10 +167,6 @@ public class CustomerOrder {
 
     public OrderDeliveryStatus nextDeliveryStatus() {
         int size = orderInfoDelivery.size();
-
-//        if(size == 0) {
-//            orderInfoDelivery.add(new OrderInfoDelivery(OrderDeliveryStatus.NOVO, LocalDateTime.now(), this));
-//        }
 
         if(size == OrderDeliveryStatus.values().length) {
             return OrderDeliveryStatus.CONCLUIDO;
@@ -218,5 +214,9 @@ public class CustomerOrder {
         }
 
         return false;
+    }
+
+    public boolean getRestaurantEmailDoesNotEquals(String email) {
+        return !this.restaurant.getEmail().equals(email);
     }
 }
