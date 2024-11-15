@@ -13,7 +13,7 @@ import br.com.ifsp.ifome.repositories.OrderInfoDeliveryRepository;
 import br.com.ifsp.ifome.repositories.RefuseCustomerOrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -29,13 +29,20 @@ public class DeliveryService {
     private final OrderStatusUpdateService orderStatusUpdateService;
     private final RefuseCustomerOrderRepository refuseCustomerOrderRepository;
     private final OrderInfoDeliveryRepository orderInfoDeliveryRepository;
+    private final ChoiceDeliveryService choiceDeliveryService;
 
-    public DeliveryService(DeliveryPersonRepository deliveryPersonRepository, CustomerOrderRepository customerOrderRepository, OrderStatusUpdateService orderStatusUpdateService, RefuseCustomerOrderRepository refuseCustomerOrderRepository, OrderInfoDeliveryRepository orderInfoDeliveryRepository) {
+    public DeliveryService(DeliveryPersonRepository deliveryPersonRepository, CustomerOrderRepository customerOrderRepository, OrderStatusUpdateService orderStatusUpdateService, RefuseCustomerOrderRepository refuseCustomerOrderRepository, OrderInfoDeliveryRepository orderInfoDeliveryRepository, ChoiceDeliveryService choiceDeliveryService) {
         this.deliveryPersonRepository = deliveryPersonRepository;
         this.customerOrderRepository = customerOrderRepository;
         this.orderStatusUpdateService = orderStatusUpdateService;
         this.refuseCustomerOrderRepository = refuseCustomerOrderRepository;
         this.orderInfoDeliveryRepository = orderInfoDeliveryRepository;
+        this.choiceDeliveryService = choiceDeliveryService;
+    }
+
+    @Scheduled(fixedDelay = 6000)
+    private void scheduleDisabledDeliveryPerson() {
+        this.deliveryPersonRepository.disabledDeliveryPerson(LocalDateTime.now().minusMinutes(5));
     }
 
     public List<DeliveryOrderResponse> getOrders(Principal principal) {
@@ -45,112 +52,10 @@ public class DeliveryService {
         return customerOrders.stream().map(DeliveryOrderResponse::new).toList();
     }
 
-    // TODO melhorar forma de busca
-    // TODO refatorar essa metodo
-    @Async
-    public void choiceDeliveryPersonWhenReady(CustomerOrder customerOrder) {
-        boolean isNotReady = !customerOrder.getCurrentOrderClientStatus().equals(OrderClientStatus.PRONTO_PARA_ENTREGA);
-        System.err.println( customerOrder.getCurrentOrderClientStatus()+ " " + isNotReady);
-        if(isNotReady) return;
-
-        System.err.println("AQUI NÂO");
-        System.err.println(customerOrder.getRestaurantAddress());
-
-        List<DeliveryPerson> deliveryPersons = deliveryPersonRepository.findDeliveryPersonAvailable(customerOrder.getId());
-        deliveryPersons.stream().forEach(System.err::println);
-        Address addressRestaurant = customerOrder.getRestaurantAddress();
-
-        double minDistance = Double.MAX_VALUE;
-        System.err.println("AQUI 1");
-
-        DeliveryPerson deliveryPersonChoice = null;
-
-        System.err.println("AQUI 2");
-
-        for(DeliveryPerson deliveryPerson : deliveryPersons) {
-            double distance = calculateDistance(addressRestaurant, deliveryPerson.getLatitude(), deliveryPerson.getLongitude());
-            System.err.println(distance);
-            if(distance < minDistance) {
-                minDistance = distance;
-                deliveryPersonChoice = deliveryPerson;
-            }
-        }
-
-        System.err.println("AQUI 3");
-
-        if(deliveryPersonChoice == null) {
-            // TODO criar uma classe thread que emcapsula isso, para também usar um limitador
-//            Thread thread = new Thread(() -> {
-//                try {
-//                    Thread.sleep(10000);
-//                    this.choiceDeliveryPersonWhenReady(customerOrder);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            });
-//            thread.start();
-            System.err.println("ENTROU NO IF");
-            return;
-        }
-        System.err.println("AQUI 4");
-        customerOrder.setDeliveryPerson(deliveryPersonChoice);
-        System.err.println("AQUI 5");
-        System.err.println("Min distance: " + minDistance);
-        System.err.println("Entregador escolhido: " + customerOrder.getDeliveryPerson().getEmail());
-
-        double preciseDelivery = minDistance * 1;
-        customerOrder.setDeliveryCost(preciseDelivery);
-        customerOrder.nextDeliveryStatus();
-
-        customerOrder.getOrderInfo().forEach(System.out::println);
-
-        customerOrderRepository.save(customerOrder);
-
-        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
+    public List<DeliveryPerson> findDeliveryPersonAvailable(Long id) {
+        return deliveryPersonRepository.findDeliveryPersonAvailable(id);
     }
 
-    private double calculateDistance(Address restaurantAddress, String latitudeDeliveryPerson, String longitudeDeliveryPerson) {
-        System.err.println("AQUI 5");
-        System.err.println("latRestaurant " + restaurantAddress.getLatitude());
-        System.err.println("lonRestaurant " + restaurantAddress.getLongitude());
-        System.err.println("latDeliveryPerson " + latitudeDeliveryPerson);
-        System.err.println("lonDeliveryPerson " + longitudeDeliveryPerson);
-
-        double latRestaurant = Math.toRadians(Double.parseDouble(restaurantAddress.getLatitude()));
-        double lonRestaurant = Math.toRadians(Double.parseDouble(restaurantAddress.getLongitude()));
-        double latDeliveryPerson = Math.toRadians(Double.parseDouble(latitudeDeliveryPerson));
-        double lonDeliveryPerson = Math.toRadians(Double.parseDouble(longitudeDeliveryPerson));
-
-        System.err.println("Passou das conversões");
-
-        double diffLatitude = latDeliveryPerson - latRestaurant;
-        double diffLongitude = lonDeliveryPerson - lonRestaurant;
-
-        System.err.println("Passou das diferenças");
-
-//        System.err.println("Latitude");
-//        System.err.println(latRestaurant);
-//        System.err.println(latDeliveryPerson);
-//
-//        System.err.println("Longitude");
-//        System.err.println(lonRestaurant);
-//        System.err.println(lonDeliveryPerson);
-//
-//        System.err.println("Diferença");
-//        System.err.println(diffLatitude);
-//        System.err.println(diffLongitude);
-
-        double diffAngular = Math.pow(Math.sin(diffLatitude / 2), 2)
-            + Math.cos(latRestaurant) * Math.cos(latDeliveryPerson) * Math.pow(Math.sin(diffLongitude / 2), 2);
-
-        System.err.println("Passou da diff angular " + diffAngular);
-
-        double anguloCentral = 2 * Math.atan2(Math.sqrt(diffAngular), Math.sqrt(1 - diffAngular));
-
-        System.err.println("Passou da angulo central " + anguloCentral);
-
-        return RAIO_DA_TERRA_KM * anguloCentral;
-    }
 
     public void updateCoordinates(@Valid CoordinatesRequest coordinatesRequest, Principal principal) {
         Optional<DeliveryPerson> deliveryPersonOptional = deliveryPersonRepository.findByEmail(principal.getName());
@@ -230,7 +135,7 @@ public class DeliveryService {
 
         refuseCustomerOrderRepository.save(refuseCustomerOrder);
 
-        this.choiceDeliveryPersonWhenReady(customerOrder);
+        choiceDeliveryService.choiceDeliveryPersonWhenReady(customerOrder);
     }
 
     public DeliveryPersonResponse getByEmail(String email) {
@@ -253,7 +158,7 @@ public class DeliveryService {
 
         this.customerOrderRepository.save(customerOrder);
 
-        this.choiceDeliveryPersonWhenReady(customerOrder);
+        choiceDeliveryService.choiceDeliveryPersonWhenReady(customerOrder);
     }
 
     public Optional<PusherDeliveryOrderResponse> getCustomerOrderId(Principal principal) {
@@ -278,5 +183,11 @@ public class DeliveryService {
         deliveryPersonRepository.save(deliveryPerson);
 
         return String.format("Você está %s!", deliveryPerson.getAvailable());
+    }
+
+    public void updateStatusOrderToRestaurant(CustomerOrder customerOrder) {
+        customerOrderRepository.save(customerOrder);
+
+        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
     }
 }
