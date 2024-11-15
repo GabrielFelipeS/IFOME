@@ -4,6 +4,7 @@ import FooterMobile from "@/components/site/FooterMobile.vue";
 import CardOrder from "@/components/site/CardOrder.vue";
 import api from "@/services/api.js";
 import {onMounted, ref} from "vue";
+import {useRouter} from "vue-router";
 
 const orders = ref([]);
 
@@ -25,6 +26,8 @@ onMounted(async () => {
 	}
 });
 
+const router = useRouter();
+
 </script>
 
 <template>
@@ -33,9 +36,9 @@ onMounted(async () => {
 		<div class="main">
 			<div class="flex flex-row h-[60px] justify-between items-center px-5
 				md:justify-start md: ">
-				<div class="md:hidden">
+				<button class="md:hidden" @click="router.go(-1)">
 					<v-icon name="fa-chevron-left" scale="1.8" class="text-primary md:hidden"/>
-				</div>
+				</button>
 				<span class="font-bold text-tertiary-light text-lg mr-6">MEUS PEDIDOS</span>
 				<div class="md:hidden"></div>
 			</div>
