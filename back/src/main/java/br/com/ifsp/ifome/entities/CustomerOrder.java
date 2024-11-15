@@ -120,7 +120,12 @@ public class CustomerOrder {
     }
 
     public String getOrderDateTimeToTimestamp() {
-        return Timestamp.valueOf(this.orderDate).toString();
+        var orderLastInfo = this.orderInfo.stream()
+            .reduce((orderInfoFirst, orderInfoLast) -> orderInfoFirst.getId() > orderInfoLast.getId()
+                ? orderInfoFirst : orderInfoLast)
+            .orElseThrow();
+
+        return Timestamp.valueOf(orderLastInfo.getLocalDateTime()).toString();
     }
 
     public Address getClientAddress() {
