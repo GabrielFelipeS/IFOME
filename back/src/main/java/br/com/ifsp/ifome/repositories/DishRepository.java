@@ -24,4 +24,6 @@ public interface DishRepository extends JpaRepository<Dish, Long> {
 
     @Query("SELECT d FROM Dish d WHERE d.availability LIKE '%Disponível%' AND d.id = :id")
     Optional<Dish> findDishAvailableById(Long id);
+
+    List<Dish> findByNameContainingIgnoreCase(String query);
 }
