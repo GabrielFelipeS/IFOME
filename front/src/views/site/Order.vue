@@ -1,22 +1,29 @@
 <script setup>
 import FooterMobile from "@/components/site/FooterMobile.vue";
-import CardOrder from "@/components/site/CardOrder.vue";
 import Header from "@/components/site/Header.vue";
 import {useRoute, useRouter} from "vue-router";
 import api from "@/services/api.js";
-import {onMounted, ref} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import {formatReal} from "@/services/formatReal.js";
+import pusher from "@/services/pusherOrders.js";
+import {useOrderStatusStore} from "@/stores/orderStatus.js";
 
 const router = useRouter();
 const route = useRoute();
 const orderId = route.params.id;
+const pusherService = pusher;
+const orderStatusStore = useOrderStatusStore();
 
 const order = ref({});
 const orderItems = ref([]);
 const orderInfo = ref([]);
-const infoFirst = ref({});
-
+const infoFirst = ref({
+	orderStatus: '',
+	status: '',
+});
 const dropdown = ref(false);
+
+const emit = defineEmits(['status_updated']);
 
 const verifyLogin = async () => {
 	const response = await api.post("auth/token/client/");
@@ -47,7 +54,33 @@ const toggleDropdown = () => {
 	}
 }
 
-console.log(orderInfo);
+onMounted(() => {
+	getOrder().then((response) => {
+		order.value = response;
+		orderItems.value = order.value.orderItems;
+		orderInfo.value = order.value.orderInfo;
+		infoFirst.value = orderInfo.value.pop();
+	});
+
+	const channel = pusherService.subscribe('order-channel');
+	channel.bind(`order-status-updated_${orderId}`, (data) => {
+		console.log('DATA DO PUSHER', data);
+		if (data.orderId == orderId) {
+			orderStatusStore.setOrderStatus(data.orderId, data.status);
+			emit('status_updated', data.status);
+
+			// Atualiza o status mostrado
+			orderInfo.value.push(infoFirst.value);
+			infoFirst.value = data;
+			infoFirst.value['orderStatus'] = data.status;
+			infoFirst.value['localDateTime'] = data.time;
+		}
+	});
+});
+
+onUnmounted(() => {
+	pusherService.unsubscribe('order-channel');
+});
 </script>
 
 <template>
@@ -89,7 +122,7 @@ console.log(orderInfo);
 							<div class="flex flex-row items-center w-full justify-between gap-4 font-semibold">
 								<v-icon name="fa-circle" scale="0.75" class="text-green-600 ml-0.5"/>
 								<span class="text-tertiary-light w-full self-start text-start leading-none">{{ info.orderStatus.replaceAll('_', ' ') }}</span>
-								<span class="text-tertiary-light text-sm pr-1">{{ (new Date(info.localDateTime).getHours()) - 3 }}:{{ new Date(info.localDateTime).getUTCMinutes() }}</span>
+								<span class="text-tertiary-light text-sm pr-1">{{ (new Date(info.localDateTime).getHours()) - 3 }}:{{ new Date(info.localDateTime).getUTCMinutes().toString().padStart(2, '0') }}</span>
 							</div>
 						</div>
 					</div>
