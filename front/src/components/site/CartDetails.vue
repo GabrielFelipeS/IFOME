@@ -58,7 +58,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="main" :class="!restaurantId ? 'flex justify-center align-middle' : ''" >
+	<div class="main-content" :class="!restaurantId ? 'flex justify-center align-middle' : ''" >
 		<div v-if="!restaurantId" class="flex flex-col text-center align-middle self-center font-semibold gap-8">
 			Você ainda não adicionou nenhum item ao seu carrinho
 			<button class="p-2 bg-primary text-white rounded-md h-fit w-fit self-center"
@@ -66,7 +66,7 @@ onMounted(() => {
 				Continuar Navegando
 			</button>
 		</div>
-		<div v-if="restaurantId">
+		<div v-if="restaurantId" class="h-full">
 			<div class="restaurant-description my-8" v-if="restaurantId">
 				<div class="flex flex-col text-center gap-3">
 					<span class="text-tertiary-light text-xs">Seu pedido em</span>
@@ -113,7 +113,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-	.main {
+	.main-content {
 		@apply bg-white fixed right-0 bottom-0 z-40 rounded-xl;
 		@apply w-full max-w-[600px] h-full max-h-[90%] p-4 pb-[75px] ;
 		@apply flex flex-col overflow-y-scroll no-scrollbar;
