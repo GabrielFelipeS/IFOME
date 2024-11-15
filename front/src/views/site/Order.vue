@@ -3,7 +3,7 @@ import FooterMobile from "@/components/site/FooterMobile.vue";
 import Header from "@/components/site/Header.vue";
 import {useRoute, useRouter} from "vue-router";
 import api from "@/services/api.js";
-import {onMounted, onUnmounted, ref} from "vue";
+import {computed, onMounted, onUnmounted, ref} from "vue";
 import {formatReal} from "@/services/formatReal.js";
 import pusher from "@/services/pusherOrders.js";
 import {useOrderStatusStore} from "@/stores/orderStatus.js";
@@ -21,7 +21,9 @@ const infoFirst = ref({
 	orderStatus: '',
 	status: '',
 });
+const windowWidth = ref(window.innerWidth);
 const dropdown = ref(false);
+const shouldShowDropdown = computed(() => dropdown.value && windowWidth.value < 1200);
 
 const emit = defineEmits(['status_updated']);
 
@@ -49,10 +51,13 @@ getOrder().then((response) => {
 });
 
 const toggleDropdown = () => {
-	if (orderInfo.value.length > 0) {
+	if (orderInfo.value.length > 0 && windowWidth.value < 1200) {
 		dropdown.value = !dropdown.value;
 	}
 }
+const updateWindowWidth = () => {
+	windowWidth.value = window.innerWidth;
+};
 
 onMounted(() => {
 	getOrder().then((response) => {
@@ -76,23 +81,25 @@ onMounted(() => {
 			infoFirst.value['localDateTime'] = data.time;
 		}
 	});
+	window.addEventListener('resize', updateWindowWidth);
 });
 
 onUnmounted(() => {
 	pusherService.unsubscribe('order-channel');
+	window.removeEventListener('resize', updateWindowWidth);
 });
 </script>
 
 <template>
 	<Header class="hidden md:flex"/>
-	<div class="w-full h-svh flex flex-row justify-center items-center pb-[125px]">
+	<div class="w-full h-svh flex flex-row justify-center items-center pb-[125px] md:pb-4">
 		<div class="main">
 			<div class="flex flex-row h-[60px] justify-between items-center px-5
 				md:justify-start ">
 				<button class="md:hidden" @click="router.push('/orders')">
 					<v-icon name="fa-chevron-left" scale="1.8" class="text-primary md:hidden"/>
 				</button>
-				<button class="font-bold text-primary mr-4 flex items-center gap-1">
+				<button class="font-bold text-primary mr-4 flex items-center gap-1 md:hidden">
 					<v-icon name="fa-regular-question-circle" scale="1.3" class="md:hidden"/>
 					Ajuda
 				</button>
@@ -103,10 +110,10 @@ onUnmounted(() => {
 				<div class="bg-green-700 h-1 rounded-full transition-all duration-300 w-full"></div>
 			</div>
 			<div class="flex flex-col items-start justify-center px-5 gap-3 py-4">
-				<button class="flex flex-row items-center w-full justify-between gap-4" @click="toggleDropdown">
+				<button class="flex flex-row items-center w-full justify-between gap-4 md:pb-1" @click="toggleDropdown">
 					<v-icon name="fa-circle" scale="1" class="text-green-600"/>
 					<span class="text-xl font-semibold w-full self-start text-start leading-none">{{ infoFirst.orderStatus.replaceAll('_', ' ') }}</span>
-					<v-icon name="fa-chevron-down" scale="1.5" class="text-tertiary-light" v-if="orderInfo.length > 0"/>
+					<v-icon name="fa-chevron-down" scale="1.5" class="text-tertiary-light" v-if="orderInfo.length > 0 && windowWidth < 1200"/>
 				</button>
 				<transition
 					name="dropdown"
@@ -117,7 +124,7 @@ onUnmounted(() => {
 					leave-from-class="transform opacity-100 translate-y-0"
 					leave-to-class="transform opacity-0 -translate-y-5"
 				>
-					<div class="dropdown" v-if="dropdown && orderInfo.length > 0">
+					<div class="dropdown" v-if="(shouldShowDropdown && orderInfo.length > 0) || (!dropdown && windowWidth >= 1200)">
 						<div class="flex flex-row justify-between" v-for="info in orderInfo">
 							<div class="flex flex-row items-center w-full justify-between gap-4 font-semibold">
 								<v-icon name="fa-circle" scale="0.75" class="text-green-600 ml-0.5"/>
@@ -128,11 +135,11 @@ onUnmounted(() => {
 					</div>
 				</transition>
 			</div>
-			<div class="px-3 flex flex-col gap-y-0 mt-6 max-h-[30%]" :class="{ 'opacity-30': dropdown }">
+			<div class="px-3 flex flex-col gap-y-0 mt-6 max-h-[30%] md:max-h-[calc(100%-15px)]" :class="{ 'opacity-30': shouldShowDropdown }">
 				<span class="font-semibold px-1">Resumo do pedido</span>
 				<div class="order-items border-s border-e px-3">
 					<div class="product" v-for="item in orderItems">
-						<div class="flex flex-col items-start gap-1.5">
+						<div class="flex flex-col items-start gap-1.5 justify-center">
 							<span class="uppercase">{{ item.dish.name }}</span>
 						</div>
 						<div class="mr-6 flex flex-col items-end">
@@ -142,7 +149,7 @@ onUnmounted(() => {
 					</div>
 				</div>
 			</div>
-			<div class="flex flex-col h-full justify-end pb-3" :class="{ 'opacity-30': dropdown }">
+			<div class="flex flex-col h-full justify-end" :class="{ 'opacity-30': shouldShowDropdown }">
 				<div class="order-summary my-8">
 					<div class="flex flex-row justify-between font-semibold">
 						<span>Total</span>
@@ -166,12 +173,13 @@ onUnmounted(() => {
 	.main {
 		@apply relative w-full h-full flex flex-col max-w-[1200px] justify-center self-center gap-y-4 overflow-auto pt-4;
 
-		@apply md:mt-[85px];
+		@apply md:pt-[75px] md:max-w-[1200px];
 	}
 	.order-items {
-		@apply flex flex-col overflow-y-scroll h-full;
+		@apply flex flex-col overflow-y-scroll h-full mt-4;
 		@apply divide-y-4;
 
+		@apply md:overflow-y-auto md:h-fit;
 	}
 	.product {
 		@apply flex flex-row justify-between py-4 -mt-1;
@@ -183,5 +191,7 @@ onUnmounted(() => {
 		@apply absolute top-0 right-0 flex flex-col-reverse gap-4 mt-52 px-5 w-full z-50;
 		@apply bg-white border-b pb-4 shadow-xl;
 		@apply transition duration-500 ease-in-out transform;
+
+		@apply md:static md:mt-0 md:px-0 md:bg-transparent md:shadow-none;
 	}
 </style>
