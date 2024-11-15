@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -114,7 +115,12 @@ public class CustomerOrder {
 
     public String getOrderDateTime() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_TIME;
+
         return this.orderDate.format(dateTimeFormatter);
+    }
+
+    public String getOrderDateTimeToTimestamp() {
+        return Timestamp.valueOf(this.orderDate).toString();
     }
 
     public Address getClientAddress() {

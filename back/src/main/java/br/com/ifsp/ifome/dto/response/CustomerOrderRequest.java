@@ -15,7 +15,7 @@ public record CustomerOrderRequest(
           customerOrder.getId(),
           customerOrder.getOrderPrice(),
           customerOrder.getPaymentStatus(),
-          customerOrder.getOrderDateTime()
+          customerOrder.getOrderDateTimeToTimestamp()
         );
     }
 }
