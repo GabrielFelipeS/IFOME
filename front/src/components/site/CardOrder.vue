@@ -11,7 +11,7 @@ const props = defineProps({
 });
 
 const restaurantId = props.order.orderItems[0].restaurantId;
-const restaurant = ref([]);
+const restaurant = ref({});
 
 const getRestaurantData = async () => {
 	const response = await api.get('restaurant/' + restaurantId);
@@ -19,12 +19,9 @@ const getRestaurantData = async () => {
 		restaurant.value = response.data.data;
 	}
 }
+getRestaurantData();
 
-onMounted(() => {
-	getRestaurantData();
-});
-
-console.log(restaurant)
+console.log(props.order);
 </script>
 
 <template>
