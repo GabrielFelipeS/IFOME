@@ -3,7 +3,7 @@
 			bg-white border-t border-b border-soft-border drop-shadow-2xl" v-if="!cartOpen && hasCart">
 		<span class="text-sm font-semibold flex flex-row items-center gap-2">
 			<img src="../../assets/img/logo_header_clean.png" alt="logo" class="max-h-8 object-contain" />
-			R$ {{ cart.totalPrice.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}
+			R$ {{ formatReal(cart.totalPrice) }}
 		</span>
 		<button class="bg-primary text-white p-2 rounded-md text-sm" @click="emit('open-cart')">
 			Ver sacola <v-icon name="fa-chevron-right" />
@@ -22,6 +22,7 @@
 import {useCart} from "@/stores/cart.js";
 import {onMounted} from "vue";
 import router from "@/router";
+import {formatReal} from "@/services/formatReal.js";
 
 const cart = useCart();
 

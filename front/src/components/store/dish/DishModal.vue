@@ -5,6 +5,7 @@ import { getImage } from "@/services/getImage.js";
 import api from "@/services/api.js";
 import {useCart} from "@/stores/cart.js";
 import {useToast} from "vue-toast-notification";
+import {formatReal} from "@/services/formatReal.js";
 
 const emit = defineEmits(['close-dish-modal', 'add-to-cart']);
 const props = defineProps({
@@ -60,7 +61,7 @@ const addToCart = async () => {
 			<div class="dish-description">
 				<span class="uppercase font-semibold">{{ dish.name }}</span>
 				<span class="text-xs text-tertiary-light line-clamp-3 md:line-clamp-none">{{ dish.description }}</span>
-				<span class="uppercase text-green-500 font-semibold">R$ {{ dish.price.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
+				<span class="uppercase text-green-500 font-semibold">R$ {{ formatReal(dish.price) }}</span>
 			</div>
 			<div class="restaurant-description">
 				<span class="font-semibold md:mb-2">{{ restaurant.nameRestaurant }} <v-icon name="fa-store"/></span>

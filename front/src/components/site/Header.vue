@@ -18,7 +18,7 @@
         <div class="flex-row hidden md:flex">
             <v-icon name="fa-shopping-bag" scale="1.5" class="text-primary cursor-pointer" @click="emit('open-cart')"/>
             <div class="flex flex-col">
-                <p class="text-xs text-tertiary-light">R$ {{ cart.totalPrice.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</p>
+                <p class="text-xs text-tertiary-light">R$ {{ formatReal(cart.totalPrice) }}</p>
                 <p class="text-xs text-tertiary-light">{{ cart.totalItems }} Itens</p>
             </div>
         </div>
@@ -33,6 +33,7 @@ import {onMounted, ref} from 'vue'
 import { useCart } from "@/stores/cart.js";
 import api from "@/services/api.js";
 import {useToast} from "vue-toast-notification";
+import {formatReal} from "@/services/formatReal.js";
 
 const emit = defineEmits(['search', 'open-cart'])
 
