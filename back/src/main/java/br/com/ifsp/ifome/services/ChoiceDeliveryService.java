@@ -1,11 +1,10 @@
 package br.com.ifsp.ifome.services;
 
-import br.com.ifsp.ifome.entities.Address;
-import br.com.ifsp.ifome.entities.CustomerOrder;
-import br.com.ifsp.ifome.entities.DeliveryPerson;
-import br.com.ifsp.ifome.entities.OrderClientStatus;
+import br.com.ifsp.ifome.entities.*;
+import br.com.ifsp.ifome.exceptions.client.CustomerNotFoundInCartException;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.repositories.DeliveryPersonRepository;
+import br.com.ifsp.ifome.repositories.RefuseCustomerOrderRepository;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -18,27 +17,22 @@ import java.util.concurrent.TimeUnit;
 public class ChoiceDeliveryService {
     private static final double RAIO_DA_TERRA_KM = 6371.01;
     private static final int ONE_MINUTE_AND_FIVE_SECONDS_IN_SECONDS = 65;
+    private static final int FIVE_MINUTES_AND_FIVE_SECONDS_IN_SECONDS = 305;
+
     private final CustomerOrderRepository customerOrderRepository;
     private final OrderStatusUpdateService orderStatusUpdateService;
     private final DeliveryPersonRepository deliveryPersonRepository;
+    private final RefuseCustomerOrderRepository refuseCustomerOrderRepository;
+    private final EmailService emailService;
 
-    public ChoiceDeliveryService(CustomerOrderRepository customerOrderRepository, OrderStatusUpdateService orderStatusUpdateService, DeliveryPersonRepository deliveryPersonRepository) {
+    public ChoiceDeliveryService(CustomerOrderRepository customerOrderRepository, OrderStatusUpdateService orderStatusUpdateService, DeliveryPersonRepository deliveryPersonRepository, RefuseCustomerOrderRepository refuseCustomerOrderRepository, EmailService emailService) {
         this.customerOrderRepository = customerOrderRepository;
         this.orderStatusUpdateService = orderStatusUpdateService;
         this.deliveryPersonRepository = deliveryPersonRepository;
+        this.refuseCustomerOrderRepository = refuseCustomerOrderRepository;
+        this.emailService = emailService;
     }
 
-
-    private void scheduleChooseAnotherDeliveryPerson(CustomerOrder customerOrder) {
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-        scheduler.schedule(() -> {
-            System.err.println("Tarefa executada no futuro por " + Thread.currentThread().getName());
-            choiceDeliveryPersonWhenReady(customerOrder);
-        }, ONE_MINUTE_AND_FIVE_SECONDS_IN_SECONDS, TimeUnit.SECONDS);
-
-        scheduler.shutdown();
-    }
 
     // TODO melhorar forma de busca
     // TODO refatorar essa metodo
@@ -93,6 +87,54 @@ public class ChoiceDeliveryService {
         customerOrderRepository.save(customerOrder);
 
         orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
+
+        this.transferOfferToNextDeliverer(customerOrder.getId(), deliveryPersonChoice.getId());
+        this.sendEmailWhenRequestedHasThreeRefused(customerOrder);
+    }
+
+    private void scheduleChooseAnotherDeliveryPerson(CustomerOrder customerOrder) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        scheduler.schedule(() -> {
+            System.err.println("Tarefa executada no futuro por " + Thread.currentThread().getName());
+            this.choiceDeliveryPersonWhenReady(customerOrder);
+        }, ONE_MINUTE_AND_FIVE_SECONDS_IN_SECONDS, TimeUnit.SECONDS);
+
+        scheduler.shutdown();
+    }
+
+    private void transferOfferToNextDeliverer(Long customerOrderId, Long deliveryPersonChoiceId) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        scheduler.schedule(() -> {
+            CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId)
+                .orElseThrow(CustomerNotFoundInCartException::new);
+
+            boolean isTheDriver = customerOrder.getDeliveryPersonId().equals(deliveryPersonChoiceId);
+            boolean isTheNew = customerOrder.getOrderInfoDelivery().size() <= 1;
+
+            boolean isToTransfer = isTheDriver && isTheNew;
+
+            if(isToTransfer) {
+                var refuseCustomerOrder = new RefuseCustomerOrder(
+                    customerOrderId, deliveryPersonChoiceId, "Tempo de espera excedido"
+                );
+
+                this.refuseCustomerOrderRepository.save(refuseCustomerOrder);
+                orderStatusUpdateService.updateStatusCanceledToDeliverer(customerOrderId);
+            }
+        }, FIVE_MINUTES_AND_FIVE_SECONDS_IN_SECONDS, TimeUnit.SECONDS);
+
+        scheduler.shutdown();
+    }
+
+
+    private void sendEmailWhenRequestedHasThreeRefused(CustomerOrder customerOrder) {
+        var refusedCustomeOrders = refuseCustomerOrderRepository.findRefuseCustomerOrderByCustomerOrderId(customerOrder.getId());
+
+        if(refusedCustomeOrders.size() < 3) return;
+
+//        emailService.sendEmailCientWhen();
     }
 
     private double calculateDistance(Address restaurantAddress, String latitudeDeliveryPerson, String longitudeDeliveryPerson) {
