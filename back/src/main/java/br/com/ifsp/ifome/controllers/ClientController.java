@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -99,9 +100,8 @@ public class ClientController {
 
         return ResponseEntity.noContent().build();
     }
-
+    @DocsSearch
     @GetMapping("/search")
-    @Operation(summary = "Pesquisar restaurantes ou pratos", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<ApiResponse> search(@RequestParam("query") String query) {
         if (query == null || query.trim().isEmpty()) {
             return ResponseEntity.badRequest().body(new ApiResponse("error", null, "O termo de pesquisa é obrigatório."));
