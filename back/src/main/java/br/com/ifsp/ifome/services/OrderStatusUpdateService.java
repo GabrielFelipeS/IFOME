@@ -9,7 +9,7 @@ import com.pusher.rest.Pusher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.Map;
 
 @Service
@@ -75,4 +75,21 @@ public class OrderStatusUpdateService {
         );
     }
 
+    /**
+     * Envia uma atualização para o entregador, com status vazio, usado para atualizar a tela do entregador
+     *
+     * @param customerOrderId Id do pedido
+     */
+    @Async
+    public void updateStatusCanceledToDeliverer(Long customerOrderId) {
+        Map<String, Object> data = Map.of(
+            "status", Collections.emptyList()
+        );
+
+        pusher.trigger(
+            "pedidos",
+            "entregador_" + customerOrderId,
+            data
+        );
+    }
 }
