@@ -2,15 +2,18 @@ package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.dto.request.OrderItemRequest;
 import br.com.ifsp.ifome.entities.OrderItem;
+import br.com.ifsp.ifome.services.SearchService;
 import br.com.ifsp.ifome.services.TokenService;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,6 +23,8 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -437,6 +442,18 @@ public class ClientControllerIT {
     }
 
 
+    @Test
+    void testSearch_withNoResults_returnsNoContent() {
+        // Realiza uma pesquisa que sabemos que não terá resultados
+        String query = "nada";
+
+        // Envia a requisição HTTP para o endpoint de busca
+        ResponseEntity<ApiResponse> response = testRestTemplate.getForEntity("/api/client/search?query=" + query, ApiResponse.class);
+
+        // Verifica se o status de retorno é 204 (No Content)
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+    
     private @NotNull HttpEntity<OrderItemRequest> getOrderItemRequestHttpEntity() {
         return getOrderItemRequestHttpEntity(3l, 2);
     }
