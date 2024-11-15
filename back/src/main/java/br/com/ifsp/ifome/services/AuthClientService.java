@@ -9,6 +9,7 @@ import br.com.ifsp.ifome.entities.Client;
 import br.com.ifsp.ifome.repositories.ClientRepository;
 import br.com.ifsp.ifome.validation.interfaces.Validator;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -39,6 +40,13 @@ public class AuthClientService {
         this.emailService = emailService;
     }
 
+    /**
+     * Cria um cliente com as informações passadas como parâmetro, utiliza o validatorService para fazer validações complementares
+     *
+     * @param clientRequest Informações do cliente a ser criado
+     * @return Cliente criado
+     * @throws MethodArgumentNotValidException Caso alguma validação falhe
+     */
     @SensitiveData
     public ClientResponse create(ClientRequest clientRequest) throws MethodArgumentNotValidException {
         validatorService.isValid(clientRequest);
@@ -48,6 +56,13 @@ public class AuthClientService {
         return new ClientResponse(client);
     }
 
+    /**
+     * Tenta realizar o login com email e senha passado, caso algum deles esteja inválido lança {@code BadCredentialsException}
+     *
+     * @param loginRequest Informações de login, como email e senha
+     * @return Informações de login bem sucedido, como informações do cliente e token de validação
+     * @throws BadCredentialsException Caso as credenciais estejam incorretas
+     */
     @SensitiveData
     public LoginResponse login(LoginRequest loginRequest) {
         Optional<Client> clientOptional = clientRepository.findByEmail(loginRequest.email());
