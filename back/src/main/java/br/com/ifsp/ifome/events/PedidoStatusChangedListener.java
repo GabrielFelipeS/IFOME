@@ -2,19 +2,11 @@ package br.com.ifsp.ifome.events;
 
 import br.com.ifsp.ifome.services.EmailService;
 import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Component
 public class PedidoStatusChangedListener  {
@@ -24,30 +16,12 @@ public class PedidoStatusChangedListener  {
         this.emailService = emailService;
     }
 
-    @Autowired
-    private JavaMailSender mailSender;
-
     @Async
     @EventListener
     public void handlePedidoStatusChanged(PedidoStatusChangedEvent event) throws MessagingException, IOException {
         EmailSentPedidoStatus emailSentPedidoStatus = this.getEvent(event);
 
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
-        helper.setTo(emailSentPedidoStatus.to());
-        helper.setSubject("Seu pedido " + emailSentPedidoStatus.subject());
-
-        Path htmlPath = Paths.get("src/main/resources/emails/atualizacao-pedido.html");
-        String htmlContent = new String(Files.readAllBytes(htmlPath))
-            .replace("${id_pedido}", event.getPedidoId().toString())
-            .replace("${status_pedido}", emailSentPedidoStatus.subject())
-            .replace("${mensagem}", emailSentPedidoStatus.body())
-            ;
-
-        helper.setText(htmlContent, true);
-
-        emailService.sendEmail(message);
+        emailService.sendEmailStatusChanged(emailSentPedidoStatus, event);
     }
 
     // TODO Deve ter um jeito mais bonito de fazer isso
