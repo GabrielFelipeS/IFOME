@@ -35,7 +35,7 @@ public class OrderStatusUpdateService {
                 "orderId", customerOrder.getId(),
                 "status", orderClientStatus.toString(),
                 "position", customerOrder.getOrderStatusId(),
-                "time", customerOrder.getOrderDateTime()
+                "time", customerOrder.getOrderDateTimeToTimestamp()
             )
         );
     }
