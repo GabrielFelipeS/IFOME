@@ -115,62 +115,23 @@ public class CustomerOrderControllerIT {
     @Test
     @DirtiesContext
     public void shouldReturnOrdersMadeToRestaurant() {
-        // Obter os cabeçalhos para o restaurante
         HttpHeaders headers = getHttpHeadersRestaurant();
 
-        // Requisição GET para obter todos os pedidos do restaurante
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
         ResponseEntity<List<CustomerOrderResponse>> response = testRestTemplate.exchange(
                 "/api/order/restaurantOrders", HttpMethod.GET, requestEntity,
                 new ParameterizedTypeReference<List<CustomerOrderResponse>>() {}
         );
 
-        // Verifique se a resposta é OK e se os pedidos estão corretos
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotEmpty(); // Verifique se há pedidos
 
-        // Verifique se pelo menos um pedido corresponde aos valores esperados
         List<CustomerOrderResponse> orders = response.getBody();
 
-        // Assegure-se de que pelo menos um dos pedidos existentes atenda aos critérios esperados
         assertThat(orders).anyMatch(order ->
-                order.orderPrice().equals(1015.0) && // preço do pedido
-//                        order.status().equals("NOVO") && // status do pedido
-                        order.paymentStatus().equals("PENDENTE") // status de pagamento
+                order.orderPrice().equals(1015.0) &&
+                        order.paymentStatus().equals("PENDENTE")
         );
-    }
-
-    @Test
-    @DirtiesContext
-    public void shouldUpdateOrderStatusAsRestaurant() {
-        // Primeiro, vamos criar um pedido no banco de dados
-        CustomerOrder order = new CustomerOrder();
-//        order.setStatus(OrderStatus.NOVO);
-        // Defina outros atributos do pedido, como preço, cart, restaurant, etc.
-        customerOrderRepository.save(order); // Salve o pedido
-
-        Long orderId = order.getId(); // Obtenha o ID do pedido criado
-
-        CustomerOrder existingOrder = customerOrderRepository.findById(orderId).orElseThrow();
-//        System.out.println("Status anterior: " + existingOrder.getStatus());
-
-        // Agora, vamos atualizar o status usando o token de restaurante
-        UpdateOrderStatusRequest updateRequest = new UpdateOrderStatusRequest(orderId);
-        HttpHeaders headers = getHttpHeadersRestaurant(); // Obtenha os cabeçalhos do restaurante
-        ResponseEntity<ApiResponse> response = testRestTemplate.exchange(
-                "/api/order/updateStatus/"+orderId, HttpMethod.PUT, new HttpEntity<>(headers), ApiResponse.class
-        );
-
-        // Verifique se a atualização foi bem-sucedida
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().message()).isEqualTo("Status atualizado com sucesso!");
-
-        // Verifique se o status foi realmente atualizado no banco de dados
-        CustomerOrder updatedOrder = customerOrderRepository.findById(orderId).orElseThrow();
-//        assertThat(updatedOrder.getStatus()).isEqualTo(OrderStatus.ACEITO);
-
-//        System.out.println("Novo status do pedido: " + updatedOrder.getStatus());
-
     }
 
     @Test

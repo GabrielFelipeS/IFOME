@@ -1,6 +1,7 @@
 package br.com.ifsp.ifome.aspect;
 
 import br.com.ifsp.ifome.dto.request.LoginRequest;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ public class LoggingAspect {
 
 
     @Before("controllerMethods()")
-    public void logAroundControllerMethods(ProceedingJoinPoint joinPoint) throws Throwable {
+    public void logAroundControllerMethods(JoinPoint joinPoint) throws Throwable {
         String controllerClass = joinPoint.getSignature().getDeclaringTypeName();
         String methodName = joinPoint.getSignature().getName();
         Object[] args = joinPoint.getArgs();
@@ -40,7 +41,7 @@ public class LoggingAspect {
     }
 
     @AfterReturning(value = "controllerMethods()", returning = "result")
-    public Object logAroundControllerMethods(ProceedingJoinPoint joinPoint, Object result) throws Throwable {
+    public Object logAroundControllerMethods(JoinPoint joinPoint, Object result) throws Throwable {
         String controllerClass = joinPoint.getSignature().getDeclaringTypeName();
         String methodName = joinPoint.getSignature().getName();
 
@@ -50,7 +51,7 @@ public class LoggingAspect {
 
 
     @Before("serviceMethods()")
-    public void logAroundServiceMethods(ProceedingJoinPoint joinPoint) throws Throwable {
+    public void logAroundServiceMethods(JoinPoint joinPoint) throws Throwable {
         String ServiceClass = joinPoint.getSignature().getDeclaringTypeName();
         String methodName = joinPoint.getSignature().getName();
         Object[] args = joinPoint.getArgs();
@@ -61,7 +62,7 @@ public class LoggingAspect {
     }
 
     @AfterReturning(value = "serviceMethods()", returning = "result")
-    public Object logAfterReturningServiceMethods(ProceedingJoinPoint joinPoint, Object result) throws Throwable {
+    public Object logAfterReturningServiceMethods(JoinPoint joinPoint, Object result) throws Throwable {
         String serviceClass = joinPoint.getSignature().getDeclaringTypeName();
         String methodName = joinPoint.getSignature().getName();
 

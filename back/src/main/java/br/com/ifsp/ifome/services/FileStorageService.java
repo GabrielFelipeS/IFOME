@@ -13,9 +13,16 @@ import java.util.Random;
 @Service
 public class FileStorageService {
 
+    /**
+     * Salva o arquivo passado como parâmetro em resources/static/images/, gera um novo nome para o arquivo e devolvendo o nome gerado.
+     *
+     * @param file Arquivo a ser salvo
+     * @return Nome do arquivo
+     * @throws IOException Caso ocorra algum problema ao salvar o arquivo
+     */
     // TODO Fazer conversçao para webp
     // TODO Fazer validação se é uma imagem
-    public String storeFile(String cnpj, MultipartFile file) throws IOException {
+    public String storeFile(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             throw new IOException("File is empty");
         }
@@ -32,6 +39,13 @@ public class FileStorageService {
         return uploadedFile.getName(); // Retorna o caminho absoluto do arquivo salvo
     }
 
+    /**
+     * Retorna um novo nome para a imagem, seguindo o padrão \d{1,4}-yyyyMMddHHmmssSSS-\dn{1,4}-a-extencion
+     * Começa com um número aleatório de 1 a 10000, seguido da data atual no formato 'yyyyMMddHHmmssSSS', seguido de outro número aleatório de 1 a 1000, seguido por uma letra aleatória do alfabeto e finalizando com a extenção do arquivo
+     *
+     * @param nameImage Nome da imagem
+     * @return Nome gerado
+     */
     private String refactoreName(String nameImage) {
         if (nameImage == null) {
             throw new RuntimeException("Nome do arquivo é nulo");

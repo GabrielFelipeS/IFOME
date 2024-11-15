@@ -7,6 +7,7 @@ import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.Client;
 import br.com.ifsp.ifome.entities.Dish;
 import br.com.ifsp.ifome.entities.OrderItem;
+import br.com.ifsp.ifome.exceptions.client.CartCannotBeEmptyException;
 import br.com.ifsp.ifome.exceptions.client.ClientNotFoundException;
 import br.com.ifsp.ifome.exceptions.dish.DishNotFoundException;
 import br.com.ifsp.ifome.repositories.CartRepository;
@@ -113,6 +114,20 @@ public class ClientService {
         cart.clearCart();
 
         this.cartRepository.save(cart);
+    }
+
+    /**
+     * Busca o carrinho do cliente, ou lança uma exception caso não encontre nenhum carrinho ou ele esteja vazio
+     *
+     * @param email Email do cliente logado
+     * @return Carrinho do cliente
+     * @throws ClientNotFoundException Caso não encontre o cliente pelo email passado.
+     */
+    public Cart getCartNotEmpty(String email) {
+        return cartRepository
+            .findFirstByClientEmail(email)
+            .orElseThrow(CartCannotBeEmptyException::new)
+            .cartCannotBeEmpty();
     }
 
     /**

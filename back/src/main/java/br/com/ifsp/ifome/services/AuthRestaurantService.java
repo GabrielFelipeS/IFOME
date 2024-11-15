@@ -10,6 +10,7 @@ import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
 import br.com.ifsp.ifome.validation.interfaces.Validator;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -40,11 +41,18 @@ public class AuthRestaurantService {
         this.addressCoordinatesService = addressCoordinatesService;
     }
 
+    /**
+     * Cria um restaurante com as informações passadas como parâmetro, utiliza o validatorService para fazer validações complementares
+     *
+     * @param restaurantRequest Informações do restaurante a ser criado
+     * @return Restaurante criado
+     * @throws MethodArgumentNotValidException Caso alguma validação falhe
+     */
     @SensitiveData
     public RestaurantResponse create(RestaurantRequest restaurantRequest, MultipartFile multipartFile) throws MethodArgumentNotValidException, IOException {
         validatorService.isValid(restaurantRequest);
 
-        String imageUrl = fileStorageService.storeFile(restaurantRequest.cnpj(), multipartFile);
+        String imageUrl = fileStorageService.storeFile(multipartFile);
 
         Address address = addressCoordinatesService.createAddressWithCoordinates(restaurantRequest.address());
 
@@ -54,7 +62,13 @@ public class AuthRestaurantService {
         return RestaurantResponse.from(restaurant);
     }
 
-
+    /**
+     * Tenta realizar o login com email e senha passado, caso algum deles esteja inválido lança {@code BadCredentialsException}
+     *
+     * @param loginRequest Informações de login, como email e senha
+     * @return Informações de login bem sucedido, como informações do cliente e token de validação
+     * @throws BadCredentialsException Caso as credenciais estejam incorretas
+     */
     @SensitiveData
     public RestaurantLoginResponse login(LoginRequest loginRequest) {
         Optional<Restaurant> restaurantOptional = restaurantRepository.findByEmail(loginRequest.email());

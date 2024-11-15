@@ -6,9 +6,9 @@ import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.CustomerOrder;
 import br.com.ifsp.ifome.entities.OrderClientStatus;
 import br.com.ifsp.ifome.entities.Restaurant;
-import br.com.ifsp.ifome.exceptions.client.CartCannotBeEmptyException;
+import br.com.ifsp.ifome.exceptions.client.CustomerNotFoundInCartException;
 import br.com.ifsp.ifome.exceptions.restaurant.OrderNotFromRestaurantException;
-import br.com.ifsp.ifome.repositories.CartRepository;
+import br.com.ifsp.ifome.exceptions.restaurant.RestaurantNotFoundException;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -21,26 +21,33 @@ import java.util.stream.Collectors;
 @Service
 public class CustomerOrderService {
     private final CustomerOrderRepository customerOrderRepository;
-    private final CartRepository cartRepository;
     private final OrderStatusUpdateService orderStatusUpdateService;
     private final DeliveryService deliveryService;
     private final RestaurantService restaurantService;
+    private final ClientService clientService;
+    private final ChoiceDeliveryService choiceDeliveryService;
 
     public CustomerOrderService(CustomerOrderRepository customerOrderRepository,
-                                CartRepository cartRepository,
-                                OrderStatusUpdateService orderStatusUpdateService, DeliveryService deliveryService, RestaurantService restaurantService) {
+                                OrderStatusUpdateService orderStatusUpdateService,
+                                DeliveryService deliveryService, RestaurantService restaurantService,
+                                ClientService clientService, ChoiceDeliveryService choiceDeliveryService) {
         this.customerOrderRepository = customerOrderRepository;
-        this.cartRepository = cartRepository;
         this.orderStatusUpdateService = orderStatusUpdateService;
         this.deliveryService = deliveryService;
         this.restaurantService = restaurantService;
+        this.clientService = clientService;
+        this.choiceDeliveryService = choiceDeliveryService;
     }
 
+    /**
+     * Cria um pedido baseado no carrinho não vazio do cliente
+     *
+     * @param principal Indivíduo que está logado
+     * @return Informações do pedido criado
+     */
+    // TODO mover o essa pegada de pegar o restaurante para o clientService
     public CustomerOrderRequest createOrder(Principal principal) {
-        Cart cart = cartRepository
-            .findFirstByClientEmail(principal.getName())
-            .orElseThrow(CartCannotBeEmptyException::new)
-            .cartCannotBeEmpty();
+        Cart cart = clientService.getCartNotEmpty(principal.getName());
 
         Restaurant restaurant = restaurantService.findById(cart.getIdRestaurant());
 
@@ -51,6 +58,12 @@ public class CustomerOrderService {
         return CustomerOrderRequest.from(customerOrder);
     }
 
+    /**
+     * Pegar todos os pedidos do cliente
+     *
+     * @param customerEmail Email do cliente
+     * @return Lista de pedidos do cliente
+     */
     public List<CustomerOrderResponse> getAllOrdersByCustomer(String customerEmail) {
         List<CustomerOrder> orders = customerOrderRepository.findAllByCartClientEmail(customerEmail);
 
@@ -59,6 +72,13 @@ public class CustomerOrderService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retorna todos os pedidos do restaurante
+     *
+     * @param restaurantEmail Email do restaurante
+     * @return Lista de pedidos
+     * @throws RestaurantNotFoundException Caso não encontre o restaurante
+     */
     public List<CustomerOrderResponse> getAllOrdersByRestaurant(String restaurantEmail) {
         Restaurant restaurant = restaurantService.findByEmail(restaurantEmail);
 
@@ -73,9 +93,17 @@ public class CustomerOrderService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Atualiza o status do pedido de um restaurante para o próximo status. Caso o status do pedido vá para {@code PRONTO_PARA_ENTREGAR} inicia-se o processo de busca de um entregador
+     *
+     * @param orderId Id do pedido
+     * @param email Email do restaurante
+     * @throws CustomerNotFoundInCartException Caso não encontre o pedido
+     * @throws OrderNotFromRestaurantException Caso o pedido seja de outro restaurante
+     */
     public void updateOrderStatus(Long orderId, String email) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
-            .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
+            .orElseThrow(() -> new CustomerNotFoundInCartException("Pedido não encontrado com ID: " + orderId));
 
         if(customerOrder.getRestaurantEmailDoesNotEquals(email)) {
             throw new OrderNotFromRestaurantException("O pedido não pertence ao restaurante logado");
@@ -87,9 +115,17 @@ public class CustomerOrderService {
 
         orderStatusUpdateService.updateStatusOrderToClient(customerOrder, orderClientStatus);
 
-        deliveryService.choiceDeliveryPersonWhenReady(customerOrder);
+        choiceDeliveryService.choiceDeliveryPersonWhenReady(customerOrder);
     }
 
+    /**
+     * Atualiza o status do pedido de um restaurante para o status anterior.
+     *
+     * @param orderId Id do pedido
+     * @param email Email do restaurante
+     * @throws CustomerNotFoundInCartException Caso não encontre o pedido
+     * @throws OrderNotFromRestaurantException Caso o pedido seja de outro restaurante
+     */
     public void previousOrderStatus(Long orderId, String email) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));

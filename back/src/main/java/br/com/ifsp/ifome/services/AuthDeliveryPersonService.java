@@ -8,6 +8,7 @@ import br.com.ifsp.ifome.dto.response.LoginResponse;
 import br.com.ifsp.ifome.entities.DeliveryPerson;
 import br.com.ifsp.ifome.repositories.DeliveryPersonRepository;
 import br.com.ifsp.ifome.validation.interfaces.Validator;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -34,6 +35,13 @@ public class AuthDeliveryPersonService {
         this.loginService = loginService;
     }
 
+    /**
+     * Cria um entregador com as informações passadas como parâmetro, utiliza o validatorService para fazer validações complementares
+     *
+     * @param deliveryPersonRequest Informações do entregador a ser criado
+     * @return Entregador criado
+     * @throws MethodArgumentNotValidException Caso alguma validação falhe
+     */
     @SensitiveData
     public DeliveryPersonResponse create(DeliveryPersonRequest deliveryPersonRequest) throws MethodArgumentNotValidException {
         validatorService.isValid(deliveryPersonRequest);
@@ -45,6 +53,13 @@ public class AuthDeliveryPersonService {
         return new DeliveryPersonResponse(deliveryPerson);
     }
 
+    /**
+     * Tenta realizar o login com email e senha passado, caso algum deles esteja inválido lança {@code BadCredentialsException}
+     *
+     * @param loginRequest Informações de login, como email e senha
+     * @return Informações de login bem sucedido, como informações do cliente e token de validação
+     * @throws BadCredentialsException Caso as credenciais estejam incorretas
+     */
     @SensitiveData
     public LoginResponse login(LoginRequest loginRequest) {
         Optional<DeliveryPerson> deliveryPersonOptional = deliveryPersonRepository.findByEmail(loginRequest.email());

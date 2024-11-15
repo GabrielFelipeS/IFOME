@@ -50,7 +50,7 @@ public class DishService {
         Restaurant restaurant = restaurantRepository.findByEmail(email)
             .orElseThrow(() -> new RestaurantNotFoundException("Restaurante não encontrado"));
 
-        String imageUrl = fileStorageService.storeFile(restaurant.getCnpj(), multipartFile);
+        String imageUrl = fileStorageService.storeFile(multipartFile);
 
         Dish dish = new Dish(dishRequest, imageUrl);
         dish.setRestaurant(restaurant); // Associe o prato ao restaurante

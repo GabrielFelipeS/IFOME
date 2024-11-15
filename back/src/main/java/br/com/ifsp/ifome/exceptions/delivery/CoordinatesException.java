@@ -4,4 +4,8 @@ public class CoordinatesException extends RuntimeException{
     public CoordinatesException() {
         super("Problema ao pegar coordenadas");
     }
+
+    public CoordinatesException(String msg) {
+        super(msg);
+    }
 }
