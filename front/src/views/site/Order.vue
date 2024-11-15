@@ -13,6 +13,8 @@ const orderId = route.params.id;
 
 const order = ref({});
 const orderItems = ref([]);
+const orderInfo = ref([]);
+const infoFirst = ref({});
 
 const dropdown = ref(false);
 
@@ -29,20 +31,28 @@ const getOrder = async () => {
 	if (response.status !== 200) {
 		return false;
 	}
-	return response.data.find(order => order.orderId = orderId);
-}
 
-onMounted(async () => {
-	order.value = await getOrder();
+	return response.data.find(order => order.orderId == orderId);
+}
+getOrder().then((response) => {
+	order.value = response;
 	orderItems.value = order.value.orderItems;
+	orderInfo.value = order.value.orderInfo;
+	infoFirst.value = orderInfo.value.pop();
 });
 
-console.log(order)
+const toggleDropdown = () => {
+	if (orderInfo.value.length > 0) {
+		dropdown.value = !dropdown.value;
+	}
+}
+
+console.log(orderInfo);
 </script>
 
 <template>
 	<Header class="hidden md:flex"/>
-	<div class="w-full h-svh flex flex-row justify-center items-center pb-[75px]">
+	<div class="w-full h-svh flex flex-row justify-center items-center pb-[125px]">
 		<div class="main">
 			<div class="flex flex-row h-[60px] justify-between items-center px-5
 				md:justify-start ">
@@ -60,10 +70,10 @@ console.log(order)
 				<div class="bg-green-700 h-1 rounded-full transition-all duration-300 w-full"></div>
 			</div>
 			<div class="flex flex-col items-start justify-center px-5 gap-3 py-4">
-				<button class="flex flex-row items-center w-full justify-between gap-4" @click="dropdown = !dropdown">
+				<button class="flex flex-row items-center w-full justify-between gap-4" @click="toggleDropdown">
 					<v-icon name="fa-circle" scale="1" class="text-green-600"/>
-					<span class="text-xl font-semibold w-full self-start text-start leading-none">Joardo está indo ao restaurante</span>
-					<v-icon name="fa-chevron-down" scale="1.5" class="text-tertiary-light"/>
+					<span class="text-xl font-semibold w-full self-start text-start leading-none">{{ infoFirst.orderStatus.replaceAll('_', ' ') }}</span>
+					<v-icon name="fa-chevron-down" scale="1.5" class="text-tertiary-light" v-if="orderInfo.length > 0"/>
 				</button>
 				<transition
 					name="dropdown"
@@ -74,32 +84,18 @@ console.log(order)
 					leave-from-class="transform opacity-100 translate-y-0"
 					leave-to-class="transform opacity-0 -translate-y-5"
 				>
-					<div class="dropdown" v-if="dropdown">
-						<div class="flex flex-row justify-between">
+					<div class="dropdown" v-if="dropdown && orderInfo.length > 0">
+						<div class="flex flex-row justify-between" v-for="info in orderInfo">
 							<div class="flex flex-row items-center w-full justify-between gap-4 font-semibold">
 								<v-icon name="fa-circle" scale="0.75" class="text-green-600 ml-0.5"/>
-								<span class="text-tertiary-light w-full self-start text-start leading-none">Pedido pronto</span>
-								<span class="text-tertiary-light text-sm pr-1">18:17</span>
-							</div>
-						</div>
-						<div class="flex flex-row justify-between">
-							<div class="flex flex-row items-center w-full justify-between gap-4 font-semibold">
-								<v-icon name="fa-circle" scale="0.75" class="text-green-600 ml-0.5"/>
-								<span class="text-tertiary-light w-full self-start text-start leading-none">Pedido confirmado</span>
-								<span class="text-tertiary-light text-sm pr-1">18:17</span>
-							</div>
-						</div>
-						<div class="flex flex-row justify-between">
-							<div class="flex flex-row items-center w-full justify-between gap-4 font-semibold">
-								<v-icon name="fa-circle" scale="0.75" class="text-green-600 ml-0.5"/>
-								<span class="text-tertiary-light w-full self-start text-start leading-none">Pedido enviado ao restaurante</span>
-								<span class="text-tertiary-light text-sm pr-1">18:17</span>
+								<span class="text-tertiary-light w-full self-start text-start leading-none">{{ info.orderStatus.replaceAll('_', ' ') }}</span>
+								<span class="text-tertiary-light text-sm pr-1">{{ (new Date(info.localDateTime).getHours()) - 3 }}:{{ new Date(info.localDateTime).getUTCMinutes() }}</span>
 							</div>
 						</div>
 					</div>
 				</transition>
 			</div>
-			<div class="px-3 flex flex-col gap-y-0 mt-6 max-h-[35%]" :class="{ 'opacity-30': dropdown }">
+			<div class="px-3 flex flex-col gap-y-0 mt-6 max-h-[30%]" :class="{ 'opacity-30': dropdown }">
 				<span class="font-semibold px-1">Resumo do pedido</span>
 				<div class="order-items border-s border-e px-3">
 					<div class="product" v-for="item in orderItems">
@@ -151,7 +147,7 @@ console.log(order)
 		@apply flex flex-col gap-4 px-6 font-semibold max-h-[20%];
 	}
 	.dropdown {
-		@apply absolute right-0 flex flex-col gap-4 mt-52 px-5 w-full z-50;
+		@apply absolute top-0 right-0 flex flex-col-reverse gap-4 mt-52 px-5 w-full z-50;
 		@apply bg-white border-b pb-4 shadow-xl;
 		@apply transition duration-500 ease-in-out transform;
 	}
