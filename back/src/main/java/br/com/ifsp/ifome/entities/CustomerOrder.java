@@ -107,11 +107,6 @@ public class CustomerOrder {
         return this.cart.getOrderItems();
     }
 
-    public String getOrderDate() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
-           return this.orderDate.format(dateTimeFormatter);
-    }
-
     public String getOrderDateTime() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_TIME;
         return this.orderDate.format(dateTimeFormatter);
@@ -159,7 +154,7 @@ public class CustomerOrder {
         return orderInfo.size();
     }
 
-
+    public Long getDeliveryPersonId() { return deliveryPerson.getId();}
 
     public String getClientPhone() {
         return this.cart.getClientPhone();
