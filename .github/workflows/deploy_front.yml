@@ -32,6 +32,7 @@ jobs:
             cd IFOME && \
             git pull origin dev && \
             cd ./front/ && \
+            rm -rf ./node_modules && \
             docker compose down && \
             docker compose up -d --build && \
             pwd
