@@ -8,6 +8,8 @@ import router from './router'
 
 import { OhVueIcon, addIcons } from "oh-vue-icons";
 import * as FaIcons from "oh-vue-icons/icons/fa";
+import * as MdIcons from "oh-vue-icons/icons/md";
+
 
 import ToastPlugin from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-bootstrap.css';
@@ -16,6 +18,9 @@ import Autocomplete from '@trevoreyre/autocomplete-vue';
 
 const Fa = Object.values({ ...FaIcons });
 addIcons(...Fa);
+const Md = Object.values({ ...MdIcons });
+addIcons(...Md);
+
 
 const app = createApp(App)
 
