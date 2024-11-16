@@ -92,9 +92,10 @@ public class ClientControllerIT {
         Integer quantityFirst = documentContextFirst.read("$.data.orderItems[0].quantity");
         Double unitPriceFirst = documentContextFirst.read("$.data.orderItems[0].unitPrice");
         Double totalPriceFirst = documentContextFirst.read("$.data.totalPrice");
+        Double freigth = documentContextFirst.read("$.data.freigth");
 
         assertThat(quantityFirst).isEqualTo(2);
-        assertThat((quantityFirst * unitPriceFirst)).isEqualTo(totalPriceFirst);
+        assertThat((quantityFirst * unitPriceFirst + freigth)).isEqualTo(totalPriceFirst);
 
 
         ResponseEntity<String> response = testRestTemplate.postForEntity
@@ -102,20 +103,20 @@ public class ClientControllerIT {
                 requestEntity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
+        System.err.println(response.getBody());
         DocumentContext documentContextSecond = JsonPath.parse(response.getBody());
         List<OrderItem> orderItems = documentContextSecond.read("$.data.orderItems");
         Integer quantitySecond = documentContextSecond.read("$.data.orderItems[0].quantity");
         Double unitPriceSecond = documentContextSecond.read("$.data.orderItems[0].unitPrice");
         Double  totalPriceSecond = documentContextSecond.read("$.data.totalPrice");
-
+        Double  freigthSecond = documentContextSecond.read("$.data.freigth");
         assertThat(orderItems).isNotNull().isNotEmpty();
 
         assertThat(orderItems.size()).isEqualTo(1);
 
         assertThat(quantitySecond).isEqualTo(4);
 
-        assertThat((quantitySecond * unitPriceSecond)).isEqualTo(totalPriceSecond);
+        assertThat((quantitySecond * unitPriceSecond + freigthSecond)).isEqualTo(totalPriceSecond);
     }
 
     @Test

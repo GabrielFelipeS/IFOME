@@ -266,7 +266,7 @@ VALUES
     ('Endereço Mariana', '04578-000', 'Itaim Bibi', 'São Paulo', 'SP', 'Rua Tabapuã', '700', 'Apto 704', 'Próximo ao Parque do Povo', 'Apartamento', 6);
 
 -- Um pedido para client com id 1
-INSERT INTO cart (client_id) VALUES (1);
+INSERT INTO cart (client_id, freight) VALUES (1, 0.0);
 
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (1, 3, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (1, 4, 29.00, 5);
@@ -275,9 +275,7 @@ INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (1, 3, 2
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (1, 4, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (1, 3, 29.00, 5);
 
-INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, order_date) VALUES (1015, 1, 1, 'PENDENTE', 'NOVO', CURRENT_TIMESTAMP);
-
-
+INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, freight, order_date) VALUES (1015, 1, 1, 'PENDENTE', 'NOVO', 0.0, CURRENT_TIMESTAMP);
 
 UPDATE cart SET customer_order_id = 1 WHERE client_id = 1 LIMIT 1;
 
@@ -285,7 +283,7 @@ INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('
 -- Fim dos insert de pedido
 
 -- Outro pedido para cliente com id 2
-INSERT INTO cart (client_id) VALUES (2);
+INSERT INTO cart (client_id, freight) VALUES (2, 0.0);
 
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (2, 3, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (2, 4, 29.00, 5);
@@ -294,7 +292,7 @@ INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (2, 3, 2
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (2, 4, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (2, 3, 29.00, 5);
 
-INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, order_date) VALUES (1015, 1, 2, 'PENDENTE','NOVO', CURRENT_TIMESTAMP);
+INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, freight, order_date) VALUES (1015, 1, 2, 'PENDENTE','NOVO',  0.0, CURRENT_TIMESTAMP);
 
 UPDATE cart SET customer_order_id = 2 WHERE client_id = 2 LIMIT 1;
 
@@ -302,14 +300,14 @@ INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('
 -- Fim dos insert de pedido
 
 -- Outro pedido para cliente com id 3
-INSERT INTO cart (client_id) VALUES (3);
+INSERT INTO cart (client_id, freight) VALUES (3,  0.0);
 
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 1, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 2, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 3, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 4, 29.00, 5);
 
-INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, current_order_delivery_status, order_date, delivery_cost) VALUES (1015, 1, 3, 'PENDENTE', 'PRONTO_PARA_ENTREGA', 'NOVO', CURRENT_TIMESTAMP, 10.0);
+INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, current_order_delivery_status, order_date, delivery_cost, freight) VALUES (1015, 1, 3, 'PENDENTE', 'PRONTO_PARA_ENTREGA', 'NOVO', CURRENT_TIMESTAMP, 10.0, 0.0);
 
 UPDATE cart SET customer_order_id = 3 WHERE client_id = 3 LIMIT 1;
 
@@ -319,14 +317,14 @@ INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('
 -- Fim dos insert de pedido
 
 -- Outro pedido para cliente com id 3
-INSERT INTO cart (client_id) VALUES (3);
+INSERT INTO cart (client_id, freight) VALUES (3, 0.0);
 
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 1, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 2, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 3, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (3, 4, 29.00, 5);
 
-INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, current_order_delivery_status, order_date, delivery_cost) VALUES (1015, 1, 3, 'PENDENTE', 'PRONTO_PARA_ENTREGA', 'NOVO', CURRENT_TIMESTAMP, 10.0);
+INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, current_order_delivery_status, order_date, delivery_cost, freight) VALUES (1015, 1, 3, 'PENDENTE', 'PRONTO_PARA_ENTREGA', 'NOVO', CURRENT_TIMESTAMP, 10.0, 0.0);
 
 UPDATE cart SET customer_order_id = 4 WHERE client_id = 3 LIMIT 1;
 
@@ -335,7 +333,7 @@ INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('
 
 -- Fim dos insert de pedido
 
-INSERT INTO cart (client_id) VALUES (3);
+INSERT INTO cart (client_id, freight) VALUES (3, 0.0);
 
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (4, 3, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (4, 4, 29.00, 5);

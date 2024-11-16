@@ -15,18 +15,22 @@ public record CustomerOrderResponse(
     Double orderPrice,
     List<OrderInfo> orderInfo,
     String paymentStatus,
-    String orderDate
+    String orderDate,
+    Double freight,
+    Double totalPrice
 ) {
     public CustomerOrderResponse(CustomerOrder customerOrder){
         this(
-                customerOrder.getId(),
-                customerOrder.getClientName(),
-                customerOrder.getClientAddress(),
-                customerOrder.getOrderItems(),
-                customerOrder.getOrderPrice(),
-                customerOrder.getOrderInfo(),
-                customerOrder.getPaymentStatus(),
-                customerOrder.getOrderDate()
+            customerOrder.getId(),
+            customerOrder.getClientName(),
+            customerOrder.getClientAddress(),
+            customerOrder.getOrderItems(),
+            customerOrder.getOrderPrice(),
+            customerOrder.getOrderInfo(),
+            customerOrder.getPaymentStatus(),
+            customerOrder.getOrderDate(),
+            customerOrder.getFreight(),
+            customerOrder.totalPrice()
         );
     }
 }

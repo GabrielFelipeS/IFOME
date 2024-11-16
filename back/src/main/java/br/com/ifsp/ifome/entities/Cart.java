@@ -26,6 +26,8 @@ public class Cart {
     @JoinColumn(name = "client_id")
     private Client client;
 
+    private Double freight;
+
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<OrderItem> orderItems = new ArrayList<>();
 
@@ -35,6 +37,7 @@ public class Cart {
 
     public Cart(Client client) {
         this.client = client;
+        this.freight = 0.0;
     }
 
     public void add(OrderItem orderItemToAdd) {
@@ -42,6 +45,10 @@ public class Cart {
             Objects.equals(orderItem.getRestaurantId(), orderItemToAdd.getRestaurantId()))) {
             throw new DishFromAnotherRestaurant();
         }
+
+        double totalPrice = this.totalPrice();
+
+        this.freight = totalPrice <= 50? 15.0 : totalPrice <= 100? 10.0 : 0.0;
 
         if(this.orderItems.contains(orderItemToAdd)) {
            int index = this.orderItems.indexOf(orderItemToAdd);
@@ -62,7 +69,7 @@ public class Cart {
     }
 
     public Double totalPrice() {
-        return this.orderItems.stream().mapToDouble(OrderItem::getTotalPrice).sum();
+        return this.orderItems.stream().mapToDouble(OrderItem::getTotalPrice).sum() + freight;
     }
 
     public boolean cartEmpty() {
@@ -138,4 +145,5 @@ public class Cart {
     public void clearCart() {
         this.orderItems.clear();
     }
+
 }
