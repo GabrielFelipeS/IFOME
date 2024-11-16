@@ -28,4 +28,3 @@ coverage
 *.sw?
 .env
 *.tsbuildinfo
-/package-lock.json
