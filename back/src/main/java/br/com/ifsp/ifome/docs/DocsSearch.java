@@ -62,18 +62,11 @@ import java.lang.annotation.Target;
                 """)
                         )
                 ),
-                @ApiResponse(responseCode = "204", description = "Nenhum resultado encontrado",
-                        content = @Content(mediaType = "application/json",
-                                examples = @ExampleObject(value = """
-                    {
-                        "message": "Nenhum resultado encontrado."
-                    }
-                """)
-                        )
-                )
+                @ApiResponse(responseCode = "204", description = "Nenhum resultado encontrado")
         }
 )
-
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface DocsSearch {
 }
 

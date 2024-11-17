@@ -24,6 +24,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
@@ -453,7 +454,63 @@ public class ClientControllerIT {
         // Verifica se o status de retorno é 204 (No Content)
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
-    
+
+    @Test
+    @DirtiesContext
+    @DisplayName("Should return BadRequest when query is empty")
+    public void testSearch_withEmptyQuery_returnsBadRequest() {
+        // Realizando a requisição GET passando a query vazia
+        ResponseEntity<String> response = testRestTemplate.exchange(
+                "/api/client/search?query=",  // A URL com a query vazia
+                HttpMethod.GET,              // Método HTTP GET
+                null,                        // Sem corpo para a requisição
+                String.class                 // Tipo de resposta esperado
+        );
+
+        // Verificando se o status da resposta é 400 (Bad Request)
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+        // Parse da resposta JSON usando JsonPath para verificar a mensagem
+        DocumentContext document = JsonPath.parse(response.getBody());
+
+        // Obtendo a mensagem da resposta JSON
+        String message = document.read("$.message");
+
+        // Verificando se a mensagem é a esperada
+        assertThat(message).isEqualTo("O termo de pesquisa é obrigatório.");
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("Should return Ok when query is valid")
+    public void testSearch_withValidQuery_returnsOk() {
+        // Envia uma requisição com um termo que sabemos que irá retornar resultados
+        String query = "Açai do Monge";
+
+        // Envia a requisição GET para o endpoint de busca, passando o termo como parâmetro
+        ResponseEntity<String> response = testRestTemplate.exchange(
+                "/api/client/search?query=" + query,  // A URL com a query válida
+                HttpMethod.GET,                      // Método HTTP GET
+                null,                                // Sem corpo para a requisição
+                String.class                         // Tipo de resposta esperado
+        );
+
+        // Verifica se o status de retorno é 200 (OK)
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        // Parse da resposta JSON usando JsonPath para verificar a mensagem
+        DocumentContext document = JsonPath.parse(response.getBody());
+
+        // Obtendo a mensagem da resposta JSON
+        String message = document.read("$.message");
+
+        // Verificando se a mensagem é a esperada (exemplo: "Busca realizada com sucesso!")
+        assertThat(message).isEqualTo("Resultados encontrados.");
+    }
+
+
+
+
     private @NotNull HttpEntity<OrderItemRequest> getOrderItemRequestHttpEntity() {
         return getOrderItemRequestHttpEntity(3l, 2);
     }
