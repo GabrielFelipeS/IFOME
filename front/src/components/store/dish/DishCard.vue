@@ -2,6 +2,7 @@
 
 import {ref} from "vue";
 import {getImage} from "@/services/getImage.js";
+import {formatReal} from "@/services/formatReal.js";
 
 const props = defineProps({
 	dish: {
@@ -32,7 +33,7 @@ imgUrl.value = getImage(props.dish.dishImage);
 			</div>
 			<div class="footer">
 				<div class="inline-flex">
-					{{ footerLead }}{{ dish.price.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}
+					{{ footerLead }}{{ formatReal(dish.price) }}
 				</div>
 			</div>
 		</div>

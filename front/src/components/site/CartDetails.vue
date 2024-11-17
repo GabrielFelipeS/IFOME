@@ -3,6 +3,7 @@ import {useCart} from "@/stores/cart.js";
 import {onMounted, ref} from "vue";
 import api from "@/services/api.js";
 import {useToast} from "vue-toast-notification";
+import {formatReal} from "@/services/formatReal.js";
 
 const cart = useCart();
 const deliveryFee = ref(0);
@@ -57,7 +58,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="main" :class="!restaurantId ? 'flex justify-center align-middle' : ''" >
+	<div class="main-content" :class="!restaurantId ? 'flex justify-center align-middle' : ''" >
 		<div v-if="!restaurantId" class="flex flex-col text-center align-middle self-center font-semibold gap-8">
 			Você ainda não adicionou nenhum item ao seu carrinho
 			<button class="p-2 bg-primary text-white rounded-md h-fit w-fit self-center"
@@ -65,7 +66,7 @@ onMounted(() => {
 				Continuar Navegando
 			</button>
 		</div>
-		<div v-if="restaurantId">
+		<div v-if="restaurantId" class="h-full">
 			<div class="restaurant-description my-8" v-if="restaurantId">
 				<div class="flex flex-col text-center gap-3">
 					<span class="text-tertiary-light text-xs">Seu pedido em</span>
@@ -83,7 +84,7 @@ onMounted(() => {
 						<button class="text-primary text-xs font-semibold" @click="removeFromCart(item.dishId)">Remover</button>
 					</div>
 					<div class="mr-6 flex flex-col items-end">
-						<span>R$ {{ item.unitPrice.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
+						<span>R$ {{ formatReal(item.unitPrice) }}</span>
 						<span>x{{ item.quantity }}</span>
 					</div>
 				</div>
@@ -91,15 +92,15 @@ onMounted(() => {
 			<div class="order-summary my-8">
 				<div class="flex flex-row justify-between text-xs text-tertiary-light">
 					<span>Subtotal</span>
-					<span>R$ {{ cart.order.totalPrice.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
+					<span>R$ {{ formatReal(cart.order.totalPrice) }}</span>
 				</div>
 				<div class="flex flex-row justify-between text-xs text-tertiary-light">
 					<span>Taxa de entrega</span>
-					<span>R$ {{ deliveryFee.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
+					<span>R$ {{ formatReal(deliveryFee) }}</span>
 				</div>
 				<div class="flex flex-row justify-between font-semibold">
 					<span>Total</span>
-					<span>R$ {{ (cart.order.totalPrice + deliveryFee).toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
+					<span>R$ {{ formatReal(cart.order.totalPrice + deliveryFee) }}</span>
 				</div>
 			</div>
 			<div class="flex flex-row justify-center mb-[85px] md:my-0">
@@ -112,7 +113,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-	.main {
+	.main-content {
 		@apply bg-white fixed right-0 bottom-0 z-40 rounded-xl;
 		@apply w-full max-w-[600px] h-full max-h-[90%] p-4 pb-[75px] ;
 		@apply flex flex-col overflow-y-scroll no-scrollbar;
