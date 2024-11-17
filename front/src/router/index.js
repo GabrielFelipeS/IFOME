@@ -27,9 +27,14 @@ const router = createRouter({
       },
       children: [
         {
-          path: '/restaurants',
-          name: 'restaurants',
-          component: () => import('@/views/site/Restaurants.vue'),
+          path: "/",
+          name: "home-site",
+          component: () => import("@/views/site/Home.vue"),
+        },
+        {
+          path: "/restaurants",
+          name: "restaurants",
+          component: () => import("@/views/site/Restaurants.vue"),
         },
         {
           path: "/restaurant/:id",
