@@ -38,4 +38,15 @@ public class RestaurantExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
+
+    @ExceptionHandler(RestaurantIsCloseException.class)
+    public  ResponseEntity<Map<String, Object>>  handleRestaurantIsCloseException(
+        RestaurantIsCloseException ex) {
+        logger.warn(ex.getMessage());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message",  ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
 }
