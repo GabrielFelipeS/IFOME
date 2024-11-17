@@ -21,7 +21,7 @@
 
                 <div class="ml-4 flex-1">
                     <h3 class="text-lg font-semibold text-gray-800">{{ restaurant.nameRestaurant }} <span
-                            v-if="restaurant.isOpen">( Fechado )</span></h3>
+                            v-if="!restaurant.isOpen">( Fechado )</span></h3>
                     <div class="flex items-center text-gray-600 text-sm mt-1">
                         <svg class="w-4 h-4 text-red-500 mr-1" fill="currentColor" viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
