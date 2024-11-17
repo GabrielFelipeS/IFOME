@@ -60,6 +60,7 @@ public class ClientService {
 
         Cart cart = this.getCartOrCreateNewCart(email, client);
         OrderItem orderItem = new OrderItem(dish, orderItemRequest.quantity(), orderItemRequest.detail(), cart);
+
         cart.add(orderItem);
 
         cart = cartRepository.save(cart);

@@ -6,11 +6,13 @@ import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.CustomerOrder;
 import br.com.ifsp.ifome.entities.OrderClientStatus;
 import br.com.ifsp.ifome.entities.Restaurant;
+import br.com.ifsp.ifome.events.PedidoStatusChangedEvent;
 import br.com.ifsp.ifome.exceptions.client.CustomerNotFoundInCartException;
 import br.com.ifsp.ifome.exceptions.restaurant.OrderNotFromRestaurantException;
 import br.com.ifsp.ifome.exceptions.restaurant.RestaurantNotFoundException;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -25,16 +27,18 @@ public class CustomerOrderService {
     private final RestaurantService restaurantService;
     private final ClientService clientService;
     private final ChoiceDeliveryService choiceDeliveryService;
+    private final ApplicationEventPublisher eventPublisherService;
 
     public CustomerOrderService(CustomerOrderRepository customerOrderRepository,
                                 OrderStatusUpdateService orderStatusUpdateService,
                                 RestaurantService restaurantService,
-                                ClientService clientService, ChoiceDeliveryService choiceDeliveryService) {
+                                ClientService clientService, ChoiceDeliveryService choiceDeliveryService, ApplicationEventPublisher eventPublisherService) {
         this.customerOrderRepository = customerOrderRepository;
         this.orderStatusUpdateService = orderStatusUpdateService;
         this.restaurantService = restaurantService;
         this.clientService = clientService;
         this.choiceDeliveryService = choiceDeliveryService;
+        this.eventPublisherService = eventPublisherService;
     }
 
     /**
@@ -112,6 +116,8 @@ public class CustomerOrderService {
         customerOrderRepository.save(customerOrder);
 
         orderStatusUpdateService.updateStatusOrderToClient(customerOrder, orderClientStatus);
+// TODO fazer os testes mockarem isso, e executar testes onde verifica o envio do email
+        eventPublisherService.publishEvent(new PedidoStatusChangedEvent(customerOrder.getId(), orderClientStatus, customerOrder));
 
         choiceDeliveryService.choiceDeliveryPersonWhenReady(customerOrder);
     }

@@ -134,7 +134,7 @@ public class ChoiceDeliveryService {
 
         if(refusedCustomeOrders.size() < 3) return;
 
-//        emailService.sendEmailCientWhen();
+        emailService.sendEmailClientWhenRequestHasTrheeRefused(customerOrder);
     }
 
     private double calculateDistance(Address restaurantAddress, String latitudeDeliveryPerson, String longitudeDeliveryPerson) {

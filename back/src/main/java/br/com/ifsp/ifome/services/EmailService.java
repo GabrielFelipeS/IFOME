@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.services;
 
+import br.com.ifsp.ifome.entities.CustomerOrder;
 import br.com.ifsp.ifome.events.EmailSentPedidoStatus;
 import br.com.ifsp.ifome.events.PedidoStatusChangedEvent;
 import jakarta.mail.MessagingException;
@@ -77,5 +78,9 @@ public class EmailService {
         helper.setText(htmlContent, true);
 
         this.sendEmail(message);
+    }
+
+    public void sendEmailClientWhenRequestHasTrheeRefused(CustomerOrder customerOrder) {
+        this.sendEmail(customerOrder.getEmailClient(), from, "Fudeu maluco, se mora na quebrana, ninguém é louco de ir");
     }
 }
