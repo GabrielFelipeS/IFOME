@@ -4,7 +4,7 @@
         <img src="../../assets/img/logo_header_clean.png" class="h-full hidden md:block" alt="Logo">
         <nav class="hidden md:block">
             <ul class="flex flex-row text-tertiary-light gap-4">
-                <li>Inicio</li>
+                 <router-link :to="{ name: 'home-site' }">Home</router-link>
                 <router-link :to="{ name: 'restaurants' }">Restaurantes</router-link>
                 <li>Pratos</li>
             </ul>
