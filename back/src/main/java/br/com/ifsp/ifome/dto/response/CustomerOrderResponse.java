@@ -19,8 +19,8 @@ public record CustomerOrderResponse(
     Double freight,
     Double totalPrice
 ) {
-    public CustomerOrderResponse(CustomerOrder customerOrder){
-        this(
+    public static CustomerOrderResponse from(CustomerOrder customerOrder){
+        return new CustomerOrderResponse(
             customerOrder.getId(),
             customerOrder.getClientName(),
             customerOrder.getClientAddress(),
@@ -28,7 +28,7 @@ public record CustomerOrderResponse(
             customerOrder.getOrderPrice(),
             customerOrder.getOrderInfo(),
             customerOrder.getPaymentStatus(),
-            customerOrder.getOrderDate(),
+            customerOrder.getOrderDateTimeToTimestamp(),
             customerOrder.getFreight(),
             customerOrder.totalPrice()
         );
