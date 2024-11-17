@@ -6,7 +6,7 @@
             <ul class="flex flex-row text-tertiary-light gap-4">
                  <router-link :to="{ name: 'home-site' }">Home</router-link>
                 <router-link :to="{ name: 'restaurants' }">Restaurantes</router-link>
-                <li>Pratos</li>
+                <router-link :to="{name: 'dishs' }"> Pratos </router-link>
             </ul>
         </nav>
         <div
