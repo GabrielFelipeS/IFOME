@@ -121,7 +121,7 @@ public class ClientWorksIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         documentContext = JsonPath.parse(response.getBody());
-        Integer orderIdResult = documentContext.read("$.data.id");
+        Integer orderIdResult = documentContext.read("$.data.orderId");
 
         response = testRestTemplate.exchange("/api/restaurant/orders",  HttpMethod.GET, getRequestHttpEntity(token_restaurant), String.class);
 
