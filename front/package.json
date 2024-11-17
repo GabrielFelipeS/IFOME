@@ -15,6 +15,7 @@
     "oh-vue-icons": "^1.0.0-rc3",
     "pinia": "^2.1.7",
     "pusher-js": "^8.4.0-rc2",
+    "swiper": "^11.1.14",
     "vue": "^3.4.29",
     "vue-3-mask": "^0.0.1-alpha",
     "vue-router": "^4.3.3",
