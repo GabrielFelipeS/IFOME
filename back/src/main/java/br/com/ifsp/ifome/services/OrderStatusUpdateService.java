@@ -9,7 +9,9 @@ import com.pusher.rest.Pusher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -82,8 +84,10 @@ public class OrderStatusUpdateService {
      */
     @Async
     public void updateStatusCanceledToDeliverer(Long customerOrderId) {
+        String timestamp = Timestamp.from(Instant.now()).toString();
+        System.err.println("Enviando segundo pusher: ");
         Map<String, Object> data = Map.of(
-            "status", Collections.emptyList()
+            "status", List.of(new OrderInfoDeliveryResponse(customerOrderId, "CANCELADO", timestamp))
         );
 
         pusher.trigger(

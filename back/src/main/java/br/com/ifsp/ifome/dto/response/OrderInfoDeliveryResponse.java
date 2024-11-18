@@ -1,15 +1,12 @@
 package br.com.ifsp.ifome.dto.response;
 
-import br.com.ifsp.ifome.entities.OrderDeliveryStatus;
 import br.com.ifsp.ifome.entities.OrderInfoDelivery;
-import org.springframework.cglib.core.Local;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public record OrderInfoDeliveryResponse (
     Long id,
-    OrderDeliveryStatus orderDeliveryStatus,
+    String orderDeliveryStatus,
     String localDateTime
 ) {
 
@@ -18,7 +15,7 @@ public record OrderInfoDeliveryResponse (
 
         return new OrderInfoDeliveryResponse(
             orderInfoDelivery.getId(),
-            orderInfoDelivery.getOrderDeliveryStatus(),
+            orderInfoDelivery.getOrderDeliveryStatus().toString(),
             orderInfoDelivery.getLocalDateTime().format(dateTimeFormatter)
         );
     }
