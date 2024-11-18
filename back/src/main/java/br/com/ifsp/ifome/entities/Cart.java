@@ -46,7 +46,7 @@ public class Cart {
             throw new DishFromAnotherRestaurant();
         }
 
-        double totalPrice = this.totalPrice();
+        double totalPrice = this.totalPriceWithoutShipping();
 
         this.freight = totalPrice <= 50? 15.0 : totalPrice <= 100? 10.0 : 0.0;
 
@@ -68,8 +68,14 @@ public class Cart {
         return orderItems.get(0).getRestaurantId();
     }
 
+
+    public Double totalPriceWithoutShipping() {
+        return this.orderItems.stream().mapToDouble(OrderItem::getTotalPrice).sum();
+    }
+
+
     public Double totalPrice() {
-        return this.orderItems.stream().mapToDouble(OrderItem::getTotalPrice).sum() + freight;
+        return this.totalPriceWithoutShipping() + freight;
     }
 
     public boolean cartEmpty() {
@@ -108,9 +114,11 @@ public class Cart {
             .peek(orderItem -> System.out.println(orderItem.getCart()))
             .filter(orderItem -> Objects.equals(orderItem.getDishId(), dishId))
             .findFirst();
+
         if(optionalOrderItem.isEmpty()) {
             throw new DishNotFoundInCartException();
         }
+
 
         OrderItem orderItem = optionalOrderItem.get();
 
@@ -119,7 +127,16 @@ public class Cart {
         System.err.println("Antes de remover");
         this.orderItems.forEach(System.err::println);
         this.orderItems.remove(orderItem);
+
         orderItem.setCart(null);
+
+        if(orderItems.isEmpty()) {
+            this.freight = 0.0;
+        } else {
+            double totalPrice = this.totalPriceWithoutShipping();
+            this.freight = totalPrice <= 50? 15.0 : totalPrice <= 100? 10.0 : 0.0;
+        }
+
         System.err.println("Depois de remover");
         this.orderItems.forEach(System.err::println);
         System.err.println("-----------------");
