@@ -28,7 +28,7 @@ public class CustomerOrderController {
     @DocsCreateCustomerOrder
     public ResponseEntity<ApiResponse> createOrder(
         Principal principal) {
-        CustomerOrderRequest customerOrderRequest = customerOrderService.createOrder(principal);
+        CustomerOrderResponse customerOrderRequest = customerOrderService.createOrder(principal);
 
         ApiResponse apiResponse = new ApiResponse("success", customerOrderRequest, "Pedido enviado! Aguarde confimação!");
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);

@@ -110,7 +110,7 @@ public class RestaurantService {
         List<CustomerOrder> orders = customerOrderRepository.findByRestaurantId(restaurant.getId());
 
         return orders.stream()
-            .map(CustomerOrderResponse::new)
+            .map(CustomerOrderResponse::from)
             .toList();
     }
 

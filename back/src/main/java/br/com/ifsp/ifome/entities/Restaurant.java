@@ -172,4 +172,8 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         System.out.println(rawPassword);
         return passwordEncoder.matches(rawPassword, this.password);
     }
+
+    public boolean isClose() {
+        return !isOpen;
+    }
 }

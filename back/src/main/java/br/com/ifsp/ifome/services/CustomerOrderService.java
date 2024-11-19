@@ -9,6 +9,7 @@ import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.events.PedidoStatusChangedEvent;
 import br.com.ifsp.ifome.exceptions.client.CustomerNotFoundInCartException;
 import br.com.ifsp.ifome.exceptions.restaurant.OrderNotFromRestaurantException;
+import br.com.ifsp.ifome.exceptions.restaurant.RestaurantIsCloseException;
 import br.com.ifsp.ifome.exceptions.restaurant.RestaurantNotFoundException;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -46,18 +47,23 @@ public class CustomerOrderService {
      *
      * @param principal Indivíduo que está logado
      * @return Informações do pedido criado
+     * @throws RestaurantIsCloseException Quando o restaurante está fechado
      */
     // TODO mover o essa pegada de pegar o restaurante para o clientService
-    public CustomerOrderRequest createOrder(Principal principal) {
+    public CustomerOrderResponse createOrder(Principal principal) {
         Cart cart = clientService.getCartNotEmpty(principal.getName());
 
         Restaurant restaurant = restaurantService.findById(cart.getIdRestaurant());
+
+        if(restaurant.isClose()) {
+            throw new RuntimeException("O restaurante está fechado, não pode aceitar pedidos");
+        }
 
         CustomerOrder customerOrder = new CustomerOrder(cart, restaurant);
 
         customerOrderRepository.save(customerOrder);
 
-        return CustomerOrderRequest.from(customerOrder);
+        return CustomerOrderResponse.from(customerOrder);
     }
 
     /**
@@ -70,7 +76,7 @@ public class CustomerOrderService {
         List<CustomerOrder> orders = customerOrderRepository.findAllByCartClientEmail(customerEmail);
 
         return orders.stream()
-                .map(CustomerOrderResponse::new)
+                .map(CustomerOrderResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -91,7 +97,7 @@ public class CustomerOrderService {
         }
 
         return orders.stream()
-                .map(CustomerOrderResponse::new) // Assumindo que você tem um construtor adequado
+                .map(CustomerOrderResponse::from) // Assumindo que você tem um construtor adequado
                 .collect(Collectors.toList());
     }
 
