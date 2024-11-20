@@ -20,36 +20,168 @@ import java.lang.annotation.Target;
                                 schema = @Schema(implementation = ApiResponse.class),
                                 examples = @ExampleObject(value = """
                     {
-                        "status": "success",
-                        "data": {
-                            "restaurants": [
-                                {
-                                    "id": 1,
-                                    "nameRestaurant": "Açai do Monge",
-                                    "cnpj": "58.911.612/0001-16",
-                                    "foodCategory": "Sorveteria",
-                                    "telephone": "(11) 1234-5678",
-                                    "address": [],
-                                    "openingHours": [],
-                                    "personResponsible": "Nome Responsável",
-                                    "email": "email1@email.com",
-                                    "paymentMethods": "Dinheiro, Cartão"
-                                }
-                            ],
-                            "dishes": [
-                                {
-                                    "id": 8,
-                                    "name": "Bruschetta",
-                                    "description": "Entrada com pão, tomate fresco e manjericão",
-                                    "price": 12.9,
-                                    "dishCategory": "Entrada",
-                                    "dishImage": "bruschetta.jpeg",
-                                    "availability": "AVAILABLE"
-                                }
-                            ]
-                        },
-                        "message": "Resultados encontrados."
-                    }
+                                              "status": "success",
+                                              "data": {
+                                                "restaurants": [
+                                                  {
+                                                    "id": 2,
+                                                    "nameRestaurant": "Pizzaria do Chef",
+                                                    "cnpj": "12345678000199",
+                                                    "foodCategory": "Pizzaria",
+                                                    "address": [
+                                                      {
+                                                        "id": 6,
+                                                        "nameAddress": "Endereço Chef",
+                                                        "cep": "22041-001",
+                                                        "neighborhood": "Copacabana",
+                                                        "city": "Rio de Janeiro",
+                                                        "state": "RJ",
+                                                        "address": "Avenida Atlântica",
+                                                        "number": "1000",
+                                                        "complement": "Loja 3",
+                                                        "details": "Frente à praia",
+                                                        "typeResidence": "Comercial",
+                                                        "latitude": "-22.9716406",
+                                                        "longitude": "-43.1845041"
+                                                      }
+                                                    ],
+                                                    "telephone": "(21) 9876-5432",
+                                                    "dish": [
+                                                      {
+                                                        "id": 6,
+                                                        "name": "Pizza Margherita",
+                                                        "description": "Pizza tradicional com molho de tomate, mussarela e manjericão",
+                                                        "price": 32.9,
+                                                        "dishCategory": "Prato Principal",
+                                                        "dishImage": "pizza_margherita.jpeg",
+                                                        "availability": "Disponível"
+                                                      },
+                                                      {
+                                                        "id": 7,
+                                                        "name": "Pizza Quatro Queijos",
+                                                        "description": "Pizza com uma combinação de queijos: mussarela, gorgonzola, parmesão e provolone",
+                                                        "price": 36.9,
+                                                        "dishCategory": "Prato Principal",
+                                                        "dishImage": "pizza_quatro_queijos.jpeg",
+                                                        "availability": "Disponível"
+                                                      },
+                                                      {
+                                                        "id": 8,
+                                                        "name": "Bruschetta",
+                                                        "description": "Entrada com pão, tomate fresco e manjericão",
+                                                        "price": 12.9,
+                                                        "dishCategory": "Entrada",
+                                                        "dishImage": "bruschetta.jpeg",
+                                                        "availability": "Disponível"
+                                                      },
+                                                      {
+                                                        "id": 9,
+                                                        "name": "Tiramisu",
+                                                        "description": "Sobremesa italiana com café e mascarpone",
+                                                        "price": 18.9,
+                                                        "dishCategory": "Sobremesa",
+                                                        "dishImage": "tiramisu.jpeg",
+                                                        "availability": "Indisponível"
+                                                      },
+                                                      {
+                                                        "id": 10,
+                                                        "name": "Suco de Laranja",
+                                                        "description": "Suco natural de laranja",
+                                                        "price": 8.9,
+                                                        "dishCategory": "Bebida",
+                                                        "dishImage": "suco_laranja.jpeg",
+                                                        "availability": "Disponível"
+                                                      }
+                                                    ],
+                                                    "openingHours": [
+                                                      {
+                                                        "id": 8,
+                                                        "dayOfTheWeek": "Segunda-feira",
+                                                        "opening": "18:00",
+                                                        "closing": "23:00"
+                                                      },
+                                                      {
+                                                        "id": 9,
+                                                        "dayOfTheWeek": "Terça-feira",
+                                                        "opening": "18:00",
+                                                        "closing": "23:00"
+                                                      },
+                                                      {
+                                                        "id": 10,
+                                                        "dayOfTheWeek": "Quarta-feira",
+                                                        "opening": "18:00",
+                                                        "closing": "23:00"
+                                                      },
+                                                      {
+                                                        "id": 11,
+                                                        "dayOfTheWeek": "Quinta-feira",
+                                                        "opening": "18:00",
+                                                        "closing": "23:00"
+                                                      },
+                                                      {
+                                                        "id": 12,
+                                                        "dayOfTheWeek": "Sexta-feira",
+                                                        "opening": "18:00",
+                                                        "closing": "00:00"
+                                                      },
+                                                      {
+                                                        "id": 13,
+                                                        "dayOfTheWeek": "Sábado",
+                                                        "opening": "18:00",
+                                                        "closing": "00:00"
+                                                      },
+                                                      {
+                                                        "id": 14,
+                                                        "dayOfTheWeek": "Domingo",
+                                                        "opening": "18:00",
+                                                        "closing": "22:00"
+                                                      }
+                                                    ],
+                                                    "personResponsible": "Chef Antônio",
+                                                    "personResponsibleCPF": "12345678901",
+                                                    "email": "email2@email.com",
+                                                    "paymentMethods": "Dinheiro, Cartão, Pix",
+                                                    "restaurantImage": "pizzaria_chef.jpeg",
+                                                    "bankAccount": {
+                                                      "bank": "Caixa Econômica",
+                                                      "agency": "4321",
+                                                      "account": "00123456-7"
+                                                    },
+                                                    "isOpen": true
+                                                  }
+                                                ],
+                                                "dishes": [
+                                                  {
+                                                    "id": 2,
+                                                    "name": "Pizza de Calabresa",
+                                                    "description": "Pizza com calabresa, cebola e azeitonas",
+                                                    "price": 34.9,
+                                                    "dishCategory": "Prato Principal",
+                                                    "dishImage": "pizza_calabresa.jpeg",
+                                                    "availability": "Indisponível"
+                                                  },
+                                                  {
+                                                    "id": 6,
+                                                    "name": "Pizza Margherita",
+                                                    "description": "Pizza tradicional com molho de tomate, mussarela e manjericão",
+                                                    "price": 32.9,
+                                                    "dishCategory": "Prato Principal",
+                                                    "dishImage": "pizza_margherita.jpeg",
+                                                    "availability": "Disponível"
+                                                  },
+                                                  {
+                                                    "id": 7,
+                                                    "name": "Pizza Quatro Queijos",
+                                                    "description": "Pizza com uma combinação de queijos: mussarela, gorgonzola, parmesão e provolone",
+                                                    "price": 36.9,
+                                                    "dishCategory": "Prato Principal",
+                                                    "dishImage": "pizza_quatro_queijos.jpeg",
+                                                    "availability": "Disponível"
+                                                  }
+                                                ]
+                                              },
+                                              "message": "Resultados encontrados."
+                                            }
                 """)
                         )
                 ),
