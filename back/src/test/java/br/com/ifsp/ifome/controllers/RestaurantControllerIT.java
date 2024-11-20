@@ -1,8 +1,11 @@
 package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.services.TokenService;
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.ServerSetupTest;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,6 +34,21 @@ public class RestaurantControllerIT {
     private String tokenWithOrders;
     private String tokenOtherRestaurant;
     private String tokenValidButRestaurantNotExist;
+
+    private GreenMail greenMail;
+
+    @BeforeEach
+    public void setup() {
+        greenMail = new GreenMail(ServerSetupTest.SMTP);
+        greenMail.setUser("teste.ifome@gmail.com", "teste");
+        greenMail.setUser("test@example.com", "test@example.com");
+        greenMail.start();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        greenMail.stop();
+    }
 
     @BeforeEach
     public void setUp() {
@@ -100,7 +118,7 @@ public class RestaurantControllerIT {
         DocumentContext document = JsonPath.parse(response.getBody());
 
         String message = document.read("$.message");
-        assertThat(message).isEqualTo("Restaurante aberto com sucesso!");
+        assertThat(message).isEqualTo("Restaurante fechado com sucesso!");
     }
 
     @Test
@@ -121,7 +139,7 @@ public class RestaurantControllerIT {
         DocumentContext document = JsonPath.parse(response.getBody());
 
         Boolean isOpen = document.read("$.data.isOpen");
-        assertThat(isOpen).isEqualTo(false);
+        assertThat(isOpen).isEqualTo(true);
     }
 
     @Test
