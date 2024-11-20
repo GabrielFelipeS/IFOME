@@ -31,7 +31,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
+import {getImage} from "@/services/getImage.js";
 
 const props = defineProps({
     restaurant: Object
@@ -39,8 +40,7 @@ const props = defineProps({
 
 const currentDay = ref('');
 const currentTime = ref('');
-const imageUrl = `${import.meta.env.VITE_API_URL}image/${props.restaurant.restaurantImage}`;
-console.log(imageUrl);
+const imageUrl = getImage(props.restaurant.restaurantImage);
 
 onMounted(() => {
     const now = new Date();
@@ -52,12 +52,8 @@ onMounted(() => {
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     currentTime.value = `${hours}:${minutes}`;
-
-    console.log(props.restaurant);
 });
 
 
 const isClosed = props.restaurant.isOpen
-
-console.log(props.restaurant);
 </script>

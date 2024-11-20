@@ -1,6 +1,8 @@
 <script setup>
 
 import {ref} from "vue";
+import {getImage} from "@/services/getImage.js";
+import {formatReal} from "@/services/formatReal.js";
 
 const props = defineProps({
 	dish: {
@@ -13,7 +15,8 @@ const props = defineProps({
 	},
 });
 
-const imgUrl = ref(`${import.meta.env.VITE_API_URL}image/${props.dish.dishImage}`)
+const imgUrl = ref('');
+imgUrl.value = getImage(props.dish.dishImage);
 </script>
 
 <template>
@@ -30,7 +33,7 @@ const imgUrl = ref(`${import.meta.env.VITE_API_URL}image/${props.dish.dishImage}
 			</div>
 			<div class="footer">
 				<div class="inline-flex">
-					{{ footerLead }}{{ dish.price }}
+					{{ footerLead }}{{ formatReal(dish.price) }}
 				</div>
 			</div>
 		</div>

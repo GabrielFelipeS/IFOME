@@ -62,7 +62,7 @@ async function submit(data) {
     try {
 
         currentData.value = { ...currentData.value, ...data };
-        let formatedAddress = [currentData.value.address];
+        let formatedAddress = currentData.value.address;
 
 
         const bankAccount = {

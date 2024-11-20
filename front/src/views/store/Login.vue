@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import Header from "@/components/user/Header.vue";
 import {useRouter} from "vue-router";
 import api from "@/services/api.js";
@@ -63,6 +63,10 @@ const goToPage = async (page) => {
 	await router.push({ name: page });
 };
 
+// TODO: usar rota de validação para role de usuário
+
+
+
 const $toast = useToast();
 async function submitLogin(data) {
 	if (!data.email || !data.password) {
@@ -75,6 +79,7 @@ async function submitLogin(data) {
 			if (response.status === 200 || response.status === 201) {
 				$toast.success('Login realizado com sucesso!');
 				localStorage.setItem('token', response.data.data.token);
+				router.push({ name: 'store-panel' });
 			} else {
 				console.log(response)
 				$toast.error(response.data.message, {});
