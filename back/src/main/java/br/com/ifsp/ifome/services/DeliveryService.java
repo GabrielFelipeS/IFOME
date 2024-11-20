@@ -6,7 +6,8 @@ import br.com.ifsp.ifome.dto.response.DeliveryPersonResponse;
 import br.com.ifsp.ifome.dto.response.PusherDeliveryOrderResponse;
 import br.com.ifsp.ifome.entities.*;
 import br.com.ifsp.ifome.exceptions.delivery.DeclineNotAvailableException;
-import br.com.ifsp.ifome.exceptions.delivery.DeliveryPersontNotFoundException;
+import br.com.ifsp.ifome.exceptions.delivery.DeliveryPersonNotFoundException;
+import br.com.ifsp.ifome.exceptions.delivery.NotTheDeliveryPersonResponsibleException;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.repositories.DeliveryPersonRepository;
 import br.com.ifsp.ifome.repositories.OrderInfoDeliveryRepository;
@@ -111,13 +112,17 @@ public class DeliveryService {
     public void refuseOrder(Long customerOrderId, String justification, Principal principal) {
         DeliveryPerson deliveryPerson = deliveryPersonRepository
                                         .findByEmail(principal.getName())
-                                        .orElseThrow(DeliveryPersontNotFoundException::new);
+                                        .orElseThrow(DeliveryPersonNotFoundException::new);
 
         CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow();
 
+        if(customerOrder.getDeliveryPersonId().equals(deliveryPerson.getId())) {
+            throw new NotTheDeliveryPersonResponsibleException("Você não é mais o entregador responsavel pelo pedido!");
+        }
+
         var currentOrderDelivery = customerOrder.getOrderInfoDelivery();
 
-        if(currentOrderDelivery.size() >= 6) {
+        if(currentOrderDelivery.size() >= 4) {
             throw new DeclineNotAvailableException(customerOrder.getCurrentOrderDeliveryStatus().toString());
         }
 

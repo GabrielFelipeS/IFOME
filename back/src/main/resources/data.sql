@@ -48,7 +48,7 @@ INSERT INTO restaurants (
     'Banco do Brasil',
     '1234',
     '00012345-6',
-    false,
+    true,
     'RESTAURANT'
 );
 

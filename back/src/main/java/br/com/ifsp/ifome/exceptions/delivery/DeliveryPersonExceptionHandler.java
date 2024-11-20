@@ -18,9 +18,9 @@ import java.util.Map;
 public class DeliveryPersonExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(DeliveryPersonExceptionHandler.class);
 
-    @ExceptionHandler(DeliveryPersontNotFoundException.class)
+    @ExceptionHandler(DeliveryPersonNotFoundException.class)
     public  ResponseEntity<Map<String, Object>>  handleDeliveryPersontNotFoundException(
-        DeliveryPersontNotFoundException ex) {
+        DeliveryPersonNotFoundException ex) {
         logger.warn(ex.getMessage());
 
         Map<String, Object> response = new HashMap<>();
@@ -32,6 +32,17 @@ public class DeliveryPersonExceptionHandler {
     @ExceptionHandler(DeclineNotAvailableException.class)
     public  ResponseEntity<Map<String, Object>>  handleDeclineNotAvailableException(
         DeclineNotAvailableException ex) {
+        logger.warn(ex.getMessage());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message",  ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    @ExceptionHandler(NotTheDeliveryPersonResponsibleException.class)
+    public  ResponseEntity<Map<String, Object>>  handleNotTheDeliveryPersonResponsibleException(
+        NotTheDeliveryPersonResponsibleException ex) {
         logger.warn(ex.getMessage());
 
         Map<String, Object> response = new HashMap<>();

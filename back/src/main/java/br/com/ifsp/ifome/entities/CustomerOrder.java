@@ -26,7 +26,7 @@ public class CustomerOrder {
     private Double orderPrice;
     private Double freight;
 
-    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<OrderInfo> orderInfo;
 
     // TODO arrumar um jeito para remover isso
@@ -69,7 +69,7 @@ public class CustomerOrder {
     public CustomerOrder(Cart cart, Restaurant restaurant) {
         this(
             null,
-            cart.totalPrice(),
+            cart.totalPriceWithoutShipping(),
             cart.getFreight(),
             new ArrayList<>(),
             new ArrayList<>(),
@@ -183,6 +183,16 @@ public class CustomerOrder {
         return deliveryCost;
     }
 
+    public void newDeliveryPersonInfo() {
+        this.orderInfoDelivery = List.of(
+            new OrderInfoDelivery(
+                OrderDeliveryStatus.NOVO,
+                LocalDateTime.now(),
+                this
+            )
+         );
+    }
+
     public OrderDeliveryStatus nextDeliveryStatus() {
         int size = orderInfoDelivery.size();
 
@@ -192,10 +202,14 @@ public class CustomerOrder {
 
         OrderDeliveryStatus value = OrderDeliveryStatus.values()[size];
         System.err.println("Value " + value);
+
         var newOrderInfo = new OrderInfoDelivery(value, LocalDateTime.now(), this);
         System.err.println(newOrderInfo);
         orderInfoDelivery.add(newOrderInfo);
+
+        System.err.println("Teste 1");
         this.setCurrentOrderDeliveryStatus(value);
+        System.err.println("Teste 2");
 
         return value;
     }
@@ -236,5 +250,13 @@ public class CustomerOrder {
 
     public boolean getRestaurantEmailDoesNotEquals(String email) {
         return !this.restaurant.getEmail().equals(email);
+    }
+
+    public List<OrderInfoDelivery> resetDeliveryPersonInfo() {
+        var orderInfoReset = orderInfoDelivery.stream().peek(order -> order.setCustomerOrder(null)).toList();
+
+//        this.orderInfoDelivery = null;
+
+        return orderInfoReset;
     }
 }

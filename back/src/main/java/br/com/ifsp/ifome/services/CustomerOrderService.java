@@ -56,7 +56,7 @@ public class CustomerOrderService {
         Restaurant restaurant = restaurantService.findById(cart.getIdRestaurant());
 
         if(restaurant.isClose()) {
-            throw new RuntimeException("O restaurante está fechado, não pode aceitar pedidos");
+            throw new RestaurantIsCloseException("O restaurante está fechado, não pode aceitar pedidos!");
         }
 
         CustomerOrder customerOrder = new CustomerOrder(cart, restaurant);
@@ -122,10 +122,11 @@ public class CustomerOrderService {
         customerOrderRepository.save(customerOrder);
 
         orderStatusUpdateService.updateStatusOrderToClient(customerOrder, orderClientStatus);
+        System.err.println("EXECUTOU");
+        choiceDeliveryService.choiceDeliveryPersonWhenReady(customerOrder);
+
 // TODO fazer os testes mockarem isso, e executar testes onde verifica o envio do email
         eventPublisherService.publishEvent(new PedidoStatusChangedEvent(customerOrder.getId(), orderClientStatus, customerOrder));
-
-        choiceDeliveryService.choiceDeliveryPersonWhenReady(customerOrder);
     }
 
     /**

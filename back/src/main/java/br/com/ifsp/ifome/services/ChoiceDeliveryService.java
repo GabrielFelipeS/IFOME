@@ -1,10 +1,14 @@
 package br.com.ifsp.ifome.services;
 
+import br.com.ifsp.ifome.aspect.LoggingAspect;
 import br.com.ifsp.ifome.entities.*;
 import br.com.ifsp.ifome.exceptions.client.CustomerNotFoundInCartException;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.repositories.DeliveryPersonRepository;
+import br.com.ifsp.ifome.repositories.OrderInfoDeliveryRepository;
 import br.com.ifsp.ifome.repositories.RefuseCustomerOrderRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,8 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class ChoiceDeliveryService {
+    private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
+
     private static final double RAIO_DA_TERRA_KM = 6371.01;
     private static final int ONE_MINUTE_AND_FIVE_SECONDS_IN_SECONDS = 65;
     private static final int FIVE_MINUTES_AND_FIVE_SECONDS_IN_SECONDS = 305;
@@ -24,13 +30,15 @@ public class ChoiceDeliveryService {
     private final DeliveryPersonRepository deliveryPersonRepository;
     private final RefuseCustomerOrderRepository refuseCustomerOrderRepository;
     private final EmailService emailService;
+    private final OrderInfoDeliveryRepository orderInfoDeliveryRepository;
 
-    public ChoiceDeliveryService(CustomerOrderRepository customerOrderRepository, OrderStatusUpdateService orderStatusUpdateService, DeliveryPersonRepository deliveryPersonRepository, RefuseCustomerOrderRepository refuseCustomerOrderRepository, EmailService emailService) {
+    public ChoiceDeliveryService(CustomerOrderRepository customerOrderRepository, OrderStatusUpdateService orderStatusUpdateService, DeliveryPersonRepository deliveryPersonRepository, RefuseCustomerOrderRepository refuseCustomerOrderRepository, EmailService emailService, OrderInfoDeliveryRepository orderInfoDeliveryRepository) {
         this.customerOrderRepository = customerOrderRepository;
         this.orderStatusUpdateService = orderStatusUpdateService;
         this.deliveryPersonRepository = deliveryPersonRepository;
         this.refuseCustomerOrderRepository = refuseCustomerOrderRepository;
         this.emailService = emailService;
+        this.orderInfoDeliveryRepository = orderInfoDeliveryRepository;
     }
 
 
@@ -39,64 +47,72 @@ public class ChoiceDeliveryService {
     @Async
     public void choiceDeliveryPersonWhenReady(CustomerOrder customerOrder) {
         boolean isNotReady = !customerOrder.getCurrentOrderClientStatus().equals(OrderClientStatus.PRONTO_PARA_ENTREGA);
-        System.err.println( customerOrder.getCurrentOrderClientStatus()+ " " + isNotReady);
         if(isNotReady) return;
 
-        System.err.println("AQUI NÂO");
-        System.err.println(customerOrder.getRestaurantAddress());
         List<DeliveryPerson> deliveryPersons = deliveryPersonRepository.findDeliveryPersonAvailable(customerOrder.getId());
-        deliveryPersons.stream().forEach(System.err::println);
+
+        deliveryPersons.forEach(delivery -> logger.info(delivery.toString()));
+
         Address addressRestaurant = customerOrder.getRestaurantAddress();
 
         double minDistance = Double.MAX_VALUE;
-        System.err.println("AQUI 1");
 
         DeliveryPerson deliveryPersonChoice = null;
 
-        System.err.println("AQUI 2");
-
         for(DeliveryPerson deliveryPerson : deliveryPersons) {
             double distance = calculateDistance(addressRestaurant, deliveryPerson.getLatitude(), deliveryPerson.getLongitude());
-            System.err.println(distance);
             if(distance < minDistance) {
                 minDistance = distance;
                 deliveryPersonChoice = deliveryPerson;
             }
         }
 
-        System.err.println("AQUI 3");
-
         if(deliveryPersonChoice == null) {
-            System.err.println("ENTROU NO IF");
+            logger.warn("Nenhum entregador encontrado");
             this.scheduleChooseAnotherDeliveryPerson(customerOrder);
-            System.err.println("Executou o choose");
             return;
         }
 
-        System.err.println("AQUI 4");
         customerOrder.setDeliveryPerson(deliveryPersonChoice);
-        System.err.println("AQUI 5");
-        System.err.println("Min distance: " + minDistance);
-        System.err.println("Entregador escolhido: " + customerOrder.getDeliveryPerson().getEmail());
+
+        customerOrder.newDeliveryPersonInfo();
+
+        logger.warn("Min distance: {}", minDistance);
+        logger.warn("Entregador escolhido: {}", customerOrder.getDeliveryPerson().getEmail());
 
         double preciseDelivery = minDistance * 1;
-        customerOrder.setDeliveryCost(preciseDelivery);
-        customerOrder.nextDeliveryStatus();
 
-        customerOrder.getOrderInfo().forEach(System.out::println);
+        logger.warn("Setando delivery cost");
+        customerOrder.setDeliveryCost(preciseDelivery);
+
+        logger.warn("Para o próximo status");
+
+        logger.warn("Salvando");
         customerOrderRepository.save(customerOrder);
+//        customerOrderRepository.flush();
+
+//        logger.warn("Proximo status: {}", customerOrder.getOrderInfoDelivery());
+//        customerOrder.getOrderInfo().forEach(order -> logger.info(order.toString()));
+
+        logger.warn("Salvando novo status");
 
         orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
 
+        logger.warn("Iniciando scheduler para esperar");
+
         this.transferOfferToNextDeliverer(customerOrder.getId(), deliveryPersonChoice.getId());
+
         this.sendEmailWhenRequestedHasThreeRefused(customerOrder);
+
+        logger.warn("Chegou no fim do método!");
     }
 
     private void scheduleChooseAnotherDeliveryPerson(CustomerOrder customerOrder) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
+        logger.warn("Procurando outro entregador em 1 minuto");
         scheduler.schedule(() -> {
-            System.err.println("Tarefa executada no futuro por " + Thread.currentThread().getName());
+            logger.warn("Tarefa executada no futuro por {}", Thread.currentThread().getName());
             this.choiceDeliveryPersonWhenReady(customerOrder);
         }, ONE_MINUTE_AND_FIVE_SECONDS_IN_SECONDS, TimeUnit.SECONDS);
 
@@ -105,6 +121,8 @@ public class ChoiceDeliveryService {
 
     private void transferOfferToNextDeliverer(Long customerOrderId, Long deliveryPersonChoiceId) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        logger.warn("Transferindo para outro entregador, em caso de sem resposta em 5 minutos");
 
         scheduler.schedule(() -> {
             CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId)
@@ -115,17 +133,44 @@ public class ChoiceDeliveryService {
 
             boolean isToTransfer = isTheDriver && isTheNew;
 
+            logger.warn("Para transferir: {}", isToTransfer);
+
             if(isToTransfer) {
+                logger.warn("Iniciando transferencia");
+
+                customerOrder.setDeliveryPerson(null);
+
+                customerOrderRepository.save(customerOrder);
+
+                customerOrderRepository.flush();
+
+                var deliveryPersonInfo = customerOrder.resetDeliveryPersonInfo();
+
+                orderInfoDeliveryRepository.deleteAll(deliveryPersonInfo);
+
+                orderInfoDeliveryRepository.flush();
+
+                logger.warn("Status limpo");
+
                 var refuseCustomerOrder = new RefuseCustomerOrder(
                     customerOrderId, deliveryPersonChoiceId, "Tempo de espera excedido"
                 );
 
-                this.refuseCustomerOrderRepository.save(refuseCustomerOrder);
-                orderStatusUpdateService.updateStatusCanceledToDeliverer(customerOrderId);
-            }
-        }, FIVE_MINUTES_AND_FIVE_SECONDS_IN_SECONDS, TimeUnit.SECONDS);
+                refuseCustomerOrderRepository.save(refuseCustomerOrder);
 
-        scheduler.shutdown();
+                refuseCustomerOrderRepository.flush();
+
+                logger.warn("Id do pedido: {}",  customerOrderId);
+
+                orderStatusUpdateService.updateStatusCanceledToDeliverer(customerOrderId);
+
+                this.choiceDeliveryPersonWhenReady(customerOrder);
+                logger.warn("scheduler finalizado");
+            }
+//        }, FIVE_MINUTES_AND_FIVE_SECONDS_IN_SECONDS, TimeUnit.SECONDS);
+        }, 20, TimeUnit.SECONDS);
+
+//        scheduler.shutdown();
     }
 
 
