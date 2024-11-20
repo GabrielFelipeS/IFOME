@@ -1,6 +1,5 @@
-package br.com.ifsp.ifome.exceptions;
+package br.com.ifsp.ifome.exceptions.client;
 
-import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

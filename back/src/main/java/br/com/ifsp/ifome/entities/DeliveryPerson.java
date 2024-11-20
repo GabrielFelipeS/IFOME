@@ -8,11 +8,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
     @Column(length = 15, nullable = false)
     private String telephone;
 
-    @Column(name = "cnh_number", length = 11, nullable = false)
+    @Column(name = "cnh_number", length = 11, nullable = false, unique = true)
     private String cnhNumber;
 
     @Column(name = "cnh_validity", nullable = false)
@@ -69,6 +69,14 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private String available;
+
+    private String latitude;
+
+    private String longitude;
+
+    private LocalDateTime lastUpdate;
+
     public DeliveryPerson(DeliveryPersonRequest deliveryPersonRequest, PasswordEncoder passwordEncoder) {
         this.name = deliveryPersonRequest.name();
         this.cpf = deliveryPersonRequest.cpf().replaceAll("[^\\d]", "");
@@ -82,14 +90,10 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
         this.cnhValidity = deliveryPersonRequest.cnhValidity();
         this.vehicleDocument = deliveryPersonRequest.vehicleDocument();
         this.bankAccount = new BankAccount(deliveryPersonRequest.bankAccount());
+        this.role = Role.DELIVERY;
+        this.available = "Indisponível";
         this.setAddress(deliveryPersonRequest.address());
     }
-
-
-    public DeliveryPerson(Long id, String name, String cpf, String email, String password,
-                          LocalDate dateOfBirth, String typeOfVehicle, String telephone,
-                          String cnh, String vehicleDocument, List<Address> address,
-                          BankAccount bankAccount,  PasswordEncoder passwordEncoder) {}
 
     public DeliveryPerson(Long id, String name, String cpf, String email, String password, LocalDate dateOfBirth, String typeOfVehicle, String plate,String telephone, String cnhNumber, LocalDate cnhValidity, String vehicleDocument, List<Address> address, BankAccount bankAccount, PasswordEncoder passwordEncoder) {
         this.id = id;
@@ -106,7 +110,13 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
         this.vehicleDocument = vehicleDocument;
         this.address = address;
         this.bankAccount = bankAccount;
+        this.available = "Indisponível";
         this.role = Role.DELIVERY;
+    }
+
+    @PreUpdate
+    public void atualizarUltimaAlteracao() {
+        this.lastUpdate = LocalDateTime.now();
     }
 
     public void setAddress(AddressRequest addressRequest) {
@@ -117,12 +127,12 @@ public class DeliveryPerson  implements PasswordPolicy, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return this.role.getAuthorities();
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return email;
     }
 
     @Override

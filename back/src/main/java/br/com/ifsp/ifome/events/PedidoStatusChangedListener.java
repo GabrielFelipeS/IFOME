@@ -38,7 +38,6 @@ public class PedidoStatusChangedListener  {
         helper.setTo(emailSentPedidoStatus.to());
         helper.setSubject("Seu pedido " + emailSentPedidoStatus.subject());
 
-//        String htmlContent = this.generateHtml(emailSentPedidoStatus.body());
         Path htmlPath = Paths.get("src/main/resources/emails/atualizacao-pedido.html");
         String htmlContent = new String(Files.readAllBytes(htmlPath))
             .replace("${id_pedido}", event.getPedidoId().toString())
@@ -57,14 +56,8 @@ public class PedidoStatusChangedListener  {
         String restaurantName = event.getRestaurantName();
         String email = event.getCustomerOrder().getCart().getClient().getEmail();
 
-
         return switch (event.getNewStatus()) {
             case NOVO -> new EmailSentPedidoStatus(
-                email,
-                "Ta faltando mensagem para novo",
-                "mensagem boa");
-
-            case ACEITO -> new EmailSentPedidoStatus(
                 email,
                 "Ta faltando mensagem para novo",
                 "mensagem boa");
@@ -89,23 +82,5 @@ public class PedidoStatusChangedListener  {
                 "foi entregue!",
                 String.format("Olá %s, \nEsperamos que você aproveite sua refeição! Seu pedido foi entregue com sucesso. Agradecemos por usar nosso serviço e esperamos vê-lo em breve!", nomeCliente));
         };
-    }
-
-    // TODO Arruma essa merda que se fez
-    private String generateHtml(String body) {
-        return
-            " <html><body>" +
-                "<table role='presentation' width='100%' cellspacing='0' cellpadding='0' border='0'>"
-                + "    <tr>"
-                + "        <td align='center' style='padding: 10px 0;'>"
-                + "            <img src='cid:rodapeImage' alt='Imagem centralizada'"
-                + "                 style='display: block; width: 200px; height: 200px;'/>"
-                + "        </td>"
-                + "    </tr>"
-                + "    <tr>"
-                + "        <td>"+ body +"</td>"
-                + "    </tr>"
-                + "</table>" +
-                "</body> </html>";
     }
 }

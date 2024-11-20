@@ -13,7 +13,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Operation(summary = "Alterar estado de aberto/fechado", security = @SecurityRequirement(name = "Bearer Token"))
+@Operation(summary = "Alterar estado de aberto/fechado",
+        security = @SecurityRequirement(name = "Bearer Token"))
 @RequestBody(
     description = """
     Para realizar a abertura/fechamento do restaurante é necessario enviar o token jwt no header, com isso ele irá identificar o restaurante

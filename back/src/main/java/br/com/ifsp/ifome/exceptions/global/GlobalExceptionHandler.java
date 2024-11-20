@@ -1,5 +1,6 @@
-package br.com.ifsp.ifome.exceptions;
+package br.com.ifsp.ifome.exceptions.global;
 
+import br.com.ifsp.ifome.exceptions.delivery.CoordinatesException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -14,7 +15,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
@@ -115,6 +115,18 @@ public class GlobalExceptionHandler {
         logger.warn(ex.getMessage());
         Map<String, Object> response = new HashMap<>();
         response.put("message",  ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(CoordinatesException.class)
+    public  ResponseEntity<Map<String, Object>>  handleHttpMessageNotReadable(
+        CoordinatesException ex) {
+        logger.warn(ex.getMessage());
+        String message =  ex.getMessage();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", message);
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }

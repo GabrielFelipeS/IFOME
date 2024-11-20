@@ -2,11 +2,12 @@ package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.docs.DocCreateDish;
 import br.com.ifsp.ifome.docs.DocsGetAllDish;
-import br.com.ifsp.ifome.docs.DocsGetPagination;
+import br.com.ifsp.ifome.docs.DocsGetPaginationDish;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.DishRequest;
 import br.com.ifsp.ifome.dto.response.DishResponse;
 import br.com.ifsp.ifome.services.DishService;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -40,7 +41,7 @@ public class DishController {
         @Valid @RequestPart("dish")DishRequest dishRequest,
         Principal principal, UriComponentsBuilder ucb)
         throws IOException, MethodArgumentNotValidException{
-        DishResponse dishResponse = dishService.create(dishRequest, multipartFile, principal);
+        DishResponse dishResponse = dishService.create(dishRequest, multipartFile, principal.getName());
 
         URI locationOfNewDish = ucb
             .path("dish/{id}")
@@ -52,8 +53,9 @@ public class DishController {
     }
 
     @GetMapping(path = "/")
-    @DocsGetPagination
-    public ResponseEntity<ApiResponse> getAllAvailableDishWithPagination(@PageableDefault(size = 15, page = 0) Pageable pageable) {
+    @DocsGetPaginationDish
+    public ResponseEntity<ApiResponse> getAllAvailableDishWithPagination(
+        @Parameter(hidden = true) @PageableDefault(size = 15, page = 0) Pageable pageable) {
        var dishResponses = this.dishService.getAllAvailable(pageable);
 
         ApiResponse apiResponse = new ApiResponse("success", dishResponses, "Busca por prato concluida");

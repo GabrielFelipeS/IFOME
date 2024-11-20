@@ -1,4 +1,4 @@
-package br.com.ifsp.ifome.exceptions;
+package br.com.ifsp.ifome.exceptions.global;
 
 public class InvalidTokenException extends RuntimeException{
     public InvalidTokenException() {

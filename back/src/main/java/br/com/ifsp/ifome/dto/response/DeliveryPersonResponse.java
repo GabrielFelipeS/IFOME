@@ -20,7 +20,8 @@ public record DeliveryPersonResponse(
         LocalDate cnhValidity,
         String vehicleDocument,
         List<Address> address,
-        BankAccount bankAccount
+        BankAccount bankAccount,
+        String available
 
 ) {
     public DeliveryPersonResponse(DeliveryPerson deliveryPerson){
@@ -36,6 +37,8 @@ public record DeliveryPersonResponse(
         deliveryPerson.getCnhValidity(),
         deliveryPerson.getVehicleDocument(),
         deliveryPerson.getAddress(),
-        deliveryPerson.getBankAccount());
+        deliveryPerson.getBankAccount(),
+        deliveryPerson.getAvailable()
+        );
     }
 }
