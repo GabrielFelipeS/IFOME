@@ -1,5 +1,5 @@
 <template>
-    <router-link :to="`/restaurant/${props.restaurant.id}`"
+    <router-link :to="`/restaurant/${props.restaurant.id}`" v-if="props.restaurant.isOpen"
         class="w-full flex flex-row md:flex-row items-center p-4 rounded-lg shadow-sm shadow-[#B3B3B3] bg-white mt-5 md:shadow-none md:hover:shadow-lg md:hover:scale-105 md:transition-all md:duration-150">
         <img :src="imageUrl  || '../../assets/img/logo_header_clean.png'"
             alt="Logo do Restaurante" class="w-20 h-20 object-cover rounded-full" />
@@ -54,6 +54,5 @@ onMounted(() => {
     currentTime.value = `${hours}:${minutes}`;
 });
 
-
-const isClosed = props.restaurant.isOpen
+const isClosed = !props.restaurant.isOpen
 </script>
