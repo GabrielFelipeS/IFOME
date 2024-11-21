@@ -1,6 +1,5 @@
 package br.com.ifsp.ifome.services;
 
-import br.com.ifsp.ifome.dto.response.CustomerOrderRequest;
 import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
 import br.com.ifsp.ifome.entities.Cart;
 import br.com.ifsp.ifome.entities.CustomerOrder;
@@ -12,7 +11,6 @@ import br.com.ifsp.ifome.exceptions.restaurant.OrderNotFromRestaurantException;
 import br.com.ifsp.ifome.exceptions.restaurant.RestaurantIsCloseException;
 import br.com.ifsp.ifome.exceptions.restaurant.RestaurantNotFoundException;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -110,8 +108,7 @@ public class CustomerOrderService {
      * @throws OrderNotFromRestaurantException Caso o pedido seja de outro restaurante
      */
     public void updateOrderStatus(Long orderId, String email) {
-        CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
-            .orElseThrow(() -> new CustomerNotFoundInCartException("Pedido não encontrado com ID: " + orderId));
+        CustomerOrder customerOrder = this.findById(orderId);
 
         if(customerOrder.getRestaurantEmailDoesNotEquals(email)) {
             throw new OrderNotFromRestaurantException("O pedido não pertence ao restaurante logado");
@@ -138,8 +135,7 @@ public class CustomerOrderService {
      * @throws OrderNotFromRestaurantException Caso o pedido seja de outro restaurante
      */
     public void previousOrderStatus(Long orderId, String email) {
-        CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
-            .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + orderId));
+        CustomerOrder customerOrder = this.findById(orderId);
 
         if(customerOrder.getRestaurantEmailDoesNotEquals(email)) {
             throw new OrderNotFromRestaurantException("O pedido não pertence ao restaurante logado");
@@ -151,4 +147,17 @@ public class CustomerOrderService {
 
         orderStatusUpdateService.updateStatusOrderToClient(customerOrder, orderClientStatus);
     }
+
+    /**
+     * Procura um pedido baseado no id, lança a exceção {@code CustomerNotFoundInCartException} caso não encontre
+     *
+     * @param customerOrderId Id do pedido
+     * @return Informações do pedido
+     * @throws CustomerNotFoundInCartException Lançado caso não encontre o pedido com o id especificado
+     */
+    public CustomerOrder findById(Long customerOrderId) {
+        return customerOrderRepository.findById(customerOrderId)
+            .orElseThrow(() -> new CustomerNotFoundInCartException("Pedido não encontrado com ID: " + customerOrderId));
+    }
+
 }
