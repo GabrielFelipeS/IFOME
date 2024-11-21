@@ -53,45 +53,51 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue'
+import { onMounted, ref } from 'vue';
 import { useCart } from "@/stores/cart.js";
 import api from "@/services/api.js";
-import {useToast} from "vue-toast-notification";
-import {formatReal} from "@/services/formatReal.js";
+import { useToast } from "vue-toast-notification";
+import { formatReal } from "@/services/formatReal.js";
 import router from "@/router/index.js";
 
-const emit = defineEmits(['search', 'open-cart'])
+const emit = defineEmits(['open-cart']);
 
-const query = ref('')
+const query = ref('');
 
 function searchForm() {
-    if (query.value) {
-        emit('search', query.value)
-    }
+  if (query.value) {
+    router.push({
+      name: 'search',
+      query: { q: query.value.trim() }
+    }).then(() => {
+      window.location.reload();
+    });
+  }
 }
 
 const cart = useCart();
-const toat = useToast();
+const toast = useToast();
 
 const updateCart = async () => {
-	if (localStorage.getItem('token') !== null) {
-		try {
-			const response = await api.get('client/cart');
-			const order = response.data.data;
-			cart.updateCart(order);
-		} catch (e) {
-			console.log("Erro ao carregar carrinho: " + e);
-			toast.error(e.data.message);
-		}
-	}
-}
+  if (localStorage.getItem('token') !== null) {
+    try {
+      const response = await api.get('client/cart');
+      const order = response.data.data;
+      cart.updateCart(order);
+    } catch (e) {
+      console.log("Erro ao carregar carrinho: " + e);
+      toast.error(e.data.message || "Erro ao carregar o carrinho");
+    }
+  }
+};
 
 onMounted(() => {
-	updateCart();
-})
+  updateCart();
+});
 
 const isDropdownOpen = ref(false);
 const toggleDropdown = () => {
-	isDropdownOpen.value = !isDropdownOpen.value;
+  isDropdownOpen.value = !isDropdownOpen.value;
 };
 </script>
+
