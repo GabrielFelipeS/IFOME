@@ -5,10 +5,7 @@ import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -35,18 +32,18 @@ public class RestaurantControllerIT {
     private String tokenOtherRestaurant;
     private String tokenValidButRestaurantNotExist;
 
-    private GreenMail greenMail;
+    private static GreenMail greenMail;
 
-    @BeforeEach
-    public void setup() {
+    @BeforeAll
+    public static void setup() {
         greenMail = new GreenMail(ServerSetupTest.SMTP);
         greenMail.setUser("teste.ifome@gmail.com", "teste");
         greenMail.setUser("test@example.com", "test@example.com");
         greenMail.start();
     }
 
-    @AfterEach
-    public void tearDown() {
+    @AfterAll
+    public static void tearDown() {
         greenMail.stop();
     }
 
