@@ -4,5 +4,4 @@ public record EmailSentPedidoStatus(
     String to,
     String subject,
     String body
-) {
-}
+) { }

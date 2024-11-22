@@ -1,7 +1,12 @@
 package br.com.ifsp.ifome.services;
 
-import br.com.ifsp.ifome.entities.CustomerOrder;
+import br.com.ifsp.ifome.dto.response.ChatResponse;
+import br.com.ifsp.ifome.dto.response.MessageResponse;
+import br.com.ifsp.ifome.entities.*;
 import br.com.ifsp.ifome.exceptions.global.CannotAccessTheChatException;
+import br.com.ifsp.ifome.repositories.ClientDeliveryChatRepository;
+import br.com.ifsp.ifome.repositories.ClientRestaurantChatRepository;
+import br.com.ifsp.ifome.repositories.RestaurantDeliveryChatRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
@@ -9,26 +14,84 @@ import java.util.Collection;
 
 @Service
 public class ChatService {
-
     private final CustomerOrderService customerOrderService;
+    private final ClientRestaurantChatRepository clientRestaurantChatRepository;
+    private final ClientDeliveryChatRepository clientDeliveryChatRepository;
+    private final RestaurantDeliveryChatRepository restaurantDeliveryChatRepository;
+    private final PusherService pusherService;
 
-    public ChatService(CustomerOrderService customerOrderService) {
+    public ChatService(CustomerOrderService customerOrderService, ClientRestaurantChatRepository clientRestaurantChatRepository, ClientDeliveryChatRepository clientDeliveryChatRepository, RestaurantDeliveryChatRepository restaurantDeliveryChatRepository, PusherService pusherService) {
         this.customerOrderService = customerOrderService;
+        this.clientRestaurantChatRepository = clientRestaurantChatRepository;
+        this.clientDeliveryChatRepository = clientDeliveryChatRepository;
+        this.restaurantDeliveryChatRepository = restaurantDeliveryChatRepository;
+        this.pusherService = pusherService;
     }
 
-    public void getChatClientDelivery(Long customerOrderId, String loggedEmail, Collection<? extends GrantedAuthority> authorities) {
+    public ClientDeliveryChat getChatClientDelivery(Long customerOrderId, String loggedEmail, Collection<? extends GrantedAuthority> authorities) {
         CustomerOrder customerOrder = customerOrderService.findById(customerOrderId);
         this.canAccessTheChatClientDeliveryOrElseThrow(customerOrder, loggedEmail, authorities);
+
+        return clientDeliveryChatRepository.findByCustomerOrderId(customerOrderId).orElseThrow();
     }
 
-    public void getChatClientRestaurant(Long customerOrderId, String loggedEmail, Collection<? extends GrantedAuthority> authorities) {
+    public ChatResponse getChatClientDeliveryResponse(Long customerOrderId, String loggedEmail, Collection<? extends GrantedAuthority> authorities) {
+        return ChatResponse.from(this.getChatClientDelivery(customerOrderId, loggedEmail,authorities));
+    }
+
+    public MessageResponse addMesssageInChatClientDelivery(Long customerOrderId, String content, String loggedEmail, Collection<? extends GrantedAuthority> authorities) {
+        ClientDeliveryChat chat = this.getChatClientDelivery(customerOrderId, loggedEmail, authorities);
+        Message message = chat.addMessage(content, loggedEmail, authorities);
+
+        clientDeliveryChatRepository.save(chat);
+
+        pusherService.addMessageInChat(chat, message);
+
+        return MessageResponse.from(message);
+    }
+
+    public ClientRestaurantChat getChatClientRestaurant(Long customerOrderId, String loggedEmail, Collection<? extends GrantedAuthority> authorities) {
         CustomerOrder customerOrder = customerOrderService.findById(customerOrderId);
         this.canAccessTheChatClientRestaurantOrElseThrow(customerOrder, loggedEmail, authorities);
+
+        return clientRestaurantChatRepository.findByCustomerOrderId(customerOrderId).orElseThrow();
     }
 
-    public void getChatRestaurantDelivery(Long customerOrderId, String loggedEmail, Collection<? extends GrantedAuthority> authorities) {
+    public ChatResponse getChatClientRestaurantResponse(Long customerOrderId, String loggedEmail, Collection<? extends GrantedAuthority> authorities) {
+        return ChatResponse.from(this.getChatClientRestaurant(customerOrderId, loggedEmail,authorities));
+    }
+
+    public MessageResponse addMesssageInChatClientRestaurant(Long customerOrderId, String content, String loggedEmail, Collection<? extends GrantedAuthority> authorities) {
+        ClientRestaurantChat chat = this.getChatClientRestaurant(customerOrderId, loggedEmail, authorities);
+        Message message = chat.addMessage(content, loggedEmail, authorities);
+
+        clientRestaurantChatRepository.save(chat);
+
+        pusherService.addMessageInChat(chat, message);
+
+        return MessageResponse.from(message);
+    }
+
+    public RestaurantDeliveryChat getChatRestaurantDelivery(Long customerOrderId, String loggedEmail, Collection<? extends GrantedAuthority> authorities) {
         CustomerOrder customerOrder = customerOrderService.findById(customerOrderId);
         this.canAccessTheChatRestaurantDeliveryOrElseThrow(customerOrder, loggedEmail, authorities);
+
+        return restaurantDeliveryChatRepository.findByCustomerOrderId(customerOrderId).orElseThrow();
+    }
+
+    public ChatResponse getChatRestaurantDeliveryResponse(Long customerOrderId, String loggedEmail, Collection<? extends GrantedAuthority> authorities) {
+        return ChatResponse.from(this.getChatRestaurantDelivery(customerOrderId, loggedEmail, authorities));
+    }
+
+    public MessageResponse addMesssageInChatRestaurantDelivery(Long customerOrderId, String content, String loggedEmail, Collection<? extends GrantedAuthority> authorities) {
+        RestaurantDeliveryChat chat = this.getChatRestaurantDelivery(customerOrderId, loggedEmail, authorities);
+        Message message = chat.addMessage(content, loggedEmail, authorities);
+
+        restaurantDeliveryChatRepository.save(chat);
+
+        pusherService.addMessageInChat(chat, message);
+
+        return MessageResponse.from(message);
     }
 
     private void canAccessTheChatClientDeliveryOrElseThrow(CustomerOrder customerOrder, String loggedEmail, Collection<? extends GrantedAuthority> authorities) {
@@ -58,9 +121,11 @@ public class ChatService {
         }
     }
 
-    private boolean cannnotAccessTheChat(String userEmail, String loggedEmail,
-                                         Collection<? extends GrantedAuthority> authorities, String role) {
+    private boolean cannnotAccessTheChat(String associatedEmailWithOrder, String userEmail,
+                                         Collection<? extends GrantedAuthority> authorities, String expectedRole) {
 
-        return !userEmail.equals(loggedEmail) || authorities.stream().noneMatch(auth -> auth.getAuthority().equals(role));
+        return !associatedEmailWithOrder.equals(userEmail) || authorities.stream().noneMatch(auth -> auth.getAuthority().equals(expectedRole));
     }
+
+
 }
