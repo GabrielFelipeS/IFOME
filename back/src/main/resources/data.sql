@@ -355,7 +355,6 @@ UPDATE cart SET customer_order_id = 5 WHERE client_id = 2 AND id = 5 LIMIT 1;
 INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('NOVO', CURRENT_TIMESTAMP, 5);
 -- Fim dos insert de pedido
 
-
 INSERT INTO cart (client_id, freight) VALUES (3, 0.0);
 
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (6, 3, 29.00, 5);
@@ -364,3 +363,24 @@ INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (6, 3, 2
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (6, 3, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (6, 4, 29.00, 5);
 INSERT INTO order_item (cart_id, dish_id, unit_price, quantity ) VALUES (6, 3, 29.00, 5);
+
+INSERT INTO chat (id, order_id, created_at) VALUES (1, 4, '2024-11-22T10:00:00');
+
+INSERT INTO client_delivery_chat (id, client_id, delivery_id) VALUES (1, 3, 6);
+
+INSERT INTO message (chat_id, email, sender_type, content, created_at) VALUES (1, 'telha_rina@email.com', 'CLIENT', 'Poderia subir?', CURRENT_TIMESTAMP);
+INSERT INTO message (chat_id, email, sender_type, content, created_at) VALUES (1, 'email6@email.com', 'DELIVERY', 'Não', CURRENT_TIMESTAMP);
+
+INSERT INTO chat (id, order_id, created_at) VALUES (2, 4, '2024-11-22T10:00:00');
+
+INSERT INTO client_restaurant_chat (id, client_id, restaurant_id) VALUES (2, 3, 2);
+
+INSERT INTO message (chat_id, email, sender_type, content, created_at) VALUES (2, 'telha_rina@email.com', 'CLIENT', 'Poderia mandar talher??', CURRENT_TIMESTAMP);
+INSERT INTO message (chat_id, email, sender_type, content, created_at) VALUES (2, 'email2@email.com', 'RESTAURANT', 'Claro!', CURRENT_TIMESTAMP);
+
+INSERT INTO chat (id, order_id, created_at) VALUES (3, 4, '2024-11-22T10:00:00');
+
+INSERT INTO restaurant_delivery_chat (id, restaurant_id, delivery_id) VALUES (3, 2, 6);
+
+INSERT INTO message (chat_id, email, sender_type, content, created_at) VALUES (3, 'email6@email.com', 'DELIVERY', 'Vou chegar em 2 minutos', CURRENT_TIMESTAMP);
+INSERT INTO message (chat_id, email, sender_type, content, created_at) VALUES (3, 'email2@email.com', 'RESTAURANT', 'Ok', CURRENT_TIMESTAMP);
