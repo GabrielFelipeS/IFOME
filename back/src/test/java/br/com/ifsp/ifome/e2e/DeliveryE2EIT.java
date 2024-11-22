@@ -66,13 +66,12 @@ public class DeliveryE2EIT {
         assertThat(message).isEqualTo("Buscando pedido!");
 
         response = testRestTemplate.exchange("/api/delivery/info/available/", HttpMethod.PUT, getHttpEntity(token),  String.class);
-        System.err.println(response.getBody());
+
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
         response = testRestTemplate.exchange("/api/delivery/order/status/3", HttpMethod.PUT, getRequestHttpEntityRestaurant(), String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-
     }
 
     private @NotNull HttpHeaders getHttpHeadersRestaurant() {
