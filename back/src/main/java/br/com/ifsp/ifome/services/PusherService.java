@@ -3,8 +3,7 @@ package br.com.ifsp.ifome.services;
 import br.com.ifsp.ifome.dto.response.DeliveryOrderResponse;
 import br.com.ifsp.ifome.dto.response.OrderInfoDeliveryResponse;
 import br.com.ifsp.ifome.dto.response.OrderItemDeliveryResponse;
-import br.com.ifsp.ifome.entities.CustomerOrder;
-import br.com.ifsp.ifome.entities.OrderClientStatus;
+import br.com.ifsp.ifome.entities.*;
 import com.pusher.rest.Pusher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -15,10 +14,10 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class OrderStatusUpdateService {
+public class PusherService {
     private final Pusher pusher;
 
-    public OrderStatusUpdateService(Pusher pusher) {
+    public PusherService(Pusher pusher) {
         this.pusher = pusher;
     }
 
@@ -85,7 +84,7 @@ public class OrderStatusUpdateService {
     @Async
     public void updateStatusCanceledToDeliverer(Long customerOrderId) {
         String timestamp = Timestamp.from(Instant.now()).toString();
-        System.err.println("Enviando segundo pusher: ");
+
         Map<String, Object> data = Map.of(
             "status", List.of(new OrderInfoDeliveryResponse(customerOrderId, "CANCELADO", timestamp))
         );
@@ -93,6 +92,56 @@ public class OrderStatusUpdateService {
         pusher.trigger(
             "pedidos",
             "entregador_" + customerOrderId,
+            data
+        );
+    }
+
+    /**
+     *
+     * @param message Informações da mensagem
+     * @param chat Chat da mensagem vai ser enviada
+     */
+    @Async
+    public void addMessageInChat(ClientDeliveryChat chat, Message message) {
+        this.addMessage(message, chat, "client-delivery-chat");
+    }
+
+    /**
+     *
+     * @param message Informações da mensagem
+     * @param chat Chat da mensagem vai ser enviada
+     */
+    @Async
+    public void addMessageInChat(ClientRestaurantChat chat, Message message) {
+        this.addMessage(message, chat, "client-restaurant-chat");
+    }
+
+    /**
+     *
+     * @param message Informações da mensagem
+     * @param chat Chat da mensagem vai ser enviada
+     */
+    @Async
+    public void addMessageInChat(RestaurantDeliveryChat chat, Message message) {
+        this.addMessage(message, chat, "restaurant-delivery-chat");
+    }
+
+    /**
+     *
+     * @param message Informações da mensagem
+     * @param chat Chat da mensagem vai ser enviada
+     * @param channel Canal da mensagem
+     */
+    private void addMessage(Message message, Chat chat, String channel) {
+        Map<String, Object> data = Map.of(
+            "content", message.getContent(),
+            "senderType", message.getSenderType(),
+            "createdAt", message.getCreatedAtTimestamp()
+        );
+
+        pusher.trigger(
+            channel,
+            "chat_" + chat.getCustomerOrderId(),
             data
         );
     }
