@@ -42,6 +42,22 @@ public class ChoiceDeliveryService {
     }
 
 
+    public void scheduleChooseAnotherDeliveryPerson(CustomerOrder customerOrder, int time) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        logger.warn("Procurando outro entregador em 1 minuto");
+        scheduler.schedule(() -> {
+            logger.warn("Tarefa executada no futuro por {}", Thread.currentThread().getName());
+            this.choiceDeliveryPersonWhenReady(customerOrder);
+        }, time, TimeUnit.SECONDS);
+
+        scheduler.shutdown();
+    }
+
+    public void scheduleChooseAnotherDeliveryPerson(CustomerOrder customerOrder) {
+      this.scheduleChooseAnotherDeliveryPerson(customerOrder, ONE_MINUTE_AND_FIVE_SECONDS_IN_SECONDS);
+    }
+
     // TODO melhorar forma de busca
     // TODO refatorar essa metodo
     @Async
@@ -107,19 +123,7 @@ public class ChoiceDeliveryService {
         logger.warn("Chegou no fim do método!");
     }
 
-    private void scheduleChooseAnotherDeliveryPerson(CustomerOrder customerOrder) {
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-        logger.warn("Procurando outro entregador em 1 minuto");
-        scheduler.schedule(() -> {
-            logger.warn("Tarefa executada no futuro por {}", Thread.currentThread().getName());
-            this.choiceDeliveryPersonWhenReady(customerOrder);
-        }, ONE_MINUTE_AND_FIVE_SECONDS_IN_SECONDS, TimeUnit.SECONDS);
-
-        scheduler.shutdown();
-    }
-
-    private void transferOfferToNextDeliverer(Long customerOrderId, Long deliveryPersonChoiceId) {
+    public void transferOfferToNextDeliverer(Long customerOrderId, Long deliveryPersonChoiceId, int time) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
         logger.warn("Transferindo para outro entregador, em caso de sem resposta em 5 minutos");
@@ -129,9 +133,9 @@ public class ChoiceDeliveryService {
                 .orElseThrow(CustomerNotFoundInCartException::new);
 
             boolean isTheDriver = customerOrder.getDeliveryPersonId().equals(deliveryPersonChoiceId);
-            boolean isTheNew = customerOrder.getOrderInfoDelivery().size() <= 1;
+            boolean theOrderIsNew = customerOrder.getOrderInfoDelivery().size() <= 1;
 
-            boolean isToTransfer = isTheDriver && isTheNew;
+            boolean isToTransfer = isTheDriver && theOrderIsNew;
 
             logger.warn("Para transferir: {}", isToTransfer);
 
@@ -167,10 +171,14 @@ public class ChoiceDeliveryService {
                 this.choiceDeliveryPersonWhenReady(customerOrder);
                 logger.warn("scheduler finalizado");
             }
-//        }, FIVE_MINUTES_AND_FIVE_SECONDS_IN_SECONDS, TimeUnit.SECONDS);
-        }, 20, TimeUnit.SECONDS);
+        }, time, TimeUnit.SECONDS);
 
 //        scheduler.shutdown();
+    }
+
+
+     public void transferOfferToNextDeliverer(Long customerOrderId, Long deliveryPersonChoiceId) {
+        this.transferOfferToNextDeliverer(customerOrderId, deliveryPersonChoiceId, FIVE_MINUTES_AND_FIVE_SECONDS_IN_SECONDS);
     }
 
 

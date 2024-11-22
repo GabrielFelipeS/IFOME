@@ -90,7 +90,7 @@ public class DeliveryController {
     public ResponseEntity<ApiResponse> updateCoordinates(
         @RequestBody @Valid CoordinatesRequest coordinatesRequest,
         Principal principal) {
-        deliveryService.updateCoordinates(coordinatesRequest, principal);
+        deliveryService.updateCoordinates(coordinatesRequest, principal.getName());
 
         return ResponseEntity.ok(new ApiResponse("success", null, "Coordenadas atualizadas"));
     }

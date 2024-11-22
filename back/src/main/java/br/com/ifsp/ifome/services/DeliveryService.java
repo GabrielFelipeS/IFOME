@@ -14,6 +14,7 @@ import br.com.ifsp.ifome.repositories.OrderInfoDeliveryRepository;
 import br.com.ifsp.ifome.repositories.RefuseCustomerOrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -161,18 +162,6 @@ public class DeliveryService {
 
         System.err.println("Passou das diferenças");
 
-//        System.err.println("Latitude");
-//        System.err.println(latRestaurant);
-//        System.err.println(latDeliveryPerson);
-//
-//        System.err.println("Longitude");
-//        System.err.println(lonRestaurant);
-//        System.err.println(lonDeliveryPerson);
-//
-//        System.err.println("Diferença");
-//        System.err.println(diffLatitude);
-//        System.err.println(diffLongitude);
-
         double diffAngular = Math.pow(Math.sin(diffLatitude / 2), 2)
             + Math.cos(latRestaurant) * Math.cos(latDeliveryPerson) * Math.pow(Math.sin(diffLongitude / 2), 2);
 
@@ -191,10 +180,10 @@ public class DeliveryService {
      * Atualiza as informações de coordenadas do entregador logado
      *
      * @param coordinatesRequest Novas informações de coordenadas do entregador
-     * @param principal Identificação do usuário logado
+     * @param email Identificação do usuário logado
      */
-    public void updateCoordinates(@Valid CoordinatesRequest coordinatesRequest, Principal principal) {
-        Optional<DeliveryPerson> deliveryPersonOptional = deliveryPersonRepository.findByEmail(principal.getName());
+    public void updateCoordinates(@Valid CoordinatesRequest coordinatesRequest, String email) {
+        Optional<DeliveryPerson> deliveryPersonOptional = deliveryPersonRepository.findByEmail(email);
 
         DeliveryPerson deliveryPerson = deliveryPersonOptional
                                         .orElseThrow(
