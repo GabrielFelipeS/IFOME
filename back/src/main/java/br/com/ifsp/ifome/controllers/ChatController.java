@@ -1,12 +1,14 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.dto.ApiResponse;
+import br.com.ifsp.ifome.dto.response.ChatResponse;
+import br.com.ifsp.ifome.dto.response.MessageResponse;
+import br.com.ifsp.ifome.entities.Message;
 import br.com.ifsp.ifome.services.ChatService;
-import org.apache.tomcat.util.http.parser.Authorization;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -21,18 +23,50 @@ public class ChatController {
     }
 
     @GetMapping("/client/delivery/{customerOrderId}")
-    public void getChatClientDelivery(@PathVariable Long customerOrderId, Authentication authentication) {
-        chatService.getChatClientDelivery(customerOrderId, authentication.getName(), authentication.getAuthorities());
+    public ResponseEntity<ApiResponse> getChatClientDelivery(@PathVariable Long customerOrderId, Authentication authentication) {
+        ChatResponse chatResponse = chatService.getChatClientDeliveryResponse(customerOrderId, authentication.getName(), authentication.getAuthorities());
+
+        ApiResponse apiResponse = new ApiResponse("success", chatResponse, "Chat encontrado com sucesso!");
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @PostMapping("/client/delivery/{customerOrderId}")
+    public ResponseEntity<ApiResponse> addMesssageInChatClientDelivery(@PathVariable Long customerOrderId, @RequestBody String content, Authentication authentication) {
+        MessageResponse message = chatService.addMesssageInChatClientDelivery(customerOrderId, content, authentication.getName(), authentication.getAuthorities());
+
+        ApiResponse apiResponse = new ApiResponse("success", message, "Chat encontrado com sucesso!");
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
     @GetMapping("/client/restaurant/{customerOrderId}")
-    public void getChatClientRestaurant(@PathVariable Long customerOrderId, Principal principal, Authentication authentication) {
-        chatService.getChatClientRestaurant(customerOrderId, principal.getName(), authentication.getAuthorities());
+    public ResponseEntity<ApiResponse> getChatClientRestaurant(@PathVariable Long customerOrderId,  Authentication authentication) {
+        ChatResponse chatResponse = chatService.getChatClientRestaurantResponse(customerOrderId, authentication.getName(), authentication.getAuthorities());
+
+        ApiResponse apiResponse = new ApiResponse("success", chatResponse, "Chat encontrado com sucesso!");
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @PostMapping("/client/restaurant/{customerOrderId}")
+    public ResponseEntity<ApiResponse> addMesssageInChatClientRestaurant(@PathVariable Long customerOrderId, @RequestBody String content,Authentication authentication) {
+        MessageResponse message  = chatService.addMesssageInChatClientRestaurant(customerOrderId, content, authentication.getName(), authentication.getAuthorities());
+
+        ApiResponse apiResponse = new ApiResponse("success", message, "Chat encontrado com sucesso!");
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
     @GetMapping("/restaurant/delivery/{customerOrderId}")
-    public void getChatDelivery(@PathVariable Long customerOrderId, Principal principal, Authentication authentication) {
-        chatService.getChatRestaurantDelivery(customerOrderId, principal.getName(), authentication.getAuthorities());
+    public ResponseEntity<ApiResponse> getChatRestaurantDelivery(@PathVariable Long customerOrderId, Authentication authentication) {
+        ChatResponse chatResponse = chatService.getChatRestaurantDeliveryResponse(customerOrderId, authentication.getName(), authentication.getAuthorities());
+
+        ApiResponse apiResponse = new ApiResponse("success", chatResponse, "Chat encontrado com sucesso!");
+        return ResponseEntity.ok(apiResponse);
     }
 
+    @PostMapping("/restaurant/delivery/{customerOrderId}")
+    public ResponseEntity<ApiResponse> addMesssageInChatRestaurantDelivery(@PathVariable Long customerOrderId, @RequestBody String content,Authentication authentication) {
+        MessageResponse message  = chatService.addMesssageInChatRestaurantDelivery(customerOrderId, content, authentication.getName(), authentication.getAuthorities());
+
+        ApiResponse apiResponse = new ApiResponse("success", message, "Chat encontrado com sucesso!");
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+    }
 }
