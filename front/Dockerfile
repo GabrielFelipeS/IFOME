@@ -8,7 +8,7 @@ COPY . .
 
 RUN rm -rf node_modules package-lock.json && npm install
 
-CMD ["npm", "run", "build"]
+RUN npm run build
 
 FROM nginx:alpine AS production-stage
 
