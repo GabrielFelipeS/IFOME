@@ -51,7 +51,7 @@ import java.lang.annotation.Target;
         schema = @Schema(implementation = ClientRequest.class),
         examples = {
             @ExampleObject(
-            name = "login válido",
+            name = "login válido com usuário 1",
             description = "Locado com cliente válido",
             value = """
                     {
@@ -60,6 +60,36 @@ import java.lang.annotation.Target;
                     }
                 """
         ),
+            @ExampleObject(
+                name = "login válido com usuário 2",
+                description = "Locado com cliente válido",
+                value = """
+                    {
+                      "email" : "user1@gmail.com",
+                      "password": "@Password1"
+                    }
+                """
+            ),
+            @ExampleObject(
+                name = "login válido com usuário 3",
+                description = "Locado com cliente válido",
+                value = """
+                    {
+                      "email" : "telha_rina@email.com",
+                      "password": "@Password1"
+                    }
+                """
+            ),
+            @ExampleObject(
+                name = "login válido com usuário 4",
+                description = "Locado com cliente válido",
+                value = """
+                    {
+                      "email" : "noreply.ifome@gmail.com",
+                      "password": "@Password1"
+                    }
+                """
+            ),
             @ExampleObject(
                 name = "login inválido",
                 description =

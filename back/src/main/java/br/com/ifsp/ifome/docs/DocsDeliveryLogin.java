@@ -51,11 +51,20 @@ import java.lang.annotation.Target;
         schema = @Schema(implementation = ClientRequest.class),
         examples = {
             @ExampleObject(
-            name = "login válido",
+            name = "login válido com usuário 1",
             description = "Logando com entregador válido",
             value = """
                     {
                       "email" : "email1@email.com",
+                      "password": "@Password1"
+                    }
+                """
+        ), @ExampleObject(
+            name = "login válido com usuário 2",
+            description = "Logando com entregador válido",
+            value = """
+                    {
+                      "email" : "email2@email.com",
                       "password": "@Password1"
                     }
                 """

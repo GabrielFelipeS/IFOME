@@ -52,10 +52,19 @@ import java.lang.annotation.Target;
         examples = {
             @ExampleObject(
             name = "login válido",
-            description = "logado com restaurante válido",
+            description = "logado com restaurante válido com usuário 1",
             value = """
                     {
                       "email" : "email1@email.com",
+                      "password": "@Password1"
+                    }
+                """
+        ),     @ExampleObject(
+            name = "login válido",
+            description = "logado com restaurante válido com usuário 2",
+            value = """
+                    {
+                      "email" : "email2@email.com",
                       "password": "@Password1"
                     }
                 """
