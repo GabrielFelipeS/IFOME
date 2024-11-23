@@ -1,10 +1,13 @@
 package br.com.ifsp.ifome.services;
 
+import br.com.ifsp.ifome.aspect.LoggingAspect;
 import br.com.ifsp.ifome.dto.response.DeliveryOrderResponse;
 import br.com.ifsp.ifome.dto.response.OrderInfoDeliveryResponse;
 import br.com.ifsp.ifome.dto.response.OrderItemDeliveryResponse;
 import br.com.ifsp.ifome.entities.*;
 import com.pusher.rest.Pusher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,8 @@ import java.util.Map;
 
 @Service
 public class PusherService {
+    private static final Logger logger = LoggerFactory.getLogger(PusherService.class);
+
     private final Pusher pusher;
 
     public PusherService(Pusher pusher) {
@@ -29,6 +34,17 @@ public class PusherService {
      */
     @Async
     public void updateStatusOrderToClient(CustomerOrder customerOrder, OrderClientStatus orderClientStatus)  {
+        String infos = String.format(
+            "Channel: order-channel \nEventName: order-status-updated_%s\nOrderId: %d\nStatus: %s\nPosition: %d\nTime: %s",
+            customerOrder.getId().toString(),
+            customerOrder.getId(),
+            orderClientStatus.toString(),
+            customerOrder.getOrderStatusId(),
+            customerOrder.getOrderDateTimeToTimestamp()
+        );
+
+        logger.info(infos);
+
         pusher.trigger(
             "order-channel",
             "order-status-updated_" + customerOrder.getId().toString(),
@@ -130,18 +146,23 @@ public class PusherService {
      *
      * @param message Informações da mensagem
      * @param chat Chat da mensagem vai ser enviada
-     * @param channel Canal da mensagem
+     * @param event Canal da mensagem
      */
-    private void addMessage(Message message, Chat chat, String channel) {
+    private void addMessage(Message message, Chat chat, String event) {
         Map<String, Object> data = Map.of(
             "content", message.getContent(),
             "senderType", message.getSenderType(),
             "createdAt", message.getCreatedAtTimestamp()
         );
 
+        System.err.println("OrderId: " + chat.getCustomerOrderId());
+        System.err.println("Content: " + data.get("content"));
+        System.err.println("senderType: " + data.get("senderType"));
+        System.err.println("createdAt: " + data.get("createdAt"));
+
         pusher.trigger(
-            channel,
             "chat_" + chat.getCustomerOrderId(),
+            event,
             data
         );
     }
