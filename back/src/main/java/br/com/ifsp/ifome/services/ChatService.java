@@ -32,7 +32,9 @@ public class ChatService {
         CustomerOrder customerOrder = customerOrderService.findById(customerOrderId);
         this.canAccessTheChatClientDeliveryOrElseThrow(customerOrder, loggedEmail, authorities);
 
-        return clientDeliveryChatRepository.findByCustomerOrderId(customerOrderId).orElseThrow();
+        return clientDeliveryChatRepository.findByCustomerOrderId(customerOrderId).orElse(
+            this.generatedClientDeliveryChat(customerOrder)
+        );
     }
 
     public ChatResponse getChatClientDeliveryResponse(Long customerOrderId, String loggedEmail, Collection<? extends GrantedAuthority> authorities) {
@@ -54,7 +56,10 @@ public class ChatService {
         CustomerOrder customerOrder = customerOrderService.findById(customerOrderId);
         this.canAccessTheChatClientRestaurantOrElseThrow(customerOrder, loggedEmail, authorities);
 
-        return clientRestaurantChatRepository.findByCustomerOrderId(customerOrderId).orElseThrow();
+        return clientRestaurantChatRepository.findByCustomerOrderId(customerOrderId).orElse(
+            this.generatedClientRestaurantChat(customerOrder)
+
+        );
     }
 
     public ChatResponse getChatClientRestaurantResponse(Long customerOrderId, String loggedEmail, Collection<? extends GrantedAuthority> authorities) {
@@ -76,8 +81,11 @@ public class ChatService {
         CustomerOrder customerOrder = customerOrderService.findById(customerOrderId);
         this.canAccessTheChatRestaurantDeliveryOrElseThrow(customerOrder, loggedEmail, authorities);
 
-        return restaurantDeliveryChatRepository.findByCustomerOrderId(customerOrderId).orElseThrow();
+        return restaurantDeliveryChatRepository.findByCustomerOrderId(customerOrderId).orElse(
+            this.generatedRestaurantDeliveryChat(customerOrder)
+        );
     }
+
 
     public ChatResponse getChatRestaurantDeliveryResponse(Long customerOrderId, String loggedEmail, Collection<? extends GrantedAuthority> authorities) {
         return ChatResponse.from(this.getChatRestaurantDelivery(customerOrderId, loggedEmail, authorities));
@@ -127,5 +135,21 @@ public class ChatService {
         return !associatedEmailWithOrder.equals(userEmail) || authorities.stream().noneMatch(auth -> auth.getAuthority().equals(expectedRole));
     }
 
+    public void generatedChats(CustomerOrder customerOrder){
+        this.generatedClientDeliveryChat(customerOrder);
+        this.generatedClientRestaurantChat(customerOrder);
+        this.generatedRestaurantDeliveryChat(customerOrder);
+    }
 
+    private ClientDeliveryChat generatedClientDeliveryChat(CustomerOrder customerOrder) {
+        return clientDeliveryChatRepository.save(new ClientDeliveryChat(customerOrder));
+    }
+
+    private ClientRestaurantChat generatedClientRestaurantChat(CustomerOrder customerOrder) {
+        return clientRestaurantChatRepository.save(new ClientRestaurantChat(customerOrder));
+    }
+
+    private RestaurantDeliveryChat generatedRestaurantDeliveryChat(CustomerOrder customerOrder) {
+        return restaurantDeliveryChatRepository.save(new RestaurantDeliveryChat(customerOrder));
+    }
 }
