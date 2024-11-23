@@ -59,7 +59,7 @@ onMounted(() => {
 
 function logout() {
 	localStorage.removeItem('token');
-	toast.info('Você foi deslogado com sucesso!', {position: 'top-left'});
+	toast.info('Fazendo logout...', {position: 'top-left'});
 	routerFooter.push({name: 'home-site'});
 	window.location.reload();
 }
