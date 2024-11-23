@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.NoArgsConstructor;
 
 @Entity
-
+@NoArgsConstructor
 public class ClientRestaurantChat extends Chat {
     @ManyToOne
     @JsonIgnore
@@ -17,4 +18,10 @@ public class ClientRestaurantChat extends Chat {
     @JsonIgnore
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+
+    public ClientRestaurantChat(CustomerOrder customerOrder) {
+        super(customerOrder);
+        this.client = customerOrder.getClient();
+        this.restaurant = customerOrder.getRestaurant();
+    }
 }
