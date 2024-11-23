@@ -2,7 +2,7 @@ package br.com.ifsp.ifome.services;
 
 import br.com.ifsp.ifome.aspect.LoggingAspect;
 import br.com.ifsp.ifome.entities.*;
-import br.com.ifsp.ifome.exceptions.client.CustomerNotFoundInCartException;
+import br.com.ifsp.ifome.exceptions.client.CustomerNotFoundException;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.repositories.DeliveryPersonRepository;
 import br.com.ifsp.ifome.repositories.OrderInfoDeliveryRepository;
@@ -26,15 +26,15 @@ public class ChoiceDeliveryService {
     private static final int FIVE_MINUTES_AND_FIVE_SECONDS_IN_SECONDS = 305;
 
     private final CustomerOrderRepository customerOrderRepository;
-    private final OrderStatusUpdateService orderStatusUpdateService;
+    private final PusherService pusherService;
     private final DeliveryPersonRepository deliveryPersonRepository;
     private final RefuseCustomerOrderRepository refuseCustomerOrderRepository;
     private final EmailService emailService;
     private final OrderInfoDeliveryRepository orderInfoDeliveryRepository;
 
-    public ChoiceDeliveryService(CustomerOrderRepository customerOrderRepository, OrderStatusUpdateService orderStatusUpdateService, DeliveryPersonRepository deliveryPersonRepository, RefuseCustomerOrderRepository refuseCustomerOrderRepository, EmailService emailService, OrderInfoDeliveryRepository orderInfoDeliveryRepository) {
+    public ChoiceDeliveryService(CustomerOrderRepository customerOrderRepository, PusherService pusherService, DeliveryPersonRepository deliveryPersonRepository, RefuseCustomerOrderRepository refuseCustomerOrderRepository, EmailService emailService, OrderInfoDeliveryRepository orderInfoDeliveryRepository) {
         this.customerOrderRepository = customerOrderRepository;
-        this.orderStatusUpdateService = orderStatusUpdateService;
+        this.pusherService = pusherService;
         this.deliveryPersonRepository = deliveryPersonRepository;
         this.refuseCustomerOrderRepository = refuseCustomerOrderRepository;
         this.emailService = emailService;
@@ -112,7 +112,7 @@ public class ChoiceDeliveryService {
 
         logger.warn("Salvando novo status");
 
-        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
+        pusherService.updateStatusOrderToRestaurant(customerOrder);
 
         logger.warn("Iniciando scheduler para esperar");
 
@@ -130,7 +130,7 @@ public class ChoiceDeliveryService {
 
         scheduler.schedule(() -> {
             CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId)
-                .orElseThrow(CustomerNotFoundInCartException::new);
+                .orElseThrow(CustomerNotFoundException::new);
 
             boolean isTheDriver = customerOrder.getDeliveryPersonId().equals(deliveryPersonChoiceId);
             boolean theOrderIsNew = customerOrder.getOrderInfoDelivery().size() <= 1;
@@ -166,7 +166,7 @@ public class ChoiceDeliveryService {
 
                 logger.warn("Id do pedido: {}",  customerOrderId);
 
-                orderStatusUpdateService.updateStatusCanceledToDeliverer(customerOrderId);
+                pusherService.updateStatusCanceledToDeliverer(customerOrderId);
 
                 this.choiceDeliveryPersonWhenReady(customerOrder);
                 logger.warn("scheduler finalizado");

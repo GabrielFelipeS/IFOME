@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class RestaurantWorksIT {
+public class RestaurantE2EIT {
 
     @Autowired
     private TestRestTemplate testRestTemplate;

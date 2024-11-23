@@ -129,4 +129,26 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
+    @ExceptionHandler(CannotAccessTheChatException.class)
+    public  ResponseEntity<Map<String, Object>>  handleCannotAccessTheChat(
+        CannotAccessTheChatException ex) {
+        logger.warn(ex.getMessage());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message",  ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+    }
+
+    @ExceptionHandler(DeliveryChatCannotBeOpenedException.class)
+    public  ResponseEntity<Map<String, Object>>  handleCannotAccessTheChat(
+        DeliveryChatCannotBeOpenedException ex) {
+        logger.warn(ex.getMessage());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message",  ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
 }
