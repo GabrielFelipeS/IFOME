@@ -14,8 +14,8 @@ import java.lang.annotation.Target;
 
 
 @Operation(
-    summary = "Busca um chat pelo ID",
-    description = "Retorna o chat de uma pedido com base no ID fornecido.",
+    summary = "Envia mensagem para um chat",
+    description = "Insere uma mensagem em um o chat de uma pedido com base no ID fornecido.",
     security = @SecurityRequirement(name = "Bearer Token"),
     responses = {
         @ApiResponse(
