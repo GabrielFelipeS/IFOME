@@ -4,6 +4,7 @@ import br.com.ifsp.ifome.dto.response.ChatResponse;
 import br.com.ifsp.ifome.dto.response.MessageResponse;
 import br.com.ifsp.ifome.entities.*;
 import br.com.ifsp.ifome.exceptions.global.CannotAccessTheChatException;
+import br.com.ifsp.ifome.exceptions.global.DeliveryChatCannotBeOpenedException;
 import br.com.ifsp.ifome.repositories.ClientDeliveryChatRepository;
 import br.com.ifsp.ifome.repositories.ClientRestaurantChatRepository;
 import br.com.ifsp.ifome.repositories.RestaurantDeliveryChatRepository;
@@ -11,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class ChatService {
@@ -32,9 +34,9 @@ public class ChatService {
         CustomerOrder customerOrder = customerOrderService.findById(customerOrderId);
         this.canAccessTheChatClientDeliveryOrElseThrow(customerOrder, loggedEmail, authorities);
 
-        return clientDeliveryChatRepository.findByCustomerOrderId(customerOrderId).orElse(
-            this.generatedClientDeliveryChat(customerOrder)
-        );
+        return clientDeliveryChatRepository
+            .findByCustomerOrderId(customerOrderId)
+            .orElseGet(() -> this.generatedClientDeliveryChat(customerOrder));
     }
 
     public ChatResponse getChatClientDeliveryResponse(Long customerOrderId, String loggedEmail, Collection<? extends GrantedAuthority> authorities) {
@@ -56,10 +58,9 @@ public class ChatService {
         CustomerOrder customerOrder = customerOrderService.findById(customerOrderId);
         this.canAccessTheChatClientRestaurantOrElseThrow(customerOrder, loggedEmail, authorities);
 
-        return clientRestaurantChatRepository.findByCustomerOrderId(customerOrderId).orElse(
-            this.generatedClientRestaurantChat(customerOrder)
-
-        );
+        return clientRestaurantChatRepository
+            .findByCustomerOrderId(customerOrderId)
+            .orElseGet(() -> this.generatedClientRestaurantChat(customerOrder));
     }
 
     public ChatResponse getChatClientRestaurantResponse(Long customerOrderId, String loggedEmail, Collection<? extends GrantedAuthority> authorities) {
@@ -81,9 +82,9 @@ public class ChatService {
         CustomerOrder customerOrder = customerOrderService.findById(customerOrderId);
         this.canAccessTheChatRestaurantDeliveryOrElseThrow(customerOrder, loggedEmail, authorities);
 
-        return restaurantDeliveryChatRepository.findByCustomerOrderId(customerOrderId).orElse(
-            this.generatedRestaurantDeliveryChat(customerOrder)
-        );
+        return restaurantDeliveryChatRepository
+            .findByCustomerOrderId(customerOrderId)
+            .orElseGet(() -> this.generatedRestaurantDeliveryChat(customerOrder));
     }
 
 
@@ -135,13 +136,11 @@ public class ChatService {
         return !associatedEmailWithOrder.equals(userEmail) || authorities.stream().noneMatch(auth -> auth.getAuthority().equals(expectedRole));
     }
 
-    public void generatedChats(CustomerOrder customerOrder){
-        this.generatedClientDeliveryChat(customerOrder);
-        this.generatedClientRestaurantChat(customerOrder);
-        this.generatedRestaurantDeliveryChat(customerOrder);
-    }
-
     private ClientDeliveryChat generatedClientDeliveryChat(CustomerOrder customerOrder) {
+        if(customerOrder.deliveryPersonIsNotPresent()) {
+            throw new DeliveryChatCannotBeOpenedException("Não é possivel abrir um chat com o entregador, Nenhum entregador responsável pelo pedido");
+        }
+
         return clientDeliveryChatRepository.save(new ClientDeliveryChat(customerOrder));
     }
 
@@ -150,6 +149,10 @@ public class ChatService {
     }
 
     private RestaurantDeliveryChat generatedRestaurantDeliveryChat(CustomerOrder customerOrder) {
+        if(customerOrder.deliveryPersonIsNotPresent()) {
+            throw new DeliveryChatCannotBeOpenedException("Não é possivel abrir um chat com o entregador, Nenhum entregador responsável pelo pedido");
+        }
+
         return restaurantDeliveryChatRepository.save(new RestaurantDeliveryChat(customerOrder));
     }
 }
