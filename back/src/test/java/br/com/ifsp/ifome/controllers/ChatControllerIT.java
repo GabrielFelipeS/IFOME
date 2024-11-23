@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.dto.request.MessageRequest;
 import br.com.ifsp.ifome.dto.request.OrderItemRequest;
 import br.com.ifsp.ifome.dto.response.ChatResponse;
 import br.com.ifsp.ifome.services.TokenService;
@@ -512,18 +513,18 @@ public class ChatControllerIT {
         return headers;
     }
 
-    private @NotNull HttpEntity<String> postRequestHttpEntityClient(String content) {
+    private @NotNull HttpEntity<MessageRequest> postRequestHttpEntityClient(String content) {
         HttpHeaders headers = getHttpHeaders(token_client);
-        return new HttpEntity<>(content, headers);
+        return new HttpEntity<>(new MessageRequest(content), headers);
     }
 
-    private @NotNull HttpEntity<String> postRequestHttpEntityDelivery(String content) {
+    private @NotNull HttpEntity<MessageRequest> postRequestHttpEntityDelivery(String content) {
         HttpHeaders headers = getHttpHeaders(token_delivery);
-        return new HttpEntity<>(content, headers);
+        return new HttpEntity<>(new MessageRequest(content), headers);
     }
 
-    private @NotNull HttpEntity<String> postRequestHttpEntityRestaurant(String content) {
+    private @NotNull HttpEntity<MessageRequest> postRequestHttpEntityRestaurant(String content) {
         HttpHeaders headers = getHttpHeaders(token_restaurant);
-        return new HttpEntity<>(content, headers);
+        return new HttpEntity<>(new MessageRequest(content), headers);
     }
 }

@@ -3,9 +3,11 @@ package br.com.ifsp.ifome.controllers;
 import br.com.ifsp.ifome.docs.DocsGetChat;
 import br.com.ifsp.ifome.docs.DocsPostChat;
 import br.com.ifsp.ifome.dto.ApiResponse;
+import br.com.ifsp.ifome.dto.request.MessageRequest;
 import br.com.ifsp.ifome.dto.response.ChatResponse;
 import br.com.ifsp.ifome.dto.response.MessageResponse;
 import br.com.ifsp.ifome.services.ChatService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -32,8 +34,8 @@ public class ChatController {
 
     @DocsPostChat
     @PostMapping("/client/delivery/{customerOrderId}")
-    public ResponseEntity<ApiResponse> addMesssageInChatClientDelivery(@PathVariable Long customerOrderId, @RequestBody String content, Authentication authentication) {
-        MessageResponse message = chatService.addMesssageInChatClientDelivery(customerOrderId, content, authentication.getName(), authentication.getAuthorities());
+    public ResponseEntity<ApiResponse> addMesssageInChatClientDelivery(@PathVariable Long customerOrderId, @Valid @RequestBody MessageRequest messageRequest, Authentication authentication) {
+        MessageResponse message = chatService.addMesssageInChatClientDelivery(customerOrderId, messageRequest.content(), authentication.getName(), authentication.getAuthorities());
 
         ApiResponse apiResponse = new ApiResponse("success", message, "Mensagem inserida com sucesso!");
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
@@ -50,8 +52,8 @@ public class ChatController {
 
     @DocsPostChat
     @PostMapping("/client/restaurant/{customerOrderId}")
-    public ResponseEntity<ApiResponse> addMesssageInChatClientRestaurant(@PathVariable Long customerOrderId, @RequestBody String content,Authentication authentication) {
-        MessageResponse message  = chatService.addMesssageInChatClientRestaurant(customerOrderId, content, authentication.getName(), authentication.getAuthorities());
+    public ResponseEntity<ApiResponse> addMesssageInChatClientRestaurant(@PathVariable Long customerOrderId, @Valid @RequestBody MessageRequest messageRequest,Authentication authentication) {
+        MessageResponse message  = chatService.addMesssageInChatClientRestaurant(customerOrderId, messageRequest.content(), authentication.getName(), authentication.getAuthorities());
 
         ApiResponse apiResponse = new ApiResponse("success", message, "Mensagem inserida com sucesso!");
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
@@ -68,8 +70,8 @@ public class ChatController {
 
     @DocsPostChat
     @PostMapping("/restaurant/delivery/{customerOrderId}")
-    public ResponseEntity<ApiResponse> addMesssageInChatRestaurantDelivery(@PathVariable Long customerOrderId, @RequestBody String content,Authentication authentication) {
-        MessageResponse message  = chatService.addMesssageInChatRestaurantDelivery(customerOrderId, content, authentication.getName(), authentication.getAuthorities());
+    public ResponseEntity<ApiResponse> addMesssageInChatRestaurantDelivery(@PathVariable Long customerOrderId, @Valid @RequestBody MessageRequest messageRequest, Authentication authentication) {
+        MessageResponse message  = chatService.addMesssageInChatRestaurantDelivery(customerOrderId, messageRequest.content(), authentication.getName(), authentication.getAuthorities());
 
         ApiResponse apiResponse = new ApiResponse("success", message, "Mensagem inserida com sucesso!");
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
