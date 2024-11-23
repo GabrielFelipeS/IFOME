@@ -27,17 +27,19 @@ public class CustomerOrderService {
     private final ClientService clientService;
     private final ChoiceDeliveryService choiceDeliveryService;
     private final ApplicationEventPublisher eventPublisherService;
+    private final ChatService chatService;
 
     public CustomerOrderService(CustomerOrderRepository customerOrderRepository,
                                 PusherService pusherService,
                                 RestaurantService restaurantService,
-                                ClientService clientService, ChoiceDeliveryService choiceDeliveryService, ApplicationEventPublisher eventPublisherService) {
+                                ClientService clientService, ChoiceDeliveryService choiceDeliveryService, ApplicationEventPublisher eventPublisherService, ChatService chatService) {
         this.customerOrderRepository = customerOrderRepository;
         this.pusherService = pusherService;
         this.restaurantService = restaurantService;
         this.clientService = clientService;
         this.choiceDeliveryService = choiceDeliveryService;
         this.eventPublisherService = eventPublisherService;
+        this.chatService = chatService;
     }
 
     /**
@@ -60,6 +62,8 @@ public class CustomerOrderService {
         CustomerOrder customerOrder = new CustomerOrder(cart, restaurant);
 
         customerOrderRepository.save(customerOrder);
+
+        chatService.generatedChats(customerOrder);
 
         return CustomerOrderResponse.from(customerOrder);
     }

@@ -89,6 +89,8 @@ public class CustomerOrder {
         return this.orderPrice + freight;
     }
 
+    public Client getClient() {return this.cart.getClient();}
+
     public String getClientEmail() { return this.cart.getEmailClient();}
 
     public String getClientName() {
