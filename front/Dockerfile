@@ -1,15 +1,14 @@
 
-FROM node:18-alpine AS build-stage
+FROM node:18-slim AS build-stage
 
 WORKDIR /app
 
 COPY package*.json ./
-
-RUN npm install
-
 COPY . .
 
-RUN npm run build
+RUN rm -rf node_modules package-lock.json && npm install
+
+CMD ["npm", "run", "build"]
 
 FROM nginx:alpine AS production-stage
 
