@@ -51,7 +51,7 @@ const isMobile = computed(() => windowWidth.value < 1280);
 onMounted(async () => {
     window.addEventListener('resize', updateWindowWidth);
     try {
-        const { data } = await api.get('/order/restaurantOrders' ,{
+        const { data } = await api.post('auth/token/restaurant/' ,{
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
