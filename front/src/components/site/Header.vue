@@ -79,21 +79,33 @@ const cart = useCart();
 const toast = useToast();
 
 const updateCart = async () => {
-  if (localStorage.getItem('token') !== null) {
-    try {
-      const response = await api.get('client/cart');
-      const order = response.data.data;
-      cart.updateCart(order);
-    } catch (e) {
-      console.log("Erro ao carregar carrinho: " + e);
-      toast.error(e.data.message || "Erro ao carregar o carrinho");
-    }
-  }
+	if (localStorage.getItem('token') !== null) {
+		try {
+			const response = await api.post('/auth/token/client/', {}, {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('token')}`
+				}
+			});
+			if (response.status !== 200) {
+				return;
+			}
+		} catch (e) {
+			return;
+		}
+		try {
+			const response = await api.get('client/cart', {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('token')}`
+				}
+			});
+			const order = response.data.data;
+			await cart.updateCart(order);
+		} catch (e) {
+			toast.error(e?.data?.message || "Erro ao carregar o carrinho");
+		}
+	}
 };
-
-onMounted(() => {
-  updateCart();
-});
+updateCart();
 
 const isDropdownOpen = ref(false);
 const toggleDropdown = () => {
