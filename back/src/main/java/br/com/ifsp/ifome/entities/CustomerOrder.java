@@ -105,6 +105,10 @@ public class CustomerOrder {
         return this.restaurant.getEmail();
     }
 
+    public boolean deliveryPersonIsNotPresent() {
+        return this.deliveryPerson == null;
+    }
+
     public String getDeliveryEmail() {
         if(this.deliveryPerson == null) {
             return "";
