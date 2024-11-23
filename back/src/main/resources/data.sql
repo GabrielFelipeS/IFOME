@@ -1,9 +1,9 @@
 -- $2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG  -> @Password1
-INSERT INTO clients (name, email, password, date_of_birth, cpf, phone, role)
-VALUES ('Gabriel', 'user1@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '52800314028', '(12) 1234-1234','CLIENT');
-
 INSERT INTO clients (name, email, password, date_of_birth, cpf, phone,  role)
 VALUES ('Gabriel', 'email1@email.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '92051362041', '(12) 1234-1234', 'CLIENT');
+
+INSERT INTO clients (name, email, password, date_of_birth, cpf, phone, role)
+VALUES ('Gabriel', 'user1@gmail.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '52800314028', '(12) 1234-1234','CLIENT');
 
 INSERT INTO clients (name, email, password, date_of_birth, cpf, phone,  role)
 VALUES ('Telha Rina', 'telha_rina@email.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', '2003-04-14', '20000596000', '(12) 1234-1234', 'CLIENT');
@@ -384,3 +384,5 @@ INSERT INTO restaurant_delivery_chat (id, restaurant_id, delivery_id) VALUES (3,
 
 INSERT INTO message (chat_id, email, sender_type, content, created_at) VALUES (3, 'email6@email.com', 'DELIVERY', 'Vou chegar em 2 minutos', CURRENT_TIMESTAMP);
 INSERT INTO message (chat_id, email, sender_type, content, created_at) VALUES (3, 'email2@email.com', 'RESTAURANT', 'Ok', CURRENT_TIMESTAMP);
+
+ALTER SEQUENCE CHAT_SEQUENCE RESTART WITH 4;
