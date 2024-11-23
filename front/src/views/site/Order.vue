@@ -91,7 +91,6 @@ onUnmounted(() => {
 </script>
 
 <template>
-	<Header class="hidden md:flex"/>
 	<div class="w-full h-svh flex flex-row justify-center items-center pb-[125px] md:pb-4">
 		<div class="main">
 			<div class="flex flex-row h-[60px] justify-between items-center px-5
@@ -166,7 +165,6 @@ onUnmounted(() => {
 			</div>
 		</div>
 	</div>
-	<FooterMobile />
 </template>
 
 <style scoped>

@@ -1,5 +1,4 @@
 <template>
-  <Header />
   <Restaurants v-if="restaurants" :restaurants="restaurants" />
   <Dishes v-if="dishes" :dishes="dishes" />
 

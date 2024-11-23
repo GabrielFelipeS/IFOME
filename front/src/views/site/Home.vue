@@ -1,9 +1,7 @@
 <template>
-  <Header/>
   <PromoCards/>
   <Restaurants/>
   <Dish/>
-  <FooterMobile/>
 </template>
 
 <script setup>

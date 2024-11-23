@@ -9,10 +9,25 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
+      component: () => import("@/views/site/Layout.vue"),
       beforeEnter: async (to, from, next) => {
+        const unverifiedRoutes = [
+          'restaurants',
+          'restaurant internal',
+          'dishs',
+          'home-site',
+          'search',
+        ];
+
+        // Caso a rota não precise de autenticação, continua
+        if (unverifiedRoutes.includes(to.name)) {
+          next();
+          return;
+        }
+
         try {
           const data = await api.post(
-            `${import.meta.env.VITE_API_URL}auth/token/client/`
+            `auth/token/client/`
           );
           if (data.status === 200) {
             next();
@@ -79,7 +94,7 @@ const router = createRouter({
 
         try {
           const data = await api.post(
-              `${import.meta.env.VITE_API_URL}auth/token/restaurant/`
+              `auth/token/restaurant/`
           );
           if (data.status === 200) {
             next();
