@@ -1,12 +1,8 @@
 <template>
-    <Header />
     <Maps />
-    <Footer />
 </template>
 
 <script setup>
-import Header from '@/components/delivery/panel/Header.vue';
-import Footer from '@/components/delivery/panel/Footer.vue';
 import Maps from '@/components/delivery/panel/Maps.vue';
 import { onMounted, onUnmounted, ref } from 'vue';
 import pusher from '@/services/pusherOrders';

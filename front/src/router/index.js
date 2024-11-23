@@ -105,6 +105,7 @@ const router = createRouter({
     },
     {
       path: "/delivery",
+      component: () => import('@/views/delivery/Layout.vue'),
       children: [
         {
           path: "register",
