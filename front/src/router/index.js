@@ -65,6 +65,33 @@ const router = createRouter({
     },
     {
       path: "/store",
+      component: () => import('@/views/store/Layout.vue'),
+      beforeEnter: async (to, from, next) => {
+        const unverifiedRoutes = [
+          'store-login',
+          'store-register',
+        ]
+        // Caso a rota não precise de autenticação, continua
+        if (unverifiedRoutes.includes(to.name)) {
+          next();
+          return;
+        }
+
+        try {
+          const data = await api.post(
+              `${import.meta.env.VITE_API_URL}auth/token/restaurant/`
+          );
+          if (data.status === 200) {
+            next();
+          } else {
+            next({ name: "store-login" });
+          }
+        } catch (e) {
+          localStorage.removeItem("token");
+          console.error(e);
+          next({ name: "store-login" });
+        }
+      },
       children: [
         {
           path: "register",
