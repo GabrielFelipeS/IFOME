@@ -95,7 +95,7 @@ onUnmounted(() => {
 		<div class="main">
 			<div class="flex flex-row h-[60px] justify-between items-center px-5
 				md:justify-start ">
-				<button class="md:hidden" @click="router.push('/orders')">
+				<button @click="router.push('/orders')">
 					<v-icon name="fa-chevron-left" scale="1.8" class="text-primary md:hidden"/>
 				</button>
 				<button class="font-bold text-primary mr-4 flex items-center gap-1 md:hidden">
@@ -171,7 +171,7 @@ onUnmounted(() => {
 	.main {
 		@apply relative w-full h-full flex flex-col max-w-[1200px] justify-center self-center gap-y-4 overflow-auto pt-4;
 
-		@apply md:pt-[75px] md:max-w-[1200px];
+		@apply md:pt-[90px] md:max-w-[1200px];
 	}
 	.order-items {
 		@apply flex flex-col overflow-y-scroll h-full mt-4;
