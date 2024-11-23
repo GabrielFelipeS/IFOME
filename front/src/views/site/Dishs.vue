@@ -28,8 +28,6 @@
 import { computed, onMounted, ref } from 'vue';
 import axios from 'axios';
 import DishCard from "@/components/store/dish/DishCard.vue";
-import Header from "@/components/site/Header.vue";
-import FooterMobile from "@/components/site/FooterMobile.vue";
 
 const dishes = ref([]);
 

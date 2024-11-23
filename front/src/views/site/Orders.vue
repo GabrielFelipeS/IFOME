@@ -1,6 +1,4 @@
 <script setup>
-import Header from "@/components/site/Header.vue";
-import FooterMobile from "@/components/site/FooterMobile.vue";
 import CardOrder from "@/components/site/CardOrder.vue";
 import api from "@/services/api.js";
 import {onMounted, ref} from "vue";

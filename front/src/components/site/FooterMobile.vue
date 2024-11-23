@@ -34,7 +34,6 @@
 <script setup>
 import {useCart} from "@/stores/cart.js";
 import {onMounted, ref} from "vue";
-import router from "@/router";
 import {formatReal} from "@/services/formatReal.js";
 import {useToast} from "vue-toast-notification";
 import api from "@/services/api.js";

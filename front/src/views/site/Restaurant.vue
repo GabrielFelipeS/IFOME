@@ -70,14 +70,11 @@
 </template>
 
 <script setup>
-import Header from '@/components/site/Header.vue';
-import FooterMobile from '@/components/site/FooterMobile.vue';
 import DishCard from "@/components/store/dish/DishCard.vue";
 import {useRoute} from 'vue-router';
-import {ref, onMounted, watch} from 'vue';
+import {ref, onMounted} from 'vue';
 import router from '@/router';
 import DishModal from "@/components/store/dish/DishModal.vue";
-import CartDetails from "@/components/site/CartDetails.vue";
 import api from '@/services/api';
 import {getImage} from "@/services/getImage.js";
 

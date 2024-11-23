@@ -67,7 +67,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useCart } from "@/stores/cart.js";
 import api from "@/services/api.js";
 import { useToast } from "vue-toast-notification";

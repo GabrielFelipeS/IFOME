@@ -1,6 +1,4 @@
 <script setup>
-import FooterMobile from "@/components/site/FooterMobile.vue";
-import Header from "@/components/site/Header.vue";
 import {useRoute, useRouter} from "vue-router";
 import api from "@/services/api.js";
 import {computed, onMounted, onUnmounted, ref} from "vue";

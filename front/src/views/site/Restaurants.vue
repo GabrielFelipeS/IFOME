@@ -22,9 +22,6 @@
 </template>
 
 <script setup>
-import Header from '@/components/site/Header.vue';
-import FooterMobile from '@/components/site/FooterMobile.vue';
-import DropFilterArea from '@/components/site/DropFilterArea.vue';
 import CardRestaurant from '@/components/site/CardRestaurant.vue';
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
