@@ -665,7 +665,46 @@ public class ClientControllerIT {
         assertThat(message).isEqualTo("Avaliação registrada com sucesso!");
     }
 
+    @Test
+    @DirtiesContext
+    @DisplayName("Não permite avaliação em pedidos que já foram avaliados")
+    public void reviewRestaurant_OrderAlreadyReviewed() {
+        Long reviewedOrderId = 7L; // Pedido já avaliado com ID válido
+        RestaurantReviewRequest reviewRequest = new RestaurantReviewRequest(5., "Excelente comida!");
 
+        // Chama o endpoint para avaliar um pedido que já foi avaliado
+        ResponseEntity<String> response = testRestTemplate.exchange(
+                "/api/client/order/" + reviewedOrderId + "/review", HttpMethod.POST, new HttpEntity<>(reviewRequest, getHttpHeaders()), String.class);
+
+        // Verifica se o código de status é 400 BAD REQUEST
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+        // Verifica a mensagem de erro no corpo da resposta
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        String message = documentContext.read("$.message");
+        assertThat(message).isEqualTo("Este pedido já foi avaliado.");
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("Não permite comentário com mais de 250 caracteres")
+    public void reviewRestaurant_CommentTooLong() {
+        Long deliveredOrderId = 6L; // Pedido entregue com ID válido
+        String longComment = "A".repeat(251); // Comentário com mais de 250 caracteres
+        RestaurantReviewRequest reviewRequest = new RestaurantReviewRequest(5., longComment);
+
+        // Chama o endpoint para avaliar com um comentário muito longo
+        ResponseEntity<String> response = testRestTemplate.exchange(
+                "/api/client/order/" + deliveredOrderId + "/review", HttpMethod.POST, new HttpEntity<>(reviewRequest, getHttpHeaders()), String.class);
+
+        // Verifica se o código de status é 400 BAD REQUEST
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+        // Verifica a mensagem de erro no corpo da resposta
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        String message = documentContext.read("$.message");
+        assertThat(message).isEqualTo("O comentário deve ter no máximo 250 caracteres.");
+    }
 
 
 
