@@ -8,12 +8,28 @@ export const useCart = defineStore("cart", () => {
 	const order = ref({});
 
 	async function updateCart(param = null) {
+		if (localStorage.getItem('token') === null) { return; }
+		try {
+			const response = await api.post('/auth/token/client/', {}, {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('token')}`
+				}
+			});
+			if (response.status !== 200) { return; }
+		} catch (e) {
+			return;
+		}
+
 		if (param == null && localStorage.getItem('token') !== null) {
 			try {
-				const response = await api.get('client/cart');
+				const response = await api.get('client/cart', {
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem('token')}`
+					}
+				});
 				param = response.data.data;
 			} catch (e) {
-				console.log("Erro ao carregar carrinho no Pinia: " + e);
+				console.error("Erro ao carregar carrinho no Pinia: ", e);
 			}
 		}
 		if (param === null) {

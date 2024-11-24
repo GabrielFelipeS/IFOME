@@ -1,5 +1,4 @@
 <template>
-  <Header />
   <div class="w-[90%] md:max-w-[1200px] mx-auto flex flex-col md:p-5 mt-0 md:mt-[75px]">
     <h2 class="text-2xl mt-2 ml-2 font-normal text-tertiary-light">Pratos</h2>
 
@@ -22,7 +21,6 @@
       <p class="text-center">Nenhum prato encontrado</p>
     </div>
   </div>
-  <FooterMobile />
 </template>
 
 
@@ -30,8 +28,6 @@
 import { computed, onMounted, ref } from 'vue';
 import axios from 'axios';
 import DishCard from "@/components/store/dish/DishCard.vue";
-import Header from "@/components/site/Header.vue";
-import FooterMobile from "@/components/site/FooterMobile.vue";
 
 const dishes = ref([]);
 

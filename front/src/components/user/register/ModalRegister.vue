@@ -1,6 +1,7 @@
 <script setup>
 import Button from "@/components/Button.vue";
 import Modal from "@/components/user/Modal.vue";
+import router from "@/router/index.js";
 </script>
 
 <template>
@@ -26,7 +27,7 @@ import Modal from "@/components/user/Modal.vue";
 			</div>
 			<div class="btn-container">
 				<Button href="#" inversed class="button border border-primary hover:text-white hover:bg-primary
-				 active:bg-primary-dark hover:border-white">Já tenho uma conta, fazer login</Button>
+				 active:bg-primary-dark hover:border-white" @click="router.push('/user/login')">Já tenho uma conta, fazer login</Button>
 			</div>
 		</div>
 		<footer class="footer">

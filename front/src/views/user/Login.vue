@@ -77,6 +77,7 @@ async function submitLogin(data) {
 			if (response.status === 200 || response.status === 201) {
 				$toast.success('Login realizado com sucesso!');
 				localStorage.setItem('token', response.data.data.token);
+				router.push({ name: 'home-site' });
 			} else {
 				console.log(response)
 				$toast.error(response.data.message, {});

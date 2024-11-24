@@ -1,5 +1,4 @@
 <template>
-  <Header class="hidden md:flex" @open-cart="cartOpen = !cartOpen"/>
   <main class="w-full min-h-[calc(100vh-75px)] bg-white md:mt-[75px] md:max-w-[1200px] mx-auto">
     <div v-if="!restaurant" class="w-full h-[250px] bg-gray-300 animate-pulse"></div>
 
@@ -68,25 +67,14 @@
       :dish="selectedDish" :restaurant="restaurant"
       @close-dish-modal="selectedDish = null"
   />
-  <CartDetails
-      @open-cart="cartOpen = !cartOpen"
-      v-if="cartOpen"
-  />
-  <FooterMobile
-      @open-cart="cartOpen = !cartOpen"
-      :cart-open="cartOpen"
-  />
 </template>
 
 <script setup>
-import Header from '@/components/site/Header.vue';
-import FooterMobile from '@/components/site/FooterMobile.vue';
 import DishCard from "@/components/store/dish/DishCard.vue";
 import {useRoute} from 'vue-router';
-import {ref, onMounted, watch} from 'vue';
+import {ref, onMounted} from 'vue';
 import router from '@/router';
 import DishModal from "@/components/store/dish/DishModal.vue";
-import CartDetails from "@/components/site/CartDetails.vue";
 import api from '@/services/api';
 import {getImage} from "@/services/getImage.js";
 
