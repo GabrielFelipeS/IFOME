@@ -132,7 +132,6 @@ const sendReview = async () => {
 </script>
 
 <template>
-    <!-- Restante do template é a fusão das partes comuns -->
     <div class="w-full flex flex-col items-center">
         <div class="main">
             <!-- Cabeçalho -->
@@ -147,23 +146,55 @@ const sendReview = async () => {
             </div>
 
             <!-- Status do Pedido -->
-            <!-- ... mesma lógica já presente no código acima ... -->
+            <div class="flex flex-col items-start justify-center px-5 gap-3">
+                <span class="text-tertiary-light font-semibold">Previsão de entrega</span>
+                <span class="text-lg font-bold -mt-4">Hoje, 19:12 - 19:27</span>
+                <div class="bg-green-700 h-1 rounded-full transition-all duration-300 w-full"></div>
+            </div>
+            <div class="flex flex-col items-start justify-center px-5 gap-3 py-4">
+                <button class="flex flex-row items-center w-full justify-between gap-4 md:pb-1" @click="toggleDropdown">
+                    <v-icon name="fa-circle" scale="1" class="text-green-600" />
+                    <span class="text-xl font-semibold w-full self-start text-start leading-none">{{ infoFirst.orderStatus.replaceAll('_', ' ') }}</span>
+                    <v-icon name="fa-chevron-down" scale="1.5" class="text-tertiary-light" v-if="orderInfo.length > 0 && windowWidth < 1200" />
+                </button>
+                <transition name="dropdown" enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 -translate-y-5" enter-to-class="transform opacity-100 translate-y-0" leave-active-class="transition ease-in " leave-from-class="transform opacity-100 translate-y-0" leave-to-class="transform opacity-0 -translate-y-5">
+                    <div class="dropdown" v-if="(shouldShowDropdown && orderInfo.length > 0) || (!dropdown && windowWidth >= 1200)">
+                        <div class="flex flex-row justify-between" v-for="info in orderInfo">
+                            <div class="flex flex-row items-center w-full justify-between gap-4 font-semibold">
+                                <v-icon name="fa-circle" scale="0.75" class="text-green-600 ml-0.5" />
+                                <span class="text-tertiary-light w-full self-start text-start leading-none">{{ info.orderStatus.replaceAll('_', ' ') }}</span>
+                                <span class="text-tertiary-light text-sm pr-1">{{ (new Date(info.localDateTime).getHours()) - 3 }}:{{ new Date(info.localDateTime).getUTCMinutes().toString().padStart(2, '0') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </transition>
+            </div>
+
+            <!-- Resumo do Pedido -->
+            <div class="px-3 flex flex-col gap-y-0 mt-6 md:max-h-[calc(100%-15px)]" :class="{ 'opacity-30': shouldShowDropdown }">
+                <span class="font-semibold px-1">Resumo do pedido</span>
+                <div class="order-items border-s border-e px-3">
+                    <div class="product" v-for="item in orderItems">
+                        <div class="flex flex-col items-start gap-1.5 justify-center">
+                            <span class="uppercase">{{ item.dish.name }}</span>
+                        </div>
+                        <div class="mr-6 flex flex-col items-end">
+                            <span>R$ {{ formatReal(item.unitPrice) }}</span>
+                            <span>x {{ item.quantity }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Avaliação -->
             <template id="avaliacao" v-if="infoFirst.orderStatus.toLowerCase() === 'concluido'">
                 <div class="px-5 flex flex-col gap-y-4 w-full max-w-[600px] self-center mt-12 mb-8">
                     <span class="font-semibold text-lg">Avalie o restaurante</span>
                     <div class="flex flex-row justify-between p-2">
-                        <v-icon v-for="(star, index) in stars" :key="index" name="fa-star" scale="2"
-                                @click="setStars(index)"
-                                class="cursor-pointer"
-                                :class="{ 'text-yellow-400': star, 'text-tertiary-light': !star }" />
+                        <v-icon v-for="(star, index) in stars" :key="index" name="fa-star" scale="2" @click="setStars(index)" class="cursor-pointer" :class="{ 'text-yellow-400': star, 'text-tertiary-light': !star }" />
                     </div>
-                    <textarea class="w-full h-24 border border-s rounded-md p-2"
-                              placeholder="Comentário opcional"
-                              v-model="reviewComment" />
-                    <button class="bg-primary text-white self-center rounded-md w-fit p-2 px-4"
-                            @click="sendReview">
+                    <textarea class="w-full h-24 border border-s rounded-md p-2" placeholder="Comentário opcional" v-model="reviewComment" />
+                    <button class="bg-primary text-white self-center rounded-md w-fit p-2 px-4" @click="sendReview">
                         Enviar avaliação
                         <v-icon name="fa-chevron-right" class="ml-2" />
                     </button>
@@ -174,7 +205,6 @@ const sendReview = async () => {
 </template>
 
 <style scoped>
-/* Combinação dos estilos */
 .main {
     @apply relative w-full h-full flex flex-col max-w-[1200px] justify-start self-center gap-y-4 overflow-auto pt-4;
     @apply pb-[80px];
