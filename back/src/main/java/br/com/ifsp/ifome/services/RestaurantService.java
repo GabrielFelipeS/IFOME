@@ -133,7 +133,19 @@ public class RestaurantService {
         );
     }
 
-
+    /**
+     * Registra uma avaliação de um restaurante com base em um pedido realizado por um cliente.
+     *
+     * Esse método verifica se o pedido foi realizado pelo cliente autenticado, se o pedido foi entregue,
+     * e se o pedido já não foi avaliado anteriormente. Em seguida, ele cria e salva uma nova avaliação
+     * para o restaurante, atualizando a média das avaliações do restaurante.
+     *
+     * @param orderId O ID do pedido a ser avaliado.
+     * @param reviewRequest Os dados da avaliação do restaurante, como a nota e o comentário.
+     * @param customerEmail O e-mail do cliente autenticado que está realizando a avaliação.
+     * @throws IllegalArgumentException Se o pedido não for encontrado, não pertencer ao cliente autenticado,
+     *                                  não tiver sido entregue, ou já tiver sido avaliado.
+     */
     public void reviewRestaurant(Long orderId, @Valid RestaurantReviewRequest reviewRequest, String customerEmail) {
         CustomerOrder order = customerOrderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado."));
