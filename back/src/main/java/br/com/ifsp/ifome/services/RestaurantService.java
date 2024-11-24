@@ -6,6 +6,10 @@ import br.com.ifsp.ifome.dto.response.RestaurantResponse;
 import br.com.ifsp.ifome.entities.CustomerOrder;
 import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.entities.RestaurantReview;
+import br.com.ifsp.ifome.exceptions.client.OrderAlreadyReviewedException;
+import br.com.ifsp.ifome.exceptions.client.OrderNotDeliveredException;
+import br.com.ifsp.ifome.exceptions.client.OrderNotFoundException;
+import br.com.ifsp.ifome.exceptions.client.OrderNotOwnedByClientException;
 import br.com.ifsp.ifome.exceptions.restaurant.RestaurantNotFoundException;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
@@ -135,46 +139,45 @@ public class RestaurantService {
 
     /**
      * Registra uma avaliação de um restaurante com base em um pedido realizado por um cliente.
-     *
+     * <p>
      * Esse método verifica se o pedido foi realizado pelo cliente autenticado, se o pedido foi entregue,
      * e se o pedido já não foi avaliado anteriormente. Em seguida, ele cria e salva uma nova avaliação
      * para o restaurante, atualizando a média das avaliações do restaurante.
      *
-     * @param orderId O ID do pedido a ser avaliado.
+     * @param orderId       O ID do pedido a ser avaliado.
      * @param reviewRequest Os dados da avaliação do restaurante, como a nota e o comentário.
      * @param customerEmail O e-mail do cliente autenticado que está realizando a avaliação.
+     * @return
      * @throws IllegalArgumentException Se o pedido não for encontrado, não pertencer ao cliente autenticado,
      *                                  não tiver sido entregue, ou já tiver sido avaliado.
      */
-    public void reviewRestaurant(Long orderId, @Valid RestaurantReviewRequest reviewRequest, String customerEmail) {
+    public RestaurantReview reviewRestaurant(Long orderId, @Valid RestaurantReviewRequest reviewRequest, String customerEmail) {
         CustomerOrder order = customerOrderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado."));
+                .orElseThrow(() -> new OrderNotFoundException());
 
         if (!order.isOwnedByClient(customerEmail)) {
-            throw new IllegalArgumentException("Pedido não pertence ao cliente autenticado.");
+            throw new OrderNotOwnedByClientException();
         }
 
         if (!order.isDelivered()) {
-            throw new IllegalArgumentException("Apenas pedidos entregues podem ser avaliados.");
+            throw new OrderNotDeliveredException();
         }
 
         if (restaurantReviewRepository.existsByCustomerOrder_Id(order.getId())) {
-            throw new IllegalArgumentException("Este pedido já foi avaliado.");
+            throw new OrderAlreadyReviewedException();
         }
 
         Restaurant restaurant = order.getRestaurant();
-
         RestaurantReview review = new RestaurantReview(restaurant, order, reviewRequest);
-        restaurantReviewRepository.save(review);
-
 
         restaurantReviewRepository.save(review);
 
-        // Recalcular média e atualizar no restaurante
+        // Recalcular média de avaliação e atualizar restaurante
         double averageRating = restaurantReviewRepository.calculateAverageRating(restaurant.getId());
         restaurant.updateRating(averageRating);
-
         restaurantRepository.save(restaurant);
+
+        return review;  // Retorna a avaliação criada
     }
 
 }

@@ -6,6 +6,12 @@ import br.com.ifsp.ifome.dto.request.OrderItemRequest;
 import br.com.ifsp.ifome.dto.request.OrderItemUpdateRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantReviewRequest;
 import br.com.ifsp.ifome.dto.response.*;
+import br.com.ifsp.ifome.entities.Restaurant;
+import br.com.ifsp.ifome.entities.RestaurantReview;
+import br.com.ifsp.ifome.exceptions.client.OrderAlreadyReviewedException;
+import br.com.ifsp.ifome.exceptions.client.OrderNotDeliveredException;
+import br.com.ifsp.ifome.exceptions.client.OrderNotFoundException;
+import br.com.ifsp.ifome.exceptions.client.OrderNotOwnedByClientException;
 import br.com.ifsp.ifome.services.ClientService;
 import br.com.ifsp.ifome.services.CustomerOrderService;
 import br.com.ifsp.ifome.services.RestaurantService;
@@ -133,8 +139,38 @@ public class ClientController {
             @PathVariable Long orderId,
             @RequestBody @Valid RestaurantReviewRequest reviewRequest,
             Principal principal) {
-        restaurantService.reviewRestaurant(orderId, reviewRequest, principal.getName());
-        return ResponseEntity.ok(new ApiResponse("success", null, "Avaliação registrada com sucesso!"));
+
+        try {
+            // Chama o serviço para registrar a avaliação
+            RestaurantReview review = restaurantService.reviewRestaurant(orderId, reviewRequest, principal.getName());
+
+            // Constrói a resposta com os dados do restaurante e avaliação
+            Restaurant restaurant = review.getRestaurant();
+            RestaurantReviewResponse response = RestaurantReviewResponse.from(restaurant, review);
+
+            // Retorna a resposta com os dados completos
+            return ResponseEntity.ok(new ApiResponse("success", response, "Avaliação registrada com sucesso!"));
+
+        } catch (OrderNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("error", null, e.getMessage()));
+        } catch (OrderNotOwnedByClientException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("error", null, e.getMessage()));
+        } catch (OrderNotDeliveredException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("error", null, e.getMessage()));
+        } catch (OrderAlreadyReviewedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("error", null, e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse("error", null, "Erro interno no servidor."));
+        }
     }
 
+
+
 }
+
+

@@ -14,7 +14,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
 @Operation(
         summary = "Avaliar restaurante após pedido entregue",
         description = "Permite que o cliente avalie o restaurante após a entrega do pedido, atribuindo uma nota de 1 a 5 estrelas e fornecendo um comentário opcional.",
@@ -28,7 +27,26 @@ import java.lang.annotation.Target;
                         examples = @ExampleObject(value = """
                 {
                   "status": "success",
-                  "data": null,
+                  "data": {
+                    "id": 1,
+                    "nameRestaurant": "Restaurante X",
+                    "cnpj": "12345678000190",
+                    "foodCategory": "Italiana",
+                    "address": [...],
+                    "telephone": "(11) 1234-5678",
+                    "dish": [...],
+                    "openingHours": [...],
+                    "personResponsible": "João Silva",
+                    "personResponsibleCPF": "123.456.789-00",
+                    "email": "contato@restaurantex.com",
+                    "paymentMethods": "Cartão, Dinheiro",
+                    "restaurantImage": "/images/restaurant.jpg",
+                    "bankAccount": {...},
+                    "isOpen": true,
+                    "rating": 4.5,
+                    "stars": 5,
+                    "comment": "Comida deliciosa!"
+                  },
                   "message": "Avaliação registrada com sucesso!"
                 }
             """)
