@@ -26,18 +26,16 @@ import lombok.Setter;
         private CustomerOrder customerOrder;
 
         @Column(nullable = false)
-        private double stars; // Nota de 1 a 5.
+        private Double stars; // Nota de 1 a 5.
 
         @Column(length = 250)
         private String comment; // Comentário opcional.
 
-        public static RestaurantReview create(Restaurant restaurant, CustomerOrder order, @Valid RestaurantReviewRequest request) {
-            RestaurantReview review = new RestaurantReview();
-            review.setRestaurant(restaurant);
-            review.setCustomerOrder(order);
-            review.setStars(request.stars());
-            review.setComment(request.comment());
-            return review;
+        public RestaurantReview(Restaurant restaurant, CustomerOrder customerOrder, @Valid RestaurantReviewRequest request) {
+            this.restaurant = restaurant;
+            this.customerOrder = customerOrder;
+            this.stars = request.stars();
+            this.comment = request.comment();
         }
 
 

@@ -152,7 +152,7 @@ public class RestaurantService {
 
         Restaurant restaurant = order.getRestaurant();
 
-        RestaurantReview review = RestaurantReview.create(restaurant, order, reviewRequest);
+        RestaurantReview review = new RestaurantReview(restaurant, order, reviewRequest);
         restaurantReviewRepository.save(review);
 
 
