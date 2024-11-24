@@ -1,6 +1,7 @@
 package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.dto.request.OrderItemRequest;
+import br.com.ifsp.ifome.dto.request.RestaurantReviewRequest;
 import br.com.ifsp.ifome.entities.OrderItem;
 import br.com.ifsp.ifome.services.SearchService;
 import br.com.ifsp.ifome.services.TokenService;
@@ -21,6 +22,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -508,6 +510,46 @@ public class ClientControllerIT {
         // Verificando se a mensagem é a esperada (exemplo: "Busca realizada com sucesso!")
         assertThat(message).isEqualTo("Resultados encontrados.");
     }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("Should return Ok when review is successfully submitted")
+    public void testReviewRestaurant_Success() {
+        // Dados do pedido e a avaliação que vamos enviar
+        Long orderId = 1L; // ID do pedido, altere conforme necessário
+        String reviewRequestJson = "{"
+                + "\"rating\": 5,"
+                + "\"comment\": \"Excelente comida e entrega rápida!\""
+                + "}";
+
+        // Headers com o token de autenticação
+        HttpHeaders headers = getHttpHeaders();
+
+        // Criação da requisição
+        HttpEntity<String> requestEntity = new HttpEntity<>(reviewRequestJson, headers);
+
+        // Envia a requisição POST para o endpoint de avaliação do restaurante
+        ResponseEntity<String> response = testRestTemplate.exchange(
+                "/api/order/" + orderId + "/review",  // URL do endpoint com o ID do pedido
+                HttpMethod.POST,                      // Método HTTP POST
+                requestEntity,                        // Corpo da requisição com dados de avaliação
+                String.class                         // Tipo de resposta esperado
+        );
+
+        // Verifica se o status de retorno é 200 (OK)
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        // Parse da resposta JSON usando JsonPath para verificar a mensagem
+        DocumentContext document = JsonPath.parse(response.getBody());
+
+        // Obtendo a mensagem da resposta JSON
+        String message = document.read("$.message");
+
+        // Verificando se a mensagem é a esperada
+        assertThat(message).isEqualTo("Avaliação registrada com sucesso!");
+    }
+
+
 
 
 

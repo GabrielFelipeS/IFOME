@@ -127,9 +127,8 @@ public class ClientController {
         return ResponseEntity.ok(response);
     }
 
+    @DocsRestaurantReview
     @PostMapping("/order/{orderId}/review")
-    @PreAuthorize("hasRole('CUSTOMER')")
-    @Operation(summary = "Avaliar restaurante após pedido entregue")
     public ResponseEntity<ApiResponse> reviewRestaurant(
             @PathVariable Long orderId,
             @RequestBody @Valid RestaurantReviewRequest reviewRequest,
