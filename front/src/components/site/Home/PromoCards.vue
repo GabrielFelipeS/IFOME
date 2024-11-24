@@ -54,11 +54,3 @@ const images = ref([
 
 ]);
 </script>
-
-<style scoped>
-.swiper-button-*{
-  color: white;
-  background: black;
-  border-radius: 100%;
-}
-</style>
