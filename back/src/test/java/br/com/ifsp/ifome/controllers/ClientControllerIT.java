@@ -518,24 +518,13 @@ public class ClientControllerIT {
 
 
 
-
-    @Autowired
-    private CustomerOrderRepository customerOrderRepository;
-
-    @Autowired
-    private RestaurantReviewRepository restaurantReviewRepository;
-
-
-
-
-
     @Test
     @DirtiesContext
     @DisplayName("Deve retornar erro 400 quando o pedido não existir")
     public void testReviewRestaurant_OrderNotFound() {
         Long invalidOrderId = 99L;
         // Prepara o objeto de requisição para avaliação
-        RestaurantReviewRequest reviewRequest = new RestaurantReviewRequest(5, "Boa comida!");
+        RestaurantReviewRequest reviewRequest = new RestaurantReviewRequest(5., "Boa comida!");
 
         // Chama o endpoint para avaliar um pedido com ID inválido
         ResponseEntity<String> response = testRestTemplate.exchange(
@@ -605,6 +594,75 @@ public class ClientControllerIT {
         assertThat(message).isEqualTo("Avaliação registrada com sucesso!");
         assertThat(stars).isEqualTo(4.);
         assertThat(comment).isEqualTo("Ótima experiência!");
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("Should not register a review without stars")
+    public void reviewRestaurantWithOutSendStars() {
+        // Preparação dos dados e cabeçalhos
+        Long deliveredOrderId = 6L; // Pedido entregue com ID válido
+        RestaurantReviewRequest reviewRequest = new RestaurantReviewRequest(null, "Ótima experiência!");
+        HttpEntity<RestaurantReviewRequest> requestEntity = new HttpEntity<>(reviewRequest, getHttpHeaders());
+
+        // Envia a requisição para avaliar o pedido
+        ResponseEntity<String> response = testRestTemplate.exchange(
+                "/api/client/order/" + deliveredOrderId + "/review",
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+        );
+
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+        // Verifica a mensagem de sucesso no corpo da resposta
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        String message = documentContext.read("$.message");
+        assertThat(message).isEqualTo("Erro ao realizar operação");
+
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("Não permite avaliação com nota fora do intervalo (1 a 5)")
+    public void reviewRestaurant_InvalidRating() {
+        Long deliveredOrderId = 6L; // Pedido entregue com ID válido
+        RestaurantReviewRequest reviewRequest = new RestaurantReviewRequest(6., "Excelente comida!");
+
+        // Chama o endpoint para avaliar com uma nota inválida
+        ResponseEntity<String> response = testRestTemplate.exchange(
+                "/api/client/order/" + deliveredOrderId + "/review", HttpMethod.POST, new HttpEntity<>(reviewRequest, getHttpHeaders()), String.class);
+
+        // Verifica se o código de status é 400 BAD REQUEST
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+        // Verifica a mensagem de erro no corpo da resposta
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        String message = documentContext.read("$.message");
+        assertThat(message).isEqualTo("Erro ao realizar operação");
+    }
+
+    @Test
+    @DirtiesContext
+    @DisplayName("Permite avaliação sem comentário")
+    public void reviewRestaurant_WithoutComment() {
+        Long deliveredOrderId = 6L; // Pedido entregue com ID válido
+        RestaurantReviewRequest reviewRequest = new RestaurantReviewRequest(4., null); // Comentário não fornecido
+
+        // Chama o endpoint para avaliar sem comentário
+        ResponseEntity<String> response = testRestTemplate.exchange(
+                "/api/client/order/" + deliveredOrderId + "/review", HttpMethod.POST, new HttpEntity<>(reviewRequest, getHttpHeaders()), String.class);
+
+        // Verifica se o código de status é 200 OK
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        // Verifica a resposta JSON
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        String status = documentContext.read("$.status");
+        String message = documentContext.read("$.message");
+        assertThat(status).isEqualTo("success");
+        assertThat(message).isEqualTo("Avaliação registrada com sucesso!");
     }
 
 

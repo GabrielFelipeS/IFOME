@@ -165,6 +165,7 @@ public class RestaurantService {
 
         if (restaurantReviewRepository.existsByCustomerOrder_Id(order.getId())) {
             throw new OrderAlreadyReviewedException();
+
         }
 
         Restaurant restaurant = order.getRestaurant();
