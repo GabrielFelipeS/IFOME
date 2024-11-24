@@ -356,3 +356,9 @@ INSERT INTO message (chat_id, email, sender_type, content, created_at) VALUES (3
 INSERT INTO message (chat_id, email, sender_type, content, created_at) VALUES (3, 'email2@email.com', 'RESTAURANT', 'Ok', CURRENT_TIMESTAMP);
 
 ALTER SEQUENCE CHAT_SEQUENCE RESTART WITH 4;
+
+
+
+INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, freight, order_date, current_order_delivery_status)
+VALUES (1015, 1, 1, 'CONCLUIDO','CONCLUIDO',  0.0, CURRENT_TIMESTAMP, 'CONCLUIDO');
+

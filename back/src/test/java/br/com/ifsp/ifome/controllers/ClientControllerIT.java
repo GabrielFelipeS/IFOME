@@ -554,9 +554,9 @@ public class ClientControllerIT {
     @DirtiesContext
     @DisplayName("Não aceita avaliação em pedidos não entregues")
     public void OnlyDeliveryOrdersCanBeReviewed() {
-        Long validOrderId = 1L;  // Supondo que o pedido com ID 4 seja válido e tenha sido entregue
+        Long validOrderId = 1L;
         // Prepara o objeto de requisição para avaliação
-        RestaurantReviewRequest reviewRequest = new RestaurantReviewRequest(5, "Excelente serviço!");
+        RestaurantReviewRequest reviewRequest = new RestaurantReviewRequest(5., "Excelente serviço!");
 
         // Chama o endpoint para avaliar um pedido válido
         ResponseEntity<String> response = testRestTemplate.exchange(
@@ -576,8 +576,8 @@ public class ClientControllerIT {
     @DisplayName("Should successfully register a review for a delivered order")
     public void reviewRestaurant_Success() {
         // Preparação dos dados e cabeçalhos
-        Long deliveredOrderId = 1L; // Pedido entregue com ID válido
-        RestaurantReviewRequest reviewRequest = new RestaurantReviewRequest(4, "Ótima experiência!");
+        Long deliveredOrderId = 6L; // Pedido entregue com ID válido
+        RestaurantReviewRequest reviewRequest = new RestaurantReviewRequest(4.0, "Ótima experiência!");
         HttpEntity<RestaurantReviewRequest> requestEntity = new HttpEntity<>(reviewRequest, getHttpHeaders());
 
         // Envia a requisição para avaliar o pedido
@@ -589,7 +589,7 @@ public class ClientControllerIT {
         );
 
         // Valida o status da resposta
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         // Parse da resposta JSON usando JsonPath
         DocumentContext documentContext = JsonPath.parse(response.getBody());
@@ -597,13 +597,13 @@ public class ClientControllerIT {
         // Verifica os valores retornados
         String status = documentContext.read("$.status");
         String message = documentContext.read("$.message");
-        Integer stars = documentContext.read("$.data.stars");
+        Double stars = documentContext.read("$.data.stars");
         String comment = documentContext.read("$.data.comment");
 
         // Valida o conteúdo da resposta
         assertThat(status).isEqualTo("success");
         assertThat(message).isEqualTo("Avaliação registrada com sucesso!");
-        assertThat(stars).isEqualTo(4);
+        assertThat(stars).isEqualTo(4.);
         assertThat(comment).isEqualTo("Ótima experiência!");
     }
 
