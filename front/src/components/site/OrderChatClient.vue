@@ -1,11 +1,9 @@
 <template>
     <div class="w-[95%] h-[95%] max-h-[60vh] m-auto border rounded-lg flex flex-col">
-
-        <div class="flex flex-row justify-between">
-            <div class="border-b p-4 text-lg font-semibold text-gray-700">
-                Chat
-            </div>
-            <div class="p-4">
+        <!-- Cabeçalho do Chat -->
+        <div class="flex flex-row justify-between items-center border-b p-4">
+            <div class="text-lg font-semibold text-gray-700">Chat</div>
+            <div>
                 <label class="flex items-center cursor-pointer">
                     <span class="mr-2 text-gray-700">Cliente</span>
                     <input type="checkbox" id="switch-role" class="hidden"
@@ -20,10 +18,10 @@
                     </div>
                     <span class="ml-2 text-gray-700">Entregador</span>
                 </label>
-
             </div>
         </div>
 
+        <!-- Mensagens -->
         <div ref="messageContainer" class="flex-grow overflow-y-auto p-4 space-y-3">
             <div v-for="(message, index) in currentChat" :key="index" class="w-full flex" :class="{
                 'justify-end': message.senderType === 'CLIENT',
@@ -31,7 +29,7 @@
             }">
                 <div :class="{
                     'bg-blue-100': message.senderType === 'CLIENT',
-                    'bg-gray-100': message.senderType === 'DELIVERY' || message.senderType === 'RESTAURANT',
+                    'bg-gray-100': message.senderType !== 'CLIENT',
                 }" class="flex flex-row gap-2 p-3 rounded-lg shadow-sm">
                     <p class="text-gray-800">{{ message.content }}</p>
                     <span class="text-xs text-gray-500 self-end">{{ formatTime(message.createdAt) }}</span>
@@ -39,16 +37,12 @@
             </div>
         </div>
 
-        <!-- Campo de Entrada de Mensagem -->
+        <!-- Campo de Entrada -->
         <div class="border-t p-4 flex items-center">
             <input type="text" v-model="message" @keyup.enter="sendMessage" placeholder="Digite sua mensagem"
                    class="flex-grow border rounded-full p-3 px-4 text-gray-700 outline-none"
-                   :disabled="activeChat === 'client-delivery' && !states.includes(currentStatus)"/>
-            <button @click="sendMessage" class="ml-3 text-blue-500 hover:text-blue-700"
-                    :disabled="activeChat === 'client-delivery' && !states.includes(currentStatus)" :class="{
-                    'opacity-50 cursor-not-allowed': activeChat === 'client-delivery' && !states.includes(currentStatus),
-                }">
-                <!-- Ícone de Envio -->
+                   />
+            <button @click="sendMessage" class="ml-3 text-blue-500 hover:text-blue-700">
                 <v-icon name="fa-paper-plane" class="w-7 h-7 text-primary"/>
             </button>
         </div>
@@ -56,55 +50,42 @@
 </template>
 
 <script setup>
-import {ref, computed, onMounted, onUnmounted, nextTick, watch, onBeforeMount} from "vue";
+import {ref, computed, onMounted, onUnmounted, watch, nextTick} from "vue";
 import api from "@/services/api";
 import pusher from "@/services/pusherOrders.js";
-import {useOrderStatusStore} from '@/stores/orderStatus';
-import {useRoute} from "vue-router";
+import {useOrderStatusStore} from "@/stores/orderStatus";
 
-const states = [
-    'PRONTO_PARA_ENTREGA',
-    'SAIU_PARA_ENTREGA',
-];
-
-const route = useRoute();
-
+// Estados permitidos para envio de mensagens para o entregador
+const states = ["PRONTO_PARA_ENTREGA", "SAIU_PARA_ENTREGA", "PRONTO"];
 const orderStatusStore = useOrderStatusStore();
 
-const currentStatus = computed(() => orderStatusStore.getOrderStatus(props.customerOrderId.orderId) || []);
-
+// Props recebidas do componente pai
 const props = defineProps({
-    chat: {
-        type: [Array, null, String, Object],
-        required: true,
-    },
-    customerOrderId: {
-        type: [Number, String, Object],
-        required: true,
-    },
-    deliveryChat: {
-        type: [Array, null, String, Object],
-        required: true,
-    },
+    chat: {type: Array, required: true},
+    customerOrderId: {type: [Number, String], required: true},
+    deliveryChat: {type: Array, required: true},
 });
 
-const activeChat = ref("client-restaurant");
+const currentStatus = computed(() => orderStatusStore.getOrderStatus(props.customerOrderId) || []);
 
+// Controle de mensagens e chats ativos
+const activeChat = ref("client-restaurant");
 const chat = computed(() => props.chat);
 const deliveryChat = computed(() => props.deliveryChat);
+const currentChat = computed(() =>
+    activeChat.value === "client-restaurant" ? chat.value : deliveryChat.value
+);
 
 const messageContainer = ref(null);
 const message = ref("");
 
-const currentChat = computed(() => {
-    return activeChat.value === "client-restaurant" ? chat.value : deliveryChat.value;
-});
-
+// Formata o horário das mensagens
 const formatTime = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
 };
 
+// Rola para o fim das mensagens ao carregar ou enviar
 const scrollToBottom = () => {
     nextTick(() => {
         if (messageContainer.value) {
@@ -113,70 +94,33 @@ const scrollToBottom = () => {
     });
 };
 
+// Envia uma mensagem para o chat ativo
 const sendMessage = async () => {
-    if (!message.value.trim()) return;
+    if (!message.value.trim()) return; // Impede envio de mensagens vazias
     try {
         const endpoint =
             activeChat.value === "client-restaurant"
-                ? `chat/client/restaurant/${props.customerOrderId.orderId}`
-                : `chat/client/delivery/${props.customerOrderId.orderId}`;
+                ? `chat/client/restaurant/${props.customerOrderId}`
+                : `chat/client/delivery/${props.customerOrderId}`;
 
-        const response = await api.post(endpoint, {
-            content: message.value,
-        });
-
-        console.log(response.data);
-
-        message.value = "";
+        await api.post(endpoint, {content: message.value});
+        message.value = ""; // Limpa o campo de mensagem
         scrollToBottom();
     } catch (error) {
         console.error("Erro ao enviar mensagem:", error);
     }
 };
 
-watch(() => props.customerOrderId.orderId, (newOrder, oldOrder) => {
-
-    if (!props.customerOrderId.orderId) {
-        chat.value = null;
-        return;
-    }
-    pusher.unsubscribe(`chat_${oldOrder}`);
-    const channel = pusher.subscribe(`chat_${newOrder}`);
-
-    if (!channel) {
-        console.error('Erro ao se inscrever no canal');
-    }
-
-    channel.bind("client-delivery-chat", (data) => {
-        console.log('client-delivery-chat', data);
-        chat.value.push(data);
-        scrollToBottom();
-    });
-    channel.bind("client-restaurant-chat", (data) => {
-        console.log('client-restaurant-chat', data);
-        chat.value.push(data);
-        scrollToBottom();
-    });
-
-    channel.bind("restaurant-delivery-chat", (data) => {
-        console.log('restaurant-delivery-chat', data);
-        deliveryChat.value.push(data);
-        scrollToBottom();
-    });
-
-    message.value = "";
+// Rola automaticamente para o fim quando o chat ou as mensagens mudam
+onMounted(() => {
+    scrollToBottom();
+    watch(() => [chat.value, deliveryChat.value], scrollToBottom);
 });
 
+// Cancela inscrições e limpa estado no unmount
 onUnmounted(() => {
-    pusher.unsubscribe(`chat_${props.customerOrderId.orderId}`);
-    message.value = '';
-});
-
-watch(() => props.customerOrderId.orderId, (newOrder, oldOrder) => {
-    pusher.unsubscribe(`chat_${oldOrder}`);
-    pusher.subscribe(`chat_${newOrder}`);
-
-    message.value = '';
+    pusher.unsubscribe(`chat_${props.customerOrderId}`);
+    message.value = "";
 });
 </script>
 
