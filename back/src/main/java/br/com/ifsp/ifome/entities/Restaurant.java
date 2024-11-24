@@ -80,7 +80,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     private List<RestaurantReview> reviews = new ArrayList<>();
 
     @Column(name = "rating")
-    private double rating = 0.;
+    private Double rating = 0.;
 
 
     public Restaurant(RestaurantRequest restaurantRequest, Address address,BCryptPasswordEncoder bCryptPasswordEncoder, String restaurantImage){
