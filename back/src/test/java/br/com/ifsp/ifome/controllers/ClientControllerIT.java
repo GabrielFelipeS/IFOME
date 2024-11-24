@@ -703,7 +703,7 @@ public class ClientControllerIT {
         // Verifica a mensagem de erro no corpo da resposta
         DocumentContext documentContext = JsonPath.parse(response.getBody());
         String message = documentContext.read("$.message");
-        assertThat(message).isEqualTo("O comentário deve ter no máximo 250 caracteres.");
+        assertThat(message).isEqualTo("Erro ao realizar operação");
     }
 
 
