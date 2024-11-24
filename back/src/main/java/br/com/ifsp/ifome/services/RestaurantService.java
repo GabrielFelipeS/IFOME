@@ -1,12 +1,16 @@
 package br.com.ifsp.ifome.services;
 
+import br.com.ifsp.ifome.dto.request.RestaurantReviewRequest;
 import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
 import br.com.ifsp.ifome.entities.CustomerOrder;
 import br.com.ifsp.ifome.entities.Restaurant;
+import br.com.ifsp.ifome.entities.RestaurantReview;
 import br.com.ifsp.ifome.exceptions.restaurant.RestaurantNotFoundException;
 import br.com.ifsp.ifome.repositories.CustomerOrderRepository;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
+import br.com.ifsp.ifome.repositories.RestaurantReviewRepository;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,10 +24,12 @@ import java.util.Optional;
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final CustomerOrderRepository customerOrderRepository;
+    private final RestaurantReviewRepository restaurantReviewRepository;
 
-    public RestaurantService(RestaurantRepository restaurantRepository, CustomerOrderRepository customerOrderRepository) {
+    public RestaurantService(RestaurantRepository restaurantRepository, CustomerOrderRepository customerOrderRepository, RestaurantReviewRepository restaurantReviewRepository) {
         this.restaurantRepository = restaurantRepository;
         this.customerOrderRepository = customerOrderRepository;
+        this.restaurantReviewRepository = restaurantReviewRepository;
     }
 
     /**
@@ -126,4 +132,37 @@ public class RestaurantService {
             new RestaurantNotFoundException("Restaurante não encontrado com o email: " + restaurantEmail)
         );
     }
+
+
+    public void reviewRestaurant(Long orderId, @Valid RestaurantReviewRequest reviewRequest, String customerEmail) {
+        CustomerOrder order = customerOrderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado."));
+
+        if (!order.isOwnedByClient(customerEmail)) {
+            throw new IllegalArgumentException("Pedido não pertence ao cliente autenticado.");
+        }
+
+        if (!order.isDelivered()) {
+            throw new IllegalArgumentException("Apenas pedidos entregues podem ser avaliados.");
+        }
+
+        if (restaurantReviewRepository.existsByCustomerOrder_Id(order.getId())) {
+            throw new IllegalArgumentException("Este pedido já foi avaliado.");
+        }
+
+        Restaurant restaurant = order.getRestaurant();
+
+        RestaurantReview review = RestaurantReview.create(restaurant, order, reviewRequest);
+        restaurantReviewRepository.save(review);
+
+
+        restaurantReviewRepository.save(review);
+
+        // Recalcular média e atualizar no restaurante
+        double averageRating = restaurantReviewRepository.calculateAverageRating(restaurant.getId());
+        restaurant.updateRating(averageRating);
+
+        restaurantRepository.save(restaurant);
+    }
+
 }

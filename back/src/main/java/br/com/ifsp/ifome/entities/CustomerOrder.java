@@ -266,5 +266,13 @@ public class CustomerOrder {
         return orderInfoReset;
     }
 
+    public boolean isOwnedByClient(String email) {
+        return this.getClientEmail().equals(email);
+    }
 
+    public boolean isDelivered() {
+        return this.currentOrderDeliveryStatus == OrderDeliveryStatus.CONCLUIDO;
+    }
+
+    
 }

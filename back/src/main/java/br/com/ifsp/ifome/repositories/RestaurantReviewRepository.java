@@ -10,8 +10,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 @Repository
 public interface RestaurantReviewRepository extends JpaRepository<RestaurantReview, Long> {
-    boolean existsByCustomerOrder(CustomerOrder customerOrder);
+    boolean existsByCustomerOrder_Id(Long customerOrderId);
 
-    @Query("SELECT AVG(r.stars) FROM RestaurantReview r WHERE r.restaurant.id = :restaurantId")
+    @Query("SELECT COALESCE(AVG(r.stars), 0.0) FROM RestaurantReview r WHERE r.restaurant.id = :restaurantId")
     double calculateAverageRating(@Param("restaurantId") Long restaurantId);
+
 }

@@ -1,6 +1,8 @@
 package br.com.ifsp.ifome.entities;
 
+import br.com.ifsp.ifome.dto.request.RestaurantReviewRequest;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,9 +26,19 @@ import lombok.Setter;
         private CustomerOrder customerOrder;
 
         @Column(nullable = false)
-        private int stars; // Nota de 1 a 5.
+        private double stars; // Nota de 1 a 5.
 
         @Column(length = 250)
         private String comment; // Comentário opcional.
 
- }
+        public static RestaurantReview create(Restaurant restaurant, CustomerOrder order, @Valid RestaurantReviewRequest request) {
+            RestaurantReview review = new RestaurantReview();
+            review.setRestaurant(restaurant);
+            review.setCustomerOrder(order);
+            review.setStars(request.stars());
+            review.setComment(request.comment());
+            return review;
+        }
+
+
+    }

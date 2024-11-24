@@ -18,39 +18,9 @@ VALUES
     ('Endereço Carlos', '03090-000', 'Mooca', 'São Paulo', 'SP', 'Rua da Mooca', '300', 'Apto 202', 'Perto do Parque da Mooca', 'Casa', '-23.553584112883435', '-46.62239845521472', 3),
     ('Endereço Carlos', '03090-000', 'Mooca', 'São Paulo', 'SP', 'Rua da Mooca', '300', 'Apto 202', 'Perto do Parque da Mooca', 'Casa',  '-23.553584112883435', '-46.62239845521472', 4);
 
-INSERT INTO restaurants (
-    name_restaurant,
-    cnpj,
-    food_category,
-    telephone,
-    person_responsible,
-    person_responsible_cpf,
-    email,
-    password,
-    payment_methods,
-    restaurant_image,
-    bank,
-    agency,
-    account,
-    is_open,
-    role
-) VALUES (
-    'Açai do monge',
-    '58911612000116',
-    'Sorveteria',
-    '(11) 1234-5678',
-    'Nome Responsável',
-    '07635915053',
-    'email1@email.com',
-    '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG',
-    'Dinheiro, Cartão',
-    'monge.jpeg',
-    'Banco do Brasil',
-    '1234',
-    '00012345-6',
-    true,
-    'RESTAURANT'
-);
+INSERT INTO restaurants (name_restaurant, cnpj, food_category, telephone, person_responsible, person_responsible_cpf, email, password, payment_methods, restaurant_image, bank, agency, account, is_open, role, rating)
+VALUES ('Açai do monge', '58911612000116', 'Sorveteria', '(11) 1234-5678', 'Nome Responsável', '07635915053', 'email1@email.com', '$2a$10$rQP2X0ALCvxkpWkUnM/.o.JdpVtVSpQk5vurqg/otzk/motF9ObAG', 'Dinheiro, Cartão', 'monge.jpeg', 'Banco do Brasil', '1234', '00012345-6', true, 'RESTAURANT', 0);
+
 
 INSERT INTO address (name_address, cep, neighborhood, city, state, address, number, complement, details, type_residence, latitude, longitude, restaurant_id)
 VALUES

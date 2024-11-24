@@ -4,9 +4,11 @@ import br.com.ifsp.ifome.docs.*;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.OrderItemRequest;
 import br.com.ifsp.ifome.dto.request.OrderItemUpdateRequest;
+import br.com.ifsp.ifome.dto.request.RestaurantReviewRequest;
 import br.com.ifsp.ifome.dto.response.*;
 import br.com.ifsp.ifome.services.ClientService;
 import br.com.ifsp.ifome.services.CustomerOrderService;
+import br.com.ifsp.ifome.services.RestaurantService;
 import br.com.ifsp.ifome.services.SearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -27,11 +29,13 @@ public class ClientController {
     private final ClientService clientService;
     private final CustomerOrderService customerOrderService;
     private final SearchService searchService;
+    private final RestaurantService restaurantService;
 
-    public ClientController(ClientService clientService, CustomerOrderService customerOrderService, SearchService searchService) {
+    public ClientController(ClientService clientService, CustomerOrderService customerOrderService, SearchService searchService, RestaurantService restaurantService) {
         this.clientService = clientService;
         this.customerOrderService = customerOrderService;
         this.searchService = searchService;
+        this.restaurantService = restaurantService;
     }
 
     @PostMapping("/order/")
@@ -123,6 +127,15 @@ public class ClientController {
         return ResponseEntity.ok(response);
     }
 
-
+    @PostMapping("/order/{orderId}/review")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    @Operation(summary = "Avaliar restaurante após pedido entregue")
+    public ResponseEntity<ApiResponse> reviewRestaurant(
+            @PathVariable Long orderId,
+            @RequestBody @Valid RestaurantReviewRequest reviewRequest,
+            Principal principal) {
+        restaurantService.reviewRestaurant(orderId, reviewRequest, principal.getName());
+        return ResponseEntity.ok(new ApiResponse("success", null, "Avaliação registrada com sucesso!"));
+    }
 
 }
