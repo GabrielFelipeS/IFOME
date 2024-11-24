@@ -9,10 +9,25 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
+      component: () => import("@/views/site/Layout.vue"),
       beforeEnter: async (to, from, next) => {
+        const unverifiedRoutes = [
+          'restaurants',
+          'restaurant internal',
+          'dishs',
+          'home-site',
+          'search',
+        ];
+
+        // Caso a rota não precise de autenticação, continua
+        if (unverifiedRoutes.includes(to.name)) {
+          next();
+          return;
+        }
+
         try {
           const data = await api.post(
-            `${import.meta.env.VITE_API_URL}auth/token/client/`
+            `auth/token/client/`
           );
           if (data.status === 200) {
             next();
@@ -65,6 +80,33 @@ const router = createRouter({
     },
     {
       path: "/store",
+      component: () => import('@/views/store/Layout.vue'),
+      beforeEnter: async (to, from, next) => {
+        const unverifiedRoutes = [
+          'store-login',
+          'store-register',
+        ]
+        // Caso a rota não precise de autenticação, continua
+        if (unverifiedRoutes.includes(to.name)) {
+          next();
+          return;
+        }
+
+        try {
+          const data = await api.post(
+              `auth/token/restaurant/`
+          );
+          if (data.status === 200) {
+            next();
+          } else {
+            next({ name: "store-login" });
+          }
+        } catch (e) {
+          localStorage.removeItem("token");
+          console.error(e);
+          next({ name: "store-login" });
+        }
+      },
       children: [
         {
           path: "register",
@@ -105,6 +147,7 @@ const router = createRouter({
     },
     {
       path: "/delivery",
+      component: () => import('@/views/delivery/Layout.vue'),
       children: [
         {
           path: "register",

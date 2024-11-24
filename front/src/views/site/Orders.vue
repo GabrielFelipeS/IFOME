@@ -1,6 +1,4 @@
 <script setup>
-import Header from "@/components/site/Header.vue";
-import FooterMobile from "@/components/site/FooterMobile.vue";
 import CardOrder from "@/components/site/CardOrder.vue";
 import api from "@/services/api.js";
 import {onMounted, ref} from "vue";
@@ -31,7 +29,6 @@ const router = useRouter();
 </script>
 
 <template>
-	<Header class="hidden md:flex"/>
 	<div class="w-full flex flex-row justify-center items-center">
 		<div class="main">
 			<div class="flex flex-row h-[60px] justify-between items-center px-5
@@ -52,7 +49,6 @@ const router = useRouter();
 			</div>
 		</div>
 	</div>
-	<FooterMobile />
 </template>
 
 <style scoped>

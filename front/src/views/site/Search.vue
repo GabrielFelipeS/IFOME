@@ -1,5 +1,4 @@
 <template>
-  <Header />
   <Restaurants v-if="restaurants" :restaurants="restaurants" />
   <Dishes v-if="dishes" :dishes="dishes" />
 
@@ -20,7 +19,6 @@
 </template>
 
 <script setup>
-import Header from "@/components/site/Header.vue";
 import { useRoute } from "vue-router";
 import { onMounted, ref, watch } from "vue";
 import api from "@/services/api";
