@@ -5,13 +5,17 @@ import {computed, onMounted, onUnmounted, ref} from "vue";
 import {formatReal} from "@/services/formatReal.js";
 import pusher from "@/services/pusherOrders.js";
 import {useOrderStatusStore} from "@/stores/orderStatus.js";
+import {useToast} from "vue-toast-notification";
 
+// Variáveis estáticas
 const router = useRouter();
 const route = useRoute();
 const orderId = route.params.id;
 const pusherService = pusher;
 const orderStatusStore = useOrderStatusStore();
+const toast = useToast();
 
+// Variáveis reativas
 const order = ref({});
 const orderItems = ref([]);
 const orderInfo = ref([]);
@@ -87,7 +91,9 @@ onUnmounted(() => {
 	window.removeEventListener('resize', updateWindowWidth);
 });
 
-// Estrelas da avaliação
+
+// AVALIAÇÃO
+const reviewComment = ref('');
 const stars = ref([
 	false,
 	false,
@@ -95,10 +101,47 @@ const stars = ref([
 	false,
 	false,
 ]);
-const setStars = (index) => {
-	stars.value = stars.value.map((star, i) => i <= index);
-}
+const setStars = (index) => { stars.value = stars.value.map((star, i) => i <= index) }
 setStars(4);
+const sendReview = async () => {
+	const review = {
+		stars: stars.value.filter(star => star).length,
+		comment: reviewComment.value,
+	};
+	try {
+		const response = await api.post(`client/order/${orderId}/review`, review);
+		if (response.status === 200) {
+			toast.open({
+				message: response?.data?.message || 'Avaliação enviada com sucesso!',
+				type: 'success',
+				position: 'top',
+			});
+		}
+	} catch (e) {
+		if (e.status === 500) {
+			console.error("Erro ao enviar avaliação", e.response);
+			toast.open({
+				message: 'Erro ao enviar avaliação',
+				type: 'error',
+				position: 'top',
+			});
+		} else if (e.status === 401) {
+			console.error("Erro ao enviar avaliação", e.response);
+			toast.open({
+				message: e.response?.data?.message || 'Não autenticado',
+				type: 'error',
+				position: 'top',
+			});
+		} else {
+			console.error("Erro ao enviar avaliação", e.response);
+			toast.open({
+				message: e.response?.data?.message || 'Você já avaliou este pedido',
+				type: 'warning',
+				position: 'top',
+			});
+		}
+	}
+}
 
 
 </script>
@@ -205,8 +248,9 @@ setStars(4);
 						<v-icon name="fa-star" scale="2" @click="setStars(4)" class="cursor-pointer"
 								:class="{ 'text-yellow-400': stars[4], 'text-tertiary-light': !stars[4] }"/>
 					</div>
-					<textarea class="w-full h-24 border border-s rounded-md p-2" placeholder="Comentário opcional"/>
-					<button class="bg-primary text-white self-center rounded-md w-fit p-2 px-4">
+					<textarea class="w-full h-24 border border-s rounded-md p-2"
+							  placeholder="Comentário opcional" v-model="reviewComment"/>
+					<button class="bg-primary text-white self-center rounded-md w-fit p-2 px-4" @click="sendReview">
 						Enviar avaliação
 						<v-icon name="fa-chevron-right" class="ml-2"/>
 					</button>
