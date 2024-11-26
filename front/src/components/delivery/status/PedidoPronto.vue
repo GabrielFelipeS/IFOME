@@ -24,11 +24,19 @@
             </div>
 
             <!-- Botões de Ação -->
-            <div class="flex w-full gap-2 mt-4">
+            <div class="grid grid-cols-2 w-full gap-2 mt-4">
                 <button @click="$emit('cancelar')" class="w-full bg-red-500 text-white py-2 rounded-lg font-semibold">
                     Cancelar
                 </button>
-                <button @click="$emit('sairParaEntrega')" class="w-full bg-green-500 text-white py-2 rounded-lg font-semibold">
+                <button class="w-full bg-blue-500 text-white py-2 rounded-lg font-semibold" @click="$emit('chat')">
+                    <v-icon name="fa-comment"></v-icon>
+                    Chat
+                </button>
+
+            </div>
+            <div class="w-full mt-1">
+                <button @click="$emit('sairParaEntrega')"
+                        class="w-full bg-green-500 text-white py-4 rounded-lg font-semibold">
                     Sair Para Entrega
                 </button>
             </div>
@@ -37,7 +45,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import {defineProps, defineEmits} from 'vue';
 
 // Definindo as props para dados dinâmicos
 const props = defineProps({
@@ -60,7 +68,7 @@ const props = defineProps({
 });
 
 // Definindo os eventos
-const emit = defineEmits(['cancelar', 'sairParaEntrega']);
+const emit = defineEmits(['cancelar', 'sairParaEntrega', 'chat']);
 </script>
 
 <style scoped>

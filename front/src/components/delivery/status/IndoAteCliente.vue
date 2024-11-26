@@ -14,17 +14,25 @@
             </div>
 
             <!-- Botão de Ação -->
-            <div class="flex w-full mt-4">
-                <button @click="$emit('entregar')" class="w-full bg-green-500 text-white py-2 rounded-lg font-semibold">
-                    Entregar
-                </button>
+            <div class="flex w-full flex-row items-center justify-center mt-4 gap-3">
+                <div class="flex w-[80%]">
+                    <button @click="$emit('entregar')"
+                            class="w-full bg-green-500 text-white py-2 rounded-lg font-semibold">
+                        Entregar
+                    </button>
+                </div>
+                <div class="flex w-[20%]">
+                    <button class="w-full bg-blue-500 text-white py-2 rounded-lg font-semibold" @click="$emit('chat')">
+                        <v-icon name="fa-comment"></v-icon> Chat
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import {defineProps, defineEmits} from 'vue';
 
 // Definindo as props para o endereço
 const props = defineProps({
@@ -35,7 +43,7 @@ const props = defineProps({
 });
 
 // Definindo os eventos
-const emit = defineEmits(['entregar']);
+const emit = defineEmits(['entregar', 'chat']);
 </script>
 
 <style scoped>

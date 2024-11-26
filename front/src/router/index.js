@@ -11,23 +11,14 @@ const router = createRouter({
       name: "home",
       component: () => import("@/views/site/Layout.vue"),
       beforeEnter: async (to, from, next) => {
-        const unverifiedRoutes = [
-          'restaurants',
-          'restaurant internal',
-          'dishs',
-          'home-site',
-          'search',
-        ];
-
-        // Caso a rota não precise de autenticação, continua
-        if (unverifiedRoutes.includes(to.name)) {
-          next();
-          return;
-        }
 
         try {
           const data = await api.post(
-            `auth/token/client/`
+            `auth/token/client/`, {}, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+              }
           );
           if (data.status === 200) {
             next();

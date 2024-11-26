@@ -3,11 +3,12 @@
         <SidebarMenu />
         <main class="h-[100vh] w-[calc(100vw_-_150px)] flex flex-row">
             <Orders :orders="orders" @click="showOrderDetails" />
-            <div class="h-[100vh] lg:w-[calc(100vw_-_450px)] md:w-[calc(100vw_-_250px)] flex flex-col" v-if="currentOrder">
+            <div class="h-[100vh] lg:w-[calc(100vw_-_450px)] md:w-[calc(100vw_-_250px)] flex flex-col"
+                v-if="currentOrder">
                 <OrderHeader :order="currentOrder" />
-                <div class="w-full h-[60vh] grid grid-cols-2">
+                <div class="w-full h-[60vh] max-h-[60vh] grid grid-cols-2">
                     <OrderItems :order="currentOrder" />
-                    <OrderChat />
+                    <OrderChat :chat="chat" :customerOrderId="currentOrder" :deliveryChat="deliveryChat" />
                 </div>
                 <OrderStatus :order="currentOrder" />
             </div>
@@ -22,7 +23,8 @@
     </div>
 
     <div v-else class="h-[100vh] flex items-center justify-center text-center p-4 bg-red-100">
-        <h1 class="text-2xl font-semibold text-red-600">Este painel não é adequado para dispositivos móveis ou com resolução menor que 1280px. Por favor, utilize em um dispositivo maior.</h1>
+        <h1 class="text-2xl font-semibold text-red-600">Este painel não é adequado para dispositivos móveis ou com
+            resolução menor que 1280px. Por favor, utilize em um dispositivo maior.</h1>
     </div>
 </template>
 
@@ -34,29 +36,60 @@ import Orders from '@/components/store/panel/Orders.vue';
 import OrderStatus from '@/components/store/panel/OrderStatus.vue';
 import SidebarMenu from '@/components/store/panel/sidebarMenu.vue';
 import api from '@/services/api';
-import { computed, ref, onMounted, onUnmounted } from 'vue';
+import { computed, ref, onMounted, onUnmounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 const orders = ref([]);
 const selectedOrderId = ref(null);
 const windowWidth = ref(window.innerWidth);
-const router = useRouter();
 
 function updateWindowWidth() {
     windowWidth.value = window.innerWidth;
 }
+
+const chat = ref(null);
+const deliveryChat = ref(null);
+
+watch(() => selectedOrderId.value, async (orderId) => {
+    if (!orderId) {
+        chat.value = null;
+        return;
+    }
+    try {
+        const { data } = await api.get(`chat/client/restaurant/${orderId}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
+        chat.value = data.data.messages;
+    } catch (error) {
+        console.error('Erro ao buscar chat:', error);
+    }
+
+    try {
+        const { data } = await api.get(`chat/restaurant/delivery/${orderId}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
+        deliveryChat.value = data.data.messages;
+    } catch (error) {
+        deliveryChat.value = [];
+    }
+})
 
 const isMobile = computed(() => windowWidth.value < 1280);
 
 onMounted(async () => {
     window.addEventListener('resize', updateWindowWidth);
     try {
-        const { data } = await api.get('/order/restaurantOrders' ,{
+        const { data } = await api.get('restaurant/orders', {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
         });
-        orders.value = data;
+        orders.value = data.data;
+
     } catch (error) {
         if (error.response && error.response.status === 401) {
             localStorage.removeItem('token');

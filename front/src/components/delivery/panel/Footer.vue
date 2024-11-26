@@ -1,32 +1,39 @@
 <template>
     <div>
-        <BuscandoPedidos v-if="currentStatus === 'buscando'" />
+        <BuscandoPedidos v-if="currentStatus === 'buscando'"/>
 
         <NovoPedido :valor="pedidoStore.deliveryCost" :enderecoColeta="pedidoStore.restaurantData.address"
-            :enderecoDestino="pedidoStore.clientData.address" @negar="handleNegar" @aceitar="handleAceitar"
-            v-if="currentStatus === 'NOVO'" />
+                    :enderecoDestino="pedidoStore.clientData.address" @negar="handleNegar" @aceitar="handleAceitar"
+                    v-if="currentStatus === 'NOVO'"/>
 
         <EmTrajeto :endereco="pedidoStore.restaurantData.address" @cancelar="handleCancelar" @chegada="handleChegada"
-            v-if="currentStatus === 'ACEITO'" />
+                   @chat="showChat"
+                   v-if="currentStatus === 'ACEITO'"/>
 
         <PedidoEmPreparo :pedidoId="pedidoStore.customerOrderId" :cliente="pedidoStore.nameClient"
-            @cancelar="handleCancelar" v-if="currentStatus === 'EM_PREPARO' || currentStatus === 'NO_LOCAL'" />
+                         @chat="showChat"
+                         @cancelar="handleCancelar"
+                         v-if="currentStatus === 'EM_PREPARO' || currentStatus === 'NO_LOCAL'"/>
 
         <PedidoPronto :pedidoId="pedidoStore.customerOrderId" :cliente="pedidoStore.nameClient"
-            :itens="pedidoStore.orderItems ? pedidoStore.orderItems.map(item => item.dishName) : []"
-            :endereco="pedidoStore.clientData.address" @cancelar="handleCancelar"
-            @sairParaEntrega="handleSairParaEntrega" v-if="currentStatus === 'PRONTO'" />
+                      @chat="showChat"
+                      :itens="pedidoStore.orderItems ? pedidoStore.orderItems.map(item => item.dishName) : []"
+                      :endereco="pedidoStore.clientData.address" @cancelar="handleCancelar"
+                      @sairParaEntrega="handleSairParaEntrega" v-if="currentStatus === 'PRONTO'"/>
 
-        <IndoAteCliente :endereco="pedidoStore.clientData.address" @entregar="handleEntregar"
-            v-if="currentStatus === 'A_CAMINHO'" />
+        <IndoAteCliente :endereco="pedidoStore.clientData.address" @entregar="handleEntregar" @chat="showChat"
+                        v-if="currentStatus === 'A_CAMINHO'"/>
 
-        <ConfirmacaoCodigo @finalizar="handleFinalizar" v-if="currentStatus === 'CONFIRMACAO'" />
+        <ConfirmacaoCodigo @finalizar="handleFinalizar" v-if="currentStatus === 'CONFIRMACAO'"/>
+
+        <OrderChatDelivery :delivery-chat="deliveryChat" :customer-order-id="pedidoStore.customerOrderId" :chat="chat"
+                           :isActive="isActive" @closeChat="closeChat"></OrderChatDelivery>
     </div>
 </template>
 
 <script setup>
-import { computed, onUpdated, watch } from 'vue';
-import { usePedidoStore } from '@/stores/usePedidoStore';
+import {computed, onUpdated, ref, watch} from 'vue';
+import {usePedidoStore} from '@/stores/usePedidoStore';
 
 import BuscandoPedidos from '@/components/delivery/status/BuscandoPedidos.vue';
 import NovoPedido from '@/components/delivery/status/NovoPedido.vue';
@@ -36,17 +43,25 @@ import PedidoPronto from '@/components/delivery/status/PedidoPronto.vue';
 import IndoAteCliente from '@/components/delivery/status/IndoAteCliente.vue';
 import ConfirmacaoCodigo from '@/components/delivery/status/ConfirmacaoCodigo.vue';
 import api from '@/services/api';
+import OrderChatDelivery from "@/components/delivery/panel/OrderChatDelivery.vue";
 
 const pedidoStore = usePedidoStore();
 
-// Computed para obter o status atual
+const isActive = ref(false);
+
+function showChat() {
+    isActive.value = true;
+}
+
+function closeChat() {
+    isActive.value = false;
+}
+
 const currentStatus = computed(() => {
-    // Se `pedidoStore.status` estiver vazio, retornar "buscando"
     if (!Array.isArray(pedidoStore.status) || pedidoStore.status.length === 0) {
         return 'buscando';
     }
 
-    // Quando `pedidoStore.status` está carregado, usa o status atual
     const status = pedidoStore.status[pedidoStore.status.length - 1].orderDeliveryStatus;
     if (status === 'CANCELADO' || status === 'CONCLUIDO') {
         pedidoStore.resetOrderData();
@@ -54,6 +69,38 @@ const currentStatus = computed(() => {
     }
     return status;
 });
+
+watch(() => pedidoStore.customerOrderId, async (orderId) => {
+    if (!orderId) {
+        chat.value = null;
+        return;
+    }
+    try {
+
+        const {data} = await api.get(`chat/client/delivery/${pedidoStore.customerOrderId}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
+        chat.value = data.data.messages;
+    } catch (error) {
+        console.error('Erro ao buscar chat:', error);
+    }
+
+    try {
+        const {data} = await api.get(`chat/restaurant/delivery/${pedidoStore.customerOrderId}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
+        deliveryChat.value = data.data.messages;
+    } catch (error) {
+        deliveryChat.value = [];
+    }
+})
+
+const chat = ref([]);
+const deliveryChat = ref([]);
 
 // Funções para atualizar o status do pedido e manipular as ações do usuário
 async function handleNegar() {
