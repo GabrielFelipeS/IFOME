@@ -13,6 +13,10 @@ const router = useRouter();
 const route = useRoute();
 const orderId = route.params.id;
 const orderStatusStore = useOrderStatusStore();
+const pusherService = pusher;
+
+const toast = useToast();
+
 
 // Variáveis reativas
 const order = ref({});
@@ -33,52 +37,52 @@ const emit = defineEmits(["status_updated"]);
 
 // Métodos de API
 const verifyLogin = async () => {
-	const response = await api.post("auth/token/client/");
-	return response.status === 200;
+    const response = await api.post("auth/token/client/");
+    return response.status === 200;
 }
 const getOrder = async () => {
-	const login = await verifyLogin();
-	if (!login) {
-		return false;
-	}
-	const response = await api.get('order/customerOrders');
-	if (response.status !== 200) {
-		return false;
-	}
+    const login = await verifyLogin();
+    if (!login) {
+        return false;
+    }
+    const response = await api.get('order/customerOrders');
+    if (response.status !== 200) {
+        return false;
+    }
 
-	return response.data.find(order => order.orderId == orderId);
+    return response.data.find(order => order.orderId == orderId);
 }
 getOrder().then((response) => {
-	order.value = response;
-	orderItems.value = order.value.orderItems;
-	orderInfo.value = order.value.orderInfo;
-	infoFirst.value = orderInfo.value.pop();
+    order.value = response;
+    orderItems.value = order.value.orderItems;
+    orderInfo.value = order.value.orderInfo;
+    infoFirst.value = orderInfo.value.pop();
 });
 
 // Eventos de tela e dropdown
 const toggleDropdown = () => {
-	if (orderInfo.value.length > 0 && windowWidth.value < 1200) {
-		dropdown.value = !dropdown.value;
-	}
+    if (orderInfo.value.length > 0 && windowWidth.value < 1200) {
+        dropdown.value = !dropdown.value;
+    }
 }
 const updateWindowWidth = () => {
-	windowWidth.value = window.innerWidth;
+    windowWidth.value = window.innerWidth;
 };
 
 onMounted(() => {
-	getOrder().then((response) => {
-		order.value = response;
-		orderItems.value = order.value.orderItems;
-		orderInfo.value = order.value.orderInfo;
-		infoFirst.value = orderInfo.value.pop();
-	});
+    getOrder().then((response) => {
+        order.value = response;
+        orderItems.value = order.value.orderItems;
+        orderInfo.value = order.value.orderInfo;
+        infoFirst.value = orderInfo.value.pop();
+    });
 
-	const channel = pusherService.subscribe('order-channel');
-	channel.bind(`order-status-updated_${orderId}`, (data) => {
-		console.log('DATA DO PUSHER', data);
-		if (data.orderId == orderId) {
-			orderStatusStore.setOrderStatus(data.orderId, data.status);
-			emit('status_updated', data.status);
+    const channel = pusherService.subscribe('order-channel');
+    channel.bind(`order-status-updated_${orderId}`, (data) => {
+        console.log('DATA DO PUSHER', data);
+        if (data.orderId == orderId) {
+            orderStatusStore.setOrderStatus(data.orderId, data.status);
+            emit('status_updated', data.status);
 
             orderInfo.value.push(infoFirst.value);
             infoFirst.value = {
@@ -233,6 +237,7 @@ const sendReview = async () => {
                 </div>
             </div><!-- Avaliação -->
             <template id="avaliacao" v-if="infoFirst.orderStatus.toLowerCase() === 'concluido'">
+
             <div class="px-5 flex flex-col gap-y-4 w-full max-w-[600px] self-center mt-12 mb-8">
                     <span class="font-semibold text-lg">Avalie o restaurante</span>
                         <div class="flex flex-row justify-between p-2">
@@ -242,7 +247,7 @@ const sendReview = async () => {
                     <button class="bg-primary text-white self-center rounded-md w-fit p-2 px-4" @click="sendReview">
                         Enviar avaliação
                         <v-icon name="fa-chevron-right" class="ml-2" />
-                        </button>
+                    </button>
                 </div>
             </template>
         </div>
