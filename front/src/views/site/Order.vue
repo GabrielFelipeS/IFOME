@@ -13,10 +13,10 @@ const router = useRouter();
 const route = useRoute();
 const orderId = route.params.id;
 const orderStatusStore = useOrderStatusStore();
-
 const pusherService = pusher;
 
 const toast = useToast();
+
 
 // Variáveis reativas
 const order = ref({});
@@ -237,10 +237,11 @@ const sendReview = async () => {
                 </div>
             </div><!-- Avaliação -->
             <template id="avaliacao" v-if="infoFirst.orderStatus.toLowerCase() === 'concluido'">
-                <div class="px-5 flex flex-col gap-y-4 w-full max-w-[600px] self-center mt-12 mb-8">
+
+            <div class="px-5 flex flex-col gap-y-4 w-full max-w-[600px] self-center mt-12 mb-8">
                     <span class="font-semibold text-lg">Avalie o restaurante</span>
-                    <div class="flex flex-row justify-between p-2">
-                        <v-icon v-for="(star, index) in stars" :key="index" name="fa-star" scale="2" @click="setStars(index)" class="cursor-pointer" :class="{ 'text-yellow-400': star, 'text-tertiary-light': !star }" />
+                        <div class="flex flex-row justify-between p-2">
+                    <v-icon v-for="(star, index) in stars" :key="index" name="fa-star" scale="2" @click="setStars(index)" class="cursor-pointer" :class="{ 'text-yellow-400': star, 'text-tertiary-light': !star }" />
                     </div>
                     <textarea class="w-full h-24 border border-s rounded-md p-2" placeholder="Comentário opcional" v-model="reviewComment" />
                     <button class="bg-primary text-white self-center rounded-md w-fit p-2 px-4" @click="sendReview">
@@ -254,7 +255,7 @@ const sendReview = async () => {
 
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .main {
     @apply relative w-full h-full flex flex-col max-w-[1200px] justify-start self-center gap-y-4 overflow-auto pt-4;
     @apply pb-[80px];
