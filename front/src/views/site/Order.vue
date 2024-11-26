@@ -96,7 +96,7 @@ onMounted(() => {
     chatChannel.bind("client-restaurant-chat", (data) => {
         chat.value.push(data);
     });
-};
+});
 
 onMounted(async () => {
     const orderData = await fetchOrder();
@@ -259,7 +259,7 @@ const sendReview = async () => {
 
 .order-items {
     @apply flex flex-col overflow-y-scroll h-full max-h-44 mt-4 divide-y-4;
-    @apply md:overflow-y-auto md:h-fitmd:max-h-full;
+    @apply md:overflow-y-auto md:h-fit md:max-h-full;
 }
 
 .product {
