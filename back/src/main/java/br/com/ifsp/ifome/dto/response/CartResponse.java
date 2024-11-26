@@ -13,7 +13,8 @@ public record CartResponse(
     public CartResponse (Cart cart){
         this(
             cart.getOrderItems(),
-            cart.getFreight(),
+//            cart.getFreight(),
+            0.0,
             cart.totalPrice(),
             cart.totalQuantity()
         );
