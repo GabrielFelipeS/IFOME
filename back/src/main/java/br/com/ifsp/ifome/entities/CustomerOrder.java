@@ -274,5 +274,8 @@ public class CustomerOrder {
         return this.currentOrderDeliveryStatus == OrderDeliveryStatus.CONCLUIDO;
     }
 
-    
+
+    public Long getRestaurantId() {
+        return this.restaurant.getId();
+    }
 }
