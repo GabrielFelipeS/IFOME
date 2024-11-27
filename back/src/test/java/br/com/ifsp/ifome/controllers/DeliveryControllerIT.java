@@ -65,28 +65,6 @@ public class DeliveryControllerIT {
         assertThat(message).isEqualTo("Buscando pedido!" );
     }
 
-//    @Test
-//    @DirtiesContext
-//    public void getAllOrderByDeliveryPersonWithSomeOrder() {
-//        ResponseEntity<String> response = testRestTemplate.exchange("/api/restaurant/order/status/3",
-//            HttpMethod.PUT, getHttpEntityRestaurant(), String.class);
-//
-//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-//
-//        response = testRestTemplate.exchange("/api/delivery/order/",
-//            HttpMethod.GET, getHttpEntityWithNoneOrder(), String.class);
-//
-//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-//
-//        DocumentContext documentContext= JsonPath.parse(response.getBody());
-//        System.err.println(response.getBody());
-//
-//        String message = documentContext.read("$.message");
-//        assertThat(message).isEqualTo("Pedido atual pego com sucesso!");
-//    }
-
-
-
     private HttpEntity getHttpEntityRestaurant() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", this.token_restaurant);

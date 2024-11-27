@@ -18,7 +18,7 @@ public class PedidoStatusChangedEvent {
     }
 
     public String getEmailClient() {
-        return this.customerOrder.getEmailClient();
+        return this.customerOrder.getClientEmail();
     }
 
     public String getRestaurantName() {

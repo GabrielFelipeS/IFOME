@@ -17,11 +17,10 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ClientWorksIT {
+public class ClientE2EIT {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
@@ -130,6 +129,8 @@ public class ClientWorksIT {
         documentContext = JsonPath.parse(response.getBody());
         Integer orderId = documentContext.read("$.data[0].orderId");
 
+        System.err.println(orderId);
+        System.err.println( response.getBody());
         assertThat(orderId).isEqualTo(orderIdResult);
     }
 

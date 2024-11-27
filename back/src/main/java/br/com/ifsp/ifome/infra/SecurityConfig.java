@@ -46,9 +46,15 @@ public class SecurityConfig {
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/dish").hasRole("RESTAURANT")
                     .requestMatchers(HttpMethod.GET,
-                "/api/restaurant/", "/api/restaurant/{id}","/api/restaurant/all", "/api/dish/",
-                            "/api/dish/{id}", "/api/dish/restaurant/{id}","/api/dish/all", "/api/client/search")
-                    .permitAll()
+                        "/api/restaurant/", "/api/restaurant/{id}",
+                        "/api/restaurant/all", "/api/dish/",
+                        "/api/dish/{id}", "/api/dish/restaurant/{id}",
+                        "/api/dish/all", "/api/client/search"
+                    ).permitAll()
+
+                    .requestMatchers(HttpMethod.GET, "/api/chat/client/delivery/{customerOrderId}").hasAnyRole("CLIENT", "DELIVERY")
+                    .requestMatchers(HttpMethod.GET, "/api/chat/client/restaurant/{customerOrderId}").hasAnyRole("CLIENT", "RESTAURANT")
+                    .requestMatchers(HttpMethod.GET, "/api/chat/restaurant/delivery/{customerOrderId}").hasAnyRole("RESTAURANT", "DELIVERY")
 
                     .requestMatchers("/api/client/**").hasRole("CLIENT")
                     .requestMatchers(HttpMethod.PUT,"/api/order/teste").permitAll()

@@ -81,6 +81,6 @@ public class EmailService {
     }
 
     public void sendEmailClientWhenRequestHasTrheeRefused(CustomerOrder customerOrder) {
-        this.sendEmail(customerOrder.getEmailClient(), from, "Fudeu maluco, se mora na quebrana, ninguém é louco de ir");
+        this.sendEmail(customerOrder.getClientEmail(), from, "Fudeu maluco, se mora na quebrana, ninguém é louco de ir");
     }
 }

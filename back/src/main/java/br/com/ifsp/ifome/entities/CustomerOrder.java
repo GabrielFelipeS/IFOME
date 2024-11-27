@@ -89,9 +89,9 @@ public class CustomerOrder {
         return this.orderPrice + freight;
     }
 
-    public String getEmailClient() {
-        return this.cart.getEmailClient();
-    }
+    public Client getClient() {return this.cart.getClient();}
+
+    public String getClientEmail() { return this.cart.getEmailClient();}
 
     public String getClientName() {
         return this.cart.getClientName();
@@ -105,19 +105,46 @@ public class CustomerOrder {
         return this.restaurant.getEmail();
     }
 
+    public boolean deliveryPersonIsNotPresent() {
+        return this.deliveryPerson == null;
+    }
+
+    public String getDeliveryEmail() {
+        if(this.deliveryPerson == null) {
+            return "";
+        }
+
+        return this.deliveryPerson.getEmail();
+    }
+
+    public Integer getOrderStatusId() {
+        return orderInfo.size();
+    }
+
+    public Long getDeliveryPersonId() { return deliveryPerson.getId();}
+
+    public String getClientPhone() {
+        return this.cart.getClientPhone();
+    }
+
+    public Double deliveryCost() {
+        return deliveryCost;
+    }
 
     public List<OrderItem> getOrderItems() {
         return this.cart.getOrderItems();
     }
 
-    public String getOrderDate() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
-        return this.orderDate.format(dateTimeFormatter);
+    public Address getClientAddress() {
+        return this.cart.getClient().getAddress().get(0);
     }
 
-    public String getOrderDateTime() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_TIME;
+    public Address getRestaurantAddress() {
+        return this.restaurant.getAddress().get(0);
+    }
 
+    public String getOrderDate() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
         return this.orderDate.format(dateTimeFormatter);
     }
 
@@ -130,13 +157,6 @@ public class CustomerOrder {
         return Timestamp.valueOf(orderLastInfo.getLocalDateTime()).toString();
     }
 
-    public Address getClientAddress() {
-        return this.cart.getClient().getAddress().get(0);
-    }
-
-    public Address getRestaurantAddress() {
-        return this.restaurant.getAddress().get(0);
-    }
 
     public OrderClientStatus nextStatus() {
         int size = orderInfo.size();
@@ -168,20 +188,6 @@ public class CustomerOrder {
         return value;
     }
 
-    public Integer getOrderStatusId() {
-        return orderInfo.size();
-    }
-
-    public Long getDeliveryPersonId() { return deliveryPerson.getId();}
-
-    public String getClientPhone() {
-        return this.cart.getClientPhone();
-    }
-
-
-    public Double deliveryCost() {
-        return deliveryCost;
-    }
 
     public void newDeliveryPersonInfo() {
         this.orderInfoDelivery = List.of(
@@ -259,4 +265,6 @@ public class CustomerOrder {
 
         return orderInfoReset;
     }
+
+
 }

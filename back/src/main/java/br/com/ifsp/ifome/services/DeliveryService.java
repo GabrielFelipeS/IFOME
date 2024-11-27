@@ -34,15 +34,15 @@ public class DeliveryService {
     private static final double RAIO_DA_TERRA_KM = 6371.01; // Raio da Terra em quilômetros
     private final DeliveryPersonRepository deliveryPersonRepository;
     private final CustomerOrderRepository customerOrderRepository;
-    private final OrderStatusUpdateService orderStatusUpdateService;
+    private final PusherService pusherService;
     private final RefuseCustomerOrderRepository refuseCustomerOrderRepository;
     private final OrderInfoDeliveryRepository orderInfoDeliveryRepository;
     private final ChoiceDeliveryService choiceDeliveryService;
 
-    public DeliveryService(DeliveryPersonRepository deliveryPersonRepository, CustomerOrderRepository customerOrderRepository, OrderStatusUpdateService orderStatusUpdateService, RefuseCustomerOrderRepository refuseCustomerOrderRepository, OrderInfoDeliveryRepository orderInfoDeliveryRepository, ChoiceDeliveryService choiceDeliveryService) {
+    public DeliveryService(DeliveryPersonRepository deliveryPersonRepository, CustomerOrderRepository customerOrderRepository, PusherService pusherService, RefuseCustomerOrderRepository refuseCustomerOrderRepository, OrderInfoDeliveryRepository orderInfoDeliveryRepository, ChoiceDeliveryService choiceDeliveryService) {
         this.deliveryPersonRepository = deliveryPersonRepository;
         this.customerOrderRepository = customerOrderRepository;
-        this.orderStatusUpdateService = orderStatusUpdateService;
+        this.pusherService = pusherService;
         this.refuseCustomerOrderRepository = refuseCustomerOrderRepository;
         this.orderInfoDeliveryRepository = orderInfoDeliveryRepository;
         this.choiceDeliveryService = choiceDeliveryService;
@@ -132,7 +132,7 @@ public class DeliveryService {
 
         customerOrderRepository.save(customerOrder);
 
-        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
+        pusherService.updateStatusOrderToRestaurant(customerOrder);
     }
 
     /**
@@ -213,10 +213,10 @@ public class DeliveryService {
         customerOrderRepository.save(customerOrder);
         System.err.println("AQUI: " + orderDeliveryStatus);
 
-        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
+        pusherService.updateStatusOrderToRestaurant(customerOrder);
 
         if(status) {
-            orderStatusUpdateService.updateStatusOrderToClient(customerOrder, customerOrder.getCurrentOrderClientStatus());
+            pusherService.updateStatusOrderToClient(customerOrder, customerOrder.getCurrentOrderClientStatus());
         }
     }
 
@@ -239,7 +239,7 @@ public class DeliveryService {
 
         customerOrderRepository.save(customerOrder);
 
-        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
+        pusherService.updateStatusOrderToRestaurant(customerOrder);
 
 //        orderStatusUpdateService.updateStatusOrderToClient(customerOrder, customerOrder.getCurrentOrderClientStatus());
     }
@@ -360,6 +360,6 @@ public class DeliveryService {
     public void updateStatusOrderToRestaurant(CustomerOrder customerOrder) {
         customerOrderRepository.save(customerOrder);
 
-        orderStatusUpdateService.updateStatusOrderToRestaurant(customerOrder);
+        pusherService.updateStatusOrderToRestaurant(customerOrder);
     }
 }
