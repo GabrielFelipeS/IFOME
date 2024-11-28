@@ -357,12 +357,11 @@ INSERT INTO message (chat_id, email, sender_type, content, created_at) VALUES (3
 
 ALTER SEQUENCE CHAT_SEQUENCE RESTART WITH 4;
 
-
-
-INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, freight, order_date, current_order_delivery_status)
-VALUES (1015, 1, 1, 'CONCLUIDO','CONCLUIDO',  0.0, CURRENT_TIMESTAMP, 'CONCLUIDO');
-INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, freight, order_date, current_order_delivery_status)
-VALUES (10, 1, 1, 'CONCLUIDO','CONCLUIDO',  0.0, CURRENT_TIMESTAMP, 'CONCLUIDO');
-
-INSERT INTO restaurant_review (stars, customer_order_id, restaurant_id, comment)
-VALUES (4.5, 7, 1, 'Excelente experiência no restaurante!');
+-- INSERT INTO customer_order (order_price, restaurant_id, q, payment_status, current_order_client_status, freight, order_date, current_order_delivery_status)
+-- VALUES (1015, 1, 1, 'CONCLUIDO','CONCLUIDO',  0.0, CURRENT_TIMESTAMP, 'CONCLUIDO');
+--
+-- INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, freight, order_date, current_order_delivery_status)
+-- VALUES (10, 1, 1, 'CONCLUIDO','CONCLUIDO',  0.0, CURRENT_TIMESTAMP, 'CONCLUIDO');
+--
+-- INSERT INTO restaurant_review (stars, customer_order_id, restaurant_id, comment)
+-- VALUES (4.5, 7, 1, 'Excelente experiência no restaurante!');

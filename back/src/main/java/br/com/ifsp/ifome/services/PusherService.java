@@ -166,4 +166,25 @@ public class PusherService {
             data
         );
     }
+
+    public void updateOrder(CustomerOrder customerOrder) {
+        Map<String, Object> data = Map.of(
+            "orderId", customerOrder.getId(),
+            "name", customerOrder.getClientName(),
+            "address",customerOrder.getClientAddress(),
+            "orderItems" ,customerOrder.getOrderItems(),
+            "orderPrice",customerOrder.getOrderPrice(),
+            "orderInfo" ,customerOrder.getOrderInfo(),
+            "paymentStatus" ,customerOrder.getPaymentStatus(),
+            "orderDate" ,customerOrder.getOrderDateTimeToTimestamp(),
+            "freight",customerOrder.getFreight(),
+            "totalPrice" ,customerOrder.totalPrice()
+        );
+
+        pusher.trigger(
+            "restaurant_" + customerOrder.getRestaurantId(),
+            "new_order",
+            data
+        );
+    }
 }
