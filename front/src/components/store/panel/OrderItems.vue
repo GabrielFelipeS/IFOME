@@ -1,6 +1,6 @@
 <template>
     <div class="w-[95%] h-[95%] m-auto border rounded flex items-center justify-center">
-        <div class="w-[90%] h-[95%] flex flex-col justify-between ">
+        <div class="w-[90%] h-[95%] max-h-[60vh] flex flex-col justify-between ">
 
             <div class="border-b grid grid-cols-3 gap-10 justify-between text-tertiary-subtle pb-2">
                 <p>Qtd.</p>
@@ -8,7 +8,7 @@
                 <p>Preço</p>
             </div>
 
-            <div class="flex flex-col flex-grow py-4 max-h-[400px] overflow-auto">
+            <div class="flex flex-col py-4 max-h-[400px] overflow-auto">
 
                 <template v-for="items in props.order.orderItems">
                     <div class="grid grid-cols-3 gap-10 justify-between text-tertiary-subtle mb-2 text-sm font-bold">

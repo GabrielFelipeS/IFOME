@@ -1,4 +1,5 @@
 <template>
+  <Header class="hidden md:flex" @open-cart="cartOpen = !cartOpen"/>
   <main class="w-full min-h-[calc(100vh-75px)] bg-white md:mt-[75px] md:max-w-[1200px] mx-auto">
     <div v-if="!restaurant" class="w-full h-[250px] bg-gray-300 animate-pulse"></div>
 
@@ -72,7 +73,7 @@
 <script setup>
 import DishCard from "@/components/store/dish/DishCard.vue";
 import {useRoute} from 'vue-router';
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, watch} from 'vue';
 import router from '@/router';
 import DishModal from "@/components/store/dish/DishModal.vue";
 import api from '@/services/api';

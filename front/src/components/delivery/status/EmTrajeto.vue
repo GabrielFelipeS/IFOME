@@ -16,7 +16,12 @@
             <!-- Botões de Ação -->
             <div class="flex w-full gap-2 mt-4">
                 <button @click="$emit('cancelar')" class="w-full bg-primary text-white py-2 rounded-lg font-semibold">Cancelar</button>
-                <button @click="$emit('chegada')" class="w-full bg-green-500 text-white py-2 rounded-lg font-semibold">Chegada</button>
+                <button class="w-full bg-blue-500 text-white py-2 rounded-lg font-semibold" @click="$emit('chat')">
+                    <v-icon name="fa-comment"></v-icon>
+                    Chat
+                </button>            </div>
+            <div class="flex w-full mt-1">
+                <button @click="$emit('chegada')" class="w-full bg-green-500 text-white py-4 rounded-lg font-semibold">Chegada</button>
             </div>
         </div>
     </div>

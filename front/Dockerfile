@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY . .
 
-RUN rm -rf node_modules package-lock.json && npm install
+RUN rm -rf node_modules package-lock.json && npm cache clean --force && npm install
 
 RUN npm run build
 

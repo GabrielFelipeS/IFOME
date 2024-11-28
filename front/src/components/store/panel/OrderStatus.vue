@@ -12,7 +12,7 @@
                 }" />
                 <p
                     :class="{ 'text-red-500': index <= currentStatusIndex, 'text-gray-700': index > currentStatusIndex }">
-                    {{ state }}
+                    {{ state.replaceAll('_',' ') }}
                 </p>
             </div>
         </div>
