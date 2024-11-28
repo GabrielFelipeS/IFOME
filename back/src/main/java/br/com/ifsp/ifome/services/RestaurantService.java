@@ -3,6 +3,7 @@ package br.com.ifsp.ifome.services;
 import br.com.ifsp.ifome.dto.request.RestaurantReviewRequest;
 import br.com.ifsp.ifome.dto.response.CustomerOrderResponse;
 import br.com.ifsp.ifome.dto.response.RestaurantResponse;
+import br.com.ifsp.ifome.dto.response.RestaurantReviewResponse;
 import br.com.ifsp.ifome.entities.CustomerOrder;
 import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.entities.RestaurantReview;
@@ -98,9 +99,9 @@ public class RestaurantService {
      * @return restaurante com id passado como parametro
      * @throws RestaurantNotFoundException Caso não encontre o restaurante com o id especificado
      */
-    public RestaurantResponse findRestaurantResponseById(Long id) {
+    public RestaurantReviewResponse findRestaurantResponseById(Long id) {
         Restaurant restaurant = this.findById(id);
-        return RestaurantResponse.from(restaurant);
+        return RestaurantReviewResponse.from(restaurant);
     }
 
     /**

@@ -141,14 +141,10 @@ public class ClientController {
             Principal principal) {
 
             RestaurantReview review = restaurantService.reviewRestaurant(orderId, reviewRequest, principal.getName());
+            ReviewResponse response = new ReviewResponse(review);
 
-            // Constrói a resposta com os dados do restaurante e avaliação
-            Restaurant restaurant = review.getRestaurant();
-            RestaurantReviewResponse response = RestaurantReviewResponse.from(restaurant, review);
-
-            // Retorna a resposta com os dados completos
             return ResponseEntity.ok(new ApiResponse("success", response, "Avaliação registrada com sucesso!"));
-            
+
     }
 
 

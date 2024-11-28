@@ -20,13 +20,13 @@ public record RestaurantReviewResponse(
         String restaurantImage,
         BankAccount bankAccount,
         boolean isOpen,
-        Double rating,
-        Double stars,
-        String comment
+        List<ReviewResponse> restaurantReview,
+        Double rating
 
 ) {
-    public static RestaurantReviewResponse from(Restaurant restaurant, RestaurantReview restaurantReview) {
-        return new RestaurantReviewResponse( restaurant.getId(),
+    public static RestaurantReviewResponse from(Restaurant restaurant) {
+        return new RestaurantReviewResponse(
+                restaurant.getId(),
                 restaurant.getNameRestaurant(),
                 restaurant.getCnpj(),
                 restaurant.getFoodCategory(),
@@ -43,9 +43,10 @@ public record RestaurantReviewResponse(
                 restaurant.getRestaurantImage(),
                 restaurant.getBankAccount(),
                 restaurant.isOpen(),
-                restaurant.getRating(),
-                restaurantReview.getStars(),
-                restaurantReview.getComment()
+                restaurant.getRestaurantReview().stream()
+                        .map(ReviewResponse::new).
+                        toList(),
+                restaurant.getRating()
 
         );
     }
