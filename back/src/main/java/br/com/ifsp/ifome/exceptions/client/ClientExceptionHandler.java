@@ -46,4 +46,43 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
         response.put("message",  ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> hadleOrderNotFoundException(
+            OrderNotFoundException ex){
+        logger.warn(ex.getMessage());
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(OrderNotOwnedByClientException.class)
+    public ResponseEntity<Map<String, Object>> OrderNotOwnedByClientException(
+            OrderNotOwnedByClientException ex){
+        logger.warn(ex.getMessage());
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(OrderNotDeliveredException.class)
+    public ResponseEntity<Map<String, Object>> OrderNotDeliveredException(
+            OrderNotDeliveredException ex){
+        logger.warn(ex.getMessage());
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(OrderAlreadyReviewedException.class)
+    public ResponseEntity<Map<String, Object>> OrderAlreadyReviewedException(
+            OrderAlreadyReviewedException ex){
+        logger.warn(ex.getMessage());
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+
+
 }

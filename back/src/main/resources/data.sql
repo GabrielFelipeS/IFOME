@@ -365,3 +365,22 @@ ALTER SEQUENCE CHAT_SEQUENCE RESTART WITH 4;
 --
 -- INSERT INTO restaurant_review (stars, customer_order_id, restaurant_id, comment)
 -- VALUES (4.5, 7, 1, 'Excelente experiência no restaurante!');
+
+
+-- Outro pedido para cliente com id 6
+INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, freight, order_date, current_order_delivery_status)
+VALUES (1015, 1, 1, 'CONCLUIDO','CONCLUIDO',  0.0, CURRENT_TIMESTAMP, 'CONCLUIDO');
+
+INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('CONCLUIDO', CURRENT_TIMESTAMP, 6);
+-- Fim dos insert de pedido
+
+-- Outro pedido para cliente com id 7
+INSERT INTO customer_order (order_price, restaurant_id, cart_id, payment_status, current_order_client_status, freight, order_date, current_order_delivery_status)
+VALUES (1015, 1, 1, 'CONCLUIDO','CONCLUIDO',  0.0, CURRENT_TIMESTAMP, 'CONCLUIDO');
+
+--UPDATE cart SET customer_order_id = 7 WHERE client_id = 1 LIMIT 1;
+INSERT INTO order_info (order_status, local_date_time, customer_order) VALUES ('CONCLUIDO', CURRENT_TIMESTAMP, 7);
+
+INSERT INTO restaurant_review (stars, customer_order_id, restaurant_id, comment)
+VALUES (4.5, 7, 1, 'Excelente experiência no restaurante!');
+-- Fim dos insert de pedido
