@@ -637,10 +637,11 @@ public class ClientControllerIT {
         // Verifica se o código de status é 400 BAD REQUEST
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
+        System.err.println(response.getBody());
         // Verifica a mensagem de erro no corpo da resposta
         DocumentContext documentContext = JsonPath.parse(response.getBody());
-        String message = documentContext.read("$.message");
-        assertThat(message).isEqualTo("Erro ao realizar operação");
+        String message = documentContext.read("$.errors.stars");
+        assertThat(message).isEqualTo("A nota máxima é 5.");
     }
 
     @Test
