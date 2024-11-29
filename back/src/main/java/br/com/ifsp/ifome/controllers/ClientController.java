@@ -140,34 +140,11 @@ public class ClientController {
             @RequestBody @Valid RestaurantReviewRequest reviewRequest,
             Principal principal) {
 
-        try {
-            // Chama o serviço para registrar a avaliação
             RestaurantReview review = restaurantService.reviewRestaurant(orderId, reviewRequest, principal.getName());
+            ReviewResponse response = new ReviewResponse(review);
 
-            // Constrói a resposta com os dados do restaurante e avaliação
-            Restaurant restaurant = review.getRestaurant();
-            RestaurantReviewResponse response = RestaurantReviewResponse.from(restaurant, review);
-
-            // Retorna a resposta com os dados completos
             return ResponseEntity.ok(new ApiResponse("success", response, "Avaliação registrada com sucesso!"));
 
-        } catch (OrderNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse("error", null, e.getMessage()));
-        } catch (OrderNotOwnedByClientException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse("error", null, e.getMessage()));
-        } catch (OrderNotDeliveredException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse("error", null, e.getMessage()));
-        } catch (OrderAlreadyReviewedException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse("error", null, e.getMessage()));
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiResponse("error", null, "Erro interno no servidor."));
-        }
     }
 
 

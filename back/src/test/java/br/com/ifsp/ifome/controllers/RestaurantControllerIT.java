@@ -132,6 +132,7 @@ public class RestaurantControllerIT {
         );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        System.out.println(response.getBody());
 
         DocumentContext document = JsonPath.parse(response.getBody());
 

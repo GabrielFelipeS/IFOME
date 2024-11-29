@@ -658,12 +658,16 @@ public class ClientControllerIT {
         // Verifica se o código de status é 200 OK
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        // Verifica a resposta JSON
+        // Verifica a resposta JSON completa para garantir que só os campos necessários estão presentes
         DocumentContext documentContext = JsonPath.parse(response.getBody());
-        String status = documentContext.read("$.status");
-        String message = documentContext.read("$.message");
-        assertThat(status).isEqualTo("success");
-        assertThat(message).isEqualTo("Avaliação registrada com sucesso!");
+        Map<String, Object> responseMap = documentContext.json(); // Converte para um mapa
+
+        // Certifique-se de que só os campos 'status' e 'message' estão presentes
+        assertThat(responseMap).containsOnlyKeys("status", "message");
+
+        // Verifica os valores desses campos
+        assertThat(responseMap.get("status")).isEqualTo("success");
+        assertThat(responseMap.get("message")).isEqualTo("Avaliação registrada com sucesso!");
     }
 
     @Test

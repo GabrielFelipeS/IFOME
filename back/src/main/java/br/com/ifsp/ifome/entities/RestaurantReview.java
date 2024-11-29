@@ -1,6 +1,7 @@
 package br.com.ifsp.ifome.entities;
 
 import br.com.ifsp.ifome.dto.request.RestaurantReviewRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.Getter;
@@ -18,6 +19,7 @@ import lombok.Setter;
         private Long id;
 
         @ManyToOne
+        @JsonIgnore
         @JoinColumn(name = "restaurant_id", nullable = false)
         private Restaurant restaurant;
 

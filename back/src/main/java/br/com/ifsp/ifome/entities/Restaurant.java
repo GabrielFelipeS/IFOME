@@ -77,10 +77,11 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     private Boolean isOpen;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<RestaurantReview> reviews = new ArrayList<>();
+    private List<RestaurantReview> restaurantReview = new ArrayList<>();
 
     @Column(name = "rating")
     private Double rating = 0.;
+
 
 
     public Restaurant(RestaurantRequest restaurantRequest, Address address,BCryptPasswordEncoder bCryptPasswordEncoder, String restaurantImage){
@@ -103,7 +104,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.isOpen = false;
         this.address = List.of(address);
         this.role = Role.RESTAURANT;
-        this.rating = 0.0;
+        //this.rating = 0.0;
 
         address.setRestaurant(this);
     }
@@ -191,7 +192,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     }
     public void addReview(RestaurantReview review) {
         review.setRestaurant(this);
-        this.reviews.add(review);
+        this.restaurantReview.add(review);
     }
 
 

@@ -19,6 +19,13 @@
                 <button @click="$emit('cancelar')" class="w-full bg-red-500 text-white py-2 rounded-lg font-semibold">
                     Cancelar
                 </button>
+
+                <button class="w-full bg-blue-500 text-white py-2 rounded-lg font-semibold" @click="$emit('chat')">
+                    <v-icon name="fa-comment"></v-icon>
+                    Chat
+                </button>
+            </div>
+            <div class="flex w-full mt-1">
                 <button
                     :disabled="currentStatus !== 'PRONTO'"
                     @click="$emit('sairParaEntrega')"
@@ -26,11 +33,12 @@
                         'bg-gray-400': currentStatus !== 'PRONTO',
                         'bg-green-500': currentStatus === 'PRONTO'
                     }"
-                    class="w-full text-white py-2 rounded-lg font-semibold"
+                    class="w-full text-white py-5 rounded-lg font-semibold"
                 >
                     Sair Para Entrega
                 </button>
             </div>
+
         </div>
     </div>
 </template>
@@ -53,7 +61,7 @@ const props = defineProps({
 });
 
 // Definindo os eventos
-const emit = defineEmits(['cancelar', 'sairParaEntrega']);
+const emit = defineEmits(['cancelar', 'sairParaEntrega', 'chat']);
 
 const pedidoStore = usePedidoStore();
 
