@@ -13,5 +13,4 @@ public record RestaurantReviewRequest(
 
         @Size(max = 250, message = "O comentário não pode ter mais de 250 caracteres.")
         String comment
-) {
-}
+) { }

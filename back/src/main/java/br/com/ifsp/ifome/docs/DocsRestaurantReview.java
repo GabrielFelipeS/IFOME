@@ -82,7 +82,7 @@ import java.lang.annotation.Target;
     O cliente deve fornecer a nota entre 1 e 5 estrelas. O comentário é opcional, mas, se fornecido, deve ter no máximo 250 caracteres.
     Validações:
     
-    ## rating:
+    ## stars:
     Tipo: Integer
     Validação:
     - Não aceita valores nulos
@@ -103,7 +103,7 @@ import java.lang.annotation.Target;
                                 description = "Cliente atribui uma nota e um comentário opcional",
                                 value = """
                   {
-                   "rating": 4,
+                   "stars": 4,
                    "comment": "A comida estava excelente, mas o serviço demorou um pouco."
                  }
                 """
@@ -113,7 +113,7 @@ import java.lang.annotation.Target;
                                 description = "Cliente fornece uma nota fora do intervalo permitido",
                                 value = """
                     {
-                       "rating": 6,
+                       "stars": 6,
                        "comment": "Muito bom!"
                     }
                     """
@@ -123,7 +123,7 @@ import java.lang.annotation.Target;
                                 description = "Cliente avalia o restaurante sem fornecer um comentário",
                                 value = """
                     {
-                       "rating": 5
+                       "stars": 5
                     }
                     """
                         )
