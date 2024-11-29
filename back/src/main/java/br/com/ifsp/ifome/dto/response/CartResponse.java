@@ -3,7 +3,7 @@ package br.com.ifsp.ifome.dto.response;
 import br.com.ifsp.ifome.entities.*;
 
 import java.util.List;
-
+// TODO colocar atributo de totalPriceOrder e arrumar o freigth
 public record CartResponse(
         List<OrderItem> orderItems,
         Double freigth,
