@@ -640,8 +640,8 @@ public class ClientControllerIT {
         System.err.println(response.getBody());
         // Verifica a mensagem de erro no corpo da resposta
         DocumentContext documentContext = JsonPath.parse(response.getBody());
-        String message = documentContext.read("$.errors.stars");
-        assertThat(message).isEqualTo("A nota máxima é 5.");
+        List<String> messages = documentContext.read("$.errors.stars");
+        assertThat(messages).containsOnly("A nota máxima é 5.");
     }
 
     @Test
@@ -663,7 +663,7 @@ public class ClientControllerIT {
         Map<String, Object> responseMap = documentContext.json(); // Converte para um mapa
 
         // Certifique-se de que só os campos 'status' e 'message' estão presentes
-        assertThat(responseMap).containsOnlyKeys("status", "message");
+        assertThat(responseMap).containsOnlyKeys("status", "message", "data");
 
         // Verifica os valores desses campos
         assertThat(responseMap.get("status")).isEqualTo("success");
