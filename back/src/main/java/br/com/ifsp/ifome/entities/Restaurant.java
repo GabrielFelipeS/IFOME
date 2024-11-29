@@ -2,6 +2,8 @@ package br.com.ifsp.ifome.entities;
 
 import br.com.ifsp.ifome.dto.request.AddressRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
+import br.com.ifsp.ifome.dto.response.DishResponse;
+import br.com.ifsp.ifome.dto.response.ReviewResponse;
 import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -196,4 +198,15 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     }
 
 
+    public List<ReviewResponse> getRestaurantReviewResponse() {
+       return this.restaurantReview.stream()
+            .map(ReviewResponse::new).
+            toList();
+    }
+
+    public List<DishResponse> getDishesResponse() {
+        return this.dishes.stream()
+            .map(DishResponse::new)
+            .toList();
+    }
 }

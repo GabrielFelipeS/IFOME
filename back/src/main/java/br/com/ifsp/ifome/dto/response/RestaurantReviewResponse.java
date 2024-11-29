@@ -32,9 +32,7 @@ public record RestaurantReviewResponse(
                 restaurant.getFoodCategory(),
                 restaurant.getAddress(),
                 restaurant.getTelephone(),
-                restaurant.getDishes().stream()
-                        .map(DishResponse::new)
-                        .toList(),
+                restaurant.getDishesResponse(),
                 restaurant.getOpeningHours(),
                 restaurant.getPersonResponsible(),
                 restaurant.getPersonResponsibleCpf(),
@@ -43,9 +41,7 @@ public record RestaurantReviewResponse(
                 restaurant.getRestaurantImage(),
                 restaurant.getBankAccount(),
                 restaurant.isOpen(),
-                restaurant.getRestaurantReview().stream()
-                        .map(ReviewResponse::new).
-                        toList(),
+                restaurant.getRestaurantReviewResponse(),
                 restaurant.getRating()
 
         );
