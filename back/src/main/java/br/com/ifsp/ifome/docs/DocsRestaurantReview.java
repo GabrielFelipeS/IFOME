@@ -75,15 +75,33 @@ import java.lang.annotation.Target;
                 responseCode = "401", description = "Usuário não autenticado"
         ),
         @ApiResponse(
-                responseCode = "403", description = "Avaliação não permitida (pedido não entregue ou não pertence ao cliente)",
-                content = @Content(mediaType = "application/json",
+                responseCode = "403",
+                description = "Avaliação não permitida (pedido não entregue ou não pertence ao cliente)",
+                content = @Content(
+                        mediaType = "application/json",
                         schema = @Schema(implementation = ApiResponse.class),
-                        examples = @ExampleObject(value = """
-                {
-                  "message": "Pedido não pertence ao cliente autenticado."
-                }
-            """)
-                )),
+                        examples = {
+                                @ExampleObject(
+                                        name = "Pedido não entregue",
+                                        description = "O pedido não foi entregue, portanto não pode ser avaliado.",
+                                        value = """
+                    {
+                      "message": "Apenas pedidos entregues podem ser avaliados."
+                    }
+                    """
+                                ),
+                                @ExampleObject(
+                                        name = "Pedido não pertence ao cliente",
+                                        description = "O pedido não pertence ao cliente autenticado.",
+                                        value = """
+                    {
+                      "message": "Pedido não pertence ao cliente autenticado."
+                    }
+                    """
+                                )
+                        }
+                )
+        ),
         @ApiResponse(
                 responseCode = "404", description = "Pedido não encontrado",
                 content = @Content(mediaType = "application/json",
