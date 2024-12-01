@@ -275,9 +275,6 @@ public class RestaurantControllerIT {
     }
 
 
-
-
-
     private HttpEntity<Void> getHttpEntity(String token) {
         HttpHeaders headers = getHttpHeaders(token);
         return new HttpEntity<>(headers);
