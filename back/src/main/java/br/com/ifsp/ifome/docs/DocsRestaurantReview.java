@@ -25,31 +25,69 @@ import java.lang.annotation.Target;
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ApiResponse.class),
                         examples = @ExampleObject(value = """
-                {
-                  "status": "success",
-                  "data": {
-                    "id": 1,
-                    "nameRestaurant": "Restaurante X",
-                    "cnpj": "12345678000190",
-                    "foodCategory": "Italiana",
-                    "address": [...],
-                    "telephone": "(11) 1234-5678",
-                    "dish": [...],
-                    "openingHours": [...],
-                    "personResponsible": "João Silva",
-                    "personResponsibleCPF": "123.456.789-00",
-                    "email": "contato@restaurantex.com",
-                    "paymentMethods": "Cartão, Dinheiro",
-                    "restaurantImage": "/images/restaurant.jpg",
-                    "bankAccount": {...},
-                    "isOpen": true,
-                    "rating": 4.5,
-                    "stars": 5.0,
-                    "comment": "Comida deliciosa!"
-                  },
-                  "message": "Avaliação registrada com sucesso!"
-                }
-            """)
+{
+  "status": "success",
+  "data": {
+    "id": 3,
+    "customerOrder": {
+      "orderId": 6,
+      "name": "Gabriel",
+      "address": {
+        "id": 1,
+        "nameAddress": "Endereço João",
+        "cep": "05413-020",
+        "neighborhood": "Pinheiros",
+        "city": "São Paulo",
+        "state": "SP",
+        "address": "Rua dos Três Irmãos",
+        "number": "50",
+        "complement": null,
+        "details": "Próximo à Praça da República",
+        "typeResidence": "Casa",
+        "latitude": "-23.5895527",
+        "longitude": "-46.7157754"
+      },
+      "orderItems": [
+        {
+          "id": 1,
+          "dish": {
+            "id": 3,
+            "name": "Hambúrguer Artesanal",
+            "description": "Hambúrguer com queijo, alface e tomate",
+            "price": 29.9,
+            "dishCategory": "Prato Principal",
+            "dishImage": "hamburguer.jpeg",
+            "availability": "Disponível",
+            "restaurantId": 1
+          },
+          "quantity": 5,
+          "unitPrice": 29,
+          "detail": null,
+          "restaurantId": 1,
+          "dishId": 3,
+          "totalPrice": 145
+        }
+      ],
+      "orderPrice": 1015,
+      "orderInfo": [
+        {
+          "id": 10,
+          "orderStatus": "CONCLUIDO",
+          "localDateTime": "2024-12-01T20:07:10.514413"
+        }
+      ],
+      "paymentStatus": "CONCLUIDO",
+      "orderDate": "2024-12-01 20:07:10.514413",
+      "freight": 0,
+      "totalPrice": 1015
+    },
+    "stars": 4,
+    "comment": "A comida estava excelente, mas o serviço demorou um pouco."
+  },
+  "message": "Avaliação registrada com sucesso!"
+}
+""")
+
                 )
         ),
         @ApiResponse(
