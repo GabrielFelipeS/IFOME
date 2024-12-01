@@ -44,7 +44,7 @@ import java.lang.annotation.Target;
                     "bankAccount": {...},
                     "isOpen": true,
                     "rating": 4.5,
-                    "stars": 5,
+                    "stars": 5.0,
                     "comment": "Comida deliciosa!"
                   },
                   "message": "Avaliação registrada com sucesso!"
@@ -53,14 +53,14 @@ import java.lang.annotation.Target;
                 )
         ),
         @ApiResponse(
-                responseCode = "400", description = "Dados inválidos fornecidos",
+                responseCode = "400", description = "Dados inválidos fornecidos ou Pedido já avaliado",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ApiResponse.class),
                         examples = @ExampleObject(value = """
                 {
                   "message": "Erro ao realizar operação",
                   "errors": {
-                    "rating": [
+                    "stars": [
                       "A nota deve ser entre 1 e 5"
                     ],
                     "comment": [
@@ -75,15 +75,30 @@ import java.lang.annotation.Target;
                 responseCode = "401", description = "Usuário não autenticado"
         ),
         @ApiResponse(
-                responseCode = "403", description = "Avaliação não permitida (pedido não entregue ou já avaliado)"
-        )
-})
+                responseCode = "403", description = "Avaliação não permitida (pedido não entregue ou não pertence ao cliente)",
+                content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ApiResponse.class),
+                        examples = @ExampleObject(value = """
+                {
+                  "message": "Pedido não pertence ao cliente autenticado."
+                }
+            """)
+                )),
+        @ApiResponse(
+                responseCode = "404", description = "Pedido não encontrado",
+                content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ApiResponse.class),
+                        examples = @ExampleObject(value = """
+                {
+                  "message": "Pedido não encontrado."
+                }
+            """)))})
 @RequestBody(description = """
     O cliente deve fornecer a nota entre 1 e 5 estrelas. O comentário é opcional, mas, se fornecido, deve ter no máximo 250 caracteres.
     Validações:
     
     ## stars:
-    Tipo: Integer
+    Tipo: Float
     Validação:
     - Não aceita valores nulos
     - Deve ser um valor entre 1 e 5
@@ -103,7 +118,7 @@ import java.lang.annotation.Target;
                                 description = "Cliente atribui uma nota e um comentário opcional",
                                 value = """
                   {
-                   "stars": 4,
+                   "stars": 4.0,
                    "comment": "A comida estava excelente, mas o serviço demorou um pouco."
                  }
                 """
@@ -113,7 +128,7 @@ import java.lang.annotation.Target;
                                 description = "Cliente fornece uma nota fora do intervalo permitido",
                                 value = """
                     {
-                       "stars": 6,
+                       "stars": 6.0,
                        "comment": "Muito bom!"
                     }
                     """
@@ -123,7 +138,7 @@ import java.lang.annotation.Target;
                                 description = "Cliente avalia o restaurante sem fornecer um comentário",
                                 value = """
                     {
-                       "stars": 5
+                       "stars": 5.0
                     }
                     """
                         )

@@ -53,7 +53,7 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
         logger.warn(ex.getMessage());
         Map<String, Object> response = new HashMap<>();
         response.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
     @ExceptionHandler(OrderNotOwnedByClientException.class)
@@ -62,7 +62,7 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
         logger.warn(ex.getMessage());
         Map<String, Object> response = new HashMap<>();
         response.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
     @ExceptionHandler(OrderNotDeliveredException.class)
@@ -71,7 +71,7 @@ public class ClientExceptionHandler extends ResponseEntityExceptionHandler {
         logger.warn(ex.getMessage());
         Map<String, Object> response = new HashMap<>();
         response.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
     @ExceptionHandler(OrderAlreadyReviewedException.class)
