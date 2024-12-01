@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -152,6 +153,7 @@ public class RestaurantService {
      * @throws IllegalArgumentException Se o pedido não for encontrado, não pertencer ao cliente autenticado,
      *                                  não tiver sido entregue, ou já tiver sido avaliado.
      */
+    @Transactional
     public RestaurantReview reviewRestaurant(Long orderId, @Valid RestaurantReviewRequest reviewRequest, String customerEmail) {
         CustomerOrder order = customerOrderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException());
