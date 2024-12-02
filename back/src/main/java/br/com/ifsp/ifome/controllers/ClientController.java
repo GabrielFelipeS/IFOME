@@ -4,9 +4,17 @@ import br.com.ifsp.ifome.docs.*;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.OrderItemRequest;
 import br.com.ifsp.ifome.dto.request.OrderItemUpdateRequest;
+import br.com.ifsp.ifome.dto.request.RestaurantReviewRequest;
 import br.com.ifsp.ifome.dto.response.*;
+import br.com.ifsp.ifome.entities.Restaurant;
+import br.com.ifsp.ifome.entities.RestaurantReview;
+import br.com.ifsp.ifome.exceptions.client.OrderAlreadyReviewedException;
+import br.com.ifsp.ifome.exceptions.client.OrderNotDeliveredException;
+import br.com.ifsp.ifome.exceptions.client.OrderNotFoundException;
+import br.com.ifsp.ifome.exceptions.client.OrderNotOwnedByClientException;
 import br.com.ifsp.ifome.services.ClientService;
 import br.com.ifsp.ifome.services.CustomerOrderService;
+import br.com.ifsp.ifome.services.RestaurantService;
 import br.com.ifsp.ifome.services.SearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -27,11 +35,13 @@ public class ClientController {
     private final ClientService clientService;
     private final CustomerOrderService customerOrderService;
     private final SearchService searchService;
+    private final RestaurantService restaurantService;
 
-    public ClientController(ClientService clientService, CustomerOrderService customerOrderService, SearchService searchService) {
+    public ClientController(ClientService clientService, CustomerOrderService customerOrderService, SearchService searchService, RestaurantService restaurantService) {
         this.clientService = clientService;
         this.customerOrderService = customerOrderService;
         this.searchService = searchService;
+        this.restaurantService = restaurantService;
     }
 
     @PostMapping("/order/")
@@ -123,6 +133,22 @@ public class ClientController {
         return ResponseEntity.ok(response);
     }
 
+    @DocsRestaurantReview
+    @PostMapping("/order/{orderId}/review")
+    public ResponseEntity<ApiResponse> reviewRestaurant(
+            @PathVariable Long orderId,
+            @RequestBody @Valid RestaurantReviewRequest reviewRequest,
+            Principal principal) {
+
+            RestaurantReview review = restaurantService.reviewRestaurant(orderId, reviewRequest, principal.getName());
+            ReviewResponse response = new ReviewResponse(review);
+
+            return ResponseEntity.ok(new ApiResponse("success", response, "Avaliação registrada com sucesso!"));
+
+    }
+
 
 
 }
+
+

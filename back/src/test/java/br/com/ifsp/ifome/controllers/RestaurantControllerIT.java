@@ -34,21 +34,18 @@ public class RestaurantControllerIT {
 
     private static GreenMail greenMail;
 
-    @BeforeAll
-    public static void setup() {
-        greenMail = new GreenMail(ServerSetupTest.SMTP);
-        greenMail.setUser("teste.ifome@gmail.com", "teste");
-        greenMail.setUser("test@example.com", "test@example.com");
-        greenMail.start();
-    }
-
-    @AfterAll
-    public static void tearDown() {
+    @AfterEach
+    public void setDown() {
         greenMail.stop();
     }
 
     @BeforeEach
     public void setUp() {
+        greenMail = new GreenMail(ServerSetupTest.SMTP);
+        greenMail.setUser("teste.ifome@gmail.com", "teste");
+        greenMail.setUser("test@example.com", "test@example.com");
+        greenMail.start();
+
         this.tokenWithOrders = tokenService.generateToken("email1@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
         this.tokenOtherRestaurant = tokenService.generateToken("email2@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
         this.tokenValidButRestaurantNotExist = tokenService.generateToken("restaurant_not_exists@email.com",  List.of(new SimpleGrantedAuthority("ROLE_RESTAURANT")));
@@ -132,6 +129,7 @@ public class RestaurantControllerIT {
         );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        System.out.println(response.getBody());
 
         DocumentContext document = JsonPath.parse(response.getBody());
 

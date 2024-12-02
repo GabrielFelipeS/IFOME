@@ -73,9 +73,10 @@ public class Cart {
         return this.orderItems.stream().mapToDouble(OrderItem::getTotalPrice).sum();
     }
 
-
+// TODO colocar o frete de volta
     public Double totalPrice() {
-        return this.totalPriceWithoutShipping() + freight;
+//        return this.totalPriceWithoutShipping() + freight;
+        return this.totalPriceWithoutShipping();
     }
 
     public boolean cartEmpty() {

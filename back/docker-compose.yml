@@ -8,5 +8,6 @@ services:
       - "80:8080"
     volumes:
       - "./src/main/resources/static/images:/app/src/main/resources/static/images"
+      - "./src/main/resources/emails:/app/src/main/resources/emails"
       - "./logs:/logs"
     restart: "always"

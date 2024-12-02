@@ -2,6 +2,8 @@ package br.com.ifsp.ifome.entities;
 
 import br.com.ifsp.ifome.dto.request.AddressRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantRequest;
+import br.com.ifsp.ifome.dto.response.DishResponse;
+import br.com.ifsp.ifome.dto.response.ReviewResponse;
 import br.com.ifsp.ifome.interfaces.PasswordPolicy;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -76,6 +78,14 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     @Column(name = "is_open")
     private Boolean isOpen;
 
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<RestaurantReview> restaurantReview = new ArrayList<>();
+
+    @Column(name = "rating")
+    private Double rating = 0.;
+
+
+
     public Restaurant(RestaurantRequest restaurantRequest, Address address,BCryptPasswordEncoder bCryptPasswordEncoder, String restaurantImage){
         this.nameRestaurant = restaurantRequest.nameRestaurant();
         this.cnpj = restaurantRequest.cnpj().replaceAll("[^\\d]", "");
@@ -96,6 +106,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.isOpen = false;
         this.address = List.of(address);
         this.role = Role.RESTAURANT;
+        //this.rating = 0.0;
 
         address.setRestaurant(this);
     }
@@ -104,7 +115,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
                       String foodCategory, List<Address> address, String telephone,
                       List<OpeningHours> openingHours, String personResponsible,
                       String personResponsibleCPF, String email, String password, String paymentMethods,
-                      String restaurantImage, BankAccount bankAccount, boolean isOpen,  BCryptPasswordEncoder bCryptPasswordEncoder) {
+                      String restaurantImage, BankAccount bankAccount, boolean isOpen, Double rating, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.id = id;
         this.nameRestaurant = nameRestaurant;
         this.cnpj = cnpj.replaceAll("[^\\d]", "");
@@ -121,6 +132,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.bankAccount = bankAccount;
         this.role = Role.RESTAURANT;
         this.isOpen = isOpen;
+        //this.rating = 0.;
     }
 
 //    public void setAddress(AddressRequest addressRequest) {
@@ -175,5 +187,23 @@ public class Restaurant implements PasswordPolicy, UserDetails {
 
     public boolean isClose() {
         return !isOpen;
+    }
+
+    public void updateRating(double newAverageRating) {
+        this.rating = newAverageRating;
+    }
+
+
+
+    public List<ReviewResponse> getRestaurantReviewResponse() {
+       return this.restaurantReview.stream()
+            .map(ReviewResponse::new).
+            toList();
+    }
+
+    public List<DishResponse> getDishesResponse() {
+        return this.dishes.stream()
+            .map(DishResponse::new)
+            .toList();
     }
 }
