@@ -12,10 +12,7 @@ import br.com.ifsp.ifome.exceptions.client.OrderAlreadyReviewedException;
 import br.com.ifsp.ifome.exceptions.client.OrderNotDeliveredException;
 import br.com.ifsp.ifome.exceptions.client.OrderNotFoundException;
 import br.com.ifsp.ifome.exceptions.client.OrderNotOwnedByClientException;
-import br.com.ifsp.ifome.services.ClientService;
-import br.com.ifsp.ifome.services.CustomerOrderService;
-import br.com.ifsp.ifome.services.RestaurantService;
-import br.com.ifsp.ifome.services.SearchService;
+import br.com.ifsp.ifome.services.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -36,12 +33,14 @@ public class ClientController {
     private final CustomerOrderService customerOrderService;
     private final SearchService searchService;
     private final RestaurantService restaurantService;
+    private final RecommendationsService recommendationsService;
 
-    public ClientController(ClientService clientService, CustomerOrderService customerOrderService, SearchService searchService, RestaurantService restaurantService) {
+    public ClientController(ClientService clientService, CustomerOrderService customerOrderService, SearchService searchService, RestaurantService restaurantService, RecommendationsService recommendationsService) {
         this.clientService = clientService;
         this.customerOrderService = customerOrderService;
         this.searchService = searchService;
         this.restaurantService = restaurantService;
+        this.recommendationsService = recommendationsService;
     }
 
     @PostMapping("/order/")
@@ -146,6 +145,19 @@ public class ClientController {
             return ResponseEntity.ok(new ApiResponse("success", response, "Avaliação registrada com sucesso!"));
 
     }
+
+    @GetMapping("/recommendations/restaurants")
+    public ResponseEntity<ApiResponse>getRecommendedRestaurants(@RequestParam String email){
+        List<RestaurantReviewResponse> recomendations = recommendationsService.recommendsRestaurants(email);
+        return ResponseEntity.ok(new ApiResponse("sucess", recomendations, "Restaurantes recomendados com sucesso."));
+    }
+
+    @GetMapping("recommendations/dishes")
+    public ResponseEntity<ApiResponse> getRecommendedDishes(@RequestParam String email){
+        List<DishResponse> recommendations = recommendationsService.recommendDishes(email);
+        return ResponseEntity.ok(new ApiResponse("sucess",recommendations, "Pratos Recomendados com sucesso"));
+    }
+
 
 
 
