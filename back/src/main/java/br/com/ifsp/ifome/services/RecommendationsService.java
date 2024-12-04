@@ -13,19 +13,24 @@ import br.com.ifsp.ifome.repositories.RestaurantRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
-
+/**
+ * Serviço responsável por fornecer recomendações de restaurantes e pratos com base no histórico de pedidos do cliente.
+ */
 @Service
 public class RecommendationsService {
 
     private final CustomerOrderRepository customerOrderRepository;
     private final DishRepository dishRepository;
     private final RestaurantRepository restaurantRepository;
-
+    /**
+     * Construtor para injeção das dependências.
+     *
+     * @param customerOrderRepository Repositório para acessar dados de pedidos de clientes.
+     * @param dishRepository Repositório para acessar dados de pratos.
+     * @param restaurantRepository Repositório para acessar dados de restaurantes.
+     */
     public RecommendationsService(CustomerOrderRepository customerOrderRepository,
                                  DishRepository dishRepository,
                                  RestaurantRepository restaurantRepository) {
@@ -35,7 +40,11 @@ public class RecommendationsService {
     }
 
     /**
-     * Retorna uma lista de restaurantes recomendados para o usuário
+     * Retorna uma lista de restaurantes recomendados com base no histórico de pedidos do usuário.
+     * A recomendação leva em consideração a frequência de pedidos por restaurante, priorizando os mais requisitados.
+     *
+     * @param customerEmail O e-mail do cliente para buscar o histórico de pedidos.
+     * @return Uma lista de restaurantes recomendados.
      */
     public List<RestaurantReviewResponse> recommendsRestaurants(String customerEmail) {
         // Buscar todas as ordens do cliente
@@ -45,33 +54,39 @@ public class RecommendationsService {
         Map<Long, Long> restaurantFrequency = orders.stream()
                 .collect(Collectors.groupingBy(order -> order.getRestaurant().getId(), Collectors.counting()));
 
-        // Ordenar os restaurantes pela frequência de pedidos de forma decrescente
+        // Ordenar os restaurantes pela frequência de pedidos de forma decrescente e limitar a 10
         List<Long> recommendedRestaurantIds = restaurantFrequency.entrySet().stream()
                 .sorted((entry1, entry2) -> Long.compare(entry2.getValue(), entry1.getValue()))
                 .map(Map.Entry::getKey)
                 .limit(10)  // Limita a 10 restaurantes
                 .collect(Collectors.toList());
 
-        // Obter todos os restaurantes de uma vez
+        // Buscar os restaurantes diretamente pelos IDs recomendados, incluindo a categoria de comida
         List<Restaurant> recommendedRestaurants = restaurantRepository.findAllById(recommendedRestaurantIds);
 
-        // Obter a categoria de comida do primeiro restaurante da lista de recomendações
-        String foodCategory = recommendedRestaurants.isEmpty() ? "" : recommendedRestaurants.get(0).getFoodCategory();
+        // Se não houver restaurantes recomendados, retorne uma lista vazia
+        if (recommendedRestaurants.isEmpty()) {
+            return Collections.emptyList();
+        }
 
-        // Filtrar os restaurantes pela mesma categoria de comida
-        List<Restaurant> filteredRestaurants = recommendedRestaurants.stream()
+        // Obter a categoria de comida do primeiro restaurante da lista
+        String foodCategory = recommendedRestaurants.get(0).getFoodCategory();
+
+        // Filtrar os restaurantes pela mesma categoria de comida, se houver
+        return recommendedRestaurants.stream()
                 .filter(restaurant -> restaurant.getFoodCategory().equals(foodCategory))
-                .collect(Collectors.toList());
-
-        // Mapear os restaurantes para objetos de resposta e retornar a lista
-        return filteredRestaurants.stream()
                 .map(RestaurantReviewResponse::from)
                 .collect(Collectors.toList());
     }
 
 
     /**
-     * Retorna uma lista de pratos recomendados para o usuário
+     * Retorna uma lista de pratos recomendados com base no histórico de pedidos do usuário.
+     * A recomendação leva em consideração a frequência de pedidos por prato, priorizando os mais requisitados.
+     * Para cada prato recomendado, outros pratos da mesma categoria também são sugeridos.
+     *
+     * @param customerEmail O e-mail do cliente para buscar o histórico de pedidos.
+     * @return Uma lista de pratos recomendados.
      */
     public List<DishResponse> recommendDishes(String customerEmail) {
         List<CustomerOrder> orders = customerOrderRepository.findAllByCartClientEmail(customerEmail);
