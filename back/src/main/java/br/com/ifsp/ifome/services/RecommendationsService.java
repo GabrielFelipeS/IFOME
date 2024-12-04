@@ -41,10 +41,13 @@ public class RecommendationsService {
 
     /**
      * Retorna uma lista de restaurantes recomendados com base no histórico de pedidos do usuário.
-     * A recomendação leva em consideração a frequência de pedidos por restaurante, priorizando os mais requisitados.
+     * A recomendação leva em consideração a frequência de pedidos realizados pelo cliente em cada restaurante.
+     * Os restaurantes mais requisitados serão priorizados, e a recomendação será feita considerando a categoria de comida
+     * mais frequente entre esses restaurantes.
      *
-     * @param customerEmail O e-mail do cliente para buscar o histórico de pedidos.
-     * @return Uma lista de restaurantes recomendados.
+     * @param customerEmail O e-mail do cliente para buscar o histórico de pedidos e calcular as recomendações.
+     * @return Uma lista de objetos {@link RestaurantReviewResponse} contendo os restaurantes recomendados,
+     *         ou uma lista vazia caso nenhum restaurante tenha sido recomendado.
      */
     public List<RestaurantReviewResponse> recommendsRestaurants(String customerEmail) {
         // Buscar todas as ordens do cliente
