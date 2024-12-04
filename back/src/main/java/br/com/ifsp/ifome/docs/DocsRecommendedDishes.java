@@ -27,27 +27,42 @@ import java.lang.annotation.Target;
                         schema = @Schema(implementation = ApiResponse.class),
                         examples = @ExampleObject(value = """
 {
-  "status": "success",
-  "data": [
-    {
-      "id": 1,
-      "name": "Spaghetti à Carbonara",
-      "description": "Delicioso spaghetti com molho cremoso de ovos e pancetta",
-      "price": 35.0,
-      "restaurantId": 1,
-      "image": "spaghetti.jpg"
-    },
-    {
-      "id": 2,
-      "name": "Sushi Variado",
-      "description": "Seleção de sushi fresco com peixe de alta qualidade",
-      "price": 45.0,
-      "restaurantId": 2,
-      "image": "sushi.jpg"
-    }
-  ],
-  "message": "Pratos recomendados com sucesso!"
-}
+  {
+                                   "status": "sucess",
+                                   "data": [
+                                     {
+                                       "id": 6,
+                                       "restaurantId": 2,
+                                       "name": "Pizza Margherita",
+                                       "description": "Pizza tradicional com molho de tomate, mussarela e manjericão",
+                                       "price": 32.9,
+                                       "dishCategory": "Prato Principal",
+                                       "dishImage": "pizza_margherita.jpeg",
+                                       "availability": "Disponível"
+                                     },
+                                     {
+                                       "id": 7,
+                                       "restaurantId": 2,
+                                       "name": "Pizza Quatro Queijos",
+                                       "description": "Pizza com uma combinação de queijos: mussarela, gorgonzola, parmesão e provolone",
+                                       "price": 36.9,
+                                       "dishCategory": "Prato Principal",
+                                       "dishImage": "pizza_quatro_queijos.jpeg",
+                                       "availability": "Disponível"
+                                     },
+                                     {
+                                       "id": 10,
+                                       "restaurantId": 2,
+                                       "name": "Suco de Laranja",
+                                       "description": "Suco natural de laranja",
+                                       "price": 8.9,
+                                       "dishCategory": "Bebida",
+                                       "dishImage": "suco_laranja.jpeg",
+                                       "availability": "Disponível"
+                                     }
+                                   ],
+                                   "message": "Pratos Recomendados com sucesso"
+                                 }
 """)
                 )
         ),
