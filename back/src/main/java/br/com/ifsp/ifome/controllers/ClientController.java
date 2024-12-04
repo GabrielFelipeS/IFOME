@@ -146,14 +146,18 @@ public class ClientController {
 
     }
 
+    @DocsRecommendedRestaurants
     @GetMapping("/recommendations/restaurants")
-    public ResponseEntity<ApiResponse>getRecommendedRestaurants(@RequestParam String email){
+    public ResponseEntity<ApiResponse>getRecommendedRestaurants(Principal principal){
+        String email = principal.getName(); // Obtendo o email do cliente autenticado
         List<RestaurantReviewResponse> recomendations = recommendationsService.recommendsRestaurants(email);
         return ResponseEntity.ok(new ApiResponse("sucess", recomendations, "Restaurantes recomendados com sucesso."));
     }
 
+    @DocsRecommendedDishes
     @GetMapping("recommendations/dishes")
-    public ResponseEntity<ApiResponse> getRecommendedDishes(@RequestParam String email){
+    public ResponseEntity<ApiResponse> getRecommendedDishes(Principal principal){
+        String email = principal.getName(); // Obtendo o email do cliente autenticado
         List<DishResponse> recommendations = recommendationsService.recommendDishes(email);
         return ResponseEntity.ok(new ApiResponse("sucess",recommendations, "Pratos Recomendados com sucesso"));
     }
