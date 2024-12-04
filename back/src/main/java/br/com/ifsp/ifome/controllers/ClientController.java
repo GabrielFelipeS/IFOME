@@ -150,7 +150,7 @@ public class ClientController {
     @GetMapping("/recommendations/restaurants")
     public ResponseEntity<ApiResponse>getRecommendedRestaurants(Principal principal){
         String email = principal.getName(); // Obtendo o email do cliente autenticado
-        List<RestaurantReviewResponse> recomendations = recommendationsService.recommendsRestaurants(email);
+        List<RestaurantResponse> recomendations = recommendationsService.recommendsRestaurants(email);
         return ResponseEntity.ok(new ApiResponse("sucess", recomendations, "Restaurantes recomendados com sucesso."));
     }
 

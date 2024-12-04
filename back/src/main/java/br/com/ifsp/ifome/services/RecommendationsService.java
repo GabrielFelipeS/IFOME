@@ -49,7 +49,7 @@ public class RecommendationsService {
      * @return Uma lista de objetos {@link RestaurantReviewResponse} contendo os restaurantes recomendados,
      *         ou uma lista vazia caso nenhum restaurante tenha sido recomendado.
      */
-    public List<RestaurantReviewResponse> recommendsRestaurants(String customerEmail) {
+    public List<RestaurantResponse> recommendsRestaurants(String customerEmail) {
         // Buscar todas as ordens do cliente
         List<CustomerOrder> orders = customerOrderRepository.findAllByCartClientEmail(customerEmail);
 
@@ -78,7 +78,7 @@ public class RecommendationsService {
         // Filtrar os restaurantes pela mesma categoria de comida, se houver
         return recommendedRestaurants.stream()
                 .filter(restaurant -> restaurant.getFoodCategory().equals(foodCategory))
-                .map(RestaurantReviewResponse::from)
+                .map(RestaurantResponse::from)
                 .collect(Collectors.toList());
     }
 
