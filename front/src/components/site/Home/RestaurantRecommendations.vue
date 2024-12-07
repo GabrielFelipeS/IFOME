@@ -18,13 +18,6 @@
 				</SwiperSlide>
 			</Swiper>
 		</div>
-		<router-link v-if="restaurants.length > 0" :to="{name : 'restaurants'}"
-					 class="w-full h-[50px] bg-white border border-tertiary-light
-					 	text-center rounded-md text-primary flex justify-center items-center
-					  	hover:rounded-md duration-150 hover:transition-all hover:-translate-y-1 hover:text-white
-					  	hover:bg-primary hover:border-none">
-			Ver todos
-		</router-link>
 	</div>
 </template>
 
