@@ -1,6 +1,6 @@
 <template>
 	<div class="w-[90%] md:max-w-[1200px] mx-auto flex flex-col md:p-5 mt-12">
-		<h2 class="text-2xl mt-2 ml-2 font-normal text-tertiary-light">Últimos restaurantes pedidos</h2>
+		<h2 class="text-2xl mt-2 ml-2 font-normal text-tertiary-light">Recomendação de restaurantes</h2>
 
 		<div class="w-full md:gap-5 md:mb-0">
 			<template v-if="restaurants.length > 0">
