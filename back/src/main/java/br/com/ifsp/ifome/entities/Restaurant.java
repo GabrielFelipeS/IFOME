@@ -132,7 +132,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.bankAccount = bankAccount;
         this.role = Role.RESTAURANT;
         this.isOpen = isOpen;
-        this.rating = 0.;
+        //this.rating = 0.;
     }
 
 //    public void setAddress(AddressRequest addressRequest) {
@@ -192,10 +192,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     public void updateRating(double newAverageRating) {
         this.rating = newAverageRating;
     }
-    public void addReview(RestaurantReview review) {
-        review.setRestaurant(this);
-        this.restaurantReview.add(review);
-    }
+
 
 
     public List<ReviewResponse> getRestaurantReviewResponse() {

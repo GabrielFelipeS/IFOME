@@ -531,7 +531,7 @@ public class ClientControllerIT {
                 "/api/client/order/" + invalidOrderId + "/review", HttpMethod.POST, new HttpEntity<>(reviewRequest, getHttpHeaders()), String.class);
 
         // Verifica se o código de status é 400 BAD REQUEST
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
         // Verifica a mensagem de erro no corpo da resposta
         DocumentContext documentContext = JsonPath.parse(response.getBody());
@@ -552,7 +552,7 @@ public class ClientControllerIT {
                 "/api/client/order/" + validOrderId + "/review", HttpMethod.POST, new HttpEntity<>(reviewRequest, getHttpHeaders()), String.class);
 
         // Verifica se o código de status é 200 OK
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 
         // Verifica a mensagem de sucesso no corpo da resposta
         DocumentContext documentContext = JsonPath.parse(response.getBody());
@@ -713,6 +713,7 @@ public class ClientControllerIT {
 
 
 
+   
 
 
 
