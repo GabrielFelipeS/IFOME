@@ -19,7 +19,7 @@ console.log(props.review);
 			<!-- Estrelas e Avaliação -->
 			<div class="flex items-center space-x-2">
 				<v-icon name="fa-star" class="text-yellow-400" />
-				<span class="text-gray-600 text-sm">{{ review.stars }}</span>
+				<span class="text-gray-600 text-sm">{{ review.stars.toFixed(0) }}</span>
 			</div>
 		</div>
 	</main>

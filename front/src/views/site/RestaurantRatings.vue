@@ -78,7 +78,7 @@ onMounted(() => {
 					<h3 class="text-lg font-semibold text-gray-800">{{ restaurant.nameRestaurant }} <span
 						v-if="!restaurant.isOpen">( Fechado )</span></h3>
 					<div class="flex items-center text-gray-600 text-sm mt-1">
-						<span class="mr-2">{{ restaurant.foodCategory || 'Categoria' }}</span>
+						<span class="">{{ restaurant.foodCategory || 'Categoria' }}</span>
 						<span class="mx-2">·</span>
 						<span>1.5km</span>
 						<span class="mx-2">·</span>
@@ -88,7 +88,7 @@ onMounted(() => {
 								d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.071 3.297a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.033a1 1 0 00-.364 1.118l1.071 3.297c.3.921-.755 1.688-1.54 1.118l-2.8-2.033a1 1 0 00-1.175 0l-2.8 2.033c-.785.57-1.84-.197-1.54-1.118l1.071-3.297a1 1 0 00-.364-1.118L2.98 8.724c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.071-3.297z"/>
 						</svg>
 						<span class="mr-2">{{ restaurant.rating.toFixed(1) }}</span>
-						<span><router-link :to="{name: 'restaurant-ratings'}">Ver avaliações</router-link></span>
+						<span class="font-semibold"><router-link :to="{name: 'restaurant internal', params: { id: restaurantId }}">Voltar a lista de pratos</router-link></span>
 					</div>
 					<div class="flex items-center text-sm text-gray-500 mt-1">
 						<span>50-60 min</span>
@@ -98,8 +98,8 @@ onMounted(() => {
 				</div>
 			</div>
 			<div class="border-t border-gray-300 my-4"></div>
-			<span class="text-2xl">Avaliações do Restaurante</span>
-			<div class="grid grid-cols-3">
+			<span class="text-2xl flex flex-row justify-center md:justify-start p-4 pb-0 ">Avaliações do Restaurante</span>
+			<div class="px-5 lg:grid grid-cols-3 gap-4 gap-y-0.5 mb-[91px]">
 				<CardReview v-for="review in restaurant.restaurantReview" :review="review"/>
 			</div>
 		</div>
