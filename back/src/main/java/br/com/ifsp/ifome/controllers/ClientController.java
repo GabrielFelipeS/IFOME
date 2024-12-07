@@ -109,6 +109,7 @@ public class ClientController {
 
         return ResponseEntity.noContent().build();
     }
+
     @DocsSearch
     @GetMapping("/search")
     public ResponseEntity<ApiResponse> search(@RequestParam("query") String query) {
@@ -143,19 +144,21 @@ public class ClientController {
             ReviewResponse response = new ReviewResponse(review);
 
             return ResponseEntity.ok(new ApiResponse("success", response, "Avaliação registrada com sucesso!"));
-
     }
 
     @PostMapping("/create-payment-intent")
-    public ResponseEntity<String> post(@RequestBody PaymentOrderRequest paymentOrderRequest, Principal principal) {
-        String clientSecret = paymentService.getClientSecret(paymentOrderRequest.orderId(), principal.getName());
+    public ResponseEntity<String> post(@RequestBody Principal principal) {
+        var customerOrderResponse = customerOrderService.createOrder(principal);
+        String clientSecret = paymentService.getClientSecret(customerOrderResponse.orderId(), principal.getName());
 
         return ResponseEntity.ok(clientSecret);
     }
 
     @PostMapping("/payments/confirm")
-    public ResponseEntity<?> confirmPayment(@RequestBody PaymentConfirmRequest paymentOrderRequest, Principal principal) {
+    public ResponseEntity<?> confirmPayment(@RequestBody @Valid PaymentConfirmRequest paymentOrderRequest, Principal principal) {
+        customerOrderService.createOrder(principal);
         PaymentIntent paymentIntent = paymentService.confirmPayment(paymentOrderRequest, principal.getName());
+
         return ResponseEntity.ok(paymentIntent);
     }
 }

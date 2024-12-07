@@ -30,7 +30,7 @@ public class PaymentService {
 
             PaymentIntent paymentIntent = PaymentIntent.create(params);
 
-            return paymentIntent.getClientSecret(); // Retorna o client secret
+            return paymentIntent.getClientSecret();
         } catch (Exception e) {
             throw new RuntimeException("Erro ao criar pagamento: " + e.getMessage());
         }
@@ -45,10 +45,10 @@ public class PaymentService {
             Long ammountInCent = customerOrder.totalPriceInCent();
 
             PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
-                .setAmount(ammountInCent) // Ex.: 5000 (para $50.00)
+                .setAmount(ammountInCent)
                 .setCurrency(currency)
                 .setPaymentMethod(paymentMethodId)
-                .setConfirm(true) // Confirma o pagamento diretamente
+                .setConfirm(true)
                 .build();
 
             return PaymentIntent.create(params);
