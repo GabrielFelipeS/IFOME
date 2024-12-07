@@ -84,8 +84,6 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     @Column(name = "rating")
     private Double rating = 0.;
 
-
-
     public Restaurant(RestaurantRequest restaurantRequest, Address address,BCryptPasswordEncoder bCryptPasswordEncoder, String restaurantImage){
         this.nameRestaurant = restaurantRequest.nameRestaurant();
         this.cnpj = restaurantRequest.cnpj().replaceAll("[^\\d]", "");
@@ -106,7 +104,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.isOpen = false;
         this.address = List.of(address);
         this.role = Role.RESTAURANT;
-        //this.rating = 0.0;
+        this.rating = this.getRating();
 
         address.setRestaurant(this);
     }
@@ -132,7 +130,7 @@ public class Restaurant implements PasswordPolicy, UserDetails {
         this.bankAccount = bankAccount;
         this.role = Role.RESTAURANT;
         this.isOpen = isOpen;
-        //this.rating = 0.;
+        this.rating = this.getRating();
     }
 
 //    public void setAddress(AddressRequest addressRequest) {
@@ -140,6 +138,19 @@ public class Restaurant implements PasswordPolicy, UserDetails {
 //        address.setRestaurant(this);
 //        this.address = List.of(address);
 //    }
+
+    public Double getRating() {
+        if(this.rating == null || this.restaurantReview.isEmpty()) {
+           this.rating = 0.0;
+           return this.rating;
+        }
+
+        long sizeReview = this.restaurantReview.size();
+
+        this.rating = this.restaurantReview.stream().mapToDouble(RestaurantReview::getStars).sum() / sizeReview;
+
+        return this.rating;
+    }
 
     public boolean isOpen() {
         return this.getIsOpen();
@@ -192,8 +203,6 @@ public class Restaurant implements PasswordPolicy, UserDetails {
     public void updateRating(double newAverageRating) {
         this.rating = newAverageRating;
     }
-
-
 
     public List<ReviewResponse> getRestaurantReviewResponse() {
        return this.restaurantReview.stream()
