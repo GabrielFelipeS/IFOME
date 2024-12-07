@@ -1,6 +1,6 @@
 <script setup>
 import {useRoute} from 'vue-router';
-import {ref, onMounted, watch} from 'vue';
+import {ref, onMounted, watch, computed} from 'vue';
 import router from '@/router';
 import api from '@/services/api';
 import {getImage} from "@/services/getImage.js";
@@ -54,6 +54,11 @@ if (route.query.dish) {
 onMounted(() => {
 	fetchRestaurantData();
 });
+
+
+const filteredReviews = computed(() => {
+	return restaurant.value?.restaurantReview?.filter(review => review.comment.length > 0);
+});
 </script>
 
 <template>
@@ -87,7 +92,7 @@ onMounted(() => {
 							<path
 								d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.071 3.297a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.033a1 1 0 00-.364 1.118l1.071 3.297c.3.921-.755 1.688-1.54 1.118l-2.8-2.033a1 1 0 00-1.175 0l-2.8 2.033c-.785.57-1.84-.197-1.54-1.118l1.071-3.297a1 1 0 00-.364-1.118L2.98 8.724c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.071-3.297z"/>
 						</svg>
-						<span class="mr-2">{{ restaurant.rating.toFixed(1) }}</span>
+						<span class="mr-2">{{ restaurant.rating?.toFixed(1) || 0 }}</span>
 						<span class="font-semibold"><router-link :to="{name: 'restaurant internal', params: { id: restaurantId }}">Voltar a lista de pratos</router-link></span>
 					</div>
 					<div class="flex items-center text-sm text-gray-500 mt-1">
@@ -100,7 +105,7 @@ onMounted(() => {
 			<div class="border-t border-gray-300 my-4"></div>
 			<span class="text-2xl flex flex-row justify-center md:justify-start p-4 pb-0 ">Avaliações do Restaurante</span>
 			<div class="px-5 lg:grid grid-cols-3 gap-4 gap-y-0.5 mb-[91px]">
-				<CardReview v-for="review in restaurant.restaurantReview" :review="review"/>
+				<CardReview v-for="review in filteredReviews" :review="review"/>
 			</div>
 		</div>
 	</main>
