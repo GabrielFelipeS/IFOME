@@ -147,7 +147,7 @@ public class ClientController {
     }
 
     @PostMapping("/create-payment-intent")
-    public ResponseEntity<String> post(@RequestBody Principal principal) {
+    public ResponseEntity<String> post(Principal principal) {
         var customerOrderResponse = customerOrderService.createOrder(principal);
         String clientSecret = paymentService.getClientSecret(customerOrderResponse.orderId(), principal.getName());
 
