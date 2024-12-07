@@ -9,6 +9,7 @@ import java.util.List;
 
 public record CustomerOrderResponse(
     Long orderId,
+    Long restaurantId,
     String name,
     Address address,
     List<OrderItem> orderItems,
@@ -22,6 +23,7 @@ public record CustomerOrderResponse(
     public static CustomerOrderResponse from(CustomerOrder customerOrder){
         return new CustomerOrderResponse(
             customerOrder.getId(),
+            customerOrder.getRestaurantId(),
             customerOrder.getClientName(),
             customerOrder.getClientAddress(),
             customerOrder.getOrderItems(),
