@@ -2,10 +2,7 @@ package br.com.ifsp.ifome.controllers;
 
 import br.com.ifsp.ifome.docs.*;
 import br.com.ifsp.ifome.dto.ApiResponse;
-import br.com.ifsp.ifome.dto.request.OrderItemRequest;
-import br.com.ifsp.ifome.dto.request.OrderItemUpdateRequest;
-import br.com.ifsp.ifome.dto.request.PaymentOrderRequest;
-import br.com.ifsp.ifome.dto.request.RestaurantReviewRequest;
+import br.com.ifsp.ifome.dto.request.*;
 import br.com.ifsp.ifome.dto.response.*;
 import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.entities.RestaurantReview;
@@ -14,6 +11,8 @@ import br.com.ifsp.ifome.exceptions.client.OrderNotDeliveredException;
 import br.com.ifsp.ifome.exceptions.client.OrderNotFoundException;
 import br.com.ifsp.ifome.exceptions.client.OrderNotOwnedByClientException;
 import br.com.ifsp.ifome.services.*;
+import com.stripe.model.PaymentIntent;
+import com.stripe.param.PaymentIntentCreateParams;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -147,13 +146,18 @@ public class ClientController {
 
     }
 
-    @PostMapping("client/create-payment-intent")
+    @PostMapping("/create-payment-intent")
     public ResponseEntity<String> post(@RequestBody PaymentOrderRequest paymentOrderRequest, Principal principal) {
         String clientSecret = paymentService.getClientSecret(paymentOrderRequest.orderId(), principal.getName());
 
         return ResponseEntity.ok(clientSecret);
     }
 
+    @PostMapping("/payments/confirm")
+    public ResponseEntity<?> confirmPayment(@RequestBody PaymentConfirmRequest paymentOrderRequest, Principal principal) {
+        PaymentIntent paymentIntent = paymentService.confirmPayment(paymentOrderRequest, principal.getName());
+        return ResponseEntity.ok(paymentIntent);
+    }
 }
 
 
