@@ -38,7 +38,6 @@
 
 <script setup>
 import {computed, onMounted, ref} from 'vue';
-import axios from 'axios';
 import DishCard from "@/components/store/dish/DishCard.vue";
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import "swiper/css";

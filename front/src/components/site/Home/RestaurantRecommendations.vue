@@ -37,12 +37,11 @@
 <script setup>
 import CardRestaurant from '@/components/site/CardRestaurant.vue';
 import {onMounted, ref, computed} from 'vue';
-import axios from 'axios';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import {Navigation, Pagination, Autoplay, FreeMode} from 'swiper/modules';
+import {Navigation, Pagination, FreeMode} from 'swiper/modules';
 import api from "@/services/api.js";
 
 const restaurants = ref([]);
