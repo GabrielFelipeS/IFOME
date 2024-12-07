@@ -1,30 +1,24 @@
 <template>
-	<div class="w-[90%] md:max-w-[1200px] mx-auto flex flex-col md:p-5 mb-[100px] md:mb-0">
+	<div class="w-[90%] md:max-w-[1200px] mx-auto flex flex-col md:p-5 mb-[100px] md:mb-0" v-if="dishes.length > 0">
 		<h2 class="text-2xl mt-2 ml-2 font-normal text-tertiary-light">Recomendação de pratos</h2>
 
 		<div class="w-full md:mb-0">
-			<template v-if="dishes.length > 0">
-				<Swiper
-					:modules="[Navigation, Pagination, FreeMode]"
-					:slides-per-view="'auto'"
-					:space-between="20"
-					:effect="'fade'"
-					:fade-effect="{ crossFade: true }"
-					class="mySwiper pr-8 w-full">
-					<SwiperSlide v-for="dish in limitedDishes" :key="$route.fullPath" class="my-4 w-full max-w-96">
-						<router-link :to="{name:'restaurant internal', params: {id: dish.restaurantId }, query: { dish: dish.id }}">
-							<DishCard
-								:key="dish.id"
-								:dish="dish"
-							/>
-						</router-link>
-					</SwiperSlide>
-				</Swiper>
-			</template>
-
-			<template v-else>
-				<p class="col-span-full text-center">Nenhum restaurante encontrado</p>
-			</template>
+			<Swiper
+				:modules="[Navigation, Pagination, FreeMode]"
+				:slides-per-view="'auto'"
+				:space-between="20"
+				:effect="'fade'"
+				:fade-effect="{ crossFade: true }"
+				class="mySwiper pr-8 w-full">
+				<SwiperSlide v-for="dish in limitedDishes" :key="$route.fullPath" class="my-4 w-full max-w-96">
+					<router-link :to="{name:'restaurant internal', params: {id: dish.restaurantId }, query: { dish: dish.id }}">
+						<DishCard
+							:key="dish.id"
+							:dish="dish"
+						/>
+					</router-link>
+				</SwiperSlide>
+			</Swiper>
 		</div>
 		<router-link v-if="dishes.length > 0" :to="{name : 'dishs'}"
 					 class="w-full h-[50px] bg-white border border-tertiary-light
