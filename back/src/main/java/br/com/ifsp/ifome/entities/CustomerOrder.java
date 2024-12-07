@@ -89,6 +89,10 @@ public class CustomerOrder {
         return this.orderPrice + freight;
     }
 
+    public Long totalPriceInCent() {
+        return Double.valueOf(this.totalPrice() * 100).longValue();
+    }
+
     public Client getClient() {return this.cart.getClient();}
 
     public String getClientEmail() { return this.cart.getEmailClient();}
@@ -277,4 +281,6 @@ public class CustomerOrder {
     public Long getRestaurantId() {
         return this.restaurant.getId();
     }
+
+
 }

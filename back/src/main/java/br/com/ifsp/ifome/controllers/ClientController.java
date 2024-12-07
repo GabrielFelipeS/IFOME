@@ -4,6 +4,7 @@ import br.com.ifsp.ifome.docs.*;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.OrderItemRequest;
 import br.com.ifsp.ifome.dto.request.OrderItemUpdateRequest;
+import br.com.ifsp.ifome.dto.request.PaymentOrderRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantReviewRequest;
 import br.com.ifsp.ifome.dto.response.*;
 import br.com.ifsp.ifome.entities.Restaurant;
@@ -12,10 +13,7 @@ import br.com.ifsp.ifome.exceptions.client.OrderAlreadyReviewedException;
 import br.com.ifsp.ifome.exceptions.client.OrderNotDeliveredException;
 import br.com.ifsp.ifome.exceptions.client.OrderNotFoundException;
 import br.com.ifsp.ifome.exceptions.client.OrderNotOwnedByClientException;
-import br.com.ifsp.ifome.services.ClientService;
-import br.com.ifsp.ifome.services.CustomerOrderService;
-import br.com.ifsp.ifome.services.RestaurantService;
-import br.com.ifsp.ifome.services.SearchService;
+import br.com.ifsp.ifome.services.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -36,12 +34,14 @@ public class ClientController {
     private final CustomerOrderService customerOrderService;
     private final SearchService searchService;
     private final RestaurantService restaurantService;
+    private final PaymentService paymentService;
 
-    public ClientController(ClientService clientService, CustomerOrderService customerOrderService, SearchService searchService, RestaurantService restaurantService) {
+    public ClientController(ClientService clientService, CustomerOrderService customerOrderService, SearchService searchService, RestaurantService restaurantService, PaymentService paymentService) {
         this.clientService = clientService;
         this.customerOrderService = customerOrderService;
         this.searchService = searchService;
         this.restaurantService = restaurantService;
+        this.paymentService = paymentService;
     }
 
     @PostMapping("/order/")
@@ -147,7 +147,12 @@ public class ClientController {
 
     }
 
+    @PostMapping("client/create-payment-intent")
+    public ResponseEntity<String> post(@RequestBody PaymentOrderRequest paymentOrderRequest, Principal principal) {
+        String clientSecret = paymentService.getClientSecret(paymentOrderRequest.orderId(), principal.getName());
 
+        return ResponseEntity.ok(clientSecret);
+    }
 
 }
 

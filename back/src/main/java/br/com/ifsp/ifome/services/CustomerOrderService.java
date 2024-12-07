@@ -7,6 +7,7 @@ import br.com.ifsp.ifome.entities.OrderClientStatus;
 import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.events.PedidoStatusChangedEvent;
 import br.com.ifsp.ifome.exceptions.client.CustomerNotFoundException;
+import br.com.ifsp.ifome.exceptions.client.OrderNotOwnedByClientException;
 import br.com.ifsp.ifome.exceptions.restaurant.OrderNotFromRestaurantException;
 import br.com.ifsp.ifome.exceptions.restaurant.RestaurantIsCloseException;
 import br.com.ifsp.ifome.exceptions.restaurant.RestaurantNotFoundException;
@@ -162,4 +163,11 @@ public class CustomerOrderService {
             .orElseThrow(() -> new CustomerNotFoundException("Pedido não encontrado com ID: " + customerOrderId));
     }
 
+    public CustomerOrder findById(Long customerOrderId, String email) {
+        var cutomerOrder = findById(customerOrderId);
+
+        if(cutomerOrder.getClientEmail().equals(email)) throw new OrderNotOwnedByClientException("O cliente não é dono do pedido");
+
+        return cutomerOrder;
+    }
 }
