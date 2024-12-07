@@ -22,7 +22,6 @@ public record RestaurantReviewResponse(
         boolean isOpen,
         List<ReviewResponse> restaurantReview,
         Double rating
-
 ) {
     public static RestaurantReviewResponse from(Restaurant restaurant) {
         return new RestaurantReviewResponse(
