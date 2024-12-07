@@ -81,6 +81,14 @@ public class CustomerOrderService {
                 .collect(Collectors.toList());
     }
 
+    public List<CustomerOrderResponse> getHistoryOrders(String customerEmail) {
+        List<CustomerOrder> orders = customerOrderRepository.findAllByCartClientEmailAndCurrentOrderClientStatus(customerEmail, OrderClientStatus.CONCLUIDO);
+
+        return orders.stream()
+            .map(CustomerOrderResponse::from)
+            .collect(Collectors.toList());
+    }
+
     /**
      * Retorna todos os pedidos do restaurante
      *
@@ -166,8 +174,12 @@ public class CustomerOrderService {
     public CustomerOrder findById(Long customerOrderId, String email) {
         var cutomerOrder = findById(customerOrderId);
 
-        if(cutomerOrder.getClientEmail().equals(email)) throw new OrderNotOwnedByClientException("O cliente não é dono do pedido");
-
-        return cutomerOrder;
+        if(cutomerOrder.getClientEmail().equals(email)) {
+            return cutomerOrder;
+        } else {
+            throw new OrderNotOwnedByClientException("O cliente não é dono do pedido");
+        }
     }
+
+
 }

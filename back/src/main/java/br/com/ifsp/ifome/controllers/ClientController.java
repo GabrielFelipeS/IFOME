@@ -65,6 +65,18 @@ public class ClientController {
         return ResponseEntity.ok(orders);
     }
 
+    @Operation(
+        summary = "Retorna todos os pedidos finalizados do cliente",
+        security = @SecurityRequirement(name = "Bearer Token")
+    )
+    @GetMapping("/history")
+    public ResponseEntity<ApiResponse> getHistory(Principal principal) {
+        List<CustomerOrderResponse> orders = customerOrderService.getHistoryOrders(principal.getName());
+
+        ApiResponse response = new ApiResponse("success", orders, "Carrinho encontrado!");
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/cart")
     @DocsGetCart
     public ResponseEntity<ApiResponse> getCart(Principal principal) {
@@ -146,6 +158,10 @@ public class ClientController {
             return ResponseEntity.ok(new ApiResponse("success", response, "Avaliação registrada com sucesso!"));
     }
 
+    @Operation(
+        summary = "Criar secret de pagamento",
+        security = @SecurityRequirement(name = "Bearer Token")
+    )
     @PostMapping("/create-payment-intent")
     public ResponseEntity<String> post(Principal principal) {
         var customerOrderResponse = customerOrderService.createOrder(principal);
@@ -154,6 +170,10 @@ public class ClientController {
         return ResponseEntity.ok(clientSecret);
     }
 
+    @Operation(
+        summary = "Criar secret de pagamento",
+        security = @SecurityRequirement(name = "Bearer Token")
+    )
     @PostMapping("/payments/confirm")
     public ResponseEntity<?> confirmPayment(@RequestBody @Valid PaymentConfirmRequest paymentOrderRequest, Principal principal) {
         customerOrderService.createOrder(principal);
