@@ -26,4 +26,6 @@ public interface DishRepository extends JpaRepository<Dish, Long> {
     Optional<Dish> findDishAvailableById(Long id);
 
     List<Dish> findByNameContainingIgnoreCase(String query);
+
+    List<Dish> findByDishCategory(String category);
 }

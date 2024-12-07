@@ -7,7 +7,13 @@ import br.com.ifsp.ifome.dto.request.OrderItemUpdateRequest;
 import br.com.ifsp.ifome.dto.request.PaymentConfirmRequest;
 import br.com.ifsp.ifome.dto.request.RestaurantReviewRequest;
 import br.com.ifsp.ifome.dto.response.*;
+import br.com.ifsp.ifome.entities.Restaurant;
 import br.com.ifsp.ifome.entities.RestaurantReview;
+import br.com.ifsp.ifome.exceptions.client.OrderAlreadyReviewedException;
+import br.com.ifsp.ifome.exceptions.client.OrderNotDeliveredException;
+import br.com.ifsp.ifome.exceptions.client.OrderNotFoundException;
+import br.com.ifsp.ifome.exceptions.client.OrderNotOwnedByClientException;
+import br.com.ifsp.ifome.services.*;
 import br.com.ifsp.ifome.services.*;
 import com.stripe.model.PaymentIntent;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +21,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -29,13 +36,15 @@ public class ClientController {
     private final CustomerOrderService customerOrderService;
     private final SearchService searchService;
     private final RestaurantService restaurantService;
+    private final RecommendationsService recommendationsService;
     private final PaymentService paymentService;
 
-    public ClientController(ClientService clientService, CustomerOrderService customerOrderService, SearchService searchService, RestaurantService restaurantService, PaymentService paymentService) {
+    public ClientController(ClientService clientService, CustomerOrderService customerOrderService, SearchService searchService, RestaurantService restaurantService, RecommendationsService recommendationsService, PaymentService paymentService) {
         this.clientService = clientService;
         this.customerOrderService = customerOrderService;
         this.searchService = searchService;
         this.restaurantService = restaurantService;
+        this.recommendationsService = recommendationsService;
         this.paymentService = paymentService;
     }
 
@@ -117,7 +126,6 @@ public class ClientController {
 
         return ResponseEntity.noContent().build();
     }
-
     @DocsSearch
     @GetMapping("/search")
     public ResponseEntity<ApiResponse> search(@RequestParam("query") String query) {
@@ -144,15 +152,33 @@ public class ClientController {
     @DocsRestaurantReview
     @PostMapping("/order/{orderId}/review")
     public ResponseEntity<ApiResponse> reviewRestaurant(
-        @PathVariable Long orderId,
-        @RequestBody @Valid RestaurantReviewRequest reviewRequest,
-        Principal principal) {
+            @PathVariable Long orderId,
+            @RequestBody @Valid RestaurantReviewRequest reviewRequest,
+            Principal principal) {
 
-        RestaurantReview review = restaurantService.reviewRestaurant(orderId, reviewRequest, principal.getName());
-        ReviewResponse response = new ReviewResponse(review);
+            RestaurantReview review = restaurantService.reviewRestaurant(orderId, reviewRequest, principal.getName());
+            ReviewResponse response = new ReviewResponse(review);
 
-        return ResponseEntity.ok(new ApiResponse("success", response, "Avaliação registrada com sucesso!"));
+            return ResponseEntity.ok(new ApiResponse("success", response, "Avaliação registrada com sucesso!"));
+
     }
+
+    @DocsRecommendedRestaurants
+    @GetMapping("/recommendations/restaurants")
+    public ResponseEntity<ApiResponse>getRecommendedRestaurants(Principal principal){
+        String email = principal.getName(); // Obtendo o email do cliente autenticado
+        List<RestaurantResponse> recomendations = recommendationsService.recommendsRestaurants(email);
+        return ResponseEntity.ok(new ApiResponse("sucess", recomendations, "Restaurantes recomendados com sucesso."));
+    }
+
+    @DocsRecommendedDishes
+    @GetMapping("recommendations/dishes")
+    public ResponseEntity<ApiResponse> getRecommendedDishes(Principal principal){
+        String email = principal.getName(); // Obtendo o email do cliente autenticado
+        List<DishResponse> recommendations = recommendationsService.recommendDishes(email);
+        return ResponseEntity.ok(new ApiResponse("sucess",recommendations, "Pratos Recomendados com sucesso"));
+    }
+
 
     @Operation(
         summary = "Criar secret de pagamento",
