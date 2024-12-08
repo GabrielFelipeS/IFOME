@@ -25,7 +25,7 @@ imgUrl.value = getImage(props.dish.dishImage);
 			<img :src="imgUrl" alt="Prato" class="rounded-md max-w-[100px] min-w-[100px] min-h-[100px] max-h-[100px]">
 		</div>
 		<div class="card-body">
-			<div class="title">
+			<div class="title" :title="dish.name">
 				{{ dish.name }}
 			</div>
 			<div class="content">
@@ -55,7 +55,7 @@ imgUrl.value = getImage(props.dish.dishImage);
 		@apply text-tertiary-light;
 	}
 	.title {
-		@apply text-lg font-semibold;
+		@apply text-lg font-semibold line-clamp-1;
 	}
 	.content {
 		@apply text-xs max-h-[48px] line-clamp-3 h-full;

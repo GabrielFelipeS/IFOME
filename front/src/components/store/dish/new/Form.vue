@@ -66,32 +66,8 @@ watch(selectedFiles, () => {
 });
 // End DRAG DROP
 
-// SELECT CATEGORIAS TODO: Era só um teste, alterar para uma lista estática.
-const categorias = ref([]);
-async function getCategories() {
-	const apiCategories = await axios.get('https://www.themealdb.com/api/json/v1/1/categories.php');
-	apiCategories.data.categories.forEach(category => {
-		categorias.value.push(category.strCategory);
-	});
-}
-getCategories();
-function search(input) {
-	if (!input) {
-		return categorias.value;
-	}
-	return categorias.value.filter(category => {
-		return category.toLowerCase().includes(input.toLowerCase());
-	});
-}
-function updateCategory(result) {
-	if (result.explicitOriginalTarget) {
-		dishData.value.dishCategory = result.explicitOriginalTarget.value;
-	} else {
-		dishData.value.dishCategory = result;
-	}
-
-	console.log(dishData.value.dishCategory);
-}
+// SELECT CATEGORIAS
+const categorias = ref(["Aves", "Bebida", "Bebidas Alcoólicas", "Bebidas Não Alcoólicas", "Café e Chá", "Carnes", "Cozinha Árabe", "Cozinha Brasileira", "Cozinha Chinesa", "Cozinha Francesa", "Cozinha Indiana", "Cozinha Italiana", "Cozinha Mexicana", "Cozinha Tailandesa", "Entrada", "Frutos do Mar", "Hambúrgueres", "Massas", "Peixes", "Pizzas", "Prato Principal", "Pratos Veganos", "Pratos Vegetarianos", "Risotos", "Saladas", "Sanduíches", "Sobremesa", "Sorvetes", "Sopas", "Sushi e Sashimi", "Tacos e Burritos", "Temakis"]);
 // END SELECT CATEGORIAS
 
 // Máscara para o input de preço para ele ficar com a vírgula do centavo
@@ -125,7 +101,6 @@ function validateForm() {
 		file: [],
 	}
 
-	console.log(dishData.value.price);
 	if (dishData.value.name.length === 0) {
 		errors.value.name.push('Preencha o campo Nome do prato.');
 		validated = false;
@@ -216,10 +191,10 @@ async function saveDish() {
 				</div>
 				<p class="invalid-input-text" v-for="error in errors.price">{{ error }}</p>
 				<label for="category">Categoria</label>
-				<autocomplete :search="search" placeholder="Selecione ou digite uma categoria"
-							  :submit-on-enter="true" @input="updateCategory" @submit="updateCategory"
-							  class="w-full" v-model="dishData.dishCategory" id="category">
-				</autocomplete>
+				<select class="form-input w-full rounded-md bg-white" v-model="dishData.dishCategory">
+					<option value="" selected>Selecione uma categoria</option>
+					<option v-for="category in categorias" :key="category" :value="category">{{ category }}</option>
+				</select>
 				<p class="invalid-input-text" v-for="error in errors.dishCategory">{{ error }}</p>
 				<p class="text-center w-full mb-1 mt-3 font-semibold">Foto do prato</p>
 				<div
