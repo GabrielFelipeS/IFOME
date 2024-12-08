@@ -44,13 +44,14 @@ INSERT INTO dish (
     dish_category,
     dish_image,
     availability,
-    restaurant_id
+    restaurant_id,
+    price_id
 ) VALUES
-      ('Açai com Frutas', 'Açai com banana, morango e granola', 19.90, 'Sobremesa', 'acai_frutas.jpeg', 'Indisponível', 1),
-      ('Pizza de Calabresa', 'Pizza com calabresa, cebola e azeitonas', 34.90, 'Prato Principal', 'pizza_calabresa.jpeg', 'Indisponível', 1),
-      ('Hambúrguer Artesanal', 'Hambúrguer com queijo, alface e tomate', 29.90, 'Prato Principal', 'hamburguer.jpeg', 'Disponível', 1),
-      ('Milkshake de Chocolate', 'Milkshake cremoso de chocolate', 14.90, 'Bebida', 'milkshake_chocolate.jpeg', 'Disponível', 1),
-      ('Salada Tropical', 'Salada com frutas e molho de iogurte', 22.50, 'Entrada', 'salada_tropical.jpeg', 'Disponível', 1);
+      ('Açai com Frutas', 'Açai com banana, morango e granola', 19.90, 'Sobremesa', 'acai_frutas.jpeg', 'Indisponível', 1, 'price_1QTjouGash1Acy4VhzVAUF6nId'),
+      ('Pizza de Calabresa', 'Pizza com calabresa, cebola e azeitonas', 34.90, 'Prato Principal', 'pizza_calabresa.jpeg', 'Indisponível', 1, 'price_1QTjovGash1Acy4Vsl0LRtEfId'),
+      ('Hambúrguer Artesanal', 'Hambúrguer com queijo, alface e tomate', 29.90, 'Prato Principal', 'hamburguer.jpeg', 'Disponível', 1, 'price_1QTjowGash1Acy4VlULL5KhCId'),
+      ('Milkshake de Chocolate', 'Milkshake cremoso de chocolate', 14.90, 'Bebida', 'milkshake_chocolate.jpeg', 'Disponível', 1, 'price_1QTjoxGash1Acy4VR8wbTueaId'),
+      ('Salada Tropical', 'Salada com frutas e molho de iogurte', 22.50, 'Entrada', 'salada_tropical.jpeg', 'Disponível', 1, 'price_1QTjoxGash1Acy4VKIQf3qzuId');
 
 -- Inserindo novo restaurante
 INSERT INTO restaurants (
@@ -93,13 +94,13 @@ VALUES
 INSERT INTO dish (
     name,description, price,
     dish_category, dish_image,availability,
-    restaurant_id
+    restaurant_id, price_id
 ) VALUES
-      ('Pizza Margherita', 'Pizza tradicional com molho de tomate, mussarela e manjericão', 32.90, 'Prato Principal', 'pizza_margherita.jpeg', 'Disponível', 2),
-      ('Pizza Quatro Queijos', 'Pizza com uma combinação de queijos: mussarela, gorgonzola, parmesão e provolone', 36.90, 'Prato Principal', 'pizza_quatro_queijos.jpeg', 'Disponível', 2),
-      ('Bruschetta', 'Entrada com pão, tomate fresco e manjericão', 12.90, 'Entrada', 'bruschetta.jpeg', 'Disponível', 2),
-      ('Tiramisu', 'Sobremesa italiana com café e mascarpone', 18.90, 'Sobremesa', 'tiramisu.jpeg', 'Indisponível', 2),
-      ('Suco de Laranja', 'Suco natural de laranja', 8.90, 'Bebida', 'suco_laranja.jpeg', 'Disponível', 2);
+      ('Pizza Margherita', 'Pizza tradicional com molho de tomate, mussarela e manjericão', 32.90, 'Prato Principal', 'pizza_margherita.jpeg', 'Disponível', 2, 'price_1QTjoyGash1Acy4VAaoDE4P0Id'),
+      ('Pizza Quatro Queijos', 'Pizza com uma combinação de queijos: mussarela, gorgonzola, parmesão e provolone', 36.90, 'Prato Principal', 'pizza_quatro_queijos.jpeg', 'Disponível', 2, 'price_1QTjozGash1Acy4VEne1FRffId'),
+      ('Bruschetta', 'Entrada com pão, tomate fresco e manjericão', 12.90, 'Entrada', 'bruschetta.jpeg', 'Disponível', 2, 'price_1QTjozGash1Acy4VeXMLdBBvId'),
+      ('Tiramisu', 'Sobremesa italiana com café e mascarpone', 18.90, 'Sobremesa', 'tiramisu.jpeg', 'Indisponível', 2, 'price_1QTjp0Gash1Acy4VUpK9fGpLId'),
+      ('Suco de Laranja', 'Suco natural de laranja', 8.90, 'Bebida', 'suco_laranja.jpeg', 'Disponível', 2, 'price_1QTjp2Gash1Acy4VW5gfsGuy2024');
 
 INSERT INTO delivery_person (
     email, password,

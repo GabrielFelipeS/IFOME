@@ -8,6 +8,11 @@ import br.com.ifsp.ifome.exceptions.dish.DishNotFoundException;
 import br.com.ifsp.ifome.exceptions.restaurant.RestaurantNotFoundException;
 import br.com.ifsp.ifome.repositories.DishRepository;
 import br.com.ifsp.ifome.repositories.RestaurantRepository;
+import com.stripe.model.Price;
+import com.stripe.model.Product;
+import com.stripe.param.PriceCreateParams;
+import com.stripe.param.ProductCreateParams;
+import jakarta.validation.Payload;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -45,17 +50,37 @@ public class DishService {
      * @throws RestaurantNotFoundException Caso não encontre o restaurante pelo email especificado
      */
     public DishResponse create(DishRequest dishRequest, MultipartFile multipartFile, String email)
-        throws IOException {
+        throws Exception {
 
         Restaurant restaurant = restaurantRepository.findByEmail(email)
             .orElseThrow(() -> new RestaurantNotFoundException("Restaurante não encontrado"));
 
         String imageUrl = fileStorageService.storeFile(multipartFile);
 
-        Dish dish = new Dish(dishRequest, imageUrl);
-        dish.setRestaurant(restaurant); // Associe o prato ao restaurante
+        String priceId = this.createPrice(dishRequest.name(), dishRequest.price());
+
+        Dish dish = new Dish(dishRequest, imageUrl, priceId);
+        dish.setRestaurant(restaurant);
         dish = dishRepository.save(dish);
         return new DishResponse(dish);
+    }
+
+    private String createPrice(String productName, Double amount) throws Exception {
+        ProductCreateParams productParams = ProductCreateParams.builder()
+            .setName(productName)
+            .build();
+
+        Product product = Product.create(productParams);
+
+        PriceCreateParams priceParams = PriceCreateParams.builder()
+            .setUnitAmount(Double.valueOf(amount * 100).longValue())
+            .setCurrency(PaymentService.currency)
+            .setProduct(product.getId())
+            .build();
+
+        Price price = Price.create(priceParams);
+
+        return price.getId();
     }
 
     /**

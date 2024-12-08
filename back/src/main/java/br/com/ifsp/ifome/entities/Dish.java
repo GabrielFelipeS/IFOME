@@ -25,19 +25,21 @@ public class Dish {
     private String dishCategory;
     private String dishImage;
     private String availability;
+    private String priceId;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
 
-    public Dish(DishRequest dishRequest, String imageUrl) {
+    public Dish(DishRequest dishRequest, String imageUrl, String priceId) {
         this.name = dishRequest.name();
         this.description = dishRequest.description();
         this.price = dishRequest.price();
         this.dishCategory = dishRequest.dishCategory();
         this.dishImage = imageUrl;
         this.availability = dishRequest.availability();
+        this.priceId = priceId;
     }
 
     @Override

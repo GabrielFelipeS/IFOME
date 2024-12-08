@@ -24,6 +24,7 @@ public class RecommendationsService {
     private final CustomerOrderRepository customerOrderRepository;
     private final DishRepository dishRepository;
     private final RestaurantRepository restaurantRepository;
+
     /**
      * Construtor para injeção das dependências.
      *
@@ -102,6 +103,7 @@ public class RecommendationsService {
                         dishFrequency.getOrDefault(orderItem.getDishId(), 0L) + 1);
             }
         }
+
 
         // Ordenar os pratos pela frequência de pedidos
         List<Long> recommendedDishIds = dishFrequency.entrySet().stream()

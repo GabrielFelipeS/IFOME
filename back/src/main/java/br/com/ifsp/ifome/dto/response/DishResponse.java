@@ -10,6 +10,7 @@ public record DishResponse(
         Double price,
         String dishCategory,
         String dishImage,
+        String priceId,
         String availability
 
 ) {
@@ -22,6 +23,7 @@ public record DishResponse(
             dish.getPrice(),
             dish.getDishCategory(),
             dish.getDishImage(),
+            dish.getPriceId(),
             dish.getAvailability()
     );
     }
