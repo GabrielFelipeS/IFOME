@@ -15,14 +15,6 @@ import router from "@/router/index.js";
 		</div>
 		<div class="main">
 			<div class="btn-container">
-				<Button href="#" class="button bg-[#4065B4] text-white hover:bg-[#335190] active:bg-[#20335a]">
-					Continuar com Facebook <v-icon name="fa-facebook-square" class="icon"/></Button>
-			</div>
-			<div class="btn-container">
-				<Button href="#" class="button bg-[#F2F2F2] hover:bg-[#c2c2c2] active:bg-[#797979]">
-					Fazer login com o Google <v-icon name="fa-google" class="icon" /></Button>
-			</div>
-			<div class="btn-container">
 				<Button href="#" class="button bg-primary text-white hover:bg-primary-dark active:bg-primary-darker"
 						@click="$emit('load-component', 'form-login')">Continuar com e-mail</Button>
 			</div>
@@ -32,8 +24,7 @@ import router from "@/router/index.js";
 			</div>
 		</div>
 		<footer class="footer">
-			<span>Ao continuar, você concorda em receber comunicações do iFome.
-				Confira nossa <a href="#">Declaração de Privacidade</a>.</span>
+			<span>Ao continuar, você concorda em receber comunicações do iFome.</span>
 		</footer>
 	</Modal>
 </template>

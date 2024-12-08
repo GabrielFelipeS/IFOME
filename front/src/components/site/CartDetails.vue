@@ -103,9 +103,9 @@ onMounted(() => {
 					<span class="text-tertiary-light text-xs">Seu pedido em</span>
 					<span class="font-semibold">{{ restaurant.nameRestaurant }}</span>
 				</div>
-				<button class="text-primary font-semibold">
+				<router-link :to="{name: 'restaurant internal', params: { id: restaurantId}}" class="text-primary font-semibold">
 					Ver cardápio
-				</button>
+				</router-link>
 			</div>
 			<span class="font-semibold mt-8">Resumo do pedido:</span>
 			<div class="order-items mb-8">
