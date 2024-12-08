@@ -125,6 +125,4 @@ onMounted(() => {
   fetchRestaurantData();
 });
 
-
-console.log(restaurant);
 </script>
