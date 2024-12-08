@@ -57,12 +57,14 @@ public class CustomerOrder {
     @Enumerated(EnumType.STRING)
     private OrderDeliveryStatus currentOrderDeliveryStatus;
 
+    private String clientSecret;
     private Double deliveryCost;
+
 
     public CustomerOrder(Cart cart, LocalDateTime orderDate, Double orderPrice,  Double freight,
                          Restaurant restaurant, DeliveryPerson deliveryPerson, OrderClientStatus status, String paymentStatus)
     {
-        this(null, orderPrice, freight, new ArrayList<>(), new ArrayList<>(), paymentStatus, cart, restaurant, deliveryPerson, orderDate, status, null, 0.0);
+        this(null, orderPrice, freight, new ArrayList<>(), new ArrayList<>(), paymentStatus, cart, restaurant, deliveryPerson, orderDate, status, null, "", 0.0);
         this.nextStatus();
     }
 
@@ -80,6 +82,7 @@ public class CustomerOrder {
             LocalDateTime.now(),
             OrderClientStatus.NOVO,
             null,
+            "",
             0.0);
         cart.setCustomerOrder(this);
         this.nextStatus();

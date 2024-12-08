@@ -51,7 +51,9 @@ INSERT INTO dish (
       ('Pizza de Calabresa', 'Pizza com calabresa, cebola e azeitonas', 34.90, 'Prato Principal', 'pizza_calabresa.jpeg', 'Indisponível', 1, 'price_1QTjovGash1Acy4Vsl0LRtEf'),
       ('Hambúrguer Artesanal', 'Hambúrguer com queijo, alface e tomate', 29.90, 'Prato Principal', 'hamburguer.jpeg', 'Disponível', 1, 'price_1QTjowGash1Acy4VlULL5KhC'),
       ('Milkshake de Chocolate', 'Milkshake cremoso de chocolate', 14.90, 'Bebida', 'milkshake_chocolate.jpeg', 'Disponível', 1, 'price_1QTjoxGash1Acy4VR8wbTuea'),
-      ('Salada Tropical', 'Salada com frutas e molho de iogurte', 22.50, 'Entrada', 'salada_tropical.jpeg', 'Disponível', 1, 'price_1QTjoxGash1Acy4VKIQf3qzu');
+      ('Salada Tropical', 'Salada com frutas e molho de iogurte', 22.50, 'Entrada', 'salada_tropical.jpeg', 'Disponível', 1, 'price_1QTjoxGash1Acy4VKIQf3qzu'),
+      ('Bolo de morango', 'Bolo de molango muito totoso', 0.01, 'Sobremesa', 'bolo-morango.jpg', 'Disponível', 1, 'price_1QToDIGash1Acy4VSnuwuEJA')
+;
 
 -- Inserindo novo restaurante
 INSERT INTO restaurants (

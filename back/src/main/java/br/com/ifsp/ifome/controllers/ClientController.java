@@ -1,5 +1,6 @@
 package br.com.ifsp.ifome.controllers;
 
+import br.com.ifsp.ifome.aspect.LoggingAspect;
 import br.com.ifsp.ifome.docs.*;
 import br.com.ifsp.ifome.dto.ApiResponse;
 import br.com.ifsp.ifome.dto.request.OrderItemRequest;
@@ -18,7 +19,10 @@ import br.com.ifsp.ifome.services.*;
 import com.stripe.model.PaymentIntent;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -202,6 +206,12 @@ public class ClientController {
         PaymentIntent paymentIntent = paymentService.confirmPayment(paymentOrderRequest, principal.getName());
 
         return ResponseEntity.ok(paymentIntent);
+    }
+
+    @PostMapping
+    public ResponseEntity<String> handleWebhook(HttpServletRequest request, @RequestBody String payload) {
+        paymentService.webHook(request, payload);
+        return ResponseEntity.ok("Webhook received: " + payload);
     }
 }
 
