@@ -65,7 +65,7 @@ const initiatePayment = async () => {
 			})),
 			mode: 'payment',
 			successUrl: "http://localhost:5173/orders",
-			cancelUrl: "http://localhost:5173/orders",
+			cancelUrl: "http://localhost:5173/orders?failed=true",
 		});
 
 		if (result.error) {
