@@ -58,20 +58,33 @@ const initiatePayment = async () => {
 	try {
 		const stripeInstance = stripe.value;
 
+		if (!cart.order?.orderItems?.length || !stripeInstance) {
+			toast.error("Carrinho ou instância do Stripe inválidos.", { position: "top-right" });
+			return;
+		}
+
+		const orderItems = cart.order.orderItems.map((item) => ({
+			price: `${item.dish.priceId}`,
+			quantity: item.quantity,
+		}));
+
+		if (orderItems) {
+			await sendOrder();
+		}
+
 		const result = await stripeInstance.redirectToCheckout({
-			lineItems: cart.order.orderItems.map((item) => ({
-				price: `${item.dish.priceId}`,
-				quantity: item.quantity,
-			})),
+			lineItems: orderItems,
 			mode: 'payment',
-			successUrl: "http://localhost:5173/orders",
-			cancelUrl: "http://localhost:5173/orders?failed=true",
+			successUrl: `http://localhost:5173/orders`,
+			cancelUrl: `http://localhost:5173/orders?failed=true`,
 		});
 
 		if (result.error) {
 			toast.error("Erro no pagamento: " + result.error.message, { position: "top-right" });
 		}
+
 	} catch (error) {
+		// Captura erros e exibe mensagem ao usuário
 		console.error("Erro ao iniciar o pagamento:", error);
 		toast.error("Erro ao processar o pagamento.", { position: "top-right" });
 	}
