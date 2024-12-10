@@ -22,7 +22,9 @@ public record RestaurantResponse(
         String paymentMethods,
         String restaurantImage,
         BankAccount bankAccount,
-        boolean isOpen
+        boolean isOpen,
+        Double rating
+
 
 ) {
     public static RestaurantResponse from(Restaurant restaurant) {
@@ -42,6 +44,7 @@ public record RestaurantResponse(
                 restaurant.getPaymentMethods(),
                 restaurant.getRestaurantImage(),
                 restaurant.getBankAccount(),
-                restaurant.isOpen());
+                restaurant.isOpen(),
+                    restaurant.getRating());
     }
 }

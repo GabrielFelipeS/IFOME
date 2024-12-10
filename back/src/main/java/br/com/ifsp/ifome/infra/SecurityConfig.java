@@ -49,7 +49,8 @@ public class SecurityConfig {
                         "/api/restaurant/", "/api/restaurant/{id}",
                         "/api/restaurant/all", "/api/dish/",
                         "/api/dish/{id}", "/api/dish/restaurant/{id}",
-                        "/api/dish/all", "/api/client/search"
+                        "/api/dish/all", "/api/client/search",
+                        "/api/client/recommendations/dishes", "/api/client/recommendations/restaurants"
                     ).permitAll()
 
                     .requestMatchers(HttpMethod.GET, "/api/chat/client/delivery/{customerOrderId}").hasAnyRole("CLIENT", "DELIVERY")
